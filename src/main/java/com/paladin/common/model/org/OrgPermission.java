@@ -1,132 +1,47 @@
 package com.paladin.common.model.org;
 
 import com.paladin.framework.common.UnDeleteBaseModel;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 
+@Getter
+@Setter
 public class OrgPermission extends UnDeleteBaseModel {
 
-	public static final String COLUMN_FIELD_GRANTABLE = "grantable";
-	
-	// id
-	@Id
-	private String id;
+    public static final String COLUMN_FIELD_GRANTABLE = "grantable";
 
-	// 权限名称
-	private String name;
+    @Id
+    private String id;
 
-	private String url;
+    // 权限名称
+    private String name;
 
-	private String code;
+    private String url;
 
-	// 是否菜单
-	private Integer isMenu;
-	
-	// 图标
-	private String menuIcon;
-	
-	// 权限描述
-	private String description;
+    private String code;
 
-	// 父ID
-	private String parentId;
+    // 是否菜单
+    private Integer isMenu;
 
-	// 列表顺序
-	private Integer listOrder;
+    // 图标
+    private String menuIcon;
 
-	// 是否系统管理员权限
-	private Integer isAdmin;
-	
-	// 是否可授权
-	private Integer grantable;
+    // 权限描述
+    private String description;
 
-	public String getId() {
-		return id;
-	}
+    // 父ID
+    private String parentId;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    // 列表顺序
+    private Integer listOrder;
 
-	public String getName() {
-		return name;
-	}
+    // 是否系统管理员权限
+    private Integer isAdmin;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    // 是否可授权
+    private Integer grantable;
 
-	public Integer getIsMenu() {
-		return isMenu;
-	}
-
-	public void setIsMenu(Integer isMenu) {
-		this.isMenu = isMenu;
-	}
-
-	public String getMenuIcon() {
-		return menuIcon;
-	}
-
-	public void setMenuIcon(String menuIcon) {
-		this.menuIcon = menuIcon;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	public Integer getListOrder() {
-		return listOrder;
-	}
-
-	public void setListOrder(Integer listOrder) {
-		this.listOrder = listOrder;
-	}
-
-	public Integer getIsAdmin() {
-		return isAdmin;
-	}
-
-	public void setIsAdmin(Integer isAdmin) {
-		this.isAdmin = isAdmin;
-	}
-
-	public Integer getGrantable() {
-		return grantable;
-	}
-
-	public void setGrantable(Integer grantable) {
-		this.grantable = grantable;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	
 
 }

@@ -16,7 +16,7 @@ import com.paladin.framework.excel.Validate;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
-import com.paladin.framework.utils.others.ValidateUtil;
+import com.paladin.framework.utils.ValidateUtil;
 
 /**
  * 缺省Excel读取列实例

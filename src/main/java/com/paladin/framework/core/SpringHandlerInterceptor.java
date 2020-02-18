@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paladin.framework.core.query.QueryInputMethod;
-import com.paladin.framework.utils.JsonUtil;
+import com.paladin.framework.utils.convert.JsonUtil;
 
 public class SpringHandlerInterceptor implements HandlerInterceptor {
 

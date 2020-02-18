@@ -1,4 +1,4 @@
-package com.paladin.framework.utils;
+package com.paladin.framework.utils.convert;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;

@@ -1,57 +1,32 @@
 package com.paladin.data.model.build;
 
-import javax.persistence.GeneratedValue;
+import com.paladin.framework.core.configuration.mybatis.GenIdImpl;
+import lombok.Getter;
+import lombok.Setter;
+import tk.mybatis.mapper.annotation.KeySql;
+
 import javax.persistence.Id;
 
+@Getter
+@Setter
 public class DbBuildTable {
 
-	public final static String COLUMN_FIELD_CONNECTION_NAME = "connectionName";
-	public final static String COLUMN_FIELD_TABLE_NAME = "tableName";
-	
-	// 
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private String id;
+    public final static String COLUMN_FIELD_CONNECTION_NAME = "connectionName";
+    public final static String COLUMN_FIELD_TABLE_NAME = "tableName";
 
-	// 
-	private String connectionName;
+    //
+    @Id
+    @KeySql(genId = GenIdImpl.class)
+    private String id;
 
-	// 
-	private String tableName;
+    //
+    private String connectionName;
 
-	// 
-	private String tableTitle;
+    //
+    private String tableName;
 
-	public String getId() {
-		return id;
-	}
+    //
+    private String tableTitle;
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getConnectionName() {
-		return connectionName;
-	}
-
-	public void setConnectionName(String connectionName) {
-		this.connectionName = connectionName;
-	}
-
-	public String getTableName() {
-		return tableName;
-	}
-
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-
-	public String getTableTitle() {
-		return tableTitle;
-	}
-
-	public void setTableTitle(String tableTitle) {
-		this.tableTitle = tableTitle;
-	}
 
 }

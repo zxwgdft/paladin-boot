@@ -66,16 +66,12 @@ public class ShiroCasConfiguration {
 
     @Bean(name = "redisSessionDAO")
     public ShiroRedisSessionDAO redisSessionDAO(ShiroCasProperties shiroCasProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
-        logger.info(LogContentUtil.createComponent(SessionDAO.class, ShiroRedisSessionDAO.class));
-
         ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroCasProperties, jdkRedisTemplate);
         return sessionDao;
     }
 
     @Bean(name = "sessionManager")
     public DefaultWebSessionManager defaultWebSessionManager(ShiroCasProperties shiroCasProperties, ShiroRedisSessionDAO redisSessionDAO) {
-        logger.info(LogContentUtil.createComponent(WebSessionManager.class, DefaultWebSessionManager.class));
-
         DefaultWebSessionManager sessionManager = new PaladinWebSessionManager(shiroCasProperties);
 
         if (shiroCasProperties.isRedisEnabled()) {
@@ -107,8 +103,6 @@ public class ShiroCasConfiguration {
 
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager defaultWebSecurityManage(DefaultWebSessionManager defaultWebSessionManager, List<Realm> realms, List<AuthenticationListener> authenticationListeners) {
-        logger.info(LogContentUtil.createComponent(WebSecurityManager.class, DefaultWebSecurityManager.class));
-
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 
         securityManager.setAuthenticator(new MultiRealmAuthenticator());
@@ -130,8 +124,6 @@ public class ShiroCasConfiguration {
     @Bean(name = "shiroFilter")
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager, ShiroCasProperties shiroCasProperties) {
-        logger.info(LogContentUtil.createComponent(ShiroFilterFactoryBean.class, ShiroFilterFactoryBean.class));
-
         ShiroFilterFactoryBean shiroFilterFactoryBean = new PaladinShiroFilterFactoryBean(shiroCasProperties);
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
@@ -187,14 +179,11 @@ public class ShiroCasConfiguration {
 
     @Bean(name = "authenticationStrategy")
     public AuthenticationStrategy authenticationStrategy() {
-        logger.info(LogContentUtil.createComponent(AuthenticationStrategy.class, FirstSuccessfulStrategy.class));
         return new FirstSuccessfulStrategy();
     }
 
     @Bean(name = "authorizationAttributeSourceAdvisor")
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
-        logger.info(LogContentUtil.createComponent(AuthorizationAttributeSourceAdvisor.class, AuthorizationAttributeSourceAdvisor.class));
-
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
@@ -202,7 +191,6 @@ public class ShiroCasConfiguration {
 
     @Bean(name = "lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        logger.info(LogContentUtil.createComponent(LifecycleBeanPostProcessor.class, LifecycleBeanPostProcessor.class));
         return new LifecycleBeanPostProcessor();
     }
 
@@ -210,8 +198,6 @@ public class ShiroCasConfiguration {
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
-        logger.info(LogContentUtil.createComponent(AbstractAdvisorAutoProxyCreator.class, DefaultAdvisorAutoProxyCreator.class));
-
         DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
         daap.setProxyTargetClass(true);
         return daap;

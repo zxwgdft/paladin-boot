@@ -7,7 +7,6 @@ import java.util.Date;
 
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import com.paladin.framework.utils.structure.SecHashMap;
-import com.paladin.framework.utils.DateFormatUtil;
 
 public class DataConvertManager {
 

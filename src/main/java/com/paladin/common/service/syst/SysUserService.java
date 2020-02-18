@@ -19,8 +19,8 @@ import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.configuration.PaladinProperties;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.session.UserSession;
-import com.paladin.framework.utils.SecureUtil;
-import com.paladin.framework.utils.others.ValidateUtil;
+import com.paladin.framework.utils.secure.SecureUtil;
+import com.paladin.framework.utils.ValidateUtil;
 
 import tk.mybatis.mapper.entity.Example;
 

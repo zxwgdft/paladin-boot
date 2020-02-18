@@ -1,9 +1,8 @@
 package com.paladin.platform;
 
-import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.common.specific.CommonUserSession;
-import com.paladin.common.utils.AESEncryptUtil;
+import com.paladin.framework.utils.secure.AESEncryptUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;

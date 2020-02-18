@@ -1,4 +1,4 @@
-package com.paladin.framework.utils;
+package com.paladin.framework.utils.secure;
 
 import java.security.SecureRandom;
 

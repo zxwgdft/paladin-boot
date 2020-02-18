@@ -1,4 +1,4 @@
-package com.paladin.framework.utils.others;
+package com.paladin.framework.utils;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;

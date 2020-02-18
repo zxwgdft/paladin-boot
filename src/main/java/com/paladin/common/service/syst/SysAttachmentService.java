@@ -33,7 +33,7 @@ import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.configuration.web.WebProperties;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.exception.SystemException;
-import com.paladin.framework.utils.Base64Util;
+import com.paladin.framework.utils.convert.Base64Util;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
 import net.coobird.thumbnailator.Thumbnails;

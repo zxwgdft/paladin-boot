@@ -1,50 +1,25 @@
 package com.paladin.common.model.cache;
 
-import javax.persistence.GeneratedValue;
+import com.paladin.framework.core.configuration.mybatis.GenIdImpl;
+import lombok.Getter;
+import lombok.Setter;
+import tk.mybatis.mapper.annotation.KeySql;
+
 import javax.persistence.Id;
 
+@Getter
+@Setter
 public class SysVisitCache {
 
-	@Id
-	@GeneratedValue(generator = "UUID")
-	private String id;
+    @Id
+    @KeySql(genId = GenIdImpl.class)
+    private String id;
 
-	private String ip;
+    private String ip;
 
-	private String code;
+    private String code;
 
-	private String value;
+    private String value;
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 }

@@ -1,108 +1,39 @@
 package com.paladin.common.model.syst;
 
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Id;
+import java.util.Date;
 
+@Getter
+@Setter
 public class SysAttachment {
-	
-	public final static int USE_TYPE_COLUMN_RELATION = 1;
-	public final static int USE_TYPE_RESOURCE = 2;
 
-	public static final String COLUMN_FIELD_ID = "id";
-	public static final String COLUMN_FIELD_USER_TYPE = "userType";
-	
-	@Id
-	private String id;
-	
-	private Integer useType;
+    public final static int USE_TYPE_COLUMN_RELATION = 1;
+    public final static int USE_TYPE_RESOURCE = 2;
 
-	private String type;
+    public static final String COLUMN_FIELD_ID = "id";
+    public static final String COLUMN_FIELD_USER_TYPE = "userType";
 
-	private String name;
+    @Id
+    private String id;
 
-	private String suffix;
+    private Integer useType;
 
-	private Long size;
+    private String type;
 
-	private String pelativePath;
-	
-	private String thumbnailPelativePath;
-	
-	private Date createTime;
+    private String name;
 
-	public String getId() {
-		return id;
-	}
+    private String suffix;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    private Long size;
 
-	public String getName() {
-		return name;
-	}
+    private String pelativePath;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String thumbnailPelativePath;
 
-	public String getSuffix() {
-		return suffix;
-	}
+    private Date createTime;
 
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
-
-	public String getPelativePath() {
-		return pelativePath;
-	}
-
-	public void setPelativePath(String pelativePath) {
-		this.pelativePath = pelativePath;
-	}
-
-	public Long getSize() {
-		return size;
-	}
-
-	public void setSize(Long size) {
-		this.size = size;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Integer getUseType() {
-		return useType;
-	}
-
-	public void setUseType(Integer useType) {
-		this.useType = useType;
-	}
-
-	public String getThumbnailPelativePath() {
-		return thumbnailPelativePath;
-	}
-
-	public void setThumbnailPelativePath(String thumbnailPelativePath) {
-		this.thumbnailPelativePath = thumbnailPelativePath;
-	}
 
 }

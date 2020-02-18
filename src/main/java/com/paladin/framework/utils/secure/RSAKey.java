@@ -1,4 +1,4 @@
-package com.paladin.common.utils;
+package com.paladin.framework.utils.secure;
 
 import org.apache.commons.codec.binary.Base64;
 

@@ -1,4 +1,4 @@
-package com.paladin.framework.utils;
+package com.paladin.framework.utils.convert;
 
 import java.util.Base64;
 

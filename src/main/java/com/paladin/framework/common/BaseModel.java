@@ -1,5 +1,7 @@
 package com.paladin.framework.common;
 
+import tk.mybatis.mapper.annotation.Order;
+
 import java.util.Date;
 
 import javax.persistence.OrderBy;
@@ -13,7 +15,7 @@ public abstract class BaseModel {
 	public final static int BOOLEAN_NO = 0;
 
 
-	@OrderBy("DESC")
+	@Order("DESC")
 	private Date createTime;
 
     private String createUserId;

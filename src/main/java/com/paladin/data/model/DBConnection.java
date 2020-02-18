@@ -1,74 +1,29 @@
 package com.paladin.data.model;
 
+import com.paladin.framework.common.BaseModel;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.paladin.framework.common.BaseModel;
-
+@Getter
+@Setter
 @Table(name = "db_connection")
-public class DBConnection extends BaseModel{
-	
-	@Id
-	private String name;
-	
-	private String url;
-	
-	private String type;
-	
-	private String userName;
-	
-	private String password;
-	
-	private String note;
+public class DBConnection extends BaseModel {
 
-	public String getName() {
-		return name;
-	}
+    @Id
+    private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String url;
 
-	public String getUrl() {
-		return url;
-	}
+    private String type;
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    private String userName;
 
-	public String getUserName() {
-		return userName;
-	}
+    private String password;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+    private String note;
 
 
-	
 }
