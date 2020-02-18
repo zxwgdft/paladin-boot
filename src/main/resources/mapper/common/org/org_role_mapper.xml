@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.common.mapper.org.OrgRolePermissionMapper">
+	<select id="getPermissionByRole" resultType="string">
+		SELECT permission_id FROM org_role_permission WHERE role_id = #{id}
+	</select>
+	<delete id="removePermissionByRole">
+		DELETE FROM org_role_permission WHERE role_id = #{id}
+	</delete>
+	
+     <insert id ="insertByBatch">
+           INSERT INTO org_role_permission (role_id,permission_id) VALUES
+            <foreach collection ="permissionIds" item="permissionId" index= "index" separator =",">
+                (#{roleId}, #{permissionId})
+            </foreach >
+     </insert >
+</mapper>

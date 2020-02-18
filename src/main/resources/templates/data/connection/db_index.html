@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/data/header" />
+
+<body class="layout-boxed sidebar-mini">
+    <input type="hidden" id="dbName" th:value="${dbName}">
+    <div class="wrapper curtain">
+        <section class="content-header">
+            <h1>数据库管理<small th:text="${dbName}"/></h1>
+            <ol class="breadcrumb">
+                <li><a href="/data/connection/index">数据库管理</a></li>
+                <li class="active" th:text="${dbName}" />
+            </ol>
+        </section>
+        <section class="content">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <ul id="tables" class="list-group"></ul>
+                        </div>
+                        <div class="col-xs-9">
+                            <table id="dataGrid"></table>
+                            <div id="toolbar">
+                                <button onclick="build()" class="btn btn-primary"><i class="glyphicon glyphicon-cog"></i>生成</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </section>
+    <div th:include="/data/footer"></div>
+</body>
+<script type="text/javascript">
+var table;
+var dbName;
+var currentTable;
+$(function() {
+    dbName = $("#dbName").val();
+    initDataGrid();
+});
+
+var selectTableItem;
+
+function initDataGrid(enumMap) {
+    $.postAjax("/data/connection/db/table", { dbName: dbName }, function(result) {
+        var ul = $("#tables")
+        for (var i = 0; i < result.length; i++) {
+            var item = result[i];
+            var a = $('<a href="#" class="list-group-item">' + item + '</a>');
+            var fun = function(table, a) {
+                return function() {
+                    currentTable = table;
+                    if (selectTableItem) {
+                        selectTableItem.removeClass("active");
+                    }
+
+                    selectTableItem = a;
+                    selectTableItem.addClass("active");
+                    initTable();
+                }
+            }(item, a);
+
+            a.click(fun);
+            ul.append(a);
+        }
+    });
+}
+
+function initTable() {
+
+    if (!table) {
+        table = $.createTable("#dataGrid", {
+            columns: [
+                [
+                    { title: "名称", field: "name" },
+                    { title: "数据类型", field: "dataType" },
+                    { title: "是否主键", field: "isPrimary", formatter: "boolean" },
+                    { title: "是否唯一键", field: "isUnique", formatter: "boolean" },
+                    { title: "是否外键", field: "isForeignKey", formatter: "boolean" },
+                    { title: "默认值", field: "defaultValue" },
+                    { title: "注释", field: "comment" }
+                ]
+            ],
+            url: '/data/connection/db/column',
+            queryParams: function() {
+                return {
+                    dbName: dbName,
+                    tableName: currentTable
+                }
+            },
+            responseHandler: function(res) {
+                res = res || [];
+                if ($.isArray(res)) {
+                    res.forEach(function(a) {
+                        $.extend(a, a.column);
+                    })
+                    var x = {};
+                    x["data"] = res;
+                    x["total"] = res.length;
+                    return x;
+                } else {
+                    return res;
+                }
+            },
+            showColumns: true,
+            pagination: false,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    table.refresh();
+}
+
+
+function build() {
+    if (currentTable && dbName) {
+        window.location = "/data/connection/db/build/input?dbName=" + dbName + "&tableName=" + currentTable;
+    } else {
+        $.errorMessage("请先选择一张表！");
+    }
+}
+</script>
+
+</html>

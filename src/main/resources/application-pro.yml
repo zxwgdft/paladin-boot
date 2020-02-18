@@ -1,0 +1,50 @@
+logging:
+  file: logs/spring-boot-logging.log
+
+server:
+  port: 8005
+spring:
+  datasource:
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 15
+    name: common
+    password: ''
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
+  redis:
+    database: 0
+    host: 127.0.0.1
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+    password: ''
+    port: 6379
+    timeout: 500
+
+# 自定义配置
+paladin:
+  cas-enabled: true
+  shiro:
+    cas-error-url: /static/html/error_cas_500.html
+    cas-protocol: CAS20_PROXY
+    cas-server-login-url: http://10.1.1.123:8768/casServ/login
+    cas-server-url: http://10.1.1.123:8768/casServ
+    client-server-url: http://172.16.11.135:8010
+  shiro-enabled: false
+  upload:
+    dir: D:/file/upload/
+  web:
+    file-path: file:D:/file/
+  login:
+    # 登录失败限制是否开启，默认简单实现了登录失败及IP锁定，应付安全测试工具时，可开启，如果需要上生产需要扩展实现
+    failLimit: false

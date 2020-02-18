@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <title>500</title>
+    <style>
+        body{font-size: 14px;font-family: 'helvetica neue',tahoma,arial,'hiragino sans gb','microsoft yahei','Simsun',sans-serif; background-color:#fff; color:#808080;}  
+        .wrap{margin:200px auto;width:510px;}  
+        td{text-align:left; padding:2px 10px;}  
+        td.header{font-size:22px; padding-bottom:10px; color:#000;}  
+        td.check-info{padding-top:20px;}  
+        a{color:#328ce5; text-decoration:none;}  
+        a:hover{text-decoration:underline;}  
+        li{color:#aaa;font-size: 14px;}
+    </style>
+</head>
+
+<body onload="init()">
+    <div class="wrap">
+        <table>
+            <tr>
+                <td rowspan="5" style=""><img src="/static/image/warn.png" alt="单点登录失败"></td>
+                <td class="header" id="message">
+                    <p>单点登录本系统失败！可能原因：</p>
+                    <ul>
+                        <li>本系统中找不到对应单点登录的用户账号</li>
+                        <li>账号被锁或被置为不可用</li>
+                        <li>系统异常或其他</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="/" target="_top">返回首页</a><a href="javascript:toCas()" style="margin-left: 100px" target="_top">返回单点登录</a></td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+
+    function init(){
+        //
+        //var message = getQueryVariable("message");
+        //document.getElementById("message").innerText = decodeURI(message);
+    }
+
+    function toCas() {
+        var casServerLoginUrl = getQueryVariable("casServerLoginUrl");
+        window.location = casServerLoginUrl;
+    }
+    </script>
+</body>
+
+</html>

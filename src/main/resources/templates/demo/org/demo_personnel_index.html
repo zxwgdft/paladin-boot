@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/demo/header" />
+
+<body>
+    <tt:constant enumcode="sex-type,nation-type,identification-type" />
+    <section class="content-header">
+        <h1>人员维护</h1>
+    </section>
+    <section class="content">
+        <div class="box box-widget">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" name="name" th:value="${query?.name}" placeholder="请输入查询的姓名" />
+                        </div>
+                        <div class="col-md-2">
+                            <select name="identificationType" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.identificationType}" enumcode="identification-type">
+                                <option value="">请选择查询证件类型</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <!-- 提供回显页码用 -->
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-widget" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/demo/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+
+        $.getAjax("http://localhost:8011/qos/count/referral/find/page",function(a){
+            console.log(a);
+        })
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "姓名", field: "name" },
+                    {
+                        title: "性别",
+                        field: "sex",
+                        enumcode: "sex-type",
+                        exportOption: {
+                            // 可以通过该属性配置导出
+                            width: 2, // excel列宽度，按中文字
+                            //dateFormat: 'yyyy/MM/dd', // 格式化，例如日期
+                            //enumType: 'sex-type',     // 常量类型
+                        }
+                    }, //enumcode为常量类型字段提供转换，由1、2变成男、女，需要在<tt:constant>中标明
+                    { title: "出生日期", field: "birthday", formatter: "date" },
+                    { title: "证件类型", field: "identificationType", enumcode: "identification-type" },
+                    { title: "证件号码", field: "identificationNo", formatter: "identification" }, //格式化类型为证件，这些常用格式化可以在common中增加
+                    { title: "民族", field: "nation", enumcode: "nation-type" },
+                    { title: "开始工作时间", field: "startWorkTime", formatter: "date", exportable: false }, // exportable = false 不能导出该列
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/demo/demo/personnel/find/page',
+            searchbar: '#searchbar', // 搜索条件bar
+            exportUrl: '/demo/demo/personnel/export', // 导出url
+            showExportor: true, // 是否显示导出按钮
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true,
+            exportColumn: function(exportColumns) {
+                // 除表格中字段，我还想要添加导出的字段
+                exportColumns.push({
+                    field: "cellphone", //导出字段名
+                    name: "手机号码", //导出EXCEL列名
+                    checked: true, // 是否选中
+                    width: 13, // excel列宽度，按中文字
+                    //dateFormat: 'yyyy/MM/dd', // 格式化，例如日期
+                    //enumType: 'sex-type',     // 常量类型
+                });
+
+                return exportColumns;
+            }
+        });
+    }
+
+    function add() {
+        window.location = '/demo/demo/personnel/add';
+    }
+
+    function detail(row) {
+        window.location = '/demo/demo/personnel/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/demo/demo/personnel/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    </script>
+</body>
+
+</html>

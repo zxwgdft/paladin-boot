@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.common.mapper.CommonMapper">
+	<insert id="saveContainerVersion">
+		INSERT INTO sys_container_version(id,version,update_time) VALUES(#{containerId},#{version},#{updateTime})
+	</insert>
+	
+	<update id="updateContainerVersion">
+		UPDATE sys_container_version SET version=#{currentVersion},update_time=#{updateTime}
+		WHERE id=#{containerId} AND version=#{originVersion}
+	</update>
+	
+	<select id="getContainerVersion" resultType="long">
+		SELECT version FROM sys_container_version WHERE id=#{containerId}	
+	</select>
+	
+</mapper>

@@ -1,0 +1,10 @@
+package com.paladin.demo.dynamic.mapper;
+
+import com.paladin.demo.dynamic.model.DynamicDemo;
+
+public interface DynamicDemoMapper {
+
+	public DynamicDemo getDemoFromMysql();
+	
+	public DynamicDemo getDemoFromSqlServer();
+}

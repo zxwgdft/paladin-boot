@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header">
+</head>
+<style type="text/css">
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 0px;
+}
+</style>
+
+<body>
+    <section class="content-header">
+        <h1>角色管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/common/org/role/index"><i class="fa fa-list-alt"></i>角色列表</a></li>
+            <li class="active">角色授权</li>
+        </ol>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="box-body">
+                    <div id="permissionTree"></div>
+                    <div style="text-align: center;">
+                        <button id="saveBtn" class="btn btn-primary" style="width: 120px">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/common/org/role/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="roleId" th:value="${roleId}" />
+    <div th:include="/common/footer"></div>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+    var roleId;
+    $(function() {
+        roleId = $("#roleId").val();
+        $.getAjax("/common/org/role/grant/find/permission?id=" + roleId, function(data) {
+            initTree(roleId, data, $("#permissionTree"));
+        });
+    });
+
+    var tree;
+    var treedata;
+
+    function initTree(roleId, data, treeDiv) {
+
+        tree = treeDiv;
+
+        if (data.permissions) {
+
+            var permissions = data.permissions,
+                hasPermissions = data.hasPermissions,
+                root = $.grep(permissions, function(n, i) {
+                    return n.parentId ? false : true;
+                });
+
+            var g = function(ps) {
+                var nodes = [];
+                for (var i = 0; i < ps.length; i++) {
+                    var node = {},
+                        p = ps[i];
+                    node.text = p.name;
+                    node.data = p;
+                    node.state = {
+                        checked: hasPermissions ? ($.inArray(p.id, hasPermissions) != -1) : false
+                    }
+
+                    if (p.isMenu == 1) {
+                        node.tags = ["菜单"];
+                    }
+
+                    var children = $.grep(permissions, function(n, i) {
+                        return n.parentId == p.id;
+                    });
+
+                    if (children && children.length > 0) {
+                        node.nodes = g(children);
+                    }
+                    nodes.push(node);
+                }
+
+                return nodes;
+            }
+
+            treedata = g(root);
+
+            tree.treeview({
+                data: treedata,
+                showCheckbox: true,
+                onNodeChecked: nodeChecked,
+                onNodeUnchecked: nodeUnchecked,
+                levels: 5
+            });
+
+
+
+            $("#saveBtn").click(function() {
+                var checkedNodes = tree.treeview("getChecked");
+                var ids = [];
+
+                if (checkedNodes && $.isArray(checkedNodes)) {
+                    checkedNodes.forEach(function(a) {
+                        ids.push(a.data.id);
+                    });
+                }
+
+                var data = {
+                    roleId: roleId,
+                    permissionId: ids
+                }
+
+                $.postAjax("/common/org/role/grant", data, function() {
+                    $.successAlert("保存成功", function() {
+                        window.location = "/common/org/role/index";
+                    });
+                })
+
+            });
+        }
+    }
+
+    function nodeCheckedChanged(node, checked) {}
+
+    var nodeCheckedSilent = false;
+
+    function nodeChecked(event, node) {
+        if (nodeCheckedSilent) {
+            return;
+        }
+        nodeCheckedSilent = true;
+        checkAllParent(node);
+        checkAllSon(node);
+        nodeCheckedSilent = false;
+    }
+
+    var nodeUncheckedSilent = false;
+
+    function nodeUnchecked(event, node) {
+        if (nodeUncheckedSilent)
+            return;
+        nodeUncheckedSilent = true;
+        uncheckAllParent(node);
+        uncheckAllSon(node);
+        nodeUncheckedSilent = false;
+    }
+
+    //选中全部父节点
+    function checkAllParent(node) {
+        nodeCheckedChanged(node, true);
+        tree.treeview('checkNode', node.nodeId, { silent: true });
+        var parentNode = tree.treeview('getParent', node.nodeId);
+        if (!("nodeId" in parentNode)) {
+            return;
+        } else {
+            checkAllParent(parentNode);
+        }
+    }
+
+    //取消全部父节点
+    function uncheckAllParent(node) {
+        nodeCheckedChanged(node, false);
+        tree.treeview('uncheckNode', node.nodeId, { silent: true });
+        var siblings = tree.treeview('getSiblings', node.nodeId);
+        var parentNode = tree.treeview('getParent', node.nodeId);
+        if (!("nodeId" in parentNode)) {
+            return;
+        }
+        var isAllUnchecked = true; //是否全部没选中
+        for (var i in siblings) {
+            if (siblings[i].state.checked) {
+                isAllUnchecked = false;
+                break;
+            }
+        }
+        if (isAllUnchecked) {
+            uncheckAllParent(parentNode);
+        }
+    }
+
+    //级联选中所有子节点
+    function checkAllSon(node) {
+        nodeCheckedChanged(node, true);
+        tree.treeview('checkNode', node.nodeId, { silent: true });
+        if (node.nodes != null && node.nodes.length > 0) {
+            for (var i in node.nodes) {
+                checkAllSon(node.nodes[i]);
+            }
+        }
+    }
+
+    //级联取消所有子节点
+    function uncheckAllSon(node) {
+        nodeCheckedChanged(node, false);
+        tree.treeview('uncheckNode', node.nodeId, { silent: true });
+        if (node.nodes != null && node.nodes.length > 0) {
+            for (var i in node.nodes) {
+                uncheckAllSon(node.nodes[i]);
+            }
+        }
+    }
+    /*]]>*/
+    </script>
+</body>
+
+</html>

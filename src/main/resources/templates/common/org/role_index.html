@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type,role-level-type" />
+    <section class="content-header">
+        <h1>角色管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增角色</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        var limit = $("#pageLimit").val();
+        var offset = $("#pageOffset").val();
+        var page = (limit && offset) ? offset / limit + 1 : 1;
+
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "角色名称", align: "center", field: "roleName" },
+                    { title: "角色权限等级", align: "center", field: "roleLevel", enumcode: "role-level-type" },
+                    { title: "是否启用", align: "center", field: "enable", enumcode: "boolean-type" },
+                    { title: "是否默认角色", align: "center", field: "isDefault", enumcode: "boolean-type" },
+                    { title: "角色说明", align: "center", field: "roleDesc" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .grant': function(e, value, row, index) {
+                                grant(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="grant btn btn-xs btn-success"><i class="glyphicon glyphicon-cog"></i>授权</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/common/org/role/find/all',
+            searchbar: '#searchbar',
+            showColumns: true,
+            pageSize: limit || undefined,
+            pageNumber: page || 1,
+            pagination: true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/common/org/role/add';
+    }
+
+    function detail(row) {
+        window.location = '/common/org/role/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function grant(row) {
+        window.location = '/common/org/role/grant/index?id=' + row.id;
+    }
+
+    function getSelectRow(notShowError) {
+        var rows = table.getSelections();
+        var row = rows.length > 0 ? rows[0] : null;
+        if (!notShowError && !row) {
+            $.errorMessage("请选中一条业务数据");
+        }
+        return row;
+    }
+    </script>
+</body>
+
+</html>

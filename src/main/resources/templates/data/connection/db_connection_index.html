@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/data/header" />
+
+<body class="layout-boxed sidebar-mini">
+    <div class="wrapper curtain">
+        <section class="content-header">
+            <h1>数据库管理<small>连接</small></h1>
+            <ol class="breadcrumb">
+                <li class="active">数据库管理</li>
+            </ol>
+        </section>
+        <section class="content">          
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">结果</h3>
+                    <div class="box-tools pull-right">
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="min-height:500px">
+                    <table id="dataGrid"></table>
+                    <div id="toolbar">
+                        <div class="btn-group">
+                            <a onclick="add()" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer text-center">
+                </div>
+                <!-- /.box-footer -->
+            </div>
+    </div>
+    </section>
+    <div th:include="/data/footer"></div>
+</body>
+<script type="text/javascript">
+var table;
+$(function() {
+    initDataGrid();
+});
+
+function initDataGrid(enumMap) {
+
+    table = $.createTable("#dataGrid", {
+        idField: "id",
+        columns: [
+            [
+                { title: "名称", field: "name", sortable: true },
+                { title: "URL", field: "url" },
+                { title: "类型", field: "type" },
+                { title: "用户名", field: "userName" },
+                {
+                    title: "操作",
+                    align: "center",
+                    width: "200px",
+                    events: {
+                        'click .connect': function(e, value, row, index) {
+                            connect(row);
+                        },
+                        'click .edit': function(e, value, row, index) {
+                            edit(row);
+                        },
+                        'click .delete': function(e, value, row, index) {
+                            remove(row);
+                        }
+                    },
+                    formatter: function operateFormatter(value, row, index) {
+                        return '<button class="connect btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-connectdevelop"></i>连接</button>' +
+                            '<button class="edit btn btn-xs btn-primary" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>修改</button>' +
+                            '<button class="delete btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                    }
+                }
+            ]
+        ],
+        url: '/data/connection/find/page',
+        searchbar: '#searchbar',
+        sortName: 'name',
+        showColumns: true,
+        sortOrder: 'asc',
+        pagination: true,
+        clickToSelect: true,
+        toolbar: "#toolbar",
+        showRefresh: true
+    });
+}
+
+function add() {
+    window.location = "/data/connection/add";
+}
+
+function edit(row) {
+    window.location = "/data/connection/detail?edit=1&id=" + row.name;
+}
+
+function remove(row) {
+    if (row) {
+        layer.confirm('确定删除吗?', function() {
+            $.getAjax('/data/connection/delete?id=' + row.name, function() {
+                $.successMessage("删除成功");
+                table.refresh();
+            });
+        });
+    }
+}
+
+function connect(row) {
+    if (row) {
+        $.postFormAjax("/data/connection/connect", {
+            name: row.name,
+            url: row.url,
+            type: row.type,
+            userName: row.userName,
+            password: row.password
+        });
+    } else {
+        $.errorMessage("请选中一条业务数据！");
+    }
+}
+</script>
+
+</html>

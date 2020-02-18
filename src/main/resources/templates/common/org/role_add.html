@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type,role-level-type" />
+    <section class="content-header">
+        <h1>角色管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/common/org/role/index"><i class="fa fa-list-alt"></i>角色列表</a></li>
+            <li class="active">添加角色</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/common/org/role/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "添加角色",
+        url: "/common/org/role/save",
+        columns: [
+            { title: "角色名称", name: "roleName", inputType: "TEXT", required:"required" },
+            { title: "角色权限等级", name: "roleLevel", inputType: "SELECT", enum: "role-level-type", required:"required"},
+            { title: "是否启用", name: "enable", inputType: "RADIO", enum: "boolean-type", colspan: 2 , required:"required"},
+            { title: "角色说明", name: "roleDesc", inputType: "TEXTAREA" }
+        ]
+    }
+
+    $(function() {
+    	var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+            	$.successAlert("保存成功", function() {
+                    window.location = "/common/org/role/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

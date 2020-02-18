@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/data/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>数据库连接</h1>
+        <ol class="breadcrumb">
+            <li><a href="/data/connection/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/data/connection/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/data/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/data/connection/update?name="+$("#id").val(),
+	        columns: [
+	            { name: "url", title: "URL", inputType: "TEXT",colspan:2 },
+	            { name: "type", title: "类型", inputType: "TEXT" },
+	            { name: "userName", title: "用户名", inputType: "TEXT" },
+	            { name: "password", title: "密码", inputType: "TEXT" },
+	            { name: "note", title: "备注", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/data/connection/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+            $.initComponment($(".content"));
+        });
+    });
+    </script>
+</body>
+
+</html>

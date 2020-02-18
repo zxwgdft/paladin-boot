@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/${mainModel}/header" />
+
+<body>
+    ${enumcodes}
+    <section class="content-header">
+        <h1>${mainTitle}</h1>
+        <ol class="breadcrumb">
+            <li><a href="${indexUrl}"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="${indexUrl}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/${mainModel}/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "${title}",
+        url:"${saveUrl}",
+        columns: ${columns}
+    }
+
+    $(function() {       
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
+                    window.location = "${indexUrl}";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

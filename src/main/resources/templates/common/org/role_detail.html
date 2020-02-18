@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type,role-level-type" />
+    <section class="content-header">
+        <h1>角色管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/common/org/role/index"><i class="fa fa-list-alt"></i>角色列表</a></li>
+            <li class="active">角色详情</li>
+        </ol>
+    </section>
+    <section class="content">      
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/common/org/role/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/common/org/role/update?id="+$("#id").val(),
+            columns: [
+                { title: "角色名称", name: "roleName", inputType: "TEXT", required:"required"},
+                { title: "角色权限等级", name: "roleLevel", inputType: "SELECT", enum: "role-level-type" , required:"required"},
+                { title: "是否启用", name: "enable", inputType: "RADIO", enum: "boolean-type", colspan: 2, required:"required" },
+                { title: "角色说明", name: "roleDesc", inputType: "TEXTAREA" }
+            ]
+        }
+   
+        $.getAjax("/common/org/role/get?id=" + $("#id").val(), function(data) {
+        	var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

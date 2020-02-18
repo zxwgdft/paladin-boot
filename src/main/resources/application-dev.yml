@@ -1,0 +1,49 @@
+logging:
+  level:
+    com:
+      paladin:
+        common:
+          mapper: debug
+
+server:
+  port: 8011
+
+
+spring:
+  datasource:
+    name: common
+    password: ''
+    url: jdbc:mysql://localhost:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
+  redis:
+    database: 0
+    host: 127.0.0.1
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+    password: ''
+    port: 6379
+    timeout: 500
+  thymeleaf:
+    cache: false
+
+
+paladin:
+  cas-enabled: true
+  shiro:
+    cas-error-url: /static/html/error_cas_500.html
+    cas-protocol: CAS30
+    cas-server-login-url: http://58.210.169.168:9091/login
+    cas-server-url: http://58.210.169.168:9091
+    client-server-url: http://192.168.31.128:8010
+    filter-chain-definition:
+      '[/demo/platform/login]': 'anon'
+  shiro-enabled: false
+  upload:
+    dir: D:/file/upload/
+  login:
+    # 登录失败限制是否开启，默认简单实现了登录失败及IP锁定，应付安全测试工具时，可开启，如果需要上生产需要扩展实现
+    failLimit: false

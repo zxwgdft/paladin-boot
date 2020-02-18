@@ -1,0 +1,122 @@
+package ${package};
+
+${imports}
+import com.paladin.common.core.export.ExportUtil;
+import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.query.QueryInputMethod;
+import com.paladin.framework.core.query.QueryOutputMethod;
+import com.paladin.framework.excel.write.ExcelWriteException;
+import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.framework.utils.uuid.UUIDUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("${baseRequestMapping}")
+public class ${upperModelName}Controller extends ControllerSupport {
+
+    @Autowired
+    private ${upperModelName}Service ${lowerModelName}Service;
+
+    @GetMapping("${indexRM}")
+    @QueryInputMethod(queryClass = ${upperModelName}Query.class)
+    public String index() {
+        return "${indexPage}";
+    }
+
+    @RequestMapping(value = "${findPageRM}", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    @QueryOutputMethod(queryClass = ${upperModelName}Query.class, paramIndex = 0)
+    public Object findPage(${upperModelName}Query query) {
+        return CommonResponse.getSuccessResponse(${lowerModelName}Service.searchPage(query));
+    }
+    
+    @GetMapping("${getDetailRM}")
+    @ResponseBody
+    public Object getDetail(@RequestParam String id, Model model) {   	
+        return CommonResponse.getSuccessResponse(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+    }
+    
+    @GetMapping("${addRM}")
+    public String addInput() {
+        return "${addPage}";
+    }
+
+    @GetMapping("${detailRM}")
+    public String detailInput(@RequestParam String id, Model model) {
+    	model.addAttribute("id", id);
+        return "${detailPage}";
+    }
+    
+    @PostMapping("${saveRM}")
+	@ResponseBody
+    public Object save(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return validErrorHandler(bindingResult);
+		}
+        ${upperModelName} model = beanCopy(${lowerModelName}DTO, new ${upperModelName}());
+		String id = UUIDUtil.createUUID();
+		model.set${primaryName}(id);
+		if (${lowerModelName}Service.save(model) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+		}
+		return CommonResponse.getFailResponse();
+	}
+
+    @PostMapping("${updateRM}")
+	@ResponseBody
+    public Object update(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return validErrorHandler(bindingResult);
+		}
+		String id = ${lowerModelName}DTO.getId();
+		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.get(id));
+		if (${lowerModelName}Service.update(model) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+		}
+		return CommonResponse.getFailResponse();
+	}
+
+    @RequestMapping(value = "${deleteRM}", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public Object delete(@RequestParam String id) {
+        return CommonResponse.getResponse(${lowerModelName}Service.removeByPrimaryKey(id));
+    }
+    
+    @PostMapping(value = "${exportRM}")
+	@ResponseBody
+	public Object export(@RequestBody ${upperModelName}ExportCondition condition) {
+		if (condition == null) {
+			return CommonResponse.getFailResponse("导出失败：请求参数异常");
+		}
+		condition.sortCellIndex();
+		${upperModelName}Query query = condition.getQuery();
+		try {
+			if (query != null) {
+				if (condition.isExportAll()) {
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, ${lowerModelName}Service.searchAll(query), ${upperModelName}.class));
+				} else if (condition.isExportPage()) {
+					return CommonResponse.getSuccessResponse("success",
+							ExportUtil.export(condition, ${lowerModelName}Service.searchPage(query).getData(), ${upperModelName}.class));
+				}
+			}
+			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
+		} catch (IOException | ExcelWriteException e) {
+			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
+		}
+	}
+}
