@@ -17,7 +17,6 @@ import com.paladin.data.database.model.Column;
 import com.paladin.data.database.model.DataBase;
 import com.paladin.data.database.model.Table;
 import com.paladin.data.model.DBConnection;
-import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.exception.BusinessException;
 
 @Service

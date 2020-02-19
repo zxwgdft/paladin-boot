@@ -7,7 +7,7 @@ import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.common.service.org.vo.OrgRoleVO;
 
-import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.web.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 
 import springfox.documentation.annotations.ApiIgnore;

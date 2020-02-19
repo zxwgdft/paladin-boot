@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.paladin.common.mapper.cache.SysVisitCacheMapper;
 import com.paladin.common.model.cache.SysVisitCache;
-import com.paladin.framework.core.ServiceSupport;
 
 @Service
 public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {

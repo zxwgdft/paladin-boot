@@ -1,7 +1,7 @@
 package com.paladin.common.model.syst;
 
 import com.paladin.framework.common.UnDeleteBaseModel;
-import com.paladin.framework.core.configuration.mybatis.GenIdImpl;
+import com.paladin.framework.mybatis.GenIdImpl;
 import lombok.Getter;
 import lombok.Setter;
 import tk.mybatis.mapper.annotation.KeySql;

@@ -5,7 +5,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.paladin.common.mapper.CommonMapper;
-import com.paladin.framework.core.VersionContainerDAO;
 
 public class DefaultVersionContainerDAO implements VersionContainerDAO{
 

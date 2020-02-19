@@ -8,9 +8,9 @@ import com.paladin.demo.service.org.dto.DemoAgencyDTO;
 import com.paladin.demo.service.org.vo.DemoAgencyVO;
 
 import com.paladin.common.core.export.ExportUtil;
-import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.query.QueryInputMethod;
-import com.paladin.framework.core.query.QueryOutputMethod;
+import com.paladin.framework.web.ControllerSupport;
+import com.paladin.framework.spring.annotation.QueryInputMethod;
+import com.paladin.framework.spring.annotation.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;

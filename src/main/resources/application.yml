@@ -10,7 +10,7 @@ spring:
       prefix: classpath:/templates
       suffix: .html
   profiles:
-    active: dev
+    active: @spring.profiles.active@
   servlet:
     multipart:
       max-file-size: 10MB
@@ -21,3 +21,7 @@ spring:
     prefix: classpath:/templates
     servlet:
       content-type: text/html
+
+mapper:
+  mappers: com.paladin.framework.mybatis.CustomMapper
+  enumAsSimpleType: true

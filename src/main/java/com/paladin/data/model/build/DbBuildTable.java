@@ -1,6 +1,6 @@
 package com.paladin.data.model.build;
 
-import com.paladin.framework.core.configuration.mybatis.GenIdImpl;
+import com.paladin.framework.mybatis.GenIdImpl;
 import lombok.Getter;
 import lombok.Setter;
 import tk.mybatis.mapper.annotation.KeySql;

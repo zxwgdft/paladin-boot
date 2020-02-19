@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.paladin.data.model.build.DbBuildTable;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.QueryType;
-import com.paladin.framework.core.ServiceSupport;
 
 @Service
 public class DbBuildTableService extends ServiceSupport<DbBuildTable> {

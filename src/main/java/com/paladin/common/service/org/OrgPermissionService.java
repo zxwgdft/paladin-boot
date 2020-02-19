@@ -8,7 +8,6 @@ import com.paladin.common.model.org.OrgPermission;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.QueryType;
-import com.paladin.framework.core.ServiceSupport;
 
 @Service
 public class OrgPermissionService extends ServiceSupport<OrgPermission> {

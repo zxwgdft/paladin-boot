@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.paladin.demo.model.org.DemoPersonnel;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.QueryType;
-import com.paladin.framework.core.ServiceSupport;
 
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;

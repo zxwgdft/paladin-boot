@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
 import com.paladin.common.model.org.OrgRolePermission;
-import com.paladin.framework.core.ServiceSupport;
 
 @Service
 public class OrgRolePermissionService extends ServiceSupport<OrgRolePermission> {

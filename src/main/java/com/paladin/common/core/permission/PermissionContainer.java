@@ -17,8 +17,6 @@ import com.paladin.common.service.org.OrgPermissionService;
 import com.paladin.common.service.org.OrgRolePermissionService;
 import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.core.VersionContainer;
-import com.paladin.framework.core.VersionContainerManager;
 
 @Component
 public class PermissionContainer implements VersionContainer {

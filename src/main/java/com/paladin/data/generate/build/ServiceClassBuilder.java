@@ -6,8 +6,6 @@ import com.paladin.data.generate.GenerateTableOption;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.paladin.framework.core.ServiceSupport;
-
 @Component
 public class ServiceClassBuilder extends SpringBootClassBuilder {
 

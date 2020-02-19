@@ -1,6 +1,5 @@
 package com.paladin.data.dynamic;
 
-import com.paladin.framework.core.VersionContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

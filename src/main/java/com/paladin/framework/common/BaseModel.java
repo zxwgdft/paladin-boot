@@ -1,59 +1,30 @@
 package com.paladin.framework.common;
 
-import tk.mybatis.mapper.annotation.Order;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.OrderBy;
+@Getter
+@Setter
+public abstract class BaseModel implements Serializable {
 
-public abstract class BaseModel {
+    public static final String COLUMN_FIELD_DELETED = "deleted";
+    public static final String COLUMN_FIELD_CREATE_TIME = "createTime";
 
-	public final static String COLUMN_FIELD_ID = "id";
-	public final static String COLUMN_FIELD_CREATE_TIME = "createTime";
-	
-	public final static int BOOLEAN_YES = 1;
-	public final static int BOOLEAN_NO = 0;
-
-
-	@Order("DESC")
-	private Date createTime;
-
-    private String createUserId;
-
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+    @ApiModelProperty("创建者")
+    private String createBy;
+    @ApiModelProperty("更新时间")
     private Date updateTime;
-    
-    private String updateUserId;
+    @ApiModelProperty("更新者")
+    private String updateBy;
+    @ApiModelProperty("是否删除")
+    private Boolean deleted;
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getCreateUserId() {
-		return createUserId;
-	}
-
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getUpdateUserId() {
-		return updateUserId;
-	}
-
-	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
-	}
-    
 }

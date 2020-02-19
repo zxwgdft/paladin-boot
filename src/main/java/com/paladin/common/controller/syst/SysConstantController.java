@@ -3,7 +3,7 @@ package com.paladin.common.controller.syst;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.service.syst.SysConstantService;
 import com.paladin.common.service.syst.dto.SysConstantQuery;
-import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.web.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 
 import springfox.documentation.annotations.ApiIgnore;

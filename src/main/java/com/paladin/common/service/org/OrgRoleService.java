@@ -13,7 +13,6 @@ import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.QueryType;
-import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
 

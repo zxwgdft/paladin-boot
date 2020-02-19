@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 
 @Component
 public class MapperClassBuilder extends SpringBootClassBuilder {

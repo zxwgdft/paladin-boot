@@ -37,7 +37,7 @@ import com.paladin.data.service.build.DbBuildTableService;
 import com.paladin.data.service.dto.DBConnectionDTO;
 import com.paladin.data.service.dto.DBConnectionQueryDTO;
 import com.paladin.data.service.vo.DBConnectionVO;
-import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.web.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.spring.DevCondition;
 import com.paladin.framework.utils.uuid.UUIDUtil;
