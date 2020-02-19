@@ -1,19 +1,18 @@
 package com.paladin.common.specific;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.Role;
-import com.paladin.framework.core.session.UserSession;
+import com.paladin.framework.service.UserSession;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 通用用户会话信息

@@ -1,6 +1,6 @@
 package com.paladin.common.model.org;
 
-import com.paladin.framework.common.UnDeleteBaseModel;
+import com.paladin.framework.common.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +8,9 @@ import javax.persistence.Id;
 
 @Getter
 @Setter
-public class OrgPermission extends UnDeleteBaseModel {
+public class OrgPermission extends BaseModel {
 
-    public static final String COLUMN_FIELD_GRANTABLE = "grantable";
+    public static final String FIELD_GRANTABLE = "grantable";
 
     @Id
     private String id;

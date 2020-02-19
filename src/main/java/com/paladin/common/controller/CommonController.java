@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.paladin.framework.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,7 @@ import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
 import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
-import com.paladin.framework.common.OffsetPage;
-import com.paladin.framework.core.exception.BusinessException;
-import com.paladin.framework.core.session.UserSession;
-import com.paladin.framework.web.response.CommonResponse;
+
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,7 +40,7 @@ public class CommonController {
     @GetMapping("/constant")
     @ResponseBody
     public Object enumConstants(@RequestParam("code") String[] code) {
-        return CommonResponse.getSuccessResponse(ConstantsContainer.getTypeChildren(code));
+        return R.success(ConstantsContainer.getTypeChildren(code));
     }
 
     @ApiOperation(value = "通过ID获取附件", response = SysAttachment.class)
@@ -50,7 +48,7 @@ public class CommonController {
     @GetMapping("/attachment/{id}")
     @ResponseBody
     public Object getAttachment(@PathVariable("id") String id) {
-        return CommonResponse.getSuccessResponse(attachmentService.get(id));
+        return R.success(attachmentService.get(id));
     }
 
     @ApiOperation(value = "通过ID获取多个附件", response = SysAttachment.class, responseContainer = "List")
@@ -58,7 +56,7 @@ public class CommonController {
     @GetMapping("/attachment")
     @ResponseBody
     public Object getAttachments(@RequestParam("id[]") String[] ids) {
-        return CommonResponse.getSuccessResponse(attachmentService.getAttachment(ids));
+        return R.success(attachmentService.getAttachment(ids));
     }
 
     @ApiOperation(value = "分页查询图片附件", response = SysAttachment.class, responseContainer = "List")
@@ -66,7 +64,7 @@ public class CommonController {
     @GetMapping("/resource/images")
     @ResponseBody
     public Object getImageResource(OffsetPage query) {
-        return CommonResponse.getSuccessResponse(attachmentService.getResourceImagePage(query));
+        return R.success(attachmentService.getResourceImagePage(query));
     }
 
     @ApiOperation(value = "上传附件文件", response = SysAttachment.class)
@@ -76,7 +74,7 @@ public class CommonController {
     @ResponseBody
     public Object uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(name = "filename", required = false) String name,
                              @RequestParam(name = "userType", required = false) Integer userType) {
-        return CommonResponse.getSuccessResponse(attachmentService.createAttachment(file, name, userType));
+        return R.success(attachmentService.createAttachment(file, name, userType));
     }
 
     @ApiOperation(value = "上传多个附件文件", response = SysAttachment.class)
@@ -93,7 +91,7 @@ public class CommonController {
             String filename = (names != null && names.length > i) ? names[i] : null;
             result[i] = attachmentService.createAttachment(file, filename, userType);
         }
-        return CommonResponse.getSuccessResponse(result);
+        return R.success(result);
     }
 
     @ApiOperation(value = "上传base64格式的附件文件", response = SysAttachment.class)
@@ -104,10 +102,10 @@ public class CommonController {
     public Object uploadFileByBase64(@RequestParam String fileStr, @RequestParam(required = false) String filename,
                                      @RequestParam(required = false) String fileType, @RequestParam(required = false) Integer userType) {
         if (fileStr == null || fileStr.length() == 0) {
-            return CommonResponse.getErrorResponse("上传文件为空");
+            return R.fail("上传文件为空");
         }
         SysAttachment result = attachmentService.createAttachment(fileStr, filename == null || filename.length() == 0 ? "附件" : filename, fileType, userType);
-        return CommonResponse.getSuccessResponse(result);
+        return R.success(result);
     }
 
     @ApiOperation(value = "上传图片，图片过大会被压缩", response = SysAttachment.class)
@@ -120,7 +118,7 @@ public class CommonController {
                                 @RequestParam(required = false) Integer userType, @RequestParam(required = false) Integer thumbnailWidth,
                                 @RequestParam(required = false) Integer thumbnailHeight) {
         SysAttachment result = attachmentService.createPictureAndCompress(picture, pictureName, userType, thumbnailWidth, thumbnailHeight);
-        return CommonResponse.getSuccessResponse(result);
+        return R.success(result);
     }
 
     @ApiOperation(value = "上传base64格式图片，图片过大会被压缩", response = SysAttachment.class)
@@ -134,7 +132,7 @@ public class CommonController {
                                      @RequestParam(required = false) String pictureType, @RequestParam(required = false) Integer userType,
                                      @RequestParam(required = false) Integer thumbnailWidth, @RequestParam(required = false) Integer thumbnailHeight) {
         SysAttachment result = attachmentService.createPictureAndCompress(pictureStr, pictureName, pictureType, userType, thumbnailWidth, thumbnailHeight);
-        return CommonResponse.getSuccessResponse(result);
+        return R.success(result);
     }
 
     @ApiOperation(value = "容器页面")
@@ -162,7 +160,7 @@ public class CommonController {
                 result.add(objectMap);
             }
 
-            return CommonResponse.getSuccessResponse(result);
+            return R.success(result);
         }
         return CommonResponse.getNoPermissionResponse("无权限");
     }
@@ -176,7 +174,7 @@ public class CommonController {
             long t1 = System.currentTimeMillis();
             VersionContainerManager.versionChanged(container);
             long t2 = System.currentTimeMillis();
-            return CommonResponse.getSuccessResponse("", t2 - t1);
+            return R.success("", t2 - t1);
         }
         return CommonResponse.getNoPermissionResponse("无权限");
     }
@@ -189,7 +187,7 @@ public class CommonController {
             long t1 = System.currentTimeMillis();
             VersionContainerManager.versionChanged();
             long t2 = System.currentTimeMillis();
-            return CommonResponse.getSuccessResponse("", t2 - t1);
+            return R.success("", t2 - t1);
         }
         return CommonResponse.getNoPermissionResponse("无权限");
     }

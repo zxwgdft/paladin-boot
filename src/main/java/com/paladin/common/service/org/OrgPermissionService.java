@@ -1,13 +1,14 @@
 package com.paladin.common.service.org;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.common.Condition;
-import com.paladin.framework.common.QueryType;
+import com.paladin.framework.service.Condition;
+import com.paladin.framework.service.QueryType;
+import com.paladin.framework.service.ServiceSupport;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service
 public class OrgPermissionService extends ServiceSupport<OrgPermission> {

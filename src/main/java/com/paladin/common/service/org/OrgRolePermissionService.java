@@ -1,14 +1,14 @@
 package com.paladin.common.service.org;
 
-import java.util.List;
-
+import com.paladin.common.core.permission.PermissionContainer;
+import com.paladin.common.mapper.org.OrgRolePermissionMapper;
+import com.paladin.common.model.org.OrgRolePermission;
+import com.paladin.framework.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.paladin.common.core.permission.PermissionContainer;
-import com.paladin.common.mapper.org.OrgRolePermissionMapper;
-import com.paladin.common.model.org.OrgRolePermission;
+import java.util.List;
 
 @Service
 public class OrgRolePermissionService extends ServiceSupport<OrgRolePermission> {

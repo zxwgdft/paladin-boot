@@ -13,8 +13,7 @@ public class UUIDUtil {
      *
      * @return
      */
-    public static String createUUID() {
-
+    public static String create32UUID() {
         byte[] randomBytes = new byte[16];
         numberGenerator.nextBytes(randomBytes);
         randomBytes[6] &= 0x0f; /* clear version */
@@ -41,11 +40,11 @@ public class UUIDUtil {
     }
 
     /**
-     * 创建16位UUID（对32位UUID进行Base64编码）
+     * 创建压缩的UUID（对32位UUID进行Base64编码）
      *
      * @return
      */
-    public static String create16UUID() {
+    public static String createUUID() {
         byte[] randomBytes = new byte[16];
         numberGenerator.nextBytes(randomBytes);
         return Base64.encodeBase64URLSafeString(randomBytes);
@@ -53,7 +52,7 @@ public class UUIDUtil {
 
     public static void main(String[] args) {
         for (int i = 0; i < 20; i++) {
-            System.out.println(create16UUID());
+            System.out.println(createUUID());
         }
     }
 

@@ -1,6 +1,6 @@
 package com.paladin.common.model.syst;
 
-import com.paladin.framework.common.UnDeleteBaseModel;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.mybatis.GenIdImpl;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class SysUser extends UnDeleteBaseModel implements Serializable {
+public class SysUser extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -1534400185542562200L;
 

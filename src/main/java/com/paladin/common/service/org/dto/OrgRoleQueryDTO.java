@@ -1,8 +1,8 @@
 package com.paladin.common.service.org.dto;
 
-import com.paladin.framework.common.OffsetPage;
-import com.paladin.framework.common.QueryCondition;
-import com.paladin.framework.common.QueryType;
+import com.paladin.framework.service.OffsetPage;
+import com.paladin.framework.service.QueryCondition;
+import com.paladin.framework.service.QueryType;
 
 public class OrgRoleQueryDTO extends OffsetPage {
 

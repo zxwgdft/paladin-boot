@@ -7,7 +7,7 @@ import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.exception.SystemExceptionCode;
 import com.paladin.framework.mybatis.CustomMapper;
-import com.paladin.framework.utils.ParseUtil;
+import com.paladin.framework.utils.convert.SimpleConvertUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import tk.mybatis.mapper.entity.EntityColumn;
@@ -17,10 +17,7 @@ import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <h2>业务支持类</h2>
@@ -54,7 +51,6 @@ public abstract class ServiceSupport<Model> {
     protected Example commonExample;
     protected boolean hasCommonCondition = false; // 是否有通用查询条件
 
-    protected boolean isUnDelete = false; // 是否不删除，进行逻辑删除
     protected boolean isBaseModel = false; // 是否基于基础模型
 
     /*
@@ -79,11 +75,6 @@ public abstract class ServiceSupport<Model> {
             isBaseModel = true;
         }
 
-        // 是否逻辑删除数据模型
-        if (BaseModel.class.isAssignableFrom(modelType)) {
-            isUnDelete = true;
-        }
-
         // 通用查询条件
 
         Class<?> type = this.getClass();
@@ -101,8 +92,8 @@ public abstract class ServiceSupport<Model> {
         }
 
         // 如果是逻辑删除模型，则所有查询中需要过滤删除数据
-        if (isUnDelete) {
-            commonConditions.add(new Condition(BaseModel.COLUMN_FIELD_DELETED, QueryType.EQUAL, 0));
+        if (isBaseModel) {
+            commonConditions.add(new Condition(BaseModel.FIELD_DELETED, QueryType.EQUAL, BaseModel.BOOLEAN_NO));
         }
 
         if (commonConditions.size() > 0) {
@@ -138,7 +129,7 @@ public abstract class ServiceSupport<Model> {
          * 如果没有排序规则，但是是基础对象则默认倒叙创建时间
          */
         if (!hasOrderBy && isBaseModel) {
-            orderByProperties = new String[]{BaseModel.COLUMN_FIELD_CREATE_TIME};
+            orderByProperties = new String[]{BaseModel.FIELD_CREATE_TIME};
             orderByTypes = new OrderType[]{OrderType.DESC};
             hasOrderBy = true;
         }
@@ -177,7 +168,6 @@ public abstract class ServiceSupport<Model> {
      * @return
      */
     private Condition createCondition(CommonCondition commonCondtion) {
-
         String v1 = commonCondtion.value();
         Class<?> type = commonCondtion.valueType();
         String name = commonCondtion.name();
@@ -191,14 +181,13 @@ public abstract class ServiceSupport<Model> {
                 String[] vs = v1.split(",");
                 ArrayList<Object> list = new ArrayList<>(vs.length);
                 for (String v : vs) {
-                    list.add(ParseUtil.parseString(v, type));
+                    list.add(SimpleConvertUtil.parseString(v, type));
                 }
                 o1 = list;
             } else {
-                o1 = ParseUtil.parseString(v1, type);
+                o1 = SimpleConvertUtil.parseString(v1, type);
             }
         }
-
         return new Condition(name, queryType, o1);
     }
 
@@ -841,7 +830,7 @@ public abstract class ServiceSupport<Model> {
     }
 
     public int removeByPrimaryKey(Object pk) {
-        if (isUnDelete) {
+        if (isBaseModel) {
             Model model = getSqlMapper().selectByPrimaryKey(pk);
             if (model != null) {
                 ((BaseModel) model).setDeleted(true);
@@ -927,7 +916,7 @@ public abstract class ServiceSupport<Model> {
             }
         }
 
-        if (isUnDelete) {
+        if (isBaseModel) {
             try {
                 Model model = modelType.newInstance();
                 ((BaseModel) model).setDeleted(true);
@@ -946,14 +935,33 @@ public abstract class ServiceSupport<Model> {
      *
      * @param model
      */
-    public abstract void updateModelWrap(Model model);
+    public void updateModelWrap(Model model) {
+        if (isBaseModel) {
+            Date now = new Date();
+            UserSession userSession = UserSession.getCurrentUserSession();
+            String uid = userSession == null ? "" : userSession.getUserId();
+            BaseModel baseModel = (BaseModel) model;
+            baseModel.setUpdateTime(now);
+            baseModel.setUpdateBy(uid);
+        }
+    }
 
     /**
      * 保存操作前需要对数据包裹，例如设置创建操作人与操作时间
      *
      * @param model
      */
-    public abstract void saveModelWrap(Model model);
+    public void saveModelWrap(Model model) {
+        if (isBaseModel) {
+            Date now = new Date();
+            UserSession userSession = UserSession.getCurrentUserSession();
+            String uid = userSession == null ? "" : userSession.getUserId();
+            BaseModel baseModel = (BaseModel) model;
+            baseModel.setCreateTime(now);
+            baseModel.setCreateBy(uid);
+            baseModel.setDeleted(false);
+        }
+    }
 
 
     // -----------------------------------------------------
