@@ -1,7 +1,7 @@
 package com.paladin.common.config;
 
-import com.paladin.common.model.syst.SysUser;
-import com.paladin.common.service.syst.SysUserService;
+import com.paladin.common.model.sys.SysUser;
+import com.paladin.common.service.sys.SysUserService;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;

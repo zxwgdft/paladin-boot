@@ -2,8 +2,8 @@ package com.paladin.common.controller;
 
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
-import com.paladin.common.model.syst.SysAttachment;
-import com.paladin.common.service.syst.SysAttachmentService;
+import com.paladin.common.model.sys.SysAttachment;
+import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;

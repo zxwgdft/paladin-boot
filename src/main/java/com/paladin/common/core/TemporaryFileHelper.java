@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.paladin.framework.web.WebProperties;
+import com.paladin.common.config.CommonWebProperties;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
 @Component
@@ -24,7 +24,7 @@ public class TemporaryFileHelper {
     private static Logger logger = LoggerFactory.getLogger(TemporaryFileHelper.class);
 
     @Autowired
-    private WebProperties webProperties;
+    private CommonWebProperties webProperties;
 
     private String tempPath;
 

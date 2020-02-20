@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.paladin.common.model.syst.SysAttachment;
-import com.paladin.common.service.syst.SysAttachmentService;
+import com.paladin.common.model.sys.SysAttachment;
+import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.framework.spring.SpringContainer;
 
 @Component

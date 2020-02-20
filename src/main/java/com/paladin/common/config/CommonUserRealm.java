@@ -1,7 +1,7 @@
 package com.paladin.common.config;
 
-import com.paladin.common.model.syst.SysUser;
-import com.paladin.common.service.syst.SysUserService;
+import com.paladin.common.model.sys.SysUser;
+import com.paladin.common.service.sys.SysUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;

@@ -1,8 +1,8 @@
 package com.paladin.common.config;
 
-import com.paladin.common.model.syst.SysLoggerLogin;
-import com.paladin.common.service.syst.SysLoggerLoginService;
-import com.paladin.common.service.syst.SysUserService;
+import com.paladin.common.model.sys.SysLoggerLogin;
+import com.paladin.common.service.sys.SysLoggerLoginService;
+import com.paladin.common.service.sys.SysUserService;
 import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.IPUtil;
 import com.paladin.framework.utils.uuid.UUIDUtil;

@@ -2,7 +2,7 @@ package com.paladin.demo.controller;
 
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
-import com.paladin.common.service.syst.SysUserService;
+import com.paladin.common.service.sys.SysUserService;
 import com.paladin.common.config.CommonUserSession;
 import com.paladin.framework.GlobalProperties;
 import com.paladin.framework.common.R;

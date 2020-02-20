@@ -115,7 +115,7 @@ public class ShiroConfiguration {
     @Bean(name = "shiroFilter")
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)
     public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager, ShiroProperties shiroProperties) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new PaladinShiroFilterFactoryBean(shiroProperties);
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new CommonShiroFilterFactoryBean(shiroProperties);
 
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);

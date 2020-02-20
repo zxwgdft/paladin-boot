@@ -1,7 +1,7 @@
 package com.paladin.common.core.container;
 
-import com.paladin.common.model.syst.SysConstant;
-import com.paladin.common.service.syst.SysConstantService;
+import com.paladin.common.model.sys.SysConstant;
+import com.paladin.common.service.sys.SysConstantService;
 import com.paladin.framework.service.VersionContainer;
 import com.paladin.framework.service.VersionContainerManager;
 import org.springframework.beans.factory.annotation.Autowired;

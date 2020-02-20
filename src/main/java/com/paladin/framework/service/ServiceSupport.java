@@ -316,9 +316,7 @@ public abstract class ServiceSupport<Model> {
      * @param example
      */
     protected Example buildOrderBy(Example example) {
-
         if (hasOrderBy) {
-
             if (example == null) {
                 example = getClearCurrentExample();
             }

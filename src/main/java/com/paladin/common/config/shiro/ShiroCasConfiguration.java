@@ -11,6 +11,7 @@ import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroCallbackLogic;
 import io.buji.pac4j.filter.CallbackFilter;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AbstractAuthenticator;
 import org.apache.shiro.authc.AuthenticationListener;
 import org.apache.shiro.authc.Authenticator;
@@ -28,8 +29,6 @@ import org.pac4j.cas.config.CasProtocol;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -54,12 +53,11 @@ import java.util.Map;
  * @author TontoZhou
  * @since 2018年3月21日
  */
+@Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "cas-enabled", havingValue = "true", matchIfMissing = false)
 @EnableConfigurationProperties(ShiroCasProperties.class)
 public class ShiroCasConfiguration {
-
-    private static Logger logger = LoggerFactory.getLogger(ShiroCasConfiguration.class);
 
     @Bean(name = "redisSessionDAO")
     public ShiroRedisSessionDAO redisSessionDAO(ShiroCasProperties shiroCasProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
@@ -121,7 +119,7 @@ public class ShiroCasConfiguration {
     @Bean(name = "shiroFilter")
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager, ShiroCasProperties shiroCasProperties) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new PaladinShiroFilterFactoryBean(shiroCasProperties);
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new CommonShiroFilterFactoryBean(shiroCasProperties);
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setUnauthorizedUrl(shiroCasProperties.getUnauthorizedUrl());

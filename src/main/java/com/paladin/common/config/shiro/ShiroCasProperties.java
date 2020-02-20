@@ -1,106 +1,49 @@
 package com.paladin.common.config.shiro;
 
-import com.paladin.common.config.shiro.ShiroProperties;
+import com.paladin.framework.GlobalProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.paladin.framework.GlobalProperties;
-
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "paladin.shiro")
 public class ShiroCasProperties extends ShiroProperties {
 
-	/**
-	 * CAS 服务端URL
-	 */
-	private String casServerUrl = "http://172.16.11.135:8001/cas";	
-	
-	/**
-	 * CAS 服务端登录URL
-	 */
-	private String casServerLoginUrl = "http://172.16.11.135:8001/cas/login";
+    /**
+     * CAS 服务端URL
+     */
+    private String casServerUrl;
 
-	/**
-	 * 客户端URL
-	 */
-	private String clientServerUrl = "http://172.16.11.135:8010";
-	
-	/**
-	 * CAS 客户端登录URL
-	 */
-	private String clientLoginUrl = "/" + GlobalProperties.project + "/login/cas";
-	
-	/**
-	 * CASFilter
-	 */
-	private String casFilterUrlPattern = "/" + GlobalProperties.project + "/cas";
+    /**
+     * CAS 服务端登录URL
+     */
+    private String casServerLoginUrl;
 
-	/**
-	 * CAS 协议
-	 */
-	private String casProtocol = "CAS30";
-	
-	/**
-	 * 
-	 */
-	private String casErrorUrl = "/static/html/error_cas_500.html";
-	
+    /**
+     * 客户端URL
+     */
+    private String clientServerUrl;
 
-	public String getCasServerUrl() {
-		return casServerUrl;
-	}
+    /**
+     * CAS 客户端登录URL
+     */
+    private String clientLoginUrl = "/" + GlobalProperties.project + "/login/cas";
 
-	public void setCasServerUrl(String casServerUrl) {
-		this.casServerUrl = casServerUrl;
-	}
+    /**
+     * CASFilter
+     */
+    private String casFilterUrlPattern = "/" + GlobalProperties.project + "/cas";
 
-	public String getCasServerLoginUrl() {
-		return casServerLoginUrl;
-	}
+    /**
+     * CAS 协议
+     */
+    private String casProtocol = "CAS30";
 
-	public void setCasServerLoginUrl(String casServerLoginUrl) {
-		this.casServerLoginUrl = casServerLoginUrl;
-	}
+    /**
+     *
+     */
+    private String casErrorUrl = "/static/html/error_cas_500.html";
 
-	public String getClientServerUrl() {
-		return clientServerUrl;
-	}
-
-	public void setClientServerUrl(String clientServerUrl) {
-		this.clientServerUrl = clientServerUrl;
-	}
-
-	public String getClientLoginUrl() {
-		return clientLoginUrl;
-	}
-
-	public void setClientLoginUrl(String clientLoginUrl) {
-		this.clientLoginUrl = clientLoginUrl;
-	}
-
-	public String getCasFilterUrlPattern() {
-		return casFilterUrlPattern;
-	}
-
-	public void setCasFilterUrlPattern(String casFilterUrlPattern) {
-		this.casFilterUrlPattern = casFilterUrlPattern;
-	}
-
-	public String getCasProtocol() {
-		return casProtocol;
-	}
-
-	public void setCasProtocol(String casProtocol) {
-		this.casProtocol = casProtocol;
-	}
-
-	public String getCasErrorUrl() {
-		return casErrorUrl;
-	}
-
-	public void setCasErrorUrl(String casErrorUrl) {
-		this.casErrorUrl = casErrorUrl;
-	}
-
-
-	
 
 }

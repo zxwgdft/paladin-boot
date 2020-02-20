@@ -1,8 +1,8 @@
 package com.paladin.demo.controller.org;
 
 import com.paladin.common.core.export.ExportUtil;
-import com.paladin.common.model.syst.SysAttachment;
-import com.paladin.common.service.syst.SysAttachmentService;
+import com.paladin.common.model.sys.SysAttachment;
+import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.demo.controller.org.dto.DemoPersonnelExportCondition;
 import com.paladin.demo.model.org.DemoPersonnel;
 import com.paladin.demo.service.org.DemoPersonnelService;
