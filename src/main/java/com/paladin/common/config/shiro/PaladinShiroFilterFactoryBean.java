@@ -1,4 +1,4 @@
-package com.paladin.framework.shiro;
+package com.paladin.common.config.shiro;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.paladin.common.config.shiro.ShiroProperties;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;

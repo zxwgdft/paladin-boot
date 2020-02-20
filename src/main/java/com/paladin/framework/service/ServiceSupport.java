@@ -829,17 +829,17 @@ public abstract class ServiceSupport<Model> {
         return getSqlMapper().updateByPrimaryKey(model);
     }
 
-    public int removeByPrimaryKey(Object pk) {
+    public boolean removeByPrimaryKey(Object pk) {
         if (isBaseModel) {
             Model model = getSqlMapper().selectByPrimaryKey(pk);
             if (model != null) {
                 ((BaseModel) model).setDeleted(true);
                 updateModelWrap(model);
-                return getSqlMapper().updateByPrimaryKey(model);
+                return getSqlMapper().updateByPrimaryKey(model) > 0;
             }
-            return 0;
+            return false;
         }
-        return getSqlMapper().deleteByPrimaryKey(pk);
+        return getSqlMapper().deleteByPrimaryKey(pk) > 0;
     }
 
     /**

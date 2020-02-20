@@ -3,11 +3,11 @@ package com.paladin.demo.controller;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.syst.SysUserService;
-import com.paladin.common.specific.CommonUserSession;
+import com.paladin.common.config.CommonUserSession;
 import com.paladin.framework.GlobalProperties;
+import com.paladin.framework.common.R;
+import com.paladin.framework.service.UserSession;
 import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
-import com.paladin.framework.core.session.UserSession;
-import com.paladin.framework.web.response.CommonResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -83,12 +83,12 @@ public class LoginController {
         }
     }
 
-    @ApiOperation(value = "修改密码", response = CommonResponse.class)
+    @ApiOperation("修改密码")
     @ApiImplicitParams({@ApiImplicitParam(name = "newPassword", value = "新密码", required = true), @ApiImplicitParam(name = "oldPassword", value = "旧密码")})
     @RequestMapping(value = "/update/password", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
-        return CommonResponse.getResponse(sysUserService.updateSelfPassword(newPassword, oldPassword));
+        return sysUserService.updateSelfPassword(newPassword, oldPassword) ? R.success() : R.fail("修改失败");
     }
 
     @ApiOperation(value = "登录页面")
@@ -121,10 +121,10 @@ public class LoginController {
     public Object ajaxLogin(HttpServletRequest request, HttpServletResponse response, Model model) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
-            return CommonResponse.getSuccessResponse("登录成功", UserSession.getCurrentUserSession().getUserForView());
+            return R.success(UserSession.getCurrentUserSession().getUserForView());
         } else {
             String errorMsg = (String) request.getAttribute(PaladinFormAuthenticationFilter.ERROR_KEY_LOGIN_FAIL_MESSAGE);
-            return CommonResponse.getFailResponse(errorMsg == null ? "登录失败" : errorMsg);
+            return R.fail(errorMsg == null ? "登录失败" : errorMsg);
         }
     }
 

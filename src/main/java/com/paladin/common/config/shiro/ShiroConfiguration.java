@@ -1,15 +1,6 @@
-package com.paladin.framework.shiro;
+package com.paladin.common.config.shiro;
 
-import com.paladin.framework.shiro.filter.PaladinCasAuthenticationFilter;
-import com.paladin.framework.shiro.filter.PaladinCasLogoutFilter;
-import com.paladin.framework.shiro.filter.PaladinShiroCallbackLogic;
-import com.paladin.framework.shiro.session.ClusterSessionFactory;
-import com.paladin.framework.shiro.session.PaladinWebSessionManager;
-import com.paladin.framework.shiro.session.ShiroRedisSessionDAO;
-import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.engine.ShiroCallbackLogic;
-import io.buji.pac4j.filter.CallbackFilter;
-import io.buji.pac4j.subject.Pac4jSubjectFactory;
+import com.paladin.framework.shiro.MultiRealmAuthenticator;
 import org.apache.shiro.authc.AbstractAuthenticator;
 import org.apache.shiro.authc.AuthenticationListener;
 import org.apache.shiro.authc.Authenticator;
@@ -21,12 +12,6 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.pac4j.cas.client.CasClient;
-import org.pac4j.cas.config.CasConfiguration;
-import org.pac4j.cas.config.CasProtocol;
-import org.pac4j.core.client.Clients;
-import org.pac4j.core.config.Config;
-import org.pac4j.core.context.J2EContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -38,11 +23,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import javax.servlet.Filter;
+import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
+import com.paladin.framework.shiro.filter.PaladinLogoutFilter;
+import com.paladin.framework.shiro.session.ClusterSessionFactory;
+import com.paladin.framework.shiro.session.PaladinWebSessionManager;
+import com.paladin.framework.shiro.session.ShiroRedisSessionDAO;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.Filter;
 
 /**
  * <h2>shiro配置</h2>
@@ -54,23 +46,27 @@ import java.util.Map;
  * @since 2018年3月21日
  */
 @Configuration
-@ConditionalOnProperty(prefix = "paladin", value = "cas-enabled", havingValue = "true", matchIfMissing = false)
-@EnableConfigurationProperties(ShiroCasProperties.class)
-public class ShiroCasConfiguration {
+@ConditionalOnProperty(prefix = "paladin", value = "shiro-enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(ShiroProperties.class)
+public class ShiroConfiguration {
 
-    private static Logger logger = LoggerFactory.getLogger(ShiroCasConfiguration.class);
+    private static Logger logger = LoggerFactory.getLogger(ShiroConfiguration.class);
 
     @Bean(name = "redisSessionDAO")
-    public ShiroRedisSessionDAO redisSessionDAO(ShiroCasProperties shiroCasProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
-        ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroCasProperties, jdkRedisTemplate);
+    public ShiroRedisSessionDAO redisSessionDAO(ShiroProperties shiroProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
+        ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroProperties, jdkRedisTemplate);
         return sessionDao;
     }
 
+    /**
+     * @return
+     * @see DefaultWebSessionManager
+     */
     @Bean(name = "sessionManager")
-    public DefaultWebSessionManager defaultWebSessionManager(ShiroCasProperties shiroCasProperties, ShiroRedisSessionDAO redisSessionDAO) {
-        DefaultWebSessionManager sessionManager = new PaladinWebSessionManager(shiroCasProperties);
+    public DefaultWebSessionManager defaultWebSessionManager(ShiroProperties shiroProperties, ShiroRedisSessionDAO redisSessionDAO) {
+        DefaultWebSessionManager sessionManager = new PaladinWebSessionManager(shiroProperties);
 
-        if (shiroCasProperties.isRedisEnabled()) {
+        if (shiroProperties.isRedisEnabled()) {
             // 如果设置集群共享session，需要redis来存放session
             sessionManager.setSessionDAO(redisSessionDAO);
             // 用户权限，认证等缓存设置，因为验证权限部分用其他方式实现，所以不需要缓存
@@ -86,7 +82,7 @@ public class ShiroCasConfiguration {
         // 单位为毫秒（1秒=1000毫秒） 3600000毫秒为1个小时
         sessionManager.setSessionValidationInterval(3600000);
         // 3600000 milliseconds = 1 hour
-        sessionManager.setGlobalSessionTimeout(shiroCasProperties.getSessionTime() * 60 * 1000);
+        sessionManager.setGlobalSessionTimeout(shiroProperties.getSessionTime() * 60 * 1000);
         // 是否删除无效的，默认也是开启
         sessionManager.setDeleteInvalidSessions(true);
         // 是否开启 检测，默认开启
@@ -98,12 +94,11 @@ public class ShiroCasConfiguration {
     }
 
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager defaultWebSecurityManage(DefaultWebSessionManager defaultWebSessionManager, List<Realm> realms, List<AuthenticationListener> authenticationListeners) {
+    public DefaultWebSecurityManager getDefaultWebSecurityManage(DefaultWebSessionManager defaultWebSessionManager, List<Realm> realms,
+                                                                 List<AuthenticationListener> authenticationListeners) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-
         securityManager.setAuthenticator(new MultiRealmAuthenticator());
         securityManager.setRealms(realms);
-        securityManager.setSubjectFactory(new Pac4jSubjectFactory()); // cas
 
         // 这是shiro提供的验证成功失败接口，如果在filter中处理登录成功失败不一定能覆盖所有情况
         Authenticator authenticator = securityManager.getAuthenticator();
@@ -119,58 +114,49 @@ public class ShiroCasConfiguration {
 
     @Bean(name = "shiroFilter")
     @ConditionalOnMissingBean(ShiroFilterFactoryBean.class)
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager, ShiroCasProperties shiroCasProperties) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new PaladinShiroFilterFactoryBean(shiroCasProperties);
+    public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager, ShiroProperties shiroProperties) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new PaladinShiroFilterFactoryBean(shiroProperties);
+
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setUnauthorizedUrl(shiroCasProperties.getUnauthorizedUrl());
+        // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+        shiroFilterFactoryBean.setLoginUrl(shiroProperties.getLoginUrl());
+        // 登录成功后要跳转的链接
+        shiroFilterFactoryBean.setSuccessUrl(shiroProperties.getSuccessUrl());
+        // 未授权界面;
+        shiroFilterFactoryBean.setUnauthorizedUrl(shiroProperties.getUnauthorizedUrl());
 
         // 增加自定义过滤
         Map<String, Filter> filters = new HashMap<>();
-        Config config = getConfig(shiroCasProperties);
 
-        CallbackFilter callbackFilter = new CallbackFilter();
-        callbackFilter.setConfig(config);
-        callbackFilter.setDefaultUrl(shiroCasProperties.getSuccessUrl());
-        ShiroCallbackLogic<Object, J2EContext> callbackLogic = new PaladinShiroCallbackLogic<>(shiroCasProperties);
-        callbackFilter.setCallbackLogic(callbackLogic);
-        filters.put("callback", callbackFilter);
-
-        PaladinCasLogoutFilter logoutFilter = new PaladinCasLogoutFilter(shiroCasProperties, config);
-        filters.put("logout", logoutFilter);
-
-        PaladinCasAuthenticationFilter authenticationFilter = new PaladinCasAuthenticationFilter(shiroCasProperties, config);
+        PaladinFormAuthenticationFilter authenticationFilter = new PaladinFormAuthenticationFilter();
         filters.put("authc", authenticationFilter);
+        filters.put("logout", new PaladinLogoutFilter());
 
         shiroFilterFactoryBean.setFilters(filters);
         // 拦截器.
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 
-        filterChainDefinitionMap.put(shiroCasProperties.getCasFilterUrlPattern(), "callback");
-        filterChainDefinitionMap.put(shiroCasProperties.getLogoutUrl(), "logout");
+        // anon（匿名） org.apache.shiro.web.filter.authc.AnonymousFilter
+        // authc（身份验证） org.apache.shiro.web.filter.authc.FormAuthenticationFilter
+        // authcBasic（http基本验证）org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
+        // logout（退出） org.apache.shiro.web.filter.authc.LogoutFilter
+        // noSessionCreation org.apache.shiro.web.filter.session.NoSessionCreationFilter
+        // perms(许可验证) org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter
+        // port（端口验证） org.apache.shiro.web.filter.authz.PortFilter
+        // rest (rest方面) org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter
 
-        Map<String, String> filterChainDefinition = shiroCasProperties.getFilterChainDefinition();
+        filterChainDefinitionMap.put(shiroProperties.getLogoutUrl(), "logout");
+
+        Map<String, String> filterChainDefinition = shiroProperties.getFilterChainDefinition();
         if (filterChainDefinition != null) {
             filterChainDefinitionMap.putAll(filterChainDefinition);
         }
 
         filterChainDefinitionMap.put("/**", "authc");
+
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
-    }
-
-    private Config getConfig(ShiroCasProperties cas) {
-        CasConfiguration casConfiguration = new CasConfiguration(cas.getCasServerLoginUrl(), cas.getCasServerUrl() + "/");
-        casConfiguration.setAcceptAnyProxy(true);
-        casConfiguration.setProtocol(CasProtocol.valueOf(cas.getCasProtocol()));
-
-        CasClient casClient = new CasClient(casConfiguration);
-        casClient.setCallbackUrl(cas.getClientServerUrl() + cas.getCasFilterUrlPattern() + "?client_name=CasClient");
-
-        Clients clients = new Clients(cas.getClientServerUrl() + cas.getCasFilterUrlPattern() + "?client_name=CasClient", casClient);
-        Config config = new Config(clients);
-        config.setSessionStore(new ShiroSessionStore());
-        return config;
     }
 
     @Bean(name = "authenticationStrategy")

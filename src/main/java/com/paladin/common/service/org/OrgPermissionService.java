@@ -13,8 +13,8 @@ import java.util.List;
 @Service
 public class OrgPermissionService extends ServiceSupport<OrgPermission> {
 
-	public List<OrgPermission> findGrantablePermission() {
-		return searchAll(new Condition(OrgPermission.COLUMN_FIELD_GRANTABLE, QueryType.EQUAL, BaseModel.BOOLEAN_YES));
-	}
+    public List<OrgPermission> findGrantablePermission() {
+        return searchAll(new Condition(OrgPermission.FIELD_GRANTABLE, QueryType.EQUAL, BaseModel.BOOLEAN_YES));
+    }
 
 }

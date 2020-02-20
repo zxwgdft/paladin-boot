@@ -1,11 +1,12 @@
-package com.paladin.framework.shiro;
+package com.paladin.common.config.shiro;
 
+import com.paladin.common.config.shiro.ShiroProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.paladin.framework.GlobalProperties;
 
 @ConfigurationProperties(prefix = "paladin.shiro")
-public class ShiroCasProperties extends ShiroProperties{
+public class ShiroCasProperties extends ShiroProperties {
 
 	/**
 	 * CAS 服务端URL

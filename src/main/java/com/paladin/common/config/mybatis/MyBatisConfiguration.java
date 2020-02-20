@@ -1,5 +1,6 @@
-package com.paladin.framework.mybatis;
+package com.paladin.common.config.mybatis;
 
+import com.paladin.framework.mybatis.EnumTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

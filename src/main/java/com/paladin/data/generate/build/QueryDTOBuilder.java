@@ -1,13 +1,12 @@
 package com.paladin.data.generate.build;
 
+import com.paladin.data.generate.GenerateTableOption;
+import com.paladin.framework.service.OffsetPage;
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
-import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.common.OffsetPage;
 
 @Component
 public class QueryDTOBuilder extends SpringBootClassBuilder {

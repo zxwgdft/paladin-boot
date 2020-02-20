@@ -1,6 +1,6 @@
 package com.paladin.common.service.org.dto;
 
-import com.paladin.framework.common.OffsetPage;
+import com.paladin.framework.service.OffsetPage;
 
 public class OrgPermissionQueryDTO extends OffsetPage {
 

@@ -1,6 +1,6 @@
 package com.paladin.framework.jwt;
 
-import com.paladin.framework.utils.random.RandomUtil;
+import com.paladin.framework.utils.others.RandomUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

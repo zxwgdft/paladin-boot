@@ -13,7 +13,6 @@ import java.util.*;
  * @author TontoZhou
  */
 @Slf4j
-@Component
 public class SpringContainerManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean initialized = false;

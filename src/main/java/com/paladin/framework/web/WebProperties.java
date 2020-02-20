@@ -1,13 +1,13 @@
 package com.paladin.framework.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.paladin.framework.GlobalProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.paladin.framework.GlobalProperties;
-
 @ConfigurationProperties(prefix = "paladin.web")
+@Getter
+@Setter
 public class WebProperties {
 
     /**
@@ -34,60 +34,6 @@ public class WebProperties {
      * root view
      */
     private String rootView = "redirect:/" + GlobalProperties.project + "/login";
-
-    /**
-     * url跳转配置
-     */
-    private List<UrlForwardOption> forwards = new ArrayList<>();
-
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public int getFileMaxSize() {
-        return fileMaxSize;
-    }
-
-    public void setFileMaxSize(int fileMaxSize) {
-        this.fileMaxSize = fileMaxSize;
-    }
-
-    public String getStaticPath() {
-        return staticPath;
-    }
-
-    public void setStaticPath(String staticPath) {
-        this.staticPath = staticPath;
-    }
-
-    public String getFaviconPath() {
-        return faviconPath;
-    }
-
-    public void setFaviconPath(String faviconPath) {
-        this.faviconPath = faviconPath;
-    }
-
-    public String getRootView() {
-        return rootView;
-    }
-
-    public void setRootView(String rootView) {
-        this.rootView = rootView;
-    }
-
-    public List<UrlForwardOption> getForwards() {
-        return forwards;
-    }
-
-    public void setForwards(List<UrlForwardOption> forwards) {
-        this.forwards = forwards;
-    }
 
 
 }

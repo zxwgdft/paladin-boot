@@ -1,31 +1,28 @@
 package com.paladin.common.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.paladin.framework.common.R;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
 import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
-
-
+import com.paladin.framework.common.HttpCode;
+import com.paladin.framework.common.R;
+import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.OffsetPage;
+import com.paladin.framework.service.UserSession;
+import com.paladin.framework.service.VersionContainerManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Api("通用操作管理")
 @Controller
@@ -149,10 +146,10 @@ public class CommonController {
     @ResponseBody
     public Object findContainers() {
         if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            List<VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
+            List<VersionContainerManager.VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
             List<Map<String, Object>> result = new ArrayList<>();
 
-            for (VersionObject versionObject : versionObjects) {
+            for (VersionContainerManager.VersionObject versionObject : versionObjects) {
                 Map<String, Object> objectMap = new HashMap<>();
                 objectMap.put("id", versionObject.getId());
                 objectMap.put("updateTime", versionObject.getUpdateTime());
@@ -162,7 +159,7 @@ public class CommonController {
 
             return R.success(result);
         }
-        return CommonResponse.getNoPermissionResponse("无权限");
+        return R.fail(HttpCode.UNAUTHORIZED);
     }
 
     @ApiOperation(value = "重启容器")
@@ -174,9 +171,9 @@ public class CommonController {
             long t1 = System.currentTimeMillis();
             VersionContainerManager.versionChanged(container);
             long t2 = System.currentTimeMillis();
-            return R.success("", t2 - t1);
+            return R.success(t2 - t1);
         }
-        return CommonResponse.getNoPermissionResponse("无权限");
+        return R.fail(HttpCode.UNAUTHORIZED);
     }
 
     @ApiOperation(value = "重启所有容器")
@@ -187,9 +184,9 @@ public class CommonController {
             long t1 = System.currentTimeMillis();
             VersionContainerManager.versionChanged();
             long t2 = System.currentTimeMillis();
-            return R.success("", t2 - t1);
+            return R.success(t2 - t1);
         }
-        return CommonResponse.getNoPermissionResponse("无权限");
+        return R.fail(HttpCode.UNAUTHORIZED);
     }
 
     @ApiOperation(value = "异常测试")

@@ -1,12 +1,12 @@
 package com.paladin.common.core.container;
 
-import java.util.Date;
-
+import com.paladin.common.mapper.CommonMapper;
+import com.paladin.framework.service.VersionContainerDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.paladin.common.mapper.CommonMapper;
+import java.util.Date;
 
-public class DefaultVersionContainerDAO implements VersionContainerDAO{
+public class DefaultVersionContainerDAO implements VersionContainerDAO {
 
 	@Autowired
 	private CommonMapper commonMapper;

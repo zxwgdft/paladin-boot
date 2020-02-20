@@ -1,8 +1,9 @@
-package com.paladin.common.specific;
+package com.paladin.common.config;
 
 import com.paladin.common.core.container.DefaultVersionContainerDAO;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.template.TontoDialect;
+import com.paladin.framework.service.VersionContainerDAO;
 import io.buji.pac4j.realm.Pac4jRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.AuthorizingRealm;

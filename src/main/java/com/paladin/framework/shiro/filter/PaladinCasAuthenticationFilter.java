@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.paladin.framework.shiro.ShiroCasProperties;
+import com.paladin.common.config.shiro.ShiroCasProperties;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.pac4j.core.client.Client;
@@ -17,7 +17,7 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 
-import com.paladin.framework.PaladinConstants;
+import com.paladin.framework.shiro.ShiroConfigConstants;
 
 import io.buji.pac4j.engine.ShiroSecurityLogic;
 import io.buji.pac4j.filter.SecurityFilter;
@@ -74,11 +74,11 @@ public class PaladinCasAuthenticationFilter extends PaladinFormAuthenticationFil
 		}
 
 		String loginType = (String) httpRequest.getSession().getAttribute(loginTypeField);
-		return PaladinConstants.LOGIN_TYPE_CAS.equals(loginType);
+		return ShiroConfigConstants.LOGIN_TYPE_CAS.equals(loginType);
 	}
 
 	protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
-		subject.getSession().setAttribute(loginTypeField, PaladinConstants.LOGIN_TYPE_LOCAL);
+		subject.getSession().setAttribute(loginTypeField, ShiroConfigConstants.LOGIN_TYPE_LOCAL);
 		return super.onLoginSuccess(token, subject, request, response);
 	}
 

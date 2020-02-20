@@ -8,10 +8,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.paladin.framework.shiro.ShiroCasProperties;
+import com.paladin.common.config.shiro.ShiroCasProperties;
 import org.pac4j.core.config.Config;
 
-import com.paladin.framework.PaladinConstants;
+import com.paladin.framework.shiro.ShiroConfigConstants;
 
 import io.buji.pac4j.filter.LogoutFilter;
 
@@ -41,7 +41,7 @@ public class PaladinCasLogoutFilter extends PaladinLogoutFilter {
 
 	private boolean isCas(HttpServletRequest httpRequest) {
 		String loginType = (String) httpRequest.getSession().getAttribute(loginTypeField);
-		return PaladinConstants.LOGIN_TYPE_CAS.equals(loginType);
+		return ShiroConfigConstants.LOGIN_TYPE_CAS.equals(loginType);
 	}
 
 }

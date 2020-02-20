@@ -1,4 +1,4 @@
-package com.paladin.common.specific;
+package com.paladin.common.config;
 
 import com.paladin.framework.utils.IPUtil;
 import org.apache.shiro.SecurityUtils;

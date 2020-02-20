@@ -3,6 +3,7 @@ package com.paladin.framework.web;
 import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;
 import com.paladin.framework.utils.convert.SimpleBeanCopier;
+import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,16 +34,16 @@ public class ControllerSupport {
     }
 
     protected <T> T beanCopy(Object source, T target) {
-        SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(source, target, true);
+        SimpleBeanCopyUtil.simpleCopy(source, target, true);
         return target;
     }
 
     public <T> List<T> beanCopyList(List<?> sourceList, Class<T> targetType) {
-        return SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopyList(sourceList, targetType);
+        return SimpleBeanCopyUtil.simpleCopyList(sourceList, targetType);
     }
 
     public <T> List<T> beanCopyList(List<?> sourceList, List<T> targeList) {
-        return SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopyList(sourceList, targeList);
+        return SimpleBeanCopyUtil.simpleCopyList(sourceList, targeList);
     }
 
     public ModelAndView returnErrorView(String errorMessage) {

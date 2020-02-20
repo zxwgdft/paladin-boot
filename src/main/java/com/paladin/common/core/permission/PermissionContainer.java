@@ -1,15 +1,5 @@
 package com.paladin.common.core.permission;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.model.org.OrgRolePermission;
@@ -17,6 +7,17 @@ import com.paladin.common.service.org.OrgPermissionService;
 import com.paladin.common.service.org.OrgRolePermissionService;
 import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.service.VersionContainer;
+import com.paladin.framework.service.VersionContainerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class PermissionContainer implements VersionContainer {

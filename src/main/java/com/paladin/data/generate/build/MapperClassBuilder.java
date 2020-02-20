@@ -1,5 +1,6 @@
 package com.paladin.data.generate.build;
 
+import com.paladin.framework.mybatis.CustomMapper;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.generate.GenerateBuilderContainer;

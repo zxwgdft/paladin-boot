@@ -1,10 +1,9 @@
 package com.paladin.framework.web;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.paladin.framework.spring.SpringHandlerInterceptor;
+import com.paladin.framework.web.convert.DateFormatter;
+import com.paladin.framework.web.convert.Integer2EnumConverterFactory;
+import com.paladin.framework.web.convert.String2EnumConverterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,8 +21,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.paladin.framework.spring.SpringHandlerInterceptor;
-import com.paladin.framework.core.format.DateFormatter;
+import javax.annotation.Resource;
+import java.util.Date;
 
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "web-enabled", havingValue = "true", matchIfMissing = true)
@@ -63,21 +62,17 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		if (rootView != null && rootView.length() > 0) {
 			registry.addViewController("/").setViewName(rootView);
 		}
-
-		List<UrlForwardOption> forwards = webProperties.getForwards();
-		if (forwards != null) {
-			for (UrlForwardOption forward : forwards) {
-				registry.addViewController(forward.getFrom()).setViewName(forward.getTo());
-			}
-		}
 	}
 
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new SpringHandlerInterceptor());
 	}
 
+	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		registry.addFormatterForFieldType(Date.class, new DateFormatter());
+		registry.addConverterFactory(new Integer2EnumConverterFactory());
+		registry.addConverterFactory(new String2EnumConverterFactory());
 	}
 
 	@Bean

@@ -1,32 +1,20 @@
 package com.paladin.common.service.upload;
 
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.paladin.framework.exception.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.paladin.framework.core.exception.BusinessException;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 
+@Slf4j
 @Component
 public class BigFileUploaderContainer {
-
-    private static Logger logger = LoggerFactory.getLogger(BigFileUploaderContainer.class);
 
     @Value("${paladin.upload.dir}")
     private String targetFolder;
@@ -43,10 +31,10 @@ public class BigFileUploaderContainer {
         Path root = Paths.get(targetFolder);
         try {
             Files.createDirectories(root);
-            logger.info("大文件存放目录：" + targetFolder);
+            log.info("大文件存放目录：" + targetFolder);
             initialized = true;
         } catch (Exception e) {
-            logger.error("创建大文件存放目录异常[" + targetFolder + "]", e);
+            log.error("创建大文件存放目录异常[" + targetFolder + "]", e);
             initialized = false;
         }
     }
@@ -99,7 +87,7 @@ public class BigFileUploaderContainer {
         try {
             cleanUploader(60);
         } catch (Exception e) {
-            logger.info("清理Uploader失败", e);
+            log.info("清理Uploader失败", e);
         }
 
     }

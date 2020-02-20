@@ -1,13 +1,12 @@
 package com.paladin.framework.shiro;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.pam.AuthenticationStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.realm.Realm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -17,9 +16,8 @@ import java.util.Collection;
  * @author TontoZhou
  * @since 2019/11/27
  */
+@Slf4j
 public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
-
-    private static final Logger log = LoggerFactory.getLogger(MultiRealmAuthenticator.class);
 
     /**
      * 重写该方法保证异常正确抛出,需要多个Realm支持不同Token，否则会出现异常覆盖
@@ -74,7 +72,7 @@ public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
             }
         }
 
-        if(authException != null) {
+        if (authException != null) {
             throw authException;
         }
 

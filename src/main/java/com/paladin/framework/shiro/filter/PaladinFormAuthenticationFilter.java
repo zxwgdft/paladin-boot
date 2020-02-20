@@ -1,8 +1,9 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.core.session.UserSession;
+import com.paladin.framework.common.HttpCode;
+import com.paladin.framework.common.R;
+import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.WebUtil;
-import com.paladin.framework.web.response.CommonResponse;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.subject.Subject;
@@ -43,7 +44,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
             }
 
             if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-                WebUtil.sendJsonByCors((HttpServletResponse) response, CommonResponse.getUnLoginResponse("未登录或会话超时"));
+                WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, "未登录或会话超时"));
             } else {
                 saveRequestAndRedirectToLogin(request, response);
             }
@@ -54,7 +55,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, CommonResponse.getSuccessResponse(UserSession.getCurrentUserSession().getUserForView()));
+            WebUtil.sendJsonByCors((HttpServletResponse) response, R.success(UserSession.getCurrentUserSession().getUserForView()));
             return false;
         } else {
             issueSuccessRedirect(request, response);
@@ -87,7 +88,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
         }
 
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, CommonResponse.getUnLoginResponse(errorMsg));
+            WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, errorMsg));
             return false;
         } else {
             setFailureAttribute(request, e);

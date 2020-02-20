@@ -1,12 +1,7 @@
 package com.paladin.framework.shiro.session;
 
-import java.io.Serializable;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
-import com.paladin.framework.shiro.ShiroProperties;
+import com.paladin.common.config.shiro.ShiroProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.SessionKey;
@@ -14,13 +9,15 @@ import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.session.mgt.WebSessionKey;
 import org.apache.shiro.web.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+
+@Slf4j
 public class PaladinWebSessionManager extends DefaultWebSessionManager {
-
-	private static Logger logger = LoggerFactory.getLogger(PaladinWebSessionManager.class);
-
+	
 	private String tokenField;	
 	private boolean isCluster = false;
 
@@ -75,8 +72,8 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
 
 		Serializable sessionId = getSessionId(sessionKey);
 		if (sessionId == null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a session could not be found.", sessionKey);
+			if (log.isDebugEnabled()) {
+				log.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a session could not be found.", sessionKey);
 			}
 
 			return null;

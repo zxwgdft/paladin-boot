@@ -1,12 +1,12 @@
 package com.paladin.data.service.build;
 
-import java.util.List;
-
+import com.paladin.data.model.build.DbBuildTable;
+import com.paladin.framework.service.Condition;
+import com.paladin.framework.service.QueryType;
+import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Service;
 
-import com.paladin.data.model.build.DbBuildTable;
-import com.paladin.framework.common.Condition;
-import com.paladin.framework.common.QueryType;
+import java.util.List;
 
 @Service
 public class DbBuildTableService extends ServiceSupport<DbBuildTable> {

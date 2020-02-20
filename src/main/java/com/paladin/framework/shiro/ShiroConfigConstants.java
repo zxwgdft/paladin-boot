@@ -1,6 +1,6 @@
-package com.paladin.framework;
+package com.paladin.framework.shiro;
 
-public class PaladinConstants {
+public class ShiroConfigConstants {
 
 	/** 登录方式 */
 	public final static String LOGIN_TYPE_LOCAL = "local";

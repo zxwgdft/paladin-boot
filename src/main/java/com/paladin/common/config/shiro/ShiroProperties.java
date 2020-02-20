@@ -1,4 +1,4 @@
-package com.paladin.framework.shiro;
+package com.paladin.common.config.shiro;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

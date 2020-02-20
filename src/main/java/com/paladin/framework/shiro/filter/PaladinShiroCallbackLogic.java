@@ -3,7 +3,7 @@ package com.paladin.framework.shiro.filter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import com.paladin.framework.shiro.ShiroCasProperties;
+import com.paladin.common.config.shiro.ShiroCasProperties;
 import org.apache.shiro.authc.ConcurrentAccessException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -13,7 +13,7 @@ import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
 
-import com.paladin.framework.PaladinConstants;
+import com.paladin.framework.shiro.ShiroConfigConstants;
 
 import io.buji.pac4j.engine.ShiroCallbackLogic;
 
@@ -44,7 +44,7 @@ public class PaladinShiroCallbackLogic<R, C extends J2EContext> extends ShiroCal
 
 	protected HttpAction redirectToOriginallyRequestedUrl(final C context, final String defaultUrl) {
 		HttpAction action = super.redirectToOriginallyRequestedUrl(context, defaultUrl);
-		context.getRequest().getSession().setAttribute(loginTypeField, PaladinConstants.LOGIN_TYPE_CAS);
+		context.getRequest().getSession().setAttribute(loginTypeField, ShiroConfigConstants.LOGIN_TYPE_CAS);
 		return action;
 	}
 

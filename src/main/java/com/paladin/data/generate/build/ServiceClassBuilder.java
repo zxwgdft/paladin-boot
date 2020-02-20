@@ -3,6 +3,7 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateTableOption;
 
+import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 

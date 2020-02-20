@@ -1,13 +1,5 @@
 package com.paladin.data.service;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.springframework.stereotype.Service;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.paladin.data.database.CommonDataBase;
 import com.paladin.data.database.DataBaseConfig;
@@ -17,7 +9,14 @@ import com.paladin.data.database.model.Column;
 import com.paladin.data.database.model.DataBase;
 import com.paladin.data.database.model.Table;
 import com.paladin.data.model.DBConnection;
-import com.paladin.framework.core.exception.BusinessException;
+import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.ServiceSupport;
+import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class DBConnectionService extends ServiceSupport<DBConnection> {

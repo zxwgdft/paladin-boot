@@ -2,7 +2,6 @@ package com.paladin.framework.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,9 +21,9 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
  * @author TontoZhou
  * @since 2018年3月15日
  */
+@Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
-@Slf4j
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfiguration extends CachingConfigurerSupport {
 
@@ -40,26 +39,19 @@ public class RedisConfiguration extends CachingConfigurerSupport {
 
     @Bean
     public CacheManager cacheManager(JedisConnectionFactory jedisConnectionFactory) {
-        log.info("创建CacheManager");
         RedisCacheManager redisCacheManager = RedisCacheManager.create(jedisConnectionFactory);
         return redisCacheManager;
     }
 
     @Bean("jdkRedisTemplate")
-    @ConditionalOnMissingBean
     public RedisTemplate<String, Object> getJdkRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-        log.debug("getJdkRedisTemplate()");
-
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
         return redisTemplate;
     }
 
     @Bean("jsonRedisTemplate")
-    @ConditionalOnMissingBean
     public RedisTemplate<String, Object> getJsonRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-        log.debug("getJsonRedisTemplate()");
-
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setKeySerializer(redisTemplate.getStringSerializer());
@@ -79,9 +71,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     @Bean("stringRedisTemplate")
-    @ConditionalOnMissingBean
     public RedisTemplate<String, String> getStringRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-        log.debug("getStringRedisTemplate()");
         return new StringRedisTemplate(jedisConnectionFactory);
     }
 
