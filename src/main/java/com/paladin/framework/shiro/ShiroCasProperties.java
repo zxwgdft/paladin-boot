@@ -1,4 +1,4 @@
-package com.paladin.common.config.shiro;
+package com.paladin.framework.shiro;
 
 import com.paladin.framework.GlobalProperties;
 import lombok.Getter;

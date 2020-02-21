@@ -1,4 +1,4 @@
-package com.paladin.framework.web;
+package com.paladin.common.core;
 
 import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;

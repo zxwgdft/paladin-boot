@@ -1,4 +1,4 @@
-package com.paladin.common.config;
+package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysUserService;

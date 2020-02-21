@@ -8,7 +8,7 @@ import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.common.service.org.vo.OrgRoleVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-import com.paladin.framework.web.ControllerSupport;
+import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

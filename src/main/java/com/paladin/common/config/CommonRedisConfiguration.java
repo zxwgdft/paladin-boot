@@ -1,4 +1,4 @@
-package com.paladin.framework.redis;
+package com.paladin.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
 @EnableConfigurationProperties(RedisProperties.class)
-public class RedisConfiguration extends CachingConfigurerSupport {
+public class CommonRedisConfiguration extends CachingConfigurerSupport {
 
     @Bean
     public JedisConnectionFactory getJedisConnectionFactory(RedisProperties redisProperties) {

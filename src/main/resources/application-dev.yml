@@ -32,7 +32,7 @@ spring:
 
 
 paladin:
-  cas-enabled: true
+  cas-enabled: false
   shiro:
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS30
@@ -40,7 +40,6 @@ paladin:
     cas-server-url: http://58.210.169.168:9091
     client-server-url: http://192.168.31.128:8010
     filter-chain-definition:
-      '[/demo/platform/login]': 'anon'
   shiro-enabled: false
   upload:
     dir: D:/file/upload/

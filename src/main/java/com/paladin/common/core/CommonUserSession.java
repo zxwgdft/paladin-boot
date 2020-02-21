@@ -1,4 +1,4 @@
-package com.paladin.common.config;
+package com.paladin.common.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.common.core.permission.MenuPermission;

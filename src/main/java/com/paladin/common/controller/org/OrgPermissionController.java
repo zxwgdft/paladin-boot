@@ -1,6 +1,6 @@
 package com.paladin.common.controller.org;
 
-import com.paladin.framework.web.ControllerSupport;
+import com.paladin.common.core.ControllerSupport;
 
 import springfox.documentation.annotations.ApiIgnore;
 

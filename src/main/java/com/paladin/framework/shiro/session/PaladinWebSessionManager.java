@@ -1,6 +1,6 @@
 package com.paladin.framework.shiro.session;
 
-import com.paladin.common.config.shiro.ShiroProperties;
+import com.paladin.framework.shiro.ShiroProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;

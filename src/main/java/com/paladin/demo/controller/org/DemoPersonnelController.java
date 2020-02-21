@@ -16,7 +16,7 @@ import com.paladin.framework.excel.write.ValueFormator;
 import com.paladin.framework.spring.annotation.QueryInputMethod;
 import com.paladin.framework.spring.annotation.QueryOutputMethod;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-import com.paladin.framework.web.ControllerSupport;
+import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

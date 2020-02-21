@@ -8,7 +8,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.paladin.common.config.shiro.ShiroCasProperties;
+import com.paladin.framework.shiro.ShiroCasProperties;
 import org.pac4j.core.config.Config;
 
 import com.paladin.framework.shiro.ShiroConfigConstants;

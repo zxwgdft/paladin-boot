@@ -3,7 +3,7 @@ package com.paladin.framework.shiro.filter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import com.paladin.common.config.shiro.ShiroCasProperties;
+import com.paladin.framework.shiro.ShiroCasProperties;
 import org.apache.shiro.authc.ConcurrentAccessException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;

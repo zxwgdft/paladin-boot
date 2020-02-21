@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.paladin.common.config.shiro.ShiroCasProperties;
+import com.paladin.framework.shiro.ShiroCasProperties;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.pac4j.core.client.Client;
