@@ -4,6 +4,10 @@ import com.paladin.common.model.sys.SysConstant;
 import com.paladin.common.service.sys.SysConstantService;
 import com.paladin.framework.service.VersionContainer;
 import com.paladin.framework.service.VersionContainerManager;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +27,6 @@ public class ConstantsContainer implements VersionContainer {
     private static Map<String, List<KeyValue>> otherConstantMap = new HashMap<>();
 
     public synchronized boolean initialize(boolean needReadTable) {
-
         if (needReadTable) {
             Map<String, List<KeyValue>> enumConstantMap = new HashMap<>();
             Map<String, Map<String, String>> constantValueMap = new HashMap<>();
@@ -198,27 +201,13 @@ public class ConstantsContainer implements VersionContainer {
         return null;
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public final static class KeyValue {
         private String key;
         private String value;
-
-        public KeyValue(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public KeyValue(int key, String value) {
-            this.key = String.valueOf(key);
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 
 }
