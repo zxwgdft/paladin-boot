@@ -1,8 +1,8 @@
 package com.paladin.common.controller.upload;
 
 
-import com.paladin.common.service.upload.BigFileUploader;
-import com.paladin.common.service.upload.BigFileUploaderContainer;
+import com.paladin.common.utils.upload.BigFileUploader;
+import com.paladin.common.utils.upload.BigFileUploaderContainer;
 import com.paladin.framework.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,7 +51,6 @@ public class BigFileUploadController {
         }
         return R.success(result);
     }
-
 
     @GetMapping(value = "/find/file")
     @ResponseBody

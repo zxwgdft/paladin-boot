@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import java.util.Map;
  *
  * @author TontZhou
  */
-@Component
 public class SpringBeanHelper implements ApplicationContextAware {
 
     private final static Logger logger = LoggerFactory.getLogger(SpringBeanHelper.class);

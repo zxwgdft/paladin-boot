@@ -1,5 +1,6 @@
 package com.paladin.common.controller.org;
 
+import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.service.org.OrgPermissionService;
 import com.paladin.common.service.org.OrgRolePermissionService;
 import com.paladin.common.service.org.OrgRoleService;
@@ -8,7 +9,6 @@ import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.common.service.org.vo.OrgRoleVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.utils.UUIDUtil;
-import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -58,9 +58,9 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "paladin", value = "cas-enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(prefix = "paladin", value = "shiro-cas-enabled", havingValue = "true", matchIfMissing = false)
 @EnableConfigurationProperties(ShiroCasProperties.class)
-public class ShiroCasConfiguration {
+public class CommonShiroCasConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)

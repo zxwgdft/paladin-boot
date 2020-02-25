@@ -1,4 +1,4 @@
-package com.paladin.common.config;
+package com.paladin.common.utils;
 
 import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;
@@ -12,15 +12,18 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.web.subject.WebSubject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Slf4j
+@Component
 public class CommonAuthenticationListener implements AuthenticationListener {
 
     @Autowired
     private SysLoggerLoginService sysLoggerLoginService;
+
     @Autowired
     private SysUserService sysUserService;
 

@@ -50,9 +50,9 @@ import java.util.Map;
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "shiro-enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(ShiroProperties.class)
-public class ShiroConfiguration {
+public class CommonShiroConfiguration {
 
-    private static Logger logger = LoggerFactory.getLogger(ShiroConfiguration.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonShiroConfiguration.class);
 
     @Bean
     @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)

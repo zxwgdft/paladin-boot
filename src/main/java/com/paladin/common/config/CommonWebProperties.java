@@ -13,7 +13,12 @@ public class CommonWebProperties {
     /**
      * 文件存放地址
      */
-    private String filePath = "file:D:/file/";
+    private String filePath;
+
+    /**
+     * 上传文件目录
+     */
+    private String uploadDir;
 
     /**
      * 文件最大M数

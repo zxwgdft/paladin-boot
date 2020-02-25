@@ -81,7 +81,6 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
     }
 
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-
         String errorMsg = exceptionMessageMap.get(e.getClass());
         if (errorMsg == null) {
             errorMsg = e.getMessage();
@@ -95,7 +94,6 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
             request.setAttribute(ERROR_KEY_LOGIN_FAIL_MESSAGE, errorMsg);
             return true;
         }
-
     }
 
 }

@@ -9,14 +9,14 @@ import com.paladin.framework.spring.SpringContainerManager;
 
 @Configuration
 @EnableConfigurationProperties(PaladinProperties.class)
-public class PaladinAutoConfiguration {	
+public class PaladinAutoConfiguration {
 	@Bean
 	public SpringContainerManager springContainerManager() {
 		return new SpringContainerManager();
 	}
-	
+
 	@Bean
 	public SpringBeanHelper springBeanHolder() {
 		return new SpringBeanHelper();
-	} 
+	}
 }

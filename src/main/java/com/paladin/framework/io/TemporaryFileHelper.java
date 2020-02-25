@@ -2,7 +2,6 @@ package com.paladin.framework.io;
 
 import com.paladin.framework.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -110,11 +109,6 @@ public class TemporaryFileHelper {
         }
     }
 
-    // 0 0 2 * * ? 每天凌晨2点执行
-    @Scheduled(cron = "0 0 2 * * ?")
-    public void scheduledClean() {
-        clearTemporaryFile(30);
-    }
 
     public static class TemporaryFileOutputStream extends OutputStream {
 

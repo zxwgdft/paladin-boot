@@ -2,6 +2,7 @@ package com.paladin.common.config;
 
 import com.paladin.framework.GlobalProperties;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -18,6 +19,7 @@ import java.util.List;
  * @author TontoZhou
  * @since 2019/12/31
  */
+@Component
 public class CommonDocketFactory {
 
     public static Docket newInstance() {

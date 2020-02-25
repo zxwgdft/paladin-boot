@@ -33,18 +33,14 @@ spring:
 
 # 自定义配置
 paladin:
-  cas-enabled: true
+  shiro-cas-enabled: true
+  shiro-enabled: false
   shiro:
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS20_PROXY
     cas-server-login-url: http://10.1.1.123:8768/casServ/login
     cas-server-url: http://10.1.1.123:8768/casServ
     client-server-url: http://172.16.11.135:8010
-  shiro-enabled: false
-  upload:
-    dir: D:/file/upload/
   web:
-    file-path: file:D:/file/
-  login:
-    # 登录失败限制是否开启，默认简单实现了登录失败及IP锁定，应付安全测试工具时，可开启，如果需要上生产需要扩展实现
-    failLimit: false
+    upload-dir: D:/file/upload/
+    file-path: D:/file/

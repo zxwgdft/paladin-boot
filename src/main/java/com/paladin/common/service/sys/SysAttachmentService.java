@@ -10,8 +10,8 @@ import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.exception.SystemExceptionCode;
 import com.paladin.framework.service.*;
-import com.paladin.framework.utils.convert.Base64Util;
 import com.paladin.framework.utils.UUIDUtil;
+import com.paladin.framework.utils.convert.Base64Util;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +40,8 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     private CommonWebProperties webProperties;
 
     private long maxFileByteSize;
-
     private int maxFileNameSize = 50;
-
     private String attachmentPath;
-
     private int maxFileSize;
 
     @PostConstruct

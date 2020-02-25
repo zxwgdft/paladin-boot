@@ -1,28 +1,31 @@
-package com.paladin.common.service.upload;
+package com.paladin.common.utils.upload;
 
 import com.paladin.framework.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 @Slf4j
-@Component
 public class BigFileUploaderContainer {
 
-    @Value("${paladin.upload.dir}")
     private String targetFolder;
-    private long chunkSize = 5 * 1024 * 1024;
+    private long chunkSize;
     private boolean initialized;
 
-    @PostConstruct
-    protected void initialize() {
+    public BigFileUploaderContainer(String targetFolder) {
+        this(targetFolder, 5 * 1024 * 1024);
+    }
+
+    public BigFileUploaderContainer(String targetFolder, long chunkSize) {
+        this.targetFolder = targetFolder;
+        this.chunkSize = chunkSize;
+        initialize();
+    }
+
+    private void initialize() {
         if (targetFolder == null || targetFolder.trim().length() == 0) {
             initialized = false;
             return;
@@ -78,26 +81,6 @@ public class BigFileUploaderContainer {
         return BigFileUploader.UPLOAD_REUPLOAD;
     }
 
-
-    /**
-     * 每小时执行清理操作
-     */
-    @Scheduled(cron = "0 0 */1 * * ?")
-    public void scheduledCleanUploader() {
-        try {
-            cleanUploader(60);
-        } catch (Exception e) {
-            log.info("清理Uploader失败", e);
-        }
-
-    }
-
-    //@Scheduled(cron = "0 0 */1 * * ?")
-    public void scheduledCleanFiles() {
-        // TODO 清理未上传成功的临时文件
-    }
-
-
     public void cleanUploader(int minutes) {
         long time = System.currentTimeMillis() - 60L * 1000 * minutes;
         Iterator<Map.Entry<String, BigFileUploader>> it = bigFileUploaderMap.entrySet().iterator();
@@ -109,7 +92,6 @@ public class BigFileUploaderContainer {
             }
         }
     }
-
 
     public List<FileVO> findAllFiles() {
         checkInitialized();
@@ -168,7 +150,7 @@ public class BigFileUploaderContainer {
         Path path = Paths.get(targetFolder + pelativePath);
         try {
             if (Files.deleteIfExists(path)) {
-                scheduledCleanUploader();
+                cleanUploader(60);
                 return true;
             }
             return false;

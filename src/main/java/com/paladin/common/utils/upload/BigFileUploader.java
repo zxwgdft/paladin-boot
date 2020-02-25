@@ -1,4 +1,4 @@
-package com.paladin.common.service.upload;
+package com.paladin.common.utils.upload;
 
 import com.paladin.framework.exception.BusinessException;
 

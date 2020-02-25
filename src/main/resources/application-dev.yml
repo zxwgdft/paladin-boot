@@ -32,21 +32,18 @@ spring:
 
 
 paladin:
-  cas-enabled: false
+  shiro-cas-enabled: false
+  shiro-enabled: false
   shiro:
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS30
     cas-server-login-url: http://58.210.169.168:9091/login
     cas-server-url: http://58.210.169.168:9091
     client-server-url: http://192.168.31.128:8010
-    filter-chain-definition:
-  shiro-enabled: false
-  upload:
-    dir: D:/file/upload/
-  login:
-    # 登录失败限制是否开启，默认简单实现了登录失败及IP锁定，应付安全测试工具时，可开启，如果需要上生产需要扩展实现
-    failLimit: false
-    # 动态数据库配置
+  web:
+    upload-dir: D:/file/upload/
+    file-path: D:/file/
+  # 动态数据库配置
   dynamic-datasource-enabled: true
   dynamic:
     mybatis:
