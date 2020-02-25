@@ -1,4 +1,4 @@
-package com.paladin.common.core.container;
+package com.paladin.common.core;
 
 import com.paladin.common.mapper.CommonMapper;
 import com.paladin.framework.service.VersionContainerDAO;

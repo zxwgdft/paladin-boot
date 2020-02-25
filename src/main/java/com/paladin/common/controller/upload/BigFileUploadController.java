@@ -1,8 +1,8 @@
 package com.paladin.common.controller.upload;
 
 
-import com.paladin.common.utils.upload.BigFileUploader;
-import com.paladin.common.utils.upload.BigFileUploaderContainer;
+import com.paladin.common.core.upload.BigFileUploader;
+import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.framework.common.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

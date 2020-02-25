@@ -1,5 +1,6 @@
 logging:
-  file: logs/spring-boot-logging.log
+  file:
+    path: /logs
 
 server:
   port: 8005

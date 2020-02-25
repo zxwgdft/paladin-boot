@@ -2,7 +2,7 @@ package com.paladin.demo.service.org.vo;
 
 import java.util.Date;
 
-import com.paladin.common.core.container.AttachmentContainer;
+import com.paladin.common.core.AttachmentContainer;
 import com.paladin.common.model.sys.SysAttachment;
 
 public class DemoPersonnelVO {

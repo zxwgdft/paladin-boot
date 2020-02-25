@@ -2,10 +2,10 @@ package com.paladin.common.config;
 
 import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
-import com.paladin.common.core.container.DefaultVersionContainerDAO;
+import com.paladin.common.core.DefaultVersionContainerDAO;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.template.TontoDialect;
-import com.paladin.common.utils.CommonAuthenticationListener;
+import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.VersionContainerDAO;

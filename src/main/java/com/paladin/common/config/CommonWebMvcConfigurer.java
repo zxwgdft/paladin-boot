@@ -1,6 +1,6 @@
 package com.paladin.common.config;
 
-import com.paladin.common.utils.upload.BigFileUploaderContainer;
+import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.web.convert.DateFormatter;

@@ -1,4 +1,6 @@
 logging:
+  file:
+    path: /logs
   level:
     com:
       paladin:

@@ -1,6 +1,6 @@
 package com.paladin.common.config;
 
-import com.paladin.common.utils.upload.BigFileUploaderContainer;
+import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.framework.io.TemporaryFileHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

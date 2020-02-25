@@ -1,4 +1,4 @@
-package com.paladin.common.utils;
+package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;

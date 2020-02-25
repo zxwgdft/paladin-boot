@@ -1,4 +1,4 @@
-package com.paladin.common.core.container;
+package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysConstant;
 import com.paladin.common.service.sys.SysConstantService;
