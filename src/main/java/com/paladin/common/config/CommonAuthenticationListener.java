@@ -4,8 +4,8 @@ import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.framework.service.UserSession;
-import com.paladin.framework.utils.IPUtil;
-import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.framework.utils.UUIDUtil;
+import com.paladin.framework.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -38,7 +38,7 @@ public class CommonAuthenticationListener implements AuthenticationListener {
                 // 获取request ip
                 WebSubject webSubject = (WebSubject) SecurityUtils.getSubject();
                 HttpServletRequest request = (HttpServletRequest) webSubject.getServletRequest();
-                ip = IPUtil.getIpAddress(request);
+                ip = WebUtil.getIpAddress(request);
             }
 
             String account = userSession.getAccount();

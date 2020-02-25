@@ -1,6 +1,6 @@
 package com.paladin.framework.mybatis;
 
-import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.framework.utils.UUIDUtil;
 import tk.mybatis.mapper.genid.GenId;
 
 public class GenIdImpl implements GenId<String> {

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
@@ -13,10 +14,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableScheduling
 @EnableConfigurationProperties
 public class Application {
-	
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
-	
-	
+
+    public static void main(String[] args) {
+
+        int x = NumberUtils.parseNumber("123", int.class);
+		System.out.println(x);
+
+        //SpringApplication.run(Application.class, args);
+    }
+
+
 }

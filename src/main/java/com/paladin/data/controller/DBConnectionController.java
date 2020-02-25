@@ -20,7 +20,7 @@ import com.paladin.data.service.vo.DBConnectionVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.spring.DevCondition;
-import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;

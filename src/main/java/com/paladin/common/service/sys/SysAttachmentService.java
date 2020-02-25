@@ -11,7 +11,7 @@ import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.exception.SystemExceptionCode;
 import com.paladin.framework.service.*;
 import com.paladin.framework.utils.convert.Base64Util;
-import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.framework.utils.UUIDUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package com.paladin.framework.utils.convert;
 
-import java.math.BigDecimal;
+import org.springframework.util.NumberUtils;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,14 +40,18 @@ public class SimpleConvertUtil {
     }
 
     /**
+     * 解析字符串到目标类型（基本类型）
+     *
      * @param str
      * @param type
+     * @param dateFormat 日期格式
      * @return
      */
     public static Object parseString(String str, Class<?> type, String dateFormat) {
 
-        if (str == null || str.length() == 0 || type == null)
+        if (str == null || str.length() == 0 || type == null) {
             return null;
+        }
 
         if (type == String.class) {
             return str;
@@ -64,7 +69,8 @@ public class SimpleConvertUtil {
                 try {
                     return DateFormatUtil.getThreadSafeFormat(dateFormat).parse(str);
                 } catch (ParseException e) {
-                    return null;
+                    throw new IllegalArgumentException(
+                            "Cannot convert String [" + str + "] to target class [" + type.getName() + "]");
                 }
             } else {
                 try {
@@ -73,42 +79,31 @@ public class SimpleConvertUtil {
                     try {
                         return DateFormatUtil.getThreadSafeFormat("yyyy-MM-dd").parse(str);
                     } catch (ParseException e1) {
-                        return null;
+
                     }
                 }
             }
+
+            throw new IllegalArgumentException(
+                    "Cannot convert String [" + str + "] to target class [" + type.getName() + "]");
         }
 
-        try {
-            Class<?> newType = primitives.get(type.getSimpleName());
+        Class<?> newType = primitives.get(type.getSimpleName());
 
-            if (newType != null) {
-                type = newType;
-            }
-
-            if (type == Double.class) {
-                return Double.parseDouble(str);
-            } else if (type == Integer.class) {
-                return Integer.parseInt(str);
-            } else if (type == Long.class) {
-                return Long.parseLong(str);
-            } else if (type == Boolean.class) {
-                return Boolean.parseBoolean(str);
-            } else if (type == Short.class) {
-                return Short.parseShort(str);
-            } else if (type == Float.class) {
-                return Float.parseFloat(str);
-            } else if (type == Character.class) {
-                return str.charAt(0);
-            } else if (type == BigDecimal.class) {
-                return new BigDecimal(str);
-            }
-
-        } catch (Exception e) {
-            return null;
+        if (newType != null) {
+            type = newType;
         }
 
-        return null;
+        if (Number.class.isAssignableFrom(type)) {
+            return NumberUtils.parseNumber(str, (Class<? extends Number>) type);
+        } else if (Boolean.class == type) {
+            return Boolean.parseBoolean(str);
+        } else if (Character.class == type) {
+            return str.charAt(0);
+        }
+
+        throw new IllegalArgumentException(
+                "Cannot convert String [" + str + "] to target class [" + type.getName() + "]");
     }
 
 

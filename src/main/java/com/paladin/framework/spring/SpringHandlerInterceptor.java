@@ -10,7 +10,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.paladin.framework.spring.annotation.QueryInputMethod;
+import com.paladin.framework.service.QueryInputMethod;
 import com.paladin.framework.utils.convert.JsonUtil;
 
 public class SpringHandlerInterceptor implements HandlerInterceptor {

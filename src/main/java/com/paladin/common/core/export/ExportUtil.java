@@ -1,7 +1,7 @@
 package com.paladin.common.core.export;
 
-import com.paladin.common.core.TemporaryFileHelper;
-import com.paladin.common.core.TemporaryFileHelper.TemporaryFileOutputStream;
+import com.paladin.framework.io.TemporaryFileHelper;
+import com.paladin.framework.io.TemporaryFileHelper.TemporaryFileOutputStream;
 import com.paladin.common.core.export.ExportCondition.ExportColumn;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.excel.write.ExcelWriter;

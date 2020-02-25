@@ -1,4 +1,8 @@
-package com.paladin.common.core;
+package com.paladin.framework.io;
+
+import com.paladin.framework.utils.UUIDUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,32 +11,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import com.paladin.common.config.CommonWebProperties;
-import com.paladin.framework.utils.uuid.UUIDUtil;
-
-@Component
+@Slf4j
 public class TemporaryFileHelper {
-
-    private static Logger logger = LoggerFactory.getLogger(TemporaryFileHelper.class);
-
-    @Autowired
-    private CommonWebProperties webProperties;
 
     private String tempPath;
 
     private static TemporaryFileHelper helper;
 
-    @PostConstruct
-    protected void initialize() {
-        tempPath = webProperties.getFilePath();
+    public TemporaryFileHelper(String filePath) {
+        tempPath = filePath;
         if (tempPath.startsWith("file:")) {
             tempPath = tempPath.substring(5);
         }
@@ -53,7 +41,7 @@ public class TemporaryFileHelper {
             throw new RuntimeException("创建临时文件存放目录异常", e);
         }
 
-        logger.info("临时文件目录：" + tempPath);
+        log.info("临时文件目录：" + tempPath);
 
         helper = this;
     }
@@ -113,12 +101,12 @@ public class TemporaryFileHelper {
                     try {
                         Files.delete(path);
                     } catch (IOException e) {
-                        logger.error("删除临时文件[" + path + "]失败");
+                        log.error("删除临时文件[" + path + "]失败");
                     }
                 }
             });
         } catch (IOException e) {
-            logger.error("遍历删除临时文件失败");
+            log.error("遍历删除临时文件失败");
         }
     }
 

@@ -1,6 +1,6 @@
 package com.paladin.common.config;
 
-import com.paladin.framework.utils.IPUtil;
+import com.paladin.framework.utils.WebUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -37,7 +37,7 @@ public class IPLoginFailLimiter extends HashedCredentialsMatcher {
             // 获取request ip
             WebSubject webSubject = (WebSubject) SecurityUtils.getSubject();
             HttpServletRequest request = (HttpServletRequest) webSubject.getServletRequest();
-            ip = IPUtil.getIpAddress(request);
+            ip = WebUtil.getIpAddress(request);
         }
 
         LimitStatus status = blacklist.get(ip);
@@ -71,7 +71,7 @@ public class IPLoginFailLimiter extends HashedCredentialsMatcher {
                 }
             }
         } else {
-            if(status != null) {
+            if (status != null) {
                 status.errorNum = 0;
                 status.limit = false;
             }

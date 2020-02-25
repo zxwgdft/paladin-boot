@@ -1,4 +1,4 @@
-package com.paladin.framework.utils.uuid;
+package com.paladin.framework.utils;
 
 import org.apache.commons.codec.binary.Base64;
 

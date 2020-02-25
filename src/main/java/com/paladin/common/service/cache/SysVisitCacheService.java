@@ -3,7 +3,7 @@ package com.paladin.common.service.cache;
 import com.paladin.common.mapper.cache.SysVisitCacheMapper;
 import com.paladin.common.model.cache.SysVisitCache;
 import com.paladin.framework.service.ServiceSupport;
-import com.paladin.framework.utils.IPUtil;
+import com.paladin.framework.utils.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {
         if (content == null || content.length() == 0 || content.length() > 400) {
             return 0;
         }
-        String ip = IPUtil.getIpAddress(request);
+        String ip = WebUtil.getIpAddress(request);
         if (ip == null || ip.length() == 0) {
             return 0;
         }
@@ -34,7 +34,7 @@ public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {
     }
 
     public String getCache(HttpServletRequest request, String key) {
-        String ip = IPUtil.getIpAddress(request);
+        String ip = WebUtil.getIpAddress(request);
         if (ip == null || ip.length() == 0) {
             return null;
         }

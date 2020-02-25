@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
-import com.paladin.framework.spring.annotation.QueryOutputMethod;
+import com.paladin.framework.service.QueryOutputMethod;
 import com.paladin.framework.utils.convert.JsonUtil;
 
 import java.io.IOException;
