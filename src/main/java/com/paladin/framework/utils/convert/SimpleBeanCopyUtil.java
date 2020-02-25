@@ -1,5 +1,7 @@
 package com.paladin.framework.utils.convert;
 
+import org.springframework.cglib.core.Converter;
+
 import java.util.List;
 
 public class SimpleBeanCopyUtil {
@@ -33,11 +35,11 @@ public class SimpleBeanCopyUtil {
      *
      * @param sourceList
      * @param targetList
-     * @param ignore
+     * @param converter
      * @return
      */
-    public static <T> List<T> simpleCopyList(List<?> sourceList, List<T> targetList, boolean ignore) {
-        return copier.simpleCopyList(sourceList, targetList, ignore);
+    public static <T> List<T> simpleCopyList(List<?> sourceList, List<T> targetList, Converter converter) {
+        return copier.simpleCopyList(sourceList, targetList, converter);
     }
 
     /**
@@ -45,11 +47,11 @@ public class SimpleBeanCopyUtil {
      *
      * @param sourceList
      * @param targetType
-     * @param ignore     是否忽略某些属性
+     * @param converter
      * @return
      */
-    public static <T> List<T> simpleCopyList(List<?> sourceList, Class<T> targetType, boolean ignore) {
-        return copier.simpleCopyList(sourceList, targetType, ignore);
+    public static <T> List<T> simpleCopyList(List<?> sourceList, Class<T> targetType, Converter converter) {
+        return copier.simpleCopyList(sourceList, targetType, converter);
     }
 
     /**
@@ -59,7 +61,7 @@ public class SimpleBeanCopyUtil {
      * @param targetType
      * @return
      */
-    public static Object simpleCopy(Object source, Class<?> targetType) {
+    public static <T> T simpleCopy(Object source, Class<T> targetType) {
         return copier.simpleCopy(source, targetType);
     }
 
@@ -68,11 +70,11 @@ public class SimpleBeanCopyUtil {
      *
      * @param source
      * @param targetType
-     * @param ignore     是否忽略某些属性
+     * @param converter
      * @return
      */
-    public static Object simpleCopy(Object source, Class<?> targetType, boolean ignore) {
-        return copier.simpleCopy(source, targetType, ignore);
+    public static <T> T simpleCopy(Object source, Class<T> targetType, Converter converter) {
+        return copier.simpleCopy(source, targetType, converter);
     }
 
     /**
@@ -82,8 +84,8 @@ public class SimpleBeanCopyUtil {
      * @param target
      * @return
      */
-    public static void simpleCopy(Object source, Object target) {
-        copier.simpleCopy(source, target);
+    public static <T> T simpleCopy(Object source, T target) {
+        return copier.simpleCopy(source, target);
     }
 
     /**
@@ -91,10 +93,10 @@ public class SimpleBeanCopyUtil {
      *
      * @param source
      * @param target
-     * @param ignore 是否忽略某些属性
+     * @param converter
      * @return
      */
-    public static void simpleCopy(Object source, Object target, boolean ignore) {
-        copier.simpleCopy(source, target, ignore);
+    public static <T> T simpleCopy(Object source, T target, Converter converter) {
+        return copier.simpleCopy(source, target, converter);
     }
 }

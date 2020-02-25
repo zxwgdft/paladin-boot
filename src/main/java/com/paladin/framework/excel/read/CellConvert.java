@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CellConvert {
-	public Class<? extends ReadPropertyConvert<?>> convert();
+    Class<? extends ReadPropertyConvert<?>> convert();
 }

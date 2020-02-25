@@ -1,9 +1,9 @@
 package com.paladin.framework.excel;
 
 public interface EnumContainer {
-	
-	public String getEnumName(String type, String key);
-	
-	public String getEnumKey(String type, String name);
-	
+
+    String getEnumName(String type, String key);
+
+    String getEnumKey(String type, String name);
+
 }

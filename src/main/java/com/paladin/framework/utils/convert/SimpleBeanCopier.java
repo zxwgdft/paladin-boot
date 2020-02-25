@@ -1,7 +1,8 @@
 package com.paladin.framework.utils.convert;
 
-import com.paladin.framework.utils.structure.SecHashMap;
+import com.paladin.framework.utils.structure.DoubleHashMap;
 import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.cglib.core.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class SimpleBeanCopier {
 
-    private static SecHashMap<Class<?>, Class<?>, BeanCopier> copierMap = new SecHashMap<>();
+    private static DoubleHashMap<Class<?>, Class<?>, BeanCopier> copierMap = new DoubleHashMap<>();
 
     /**
      * 获取copier，如果没有则创建
@@ -45,7 +46,7 @@ public class SimpleBeanCopier {
      * @return
      */
     public <T> List<T> simpleCopyList(List<?> sourceList, Class<T> targetType) {
-        return simpleCopyList(sourceList, targetType, false);
+        return simpleCopyList(sourceList, targetType, null);
     }
 
     /**
@@ -53,22 +54,29 @@ public class SimpleBeanCopier {
      *
      * @param sourceList
      * @param targetType
-     * @param ignore     是否忽略某些属性
+     * @param converter
      * @return
      */
-    public <T> List<T> simpleCopyList(List<?> sourceList, Class<T> targetType, boolean ignore) {
+    public <T> List<T> simpleCopyList(List<?> sourceList, Class<T> targetType, Converter converter) {
+        if (sourceList == null || targetType == null) {
+            return null;
+        }
         if (sourceList.size() > 0) {
-
-            Class<?> sourceType = sourceList.get(0).getClass();
-            BeanCopier copier = getCopier(sourceType, targetType);
-
-            // 这里为了效率，暂时视为所有集合对象都是一个类
-
+            Class<?> sourceType = null;
+            BeanCopier copier = null;
             List<T> targetList = new ArrayList<>(sourceList.size());
             for (Object source : sourceList) {
+                if (source == null) {
+                    targetList.add(null);
+                    continue;
+                }
+                if (source.getClass() != sourceType) {
+                    sourceType = source.getClass();
+                    copier = this.getCopier(sourceType, targetType);
+                }
                 try {
                     T target = targetType.newInstance();
-                    copier.copy(source, target, null);
+                    copier.copy(source, target, converter);
                     targetList.add(target);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -88,7 +96,7 @@ public class SimpleBeanCopier {
      * @return
      */
     public <T> List<T> simpleCopyList(List<?> sourceList, List<T> targetList) {
-        return simpleCopyList(sourceList, targetList, false);
+        return simpleCopyList(sourceList, targetList, null);
     }
 
     /**
@@ -96,14 +104,17 @@ public class SimpleBeanCopier {
      *
      * @param sourceList
      * @param targetList
-     * @param ignore
+     * @param converter
      * @return
      */
-    public <T> List<T> simpleCopyList(List<?> sourceList, List<T> targetList, boolean ignore) {
+    public <T> List<T> simpleCopyList(List<?> sourceList, List<T> targetList, Converter converter) {
+        if (sourceList == null || targetList == null) {
+            return null;
+        }
         int size = Math.min(sourceList.size(), targetList.size());
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                simpleCopy(sourceList.get(i), targetList.get(i), ignore);
+                simpleCopy(sourceList.get(i), targetList.get(i), converter);
             }
         }
         return targetList;
@@ -116,8 +127,8 @@ public class SimpleBeanCopier {
      * @param targetType
      * @return
      */
-    public Object simpleCopy(Object source, Class<?> targetType) {
-        return simpleCopy(source, targetType, false);
+    public <T> T simpleCopy(Object source, Class<T> targetType) {
+        return simpleCopy(source, targetType, null);
     }
 
     /**
@@ -125,19 +136,17 @@ public class SimpleBeanCopier {
      *
      * @param source
      * @param targetType
-     * @param ignore     是否忽略某些属性
+     * @param converter
      * @return
      */
-    public Object simpleCopy(Object source, Class<?> targetType, boolean ignore) {
-
-        Object target = null;
+    public <T> T simpleCopy(Object source, Class<T> targetType, Converter converter) {
+        T target = null;
         try {
             target = targetType.newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("拷贝失败，创建[" + targetType + "]实例异常", e);
         }
-        simpleCopy(source, target, ignore);
-        return target;
+        return simpleCopy(source, target, converter);
     }
 
     /**
@@ -147,8 +156,8 @@ public class SimpleBeanCopier {
      * @param target
      * @return
      */
-    public void simpleCopy(Object source, Object target) {
-        simpleCopy(source, target, false);
+    public <T> T simpleCopy(Object source, T target) {
+        return simpleCopy(source, target, null);
     }
 
     /**
@@ -156,16 +165,15 @@ public class SimpleBeanCopier {
      *
      * @param source
      * @param target
-     * @param ignore 是否忽略某些属性
+     * @param converter
      * @return
      */
-    public void simpleCopy(Object source, Object target, boolean ignore) {
-
+    public <T> T simpleCopy(Object source, T target, Converter converter) {
         if (source == null || target == null) {
-            return;
+            return null;
         }
-
-        getCopier(source.getClass(), target.getClass()).copy(source, target, null);
+        getCopier(source.getClass(), target.getClass()).copy(source, target, converter);
+        return target;
     }
 
 

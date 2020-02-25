@@ -13,7 +13,7 @@ spring:
   datasource:
     name: common
     password: ''
-    url: jdbc:mysql://localhost:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
   redis:
     database: 0
@@ -46,3 +46,13 @@ paladin:
   login:
     # 登录失败限制是否开启，默认简单实现了登录失败及IP锁定，应付安全测试工具时，可开启，如果需要上生产需要扩展实现
     failLimit: false
+    # 动态数据库配置
+  dynamic-datasource-enabled: true
+  dynamic:
+    mybatis:
+      mapper-location: classpath:dynamic/mapper/**/*.xml
+      type-aliases-package: com.paladin.demo.dynamic.model
+    source[0]:
+      name: mysql
+      url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+      username: root

@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Validate {
-	public Class<? extends PropertyValidate> validate();	
+    Class<? extends PropertyValidate> validate();
 }

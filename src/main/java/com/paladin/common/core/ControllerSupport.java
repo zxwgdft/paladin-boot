@@ -2,7 +2,6 @@ package com.paladin.common.core;
 
 import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;
-import com.paladin.framework.utils.convert.SimpleBeanCopier;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -34,8 +33,7 @@ public class ControllerSupport {
     }
 
     protected <T> T beanCopy(Object source, T target) {
-        SimpleBeanCopyUtil.simpleCopy(source, target, true);
-        return target;
+        return SimpleBeanCopyUtil.simpleCopy(source, target, null);
     }
 
     public <T> List<T> beanCopyList(List<?> sourceList, Class<T> targetType) {

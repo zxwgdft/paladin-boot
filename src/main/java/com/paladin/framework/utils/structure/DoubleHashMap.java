@@ -10,7 +10,7 @@ import java.util.Map;
  * @param <K2>
  * @param <V>
  */
-public class SecHashMap<K1, K2, V> {
+public class DoubleHashMap<K1, K2, V> {
 
     private Map<K1, Map<K2, V>> secMap = new HashMap<>();
 

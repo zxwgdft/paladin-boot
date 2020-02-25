@@ -1,24 +1,10 @@
 package com.paladin.framework.utils.reflect;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 反射工具
@@ -192,7 +178,6 @@ public class ReflectUtil {
         baseClassSet.add(String.class);
         baseClassSet.add(Date.class);
 
-        baseClassSet.add(Object.class);
         baseClassSet.add(Class.class);
     }
 
@@ -204,13 +189,12 @@ public class ReflectUtil {
      */
     public static boolean isBaseClass(Class<?> clazz) {
         return baseClassSet.contains(clazz) || clazz.isEnum();
-
     }
 
     /**
      * 获取数组类型
      *
-     * @param array 数组对象类
+     * @param clazz 数组对象类
      * @return
      */
     public static Class<?> getArrayType(Class<?> clazz) {
@@ -230,7 +214,6 @@ public class ReflectUtil {
      */
     @SuppressWarnings("rawtypes")
     public static Class<?> getActualTypeArgument(Type type, int index) {
-
         if (type instanceof ParameterizedType) {
             Type[] ts = ((ParameterizedType) type).getActualTypeArguments();
             return (ts != null && ts.length > index) ? getRawType(ts[index]) : null;
@@ -240,12 +223,10 @@ public class ReflectUtil {
                 return getActualTypeArgument(ts[0], index);
         } else if (type instanceof WildcardType) {
             WildcardType wType = (WildcardType) type;
-
             // ? extends 的泛型可以限定对象，返回该父类
             Type[] ts = wType.getUpperBounds();
             if (ts.length > 0)
                 return getActualTypeArgument(ts[0], index);
-
             // 使用 ? super 的泛型无法限定对象
         }
 
@@ -256,7 +237,6 @@ public class ReflectUtil {
      * 获取原型类型（即Class Type）
      *
      * @param type
-     * @param index
      * @return
      */
     @SuppressWarnings("rawtypes")
@@ -299,11 +279,9 @@ public class ReflectUtil {
      * @return
      */
     public static Class<?> getSuperClassArgument(Class<?> targetClass, Class<?> superClass, int index) {
-
         if (index >= 0 && superClass.isAssignableFrom(targetClass) && targetClass != superClass) {
             return _getSuperClassArgument(targetClass, superClass, index);
         }
-
         return null;
     }
 
@@ -505,7 +483,6 @@ public class ReflectUtil {
      * @return
      */
     private static Class<?> getArrayClass(Class<?> clazz, int dimension) {
-
         if (dimension > 0) {
             String s = null;
             if (clazz.isArray()) {

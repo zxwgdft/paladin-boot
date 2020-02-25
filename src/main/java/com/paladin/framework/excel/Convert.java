@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Convert {
-	public Class<? extends PropertyConvert<?>> convert();
+    Class<? extends PropertyConvert<?>> convert();
 }
