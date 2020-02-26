@@ -1,13 +1,5 @@
 package com.paladin.data.dynamic;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-import static org.springframework.util.StringUtils.hasLength;
-import static org.springframework.util.StringUtils.tokenizeToStringArray;
-
-import java.io.IOException;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.mapping.Environment;
@@ -23,226 +15,233 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 
+import javax.sql.DataSource;
+import java.io.IOException;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
+
 public class SimpleSqlSessionFactoryBuilder {
-	
-	private static Logger LOGGER = LoggerFactory.getLogger(SimpleSqlSessionFactoryBuilder.class);
 
-	private Configuration configuration;
+    private static Logger LOGGER = LoggerFactory.getLogger(SimpleSqlSessionFactoryBuilder.class);
 
-	private Resource[] mapperLocations;
+    private Configuration configuration;
 
-	private DataSource dataSource;
+    private Resource[] mapperLocations;
 
-	private TransactionFactory transactionFactory;
+    private DataSource dataSource;
 
-	private SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
+    private TransactionFactory transactionFactory;
 
-	private SqlSessionFactory sqlSessionFactory;
+    private SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
 
-	// EnvironmentAware requires spring 3.1
-	private String environment = SimpleSqlSessionFactoryBuilder.class.getSimpleName();
+    private SqlSessionFactory sqlSessionFactory;
 
-	private Interceptor[] plugins;
+    // EnvironmentAware requires spring 3.1
+    private String environment = SimpleSqlSessionFactoryBuilder.class.getSimpleName();
 
-	private TypeHandler<?>[] typeHandlers;
+    private Interceptor[] plugins;
 
-	private String typeHandlersPackage;
+    private TypeHandler<?>[] typeHandlers;
 
-	private Class<?>[] typeAliases;
+    private String typeHandlersPackage;
 
-	private String typeAliasesPackage;
+    private Class<?>[] typeAliases;
 
-	private Class<?> typeAliasesSuperType;
+    private String typeAliasesPackage;
 
-	public SqlSessionFactory build() throws IOException {
-		Configuration configuration = new Configuration();
+    private Class<?> typeAliasesSuperType;
 
-		if (hasLength(this.typeAliasesPackage)) {
-			String[] typeAliasPackageArray = tokenizeToStringArray(this.typeAliasesPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-			for (String packageToScan : typeAliasPackageArray) {
-				configuration.getTypeAliasRegistry().registerAliases(packageToScan, typeAliasesSuperType == null ? Object.class : typeAliasesSuperType);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Scanned package: '" + packageToScan + "' for aliases");
-				}
-			}
-		}
+    public SqlSessionFactory build() throws IOException {
+        Configuration configuration = new Configuration();
 
-		if (!isEmpty(this.typeAliases)) {
-			for (Class<?> typeAlias : this.typeAliases) {
-				configuration.getTypeAliasRegistry().registerAlias(typeAlias);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered type alias: '" + typeAlias + "'");
-				}
-			}
-		}
+        if (hasLength(this.typeAliasesPackage)) {
+            String[] typeAliasPackageArray = tokenizeToStringArray(this.typeAliasesPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String packageToScan : typeAliasPackageArray) {
+                configuration.getTypeAliasRegistry().registerAliases(packageToScan, typeAliasesSuperType == null ? Object.class : typeAliasesSuperType);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Scanned package: '" + packageToScan + "' for aliases");
+                }
+            }
+        }
 
-		if (!isEmpty(this.plugins)) {
-			for (Interceptor plugin : this.plugins) {
-				configuration.addInterceptor(plugin);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered plugin: '" + plugin + "'");
-				}
-			}
-		}
+        if (!isEmpty(this.typeAliases)) {
+            for (Class<?> typeAlias : this.typeAliases) {
+                configuration.getTypeAliasRegistry().registerAlias(typeAlias);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Registered type alias: '" + typeAlias + "'");
+                }
+            }
+        }
 
-		if (hasLength(this.typeHandlersPackage)) {
-			String[] typeHandlersPackageArray = tokenizeToStringArray(this.typeHandlersPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-			for (String packageToScan : typeHandlersPackageArray) {
-				configuration.getTypeHandlerRegistry().register(packageToScan);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Scanned package: '" + packageToScan + "' for type handlers");
-				}
-			}
-		}
+        if (!isEmpty(this.plugins)) {
+            for (Interceptor plugin : this.plugins) {
+                configuration.addInterceptor(plugin);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Registered plugin: '" + plugin + "'");
+                }
+            }
+        }
 
-		if (!isEmpty(this.typeHandlers)) {
-			for (TypeHandler<?> typeHandler : this.typeHandlers) {
-				configuration.getTypeHandlerRegistry().register(typeHandler);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered type handler: '" + typeHandler + "'");
-				}
-			}
-		}
+        if (hasLength(this.typeHandlersPackage)) {
+            String[] typeHandlersPackageArray = tokenizeToStringArray(this.typeHandlersPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+            for (String packageToScan : typeHandlersPackageArray) {
+                configuration.getTypeHandlerRegistry().register(packageToScan);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Scanned package: '" + packageToScan + "' for type handlers");
+                }
+            }
+        }
 
-		if (this.transactionFactory == null) {
-			this.transactionFactory = new DynamicJdbcTransactionFactory();
-		}
+        if (!isEmpty(this.typeHandlers)) {
+            for (TypeHandler<?> typeHandler : this.typeHandlers) {
+                configuration.getTypeHandlerRegistry().register(typeHandler);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Registered type handler: '" + typeHandler + "'");
+                }
+            }
+        }
 
-		configuration.setEnvironment(new Environment(this.environment, this.transactionFactory, this.dataSource));
+        if (this.transactionFactory == null) {
+            this.transactionFactory = new DynamicJdbcTransactionFactory();
+        }
 
-		if (!isEmpty(this.mapperLocations)) {
-			for (Resource mapperLocation : this.mapperLocations) {
-				if (mapperLocation == null) {
-					continue;
-				}
+        configuration.setEnvironment(new Environment(this.environment, this.transactionFactory, this.dataSource));
 
-				try {
-					XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperLocation.getInputStream(), configuration, mapperLocation.toString(),
-							configuration.getSqlFragments());
-					xmlMapperBuilder.parse();
-				} catch (Exception e) {
-					throw new NestedIOException("Failed to parse mapping resource: '" + mapperLocation + "'", e);
-				} finally {
-					ErrorContext.instance().reset();
-				}
+        if (!isEmpty(this.mapperLocations)) {
+            for (Resource mapperLocation : this.mapperLocations) {
+                if (mapperLocation == null) {
+                    continue;
+                }
 
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Parsed mapper file: '" + mapperLocation + "'");
-				}
-			}
-		} else {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Property 'mapperLocations' was not specified or no matching resources found");
-			}
-		}
+                try {
+                    XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperLocation.getInputStream(), configuration, mapperLocation.toString(),
+                            configuration.getSqlFragments());
+                    xmlMapperBuilder.parse();
+                } catch (Exception e) {
+                    throw new NestedIOException("Failed to parse mapping resource: '" + mapperLocation + "'", e);
+                } finally {
+                    ErrorContext.instance().reset();
+                }
 
-		this.configuration = configuration;
-		this.sqlSessionFactory = this.sqlSessionFactoryBuilder.build(configuration);
-		return this.sqlSessionFactory;
-	}
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Parsed mapper file: '" + mapperLocation + "'");
+                }
+            }
+        } else {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Property 'mapperLocations' was not specified or no matching resources found");
+            }
+        }
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
+        this.configuration = configuration;
+        this.sqlSessionFactory = this.sqlSessionFactoryBuilder.build(configuration);
+        return this.sqlSessionFactory;
+    }
 
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
-	}
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 
-	public Resource[] getMapperLocations() {
-		return mapperLocations;
-	}
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
-	public void setMapperLocations(Resource[] mapperLocations) {
-		this.mapperLocations = mapperLocations;
-	}
+    public Resource[] getMapperLocations() {
+        return mapperLocations;
+    }
 
-	public DataSource getDataSource() {
-		return dataSource;
-	}
+    public void setMapperLocations(Resource[] mapperLocations) {
+        this.mapperLocations = mapperLocations;
+    }
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
-	public TransactionFactory getTransactionFactory() {
-		return transactionFactory;
-	}
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-	public void setTransactionFactory(TransactionFactory transactionFactory) {
-		this.transactionFactory = transactionFactory;
-	}
+    public TransactionFactory getTransactionFactory() {
+        return transactionFactory;
+    }
 
-	public SqlSessionFactoryBuilder getSqlSessionFactoryBuilder() {
-		return sqlSessionFactoryBuilder;
-	}
+    public void setTransactionFactory(TransactionFactory transactionFactory) {
+        this.transactionFactory = transactionFactory;
+    }
 
-	public void setSqlSessionFactoryBuilder(SqlSessionFactoryBuilder sqlSessionFactoryBuilder) {
-		this.sqlSessionFactoryBuilder = sqlSessionFactoryBuilder;
-	}
+    public SqlSessionFactoryBuilder getSqlSessionFactoryBuilder() {
+        return sqlSessionFactoryBuilder;
+    }
 
-	public SqlSessionFactory getSqlSessionFactory() {
-		return sqlSessionFactory;
-	}
+    public void setSqlSessionFactoryBuilder(SqlSessionFactoryBuilder sqlSessionFactoryBuilder) {
+        this.sqlSessionFactoryBuilder = sqlSessionFactoryBuilder;
+    }
 
-	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-		this.sqlSessionFactory = sqlSessionFactory;
-	}
+    public SqlSessionFactory getSqlSessionFactory() {
+        return sqlSessionFactory;
+    }
 
-	public String getEnvironment() {
-		return environment;
-	}
+    public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
-	public void setEnvironment(String environment) {
-		this.environment = environment;
-	}
+    public String getEnvironment() {
+        return environment;
+    }
 
-	public Interceptor[] getPlugins() {
-		return plugins;
-	}
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
 
-	public void setPlugins(Interceptor[] plugins) {
-		this.plugins = plugins;
-	}
+    public Interceptor[] getPlugins() {
+        return plugins;
+    }
 
-	public TypeHandler<?>[] getTypeHandlers() {
-		return typeHandlers;
-	}
+    public void setPlugins(Interceptor[] plugins) {
+        this.plugins = plugins;
+    }
 
-	public void setTypeHandlers(TypeHandler<?>[] typeHandlers) {
-		this.typeHandlers = typeHandlers;
-	}
+    public TypeHandler<?>[] getTypeHandlers() {
+        return typeHandlers;
+    }
 
-	public String getTypeHandlersPackage() {
-		return typeHandlersPackage;
-	}
+    public void setTypeHandlers(TypeHandler<?>[] typeHandlers) {
+        this.typeHandlers = typeHandlers;
+    }
 
-	public void setTypeHandlersPackage(String typeHandlersPackage) {
-		this.typeHandlersPackage = typeHandlersPackage;
-	}
+    public String getTypeHandlersPackage() {
+        return typeHandlersPackage;
+    }
 
-	public Class<?>[] getTypeAliases() {
-		return typeAliases;
-	}
+    public void setTypeHandlersPackage(String typeHandlersPackage) {
+        this.typeHandlersPackage = typeHandlersPackage;
+    }
 
-	public void setTypeAliases(Class<?>[] typeAliases) {
-		this.typeAliases = typeAliases;
-	}
+    public Class<?>[] getTypeAliases() {
+        return typeAliases;
+    }
 
-	public String getTypeAliasesPackage() {
-		return typeAliasesPackage;
-	}
+    public void setTypeAliases(Class<?>[] typeAliases) {
+        this.typeAliases = typeAliases;
+    }
 
-	public void setTypeAliasesPackage(String typeAliasesPackage) {
-		this.typeAliasesPackage = typeAliasesPackage;
-	}
+    public String getTypeAliasesPackage() {
+        return typeAliasesPackage;
+    }
 
-	public Class<?> getTypeAliasesSuperType() {
-		return typeAliasesSuperType;
-	}
+    public void setTypeAliasesPackage(String typeAliasesPackage) {
+        this.typeAliasesPackage = typeAliasesPackage;
+    }
 
-	public void setTypeAliasesSuperType(Class<?> typeAliasesSuperType) {
-		this.typeAliasesSuperType = typeAliasesSuperType;
-	}
+    public Class<?> getTypeAliasesSuperType() {
+        return typeAliasesSuperType;
+    }
+
+    public void setTypeAliasesSuperType(Class<?> typeAliasesSuperType) {
+        this.typeAliasesSuperType = typeAliasesSuperType;
+    }
 
 }

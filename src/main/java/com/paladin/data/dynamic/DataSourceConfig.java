@@ -1,292 +1,79 @@
 package com.paladin.data.dynamic;
 
 import com.paladin.data.dynamic.DataSourceFacade.DataSourceType;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class DataSourceConfig {
-	
-	/**
-	 * 数据库名称，唯一
-	 */
-	private String name;
 
-	/**
-	 * 数据链接URL
-	 */
-	private String url;
+    /**
+     * 数据库名称，唯一
+     */
+    private String name;
 
-	/**
-	 * 用户
-	 */
-	private String username;
+    /**
+     * 数据链接URL
+     */
+    private String url;
 
-	/**
-	 * 密码
-	 */
-	private String password;
-	
-	/**
-	 * 是否启用
-	 */
-	private boolean enabled = true;
-	
+    /**
+     * 用户
+     */
+    private String username;
 
-	private DataSourceType type = DataSourceType.HIKARI;
-	
-	private boolean autoCommit =true;
-	
-	private String connectionTestQuery;
-	
-	// ------------- hikari ---------------
-	
-	private int maximumPoolSize = 5;
-	
-	private int minimumIdle = 5;
-	
-	private int idleTimeout = 600000;
-	
-	private int maxLifetime = 1800000;
-	
-	private int connectionTimeout = 30000;
-	
-	// ------------- druid ---------------
-	
-	private int maxActive = 15;
-	
-	private int initialSize = 5;
-	
-	private int minIdle = 5;
-	
-	private int maxWait = 30000;
-	
-	private boolean testOnBorrow = false;
-	
-	private boolean testOnReturn = false;
-	
-	private boolean testWhileIdle = true;
-	
-	private int timeBetweenEvictionRunsMillis = 600000;
-	
-	private int minEvictableIdleTimeMillis = 300000;
-	
-	private Boolean poolPreparedStatements;		// oracle 建议为true
-	
-	private int maxPoolPreparedStatementPerConnectionSize = -1;
-	
-	/**  
-	 * 数据库名称，唯一  
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * 密码
+     */
+    private String password;
 
-	/**  
-	 * 数据库名称，唯一  
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 是否启用
+     */
+    private boolean enabled = true;
 
-	/**  
-	 * 数据链接URL  
-	 */
-	public String getUrl() {
-		return url;
-	}
 
-	/**  
-	 * 数据链接URL  
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    private DataSourceType type = DataSourceType.HIKARI;
 
-	/**  
-	 * 用户  
-	 */
-	public String getUsername() {
-		return username;
-	}
+    private boolean autoCommit = true;
 
-	/**  
-	 * 用户  
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    private String connectionTestQuery;
 
-	/**  
-	 * 密码  
-	 */
-	public String getPassword() {
-		return password;
-	}
+    // ------------- hikari ---------------
 
-	/**  
-	 * 密码  
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    private int maximumPoolSize = 5;
 
-	public boolean getEnabled() {
-		return enabled;
-	}
+    private int minimumIdle = 5;
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    private int idleTimeout = 600000;
 
-	public DataSourceType getType() {
-		return type;
-	}
+    private int maxLifetime = 1800000;
 
-	public void setType(DataSourceType type) {
-		this.type = type;
-	}
+    private int connectionTimeout = 30000;
 
-	public boolean isAutoCommit() {
-		return autoCommit;
-	}
+    // ------------- druid ---------------
 
-	public void setAutoCommit(boolean autoCommit) {
-		this.autoCommit = autoCommit;
-	}
+    private int maxActive = 15;
 
-	public int getMaximumPoolSize() {
-		return maximumPoolSize;
-	}
+    private int initialSize = 5;
 
-	public void setMaximumPoolSize(int maximumPoolSize) {
-		this.maximumPoolSize = maximumPoolSize;
-	}
+    private int minIdle = 5;
 
-	public int getMinimumIdle() {
-		return minimumIdle;
-	}
+    private int maxWait = 30000;
 
-	public void setMinimumIdle(int minimumIdle) {
-		this.minimumIdle = minimumIdle;
-	}
+    private boolean testOnBorrow = false;
 
-	public int getIdleTimeout() {
-		return idleTimeout;
-	}
+    private boolean testOnReturn = false;
 
-	public void setIdleTimeout(int idleTimeout) {
-		this.idleTimeout = idleTimeout;
-	}
+    private boolean testWhileIdle = true;
 
-	public int getMaxLifetime() {
-		return maxLifetime;
-	}
+    private int timeBetweenEvictionRunsMillis = 600000;
 
-	public void setMaxLifetime(int maxLifetime) {
-		this.maxLifetime = maxLifetime;
-	}
+    private int minEvictableIdleTimeMillis = 300000;
 
-	public int getConnectionTimeout() {
-		return connectionTimeout;
-	}
+    private Boolean poolPreparedStatements;        // oracle 建议为true
 
-	public void setConnectionTimeout(int connectionTimeout) {
-		this.connectionTimeout = connectionTimeout;
-	}
+    private int maxPoolPreparedStatementPerConnectionSize = -1;
 
-	public String getConnectionTestQuery() {
-		return connectionTestQuery;
-	}
-
-	public void setConnectionTestQuery(String connectionTestQuery) {
-		this.connectionTestQuery = connectionTestQuery;
-	}
-
-	public int getMaxActive() {
-		return maxActive;
-	}
-
-	public void setMaxActive(int maxActive) {
-		this.maxActive = maxActive;
-	}
-
-	public int getInitialSize() {
-		return initialSize;
-	}
-
-	public void setInitialSize(int initialSize) {
-		this.initialSize = initialSize;
-	}
-
-	public int getMinIdle() {
-		return minIdle;
-	}
-
-	public void setMinIdle(int minIdle) {
-		this.minIdle = minIdle;
-	}
-
-	public int getMaxWait() {
-		return maxWait;
-	}
-
-	public void setMaxWait(int maxWait) {
-		this.maxWait = maxWait;
-	}
-
-	public boolean isTestOnBorrow() {
-		return testOnBorrow;
-	}
-
-	public void setTestOnBorrow(boolean testOnBorrow) {
-		this.testOnBorrow = testOnBorrow;
-	}
-
-	public boolean isTestOnReturn() {
-		return testOnReturn;
-	}
-
-	public void setTestOnReturn(boolean testOnReturn) {
-		this.testOnReturn = testOnReturn;
-	}
-
-	public boolean isTestWhileIdle() {
-		return testWhileIdle;
-	}
-
-	public void setTestWhileIdle(boolean testWhileIdle) {
-		this.testWhileIdle = testWhileIdle;
-	}
-
-	public int getTimeBetweenEvictionRunsMillis() {
-		return timeBetweenEvictionRunsMillis;
-	}
-
-	public void setTimeBetweenEvictionRunsMillis(int timeBetweenEvictionRunsMillis) {
-		this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
-	}
-
-	public int getMinEvictableIdleTimeMillis() {
-		return minEvictableIdleTimeMillis;
-	}
-
-	public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
-		this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
-	}
-
-	
-
-	public int getMaxPoolPreparedStatementPerConnectionSize() {
-		return maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	public void setMaxPoolPreparedStatementPerConnectionSize(int maxPoolPreparedStatementPerConnectionSize) {
-		this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	public Boolean getPoolPreparedStatements() {
-		return poolPreparedStatements;
-	}
-
-	public void setPoolPreparedStatements(Boolean poolPreparedStatements) {
-		this.poolPreparedStatements = poolPreparedStatements;
-	}
 }

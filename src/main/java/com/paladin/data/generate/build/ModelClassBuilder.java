@@ -5,6 +5,8 @@ import com.paladin.data.generate.GenerateEnvironment;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Id;
@@ -100,6 +102,8 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         });
 
+        importClassSet.add(Getter.class);
+        importClassSet.add(Setter.class);
         importClassSet.add(Id.class);
         if (baseModelType != null) {
             importClassSet.add(baseModelType);
@@ -124,8 +128,9 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
         String[] classNames = new String[importClassSet.size()];
 
         int i = 0;
-        for (Class<?> importClass : importClassSet)
+        for (Class<?> importClass : importClassSet) {
             classNames[i++] = importClass.getName();
+        }
 
         Arrays.sort(classNames);
 
@@ -134,6 +139,8 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
                 sb.append("import ").append(className).append(";\n");
         }
 
+        sb.append("\n@Getter ");
+        sb.append("\n@Setter ");
         sb.append("\npublic class ").append(tableOption.getModelName());
         if (baseModelType != null) {
             sb.append(" extends ").append(baseModelType.getSimpleName());
@@ -153,19 +160,19 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
                     .append(";\n\n");
         }
 
-        for (GenerateColumnOption columnOption : columnOptions) {
-
-            String fieldName = columnOption.getFieldName();
-            String className = columnOption.getFieldType().getSimpleName();
-
-            // getMethod
-            sb.append(tab).append("public ").append(className).append(" ").append(NameUtil.addGet(fieldName)).append("() {\n").append(tab).append(tab)
-                    .append("return ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-
-            // setMethod
-            sb.append(tab).append("public void ").append(NameUtil.addSet(fieldName)).append("(").append(className).append(" ").append(fieldName).append(") {\n")
-                    .append(tab).append(tab).append("this.").append(fieldName).append(" = ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-        }
+//        for (GenerateColumnOption columnOption : columnOptions) {
+//
+//            String fieldName = columnOption.getFieldName();
+//            String className = columnOption.getFieldType().getSimpleName();
+//
+//            // getMethod
+//            sb.append(tab).append("public ").append(className).append(" ").append(NameUtil.addGet(fieldName)).append("() {\n").append(tab).append(tab)
+//                    .append("return ").append(fieldName).append(";\n").append(tab).append("}\n\n");
+//
+//            // setMethod
+//            sb.append(tab).append("public void ").append(NameUtil.addSet(fieldName)).append("(").append(className).append(" ").append(fieldName).append(") {\n")
+//                    .append(tab).append(tab).append("this.").append(fieldName).append(" = ").append(fieldName).append(";\n").append(tab).append("}\n\n");
+//        }
 
         sb.append("}");
 

@@ -37,7 +37,7 @@ public class CommonController {
     @GetMapping("/constant")
     @ResponseBody
     public Object enumConstants(@RequestParam("code") String[] code) {
-        return R.success(ConstantsContainer.getTypeChildren(code));
+        return R.success(ConstantsContainer.getTypeConstants(code));
     }
 
     @ApiOperation(value = "通过ID获取附件", response = SysAttachment.class)

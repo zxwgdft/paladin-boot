@@ -3,102 +3,34 @@ package com.paladin.data.controller.dto;
 import java.util.List;
 
 import com.paladin.data.model.build.DbBuildColumn;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * @see com.paladin.data.generate.GenerateTableOption
  * @author TontoZhou
+ * @see com.paladin.data.generate.GenerateTableOption
  * @since 2018年4月11日
  */
+@Getter
+@Setter
 public class GenerateTableOptionDTO {
 
-	private String dbName;
+    private String dbName;
 
-	private String tableName;
+    private String tableName;
 
-	private String title;
+    private String title;
 
-	private String basePackage;
+    private String basePackage;
 
-	private String model;
+    private String model;
 
-	private String subModel;
+    private String subModel;
 
-	private String projectPath;
-	
-	private String filePath;
+    private String projectPath;
 
-	private List<DbBuildColumn> columnBuildOptions;
+    private String filePath;
 
-	public String getDbName() {
-		return dbName;
-	}
-
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
-
-	public String getTableName() {
-		return tableName;
-	}
-
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public String getBasePackage() {
-		return basePackage;
-	}
-
-	public void setBasePackage(String basePackage) {
-		this.basePackage = basePackage;
-	}
-
-	public String getSubModel() {
-		return subModel;
-	}
-
-	public void setSubModel(String subModel) {
-		this.subModel = subModel;
-	}
-
-	public String getProjectPath() {
-		return projectPath;
-	}
-
-	public void setProjectPath(String projectPath) {
-		this.projectPath = projectPath;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
-	public List<DbBuildColumn> getColumnBuildOptions() {
-		return columnBuildOptions;
-	}
-
-	public void setColumnBuildOptions(List<DbBuildColumn> columnBuildOptions) {
-		this.columnBuildOptions = columnBuildOptions;
-	}
+    private List<DbBuildColumn> columnBuildOptions;
 
 }

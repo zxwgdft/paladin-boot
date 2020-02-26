@@ -125,7 +125,14 @@ public class ConstantsContainer implements VersionContainer {
         VersionContainerManager.versionChanged(container.getId());
     }
 
-    public static Map<String, List<KeyValue>> getTypeChildren(String... typeCodes) {
+
+    /**
+     * 获取类型常量
+     *
+     * @param typeCodes
+     * @return
+     */
+    public static Map<String, List<KeyValue>> getTypeConstants(String... typeCodes) {
         Map<String, List<KeyValue>> result = new HashMap<>();
         for (String typeCode : typeCodes) {
             result.put(typeCode, constantMap.get(typeCode));
@@ -133,28 +140,16 @@ public class ConstantsContainer implements VersionContainer {
         return result;
     }
 
-    public static List<KeyValue> getType(String typeCode) {
+    /**
+     * 获取类型常量
+     *
+     * @param typeCode
+     * @return
+     */
+    public static List<KeyValue> getTypeConstant(String typeCode) {
         return constantMap.get(typeCode);
     }
 
-    public static List<KeyValue> getTypes(String typeCode, String... keys) {
-        if (keys != null && keys.length > 0) {
-            List<KeyValue> typeList = constantMap.get(typeCode);
-            if (typeList != null) {
-                List<KeyValue> result = new ArrayList<>(keys.length);
-                for (String key : keys) {
-                    for (KeyValue kv : typeList) {
-                        if (kv.getKey().equals(key)) {
-                            result.add(kv);
-                            break;
-                        }
-                    }
-                }
-                return result;
-            }
-        }
-        return null;
-    }
 
     /**
      * 根据类型和名称得到常量KEY
@@ -172,15 +167,6 @@ public class ConstantsContainer implements VersionContainer {
             return valueMap.get(name);
         }
         return null;
-    }
-
-    /**
-     * 获取所有key集合
-     *
-     * @return
-     */
-    public static Collection<String> getAllKey() {
-        return (Collection<String>) constantMap.keySet();
     }
 
     /**

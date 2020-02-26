@@ -32,7 +32,7 @@ public class ConstantTagProcessor extends AbstractElementTagProcessor {
         final String enumcode = tag.getAttributeValue("enumcode");
         if (enumcode != null && enumcode.length() > 0) {
             String[] codes = enumcode.split(",");
-            Object map = ConstantsContainer.getTypeChildren(codes);
+            Object map = ConstantsContainer.getTypeConstants(codes);
             if (map != null) {
                 try {
                     html = objectMapper.writeValueAsString(map);

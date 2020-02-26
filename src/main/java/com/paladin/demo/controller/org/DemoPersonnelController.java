@@ -130,7 +130,7 @@ public class DemoPersonnelController extends ControllerSupport {
             return R.fail("导出失败：请求参数异常");
         }
         // 用于特殊转换，如果不需要则不需要设置
-        condition.setExcelValueFormat(excelValueFormatMap);
+        condition.setExcelValueFormatMap(excelValueFormatMap);
         condition.sortCellIndex();
         DemoPersonnelQuery query = condition.getQuery();
         try {

@@ -1,8 +1,7 @@
 package com.paladin.data.dynamic;
 
 import com.paladin.framework.service.VersionContainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -13,12 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 @ConditionalOnProperty(prefix = "paladin", value = "dynamic-datasource-enabled", havingValue = "true", matchIfMissing = false)
 public class DataSourceContainer implements VersionContainer {
-
-    private static Logger logger = LoggerFactory.getLogger(DataSourceContainer.class);
-
+    
     private static String staticLocalSourceName;
     private static DataSource staticLocalDataSource;
 
@@ -41,7 +39,7 @@ public class DataSourceContainer implements VersionContainer {
             }
         }
 
-        logger.info("多数据源容器初始化完毕，共包含数据源" + dsMap.size() + "个");
+        log.info("多数据源容器初始化完毕，共包含数据源" + dsMap.size() + "个");
     }
 
     public static DataSource getRealDataSource(String name) {

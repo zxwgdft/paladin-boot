@@ -1,5 +1,6 @@
 package com.paladin.data.controller;
 
+import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.service.cache.SysVisitCacheService;
 import com.paladin.data.controller.dto.GenerateTableOptionDTO;
 import com.paladin.data.database.DataBaseSource;
@@ -21,7 +22,6 @@ import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.spring.DevCondition;
 import com.paladin.framework.utils.UUIDUtil;
-import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Controller;

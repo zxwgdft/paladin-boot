@@ -11,9 +11,9 @@ import com.paladin.data.database.constant.OracleTypeConstant;
 import com.paladin.data.database.model.Column;
 
 public class DataTypeUtil {
-	
+
 private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
-	
+
 	static {
 		propertyTypeMap = new HashMap<>();
 
@@ -41,20 +41,20 @@ private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
 		oracleTypeMap.put(OracleTypeConstant.TYPE_TIMESTAMP_WITH_TIME_ZONE, Date.class);
 		oracleTypeMap.put(OracleTypeConstant.TYPE_VARCHAR, String.class);
 		oracleTypeMap.put(OracleTypeConstant.TYPE_VARCHAR2, String.class);
-		
+
 		propertyTypeMap.put(DataBaseType.ORACLE, oracleTypeMap);
-		
-		
+
+
 
 		Map<String, Class<?>> mysqlTypeMap = new HashMap<>();
 		// 需要判断有无符号
 		//mysqlTypeMap.put(MySqlTypeConstant.TYPE_INT, PropertyType.NUMBER);
 		//mysqlTypeMap.put(MySqlTypeConstant.TYPE_BIGINT, PropertyType.NUMBER);
-		//mysqlTypeMap.put(MySqlTypeConstant.TYPE_INTEGER, PropertyType.NUMBER);				
-		
+		//mysqlTypeMap.put(MySqlTypeConstant.TYPE_INTEGER, PropertyType.NUMBER);
+
 		// 需要判断精度
 		//mysqlTypeMap.put(MySqlTypeConstant.TYPE_BIT, PropertyType.NUMBER);
-		
+
 		mysqlTypeMap.put(MySqlTypeConstant.TYPE_MEDIUMINT, Integer.class);
 		mysqlTypeMap.put(MySqlTypeConstant.TYPE_BLOB, byte[].class);
 		mysqlTypeMap.put(MySqlTypeConstant.TYPE_BOOLEAN, Boolean.class);
@@ -74,8 +74,8 @@ private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
 		propertyTypeMap.put(DataBaseType.MYSQL, mysqlTypeMap);
 
 	}
-	
-		
+
+
 	/**
 	 * 获取数据类型对应java类型，缺省情况返回String
 	 * @param column
@@ -86,13 +86,13 @@ private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
 	{
 		if(column == null || dbType == null)
 			 throw new IllegalArgumentException("表列和数据库类型不能	");
-		
+
 		String dataType = column.getDataType();
-		
+
 		 Map<String, Class<?>> classMap  = propertyTypeMap.get(dbType);
 		 if(classMap == null)
 			 throw new IllegalArgumentException("不支持数据库["+dbType+"]");
-		 
+
 		 Class<?> clazz = classMap.get(dataType);
 		 if(clazz == null)
 		 {
@@ -109,34 +109,34 @@ private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
 				 {
 					 return column.isUnsigned()? Long.class:Integer.class;
 				 }
-				 
+
 				 if(MySqlTypeConstant.TYPE_BIGINT.equals(dataType))
 				 {
 					 return column.isUnsigned()? BigInteger.class:Long.class;
 				 }
-				 
+
 				 if(MySqlTypeConstant.TYPE_BIT.equals(dataType))
 				 {
 					 return column.getDataPrecision()>1? byte[].class:Boolean.class;
 				 }
-				 
+
 			 }
 		 }
 		 else
 			 return clazz;
-		 
+
 		 return String.class;
 	}
-	
-	
-	
+
+
+
 	/**
-	 * 
+	 *
 	 * precision				class
 	 * 	<20					Float
 	 * >=20					Double
-	 * 
-	 * 
+	 *
+	 *
 	 * @param column
 	 * @return
 	 */
@@ -144,24 +144,23 @@ private final static Map<DataBaseType, Map<String, Class<?>>> propertyTypeMap;
 		Integer precision = column.getDataPrecision();
 		return (precision != null && precision < 20) ? Float.class : Double.class;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Oracle Number 特殊处理
-	 * 
-	 * 
+	 *
+	 *
 	 * precision		scale		class
 	 * 	<=10			<=0		Integer
 	 * <=19;>10	<=0		Long
 	 * >19						BigDecimal
-	 * 
+	 *
 	 * ------------------ 小数不准确 ----------------------
-	 * 					<7;>0	Float					
-	 * 					<16;>0	Double				
+	 * 					<7;>0	Float
+	 * 					<16;>0	Double
 	 * 					>=16		BigDecimal
-	 * 
+	 *
 	 * @param column
-	 * @param type
 	 * @return
 	 */
 	private static Class<?> getOracleNumberClass(Column column) {
