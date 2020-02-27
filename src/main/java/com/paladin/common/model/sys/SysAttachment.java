@@ -10,18 +10,24 @@ import java.util.Date;
 @Setter
 public class SysAttachment {
 
-    public final static int USE_TYPE_COLUMN_RELATION = 1;
-    public final static int USE_TYPE_RESOURCE = 2;
+    /**
+     * 文件
+     */
+    public final static int TYPE_FILE = 1;
 
-    public static final String COLUMN_FIELD_ID = "id";
-    public static final String COLUMN_FIELD_USER_TYPE = "userType";
+    /**
+     * 图片
+     */
+    public final static int TYPE_IMAGE = 2;
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_DELETED = "deleted";
+
 
     @Id
     private String id;
 
-    private Integer useType;
-
-    private String type;
+    private Integer type;
 
     private String name;
 
@@ -29,11 +35,12 @@ public class SysAttachment {
 
     private Long size;
 
-    private String pelativePath;
+    private String relativePath;
 
-    private String thumbnailPelativePath;
+    private String thumbnailRelativePath;
 
     private Date createTime;
 
+    private Integer deleted;
 
 }

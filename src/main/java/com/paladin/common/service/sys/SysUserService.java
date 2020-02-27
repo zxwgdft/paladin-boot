@@ -26,6 +26,11 @@ public class SysUserService extends ServiceSupport<SysUser> {
     @Resource
     private PaladinProperties paladinProperties;
 
+
+    private Pattern accountPattern = Pattern.compile("^\\w{6,30}$");
+    private Pattern passwordPattern = Pattern.compile("^\\w{6,20}$");
+
+
     /**
      * 创建一个账号
      *
@@ -36,8 +41,9 @@ public class SysUserService extends ServiceSupport<SysUser> {
      */
     public int createUserAccount(String account, String userId, Integer type) {
 
-        if (account == null || !validateAccount(account))
+        if (account == null || !validateAccount(account)) {
             throw new BusinessException("账号不符合规则或者已经存在该账号");
+        }
 
         String salt = SecureUtil.createSalte();
         String password = paladinProperties.getDefaultPassword();
@@ -52,11 +58,9 @@ public class SysUserService extends ServiceSupport<SysUser> {
         user.setType(type);
 
         return save(user);
-
     }
 
-    private final static Pattern accountPattern = Pattern.compile("^\\w{6,30}$");
-    private final static Pattern passwordPattern = Pattern.compile("^\\w{6,20}$");
+
 
     /**
      * 验证账号

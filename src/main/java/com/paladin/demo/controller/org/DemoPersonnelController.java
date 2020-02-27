@@ -1,5 +1,6 @@
 package com.paladin.demo.controller.org;
 
+import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.sys.SysAttachmentService;
@@ -16,7 +17,6 @@ import com.paladin.framework.excel.write.ValueFormator;
 import com.paladin.framework.service.QueryInputMethod;
 import com.paladin.framework.service.QueryOutputMethod;
 import com.paladin.framework.utils.UUIDUtil;
-import com.paladin.common.core.ControllerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,7 +79,7 @@ public class DemoPersonnelController extends ControllerSupport {
             return validErrorHandler(bindingResult);
         }
 
-        List<SysAttachment> attachments = attachmentService.checkOrCreateAttachment(demoPersonnelDTO.getProfilePhoto(), demoPersonnelDTO.getProfilePhotoFile());
+        List<SysAttachment> attachments = attachmentService.mergeAttachments(demoPersonnelDTO.getProfilePhoto(), demoPersonnelDTO.getProfilePhotoFile());
         if (attachments != null && attachments.size() > 1) {
             return R.fail(HttpCode.BAD_REQUEST, "附件数量不能超过1张");
         }
@@ -102,13 +102,18 @@ public class DemoPersonnelController extends ControllerSupport {
             return validErrorHandler(bindingResult);
         }
         String id = demoPersonnelDTO.getId();
-        List<SysAttachment> attachments = attachmentService.checkOrCreateAttachment(demoPersonnelDTO.getProfilePhoto(), demoPersonnelDTO.getProfilePhotoFile());
+        DemoPersonnel model = demoPersonnelService.get(id);
+        if (model == null) {
+            return R.fail(HttpCode.BAD_REQUEST, "找不到需要修改的对象");
+        }
+
+        List<SysAttachment> attachments = attachmentService.replaceAndMergeAttachments(model.getProfilePhoto(), demoPersonnelDTO.getProfilePhoto(), demoPersonnelDTO.getProfilePhotoFile());
         if (attachments != null && attachments.size() > 1) {
             return R.fail(HttpCode.BAD_REQUEST, "附件数量不能超过1张");
         }
         demoPersonnelDTO.setProfilePhoto(attachmentService.splicingAttachmentId(attachments));
 
-        DemoPersonnel model = beanCopy(demoPersonnelDTO, demoPersonnelService.get(id));
+        model = beanCopy(demoPersonnelDTO, model);
         if (demoPersonnelService.update(model) > 0) {
             return R.success(beanCopy(demoPersonnelService.get(id), new DemoPersonnelVO()));
         }

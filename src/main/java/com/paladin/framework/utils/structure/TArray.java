@@ -3,6 +3,7 @@ package com.paladin.framework.utils.structure;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
+
 public class TArray<T> {
 
     T[] values;
@@ -26,10 +27,8 @@ public class TArray<T> {
     }
 
     public void add(T[] arr) {
-
         if (arr != null) {
             int len = arr.length;
-
             if (len > 0) {
                 int toSize = size + len;
                 if (toSize > capacity) {
@@ -75,8 +74,9 @@ public class TArray<T> {
         }
     }
 
+
     public T[] toArray() {
         return Arrays.copyOf(values, size);
     }
-    
+
 }

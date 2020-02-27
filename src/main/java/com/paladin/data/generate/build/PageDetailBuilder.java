@@ -76,7 +76,7 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 			}
 
 			if (judge(buildOption.getIsAttachment())) {
-				sb.append(", fileName: \"").append(columnOption.getFieldName()).append("File").append("\"");
+				sb.append(", filename: \"").append(columnOption.getFieldName()).append("File").append("\"");
 				Integer count = buildOption.getAttachmentCount();
 				if (count != 0 && count > 0) {
 					sb.append(", maxFileCount: ").append(count).append("");
