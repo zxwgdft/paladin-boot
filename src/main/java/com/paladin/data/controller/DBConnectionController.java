@@ -20,7 +20,7 @@ import com.paladin.data.service.dto.DBConnectionQueryDTO;
 import com.paladin.data.service.vo.DBConnectionVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.spring.DevCondition;
+import com.paladin.framework.spring.DevelopCondition;
 import com.paladin.framework.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
@@ -38,7 +38,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/data/connection")
-@Conditional(DevCondition.class)
+@Conditional(DevelopCondition.class)
 public class DBConnectionController extends ControllerSupport {
 
     @Autowired

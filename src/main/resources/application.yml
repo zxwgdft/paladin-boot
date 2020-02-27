@@ -25,3 +25,7 @@ spring:
 mapper:
   mappers: com.paladin.framework.mybatis.CustomMapper
   enumAsSimpleType: true
+mybatis:
+  base-packages[0]: com.paladin.common.mapper
+  base-packages[1]: com.paladin.demo.mapper
+  mapper-locations: classpath:mapper/**/*.xml
