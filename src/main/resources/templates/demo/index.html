@@ -2,209 +2,187 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Common System</title>
+    <title>Demo System</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="/static/assets/bootstrap3/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/static/assets/adminLTE/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/assets/bootstrap3/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/static/css/skins/skin-purple.min.css">
-    <style type="text/css">
-    html {
-        overflow: hidden;
-    }
-
-    body {
-        font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
-        color: #2f2f2f;
-        text-size-adjust: 100%;
-        word-wrap: break-word;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
-    </style>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
-    <div class="wrapper">
-        <header class="main-header">
-            <a href="javascript:void(0)" class="logo">
-                <span class="logo-mini"><b>Paladin</b></span>
-                <span class="logo-lg"><b>Paladin</b>System</span>
+<div class="wrapper">
+    <header class="main-header">
+        <a href="javascript:void(0)" class="logo">
+            <span class="logo-mini"><b>Demo</b></span>
+            <span class="logo-lg"><b>Demo</b>System</span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
             </a>
-            <nav class="navbar navbar-static-top">
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                </a>
-                <div class="navbar-custom-menu">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="/static/img/user1-128x128.jpg" class="user-image" alt="User Image" />
-                                <span class="hidden-xs" th:text="${name}"></span>
-                                </a>
-                            <ul class="dropdown-menu">
-                                <!-- The user image in the menu -->
-                                <li class="user-header">
-                                    <img src="/static/img/user1-128x128.jpg" style="background: #fff" class="img-circle" alt="User Image" />
-                                    <p th:text="${name}"></p>
-                                </li>
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="javascript:see()" class="btn btn-default btn-flat">修改密码</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="/demo/logout" class="btn btn-default btn-flat">登出</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:goHome()" alt="主页"><i class="glyphicon glyphicon-home"></i></a> </li>
-                        <li>
-                            <a href="/demo/logout" alt="登出"><i class="fa fa-sign-out"></i></a>
-                        </li>
-                    </ul>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/static/img/user1-128x128.jpg" class="user-image" alt="User Image"/>
+                            <span class="hidden-xs" th:text="${name}"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <img src="/static/img/user1-128x128.jpg" style="background: #fff" class="img-circle"
+                                     alt="User Image"/>
+                                <p th:text="${name}"></p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="javascript:see()" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/demo/logout" class="btn btn-default btn-flat">登出</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:goHome()" alt="主页"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li>
+                        <a href="/demo/logout" alt="登出"><i class="fa fa-sign-out"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu" th:utext="${menuHtml}">
+            </ul>
+        </section>
+    </aside>
+    <div class="content-wrapper" id="content-wrapper" style="min-height: 421px;">
+        <!-- <div class="content-tabs">
+            <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
+                <i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs menuTabs tab-ui-menu" id="tab-menu">
+                <div class="page-tabs-content" style="margin-left: 0px;">
                 </div>
             </nav>
-        </header>
-        <aside class="main-sidebar">
-            <section class="sidebar">
-                <!-- Sidebar Menu -->
-                <ul class="sidebar-menu" th:utext="${menuHtml}"></ul>
-            </section>
-        </aside>
-        <div class="content-wrapper" id="content-wrapper" style="min-height: 421px;">
-            <!-- <div class="content-tabs">
-                <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
-                    <i class="fa fa-backward"></i>
+            <button class="roll-nav roll-right tabRight" onclick="scrollTabRight()">
+                <i class="fa fa-forward" style="margin-left: 3px;"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown tabClose" data-toggle="dropdown">
+                    页签操作<i class="fa fa-caret-down" style="padding-left: 3px;"></i>
                 </button>
-                <nav class="page-tabs menuTabs tab-ui-menu" id="tab-menu">
-                    <div class="page-tabs-content" style="margin-left: 0px;">
-                    </div>
-                </nav>
-                <button class="roll-nav roll-right tabRight" onclick="scrollTabRight()">
-                    <i class="fa fa-forward" style="margin-left: 3px;"></i>
-                </button>
-                <div class="btn-group roll-nav roll-right">
-                    <button class="dropdown tabClose" data-toggle="dropdown">
-                        页签操作<i class="fa fa-caret-down" style="padding-left: 3px;"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" style="min-width: 128px;">
-                        <li><a class="tabReload" href="javascript:refreshTab();">刷新当前</a></li>
-                        <li><a class="tabCloseCurrent" href="javascript:closeCurrentTab();">关闭当前</a></li>
-                        <li><a class="tabCloseAll" href="javascript:closeOtherTabs(true);">全部关闭</a></li>
-                        <li><a class="tabCloseOther" href="javascript:closeOtherTabs();">除此之外全部关闭</a></li>
-                    </ul>
-                </div>
-                <button class="roll-nav roll-right fullscreen" onclick="App.handleFullScreen()"><i class="fa fa-arrows-alt"></i></button>
-            </div> -->
-            <div class="content-iframe" style="background-color: #ecf0f5;">
-                <div class="tab-content" id="tab-content" style="background-color: #ecf0f5;">
-                </div>
+                <ul class="dropdown-menu dropdown-menu-right" style="min-width: 128px;">
+                    <li><a class="tabReload" href="javascript:refreshTab();">刷新当前</a></li>
+                    <li><a class="tabCloseCurrent" href="javascript:closeCurrentTab();">关闭当前</a></li>
+                    <li><a class="tabCloseAll" href="javascript:closeOtherTabs(true);">全部关闭</a></li>
+                    <li><a class="tabCloseOther" href="javascript:closeOtherTabs();">除此之外全部关闭</a></li>
+                </ul>
             </div>
-        </div>
-        <div class="control-sidebar-bg"></div>
-        <div id="updatePsd" style="display: none">
-            <div class="form-group" style="height: 32px; display: block; margin-top: 10px;">
-                <label for="username" class="col-sm-2 control-label" style="height: 34px; display: inline-block; line-height: 34px;">用户名</label>
-                <div class="col-sm-10">
-                    <input type="text" name="username" readonly="readonly" class="form-control" id="username" th:value="${name}" />
-                </div>
-            </div>
-            <div class="form-group" style="height: 32px; display: block;">
-                <label for="oldPassword" class="col-sm-2 control-label" style="height: 34px; display: inline-block; line-height: 34px;">原始密码:</label>
-                <div class="col-sm-10">
-                    <input type="password" name="oldPassword" class="form-control" id="oldPassword" placeholder="请输入原始密码" />
-                </div>
-            </div>
-            <div class="form-group" style="height: 32px; display: block;">
-                <label for="newPassword" class="col-sm-2 control-label" style="height: 34px; display: inline-block; line-height: 34px;">新密码:</label>
-                <div class="col-sm-10">
-                    <input type="password" name="newPassword" class="form-control" id="newPassword" placeholder="请输入6-20位由数字，字母或下划线组成的密码" />
-                </div>
-            </div>
-            <div class="form-group" style="height: 32px; display: block;">
-                <label for="confirmNewPassword" class="col-sm-2 control-label" style="height: 34px; display: inline-block; line-height: 34px;">确认新密码:</label>
-                <div class="col-sm-10">
-                    <input type="password" name="confirmNewPassword" class="form-control" id="iConfirmNewPassword" placeholder="请输入6-20位由数字，字母或下划线组成的密码" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-2">
-                    <button type="button" id="submitted" class="btn btn-primary btn-block">提交</button>
-                </div>
+            <button class="roll-nav roll-right fullscreen" onclick="App.handleFullScreen()"><i class="fa fa-arrows-alt"></i></button>
+        </div> -->
+        <div class="content-iframe" style="background-color: #ecf0f5;">
+            <div class="tab-content" id="tab-content" style="background-color: #ecf0f5;">
             </div>
         </div>
     </div>
-    <!-- ./wrapper -->
-    <!-- REQUIRED JS SCRIPTS -->
-    <script src="/static/assets/jquery/jquery-2.2.4.min.js"></script>
-    <script src="/static/assets/bootstrap3/js/bootstrap.min.js"></script>
-    <script src="/static/assets/adminLTE/components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-    <script src="/static/assets/adminLTE/components/fastclick/lib/fastclick.js"></script>
-    <script src="/static/js/app/app.min.js"></script>
-    <script src="/static/js/app/app_iframe.min.js"></script>
-    <script src="/static/assets/jquery-asidenav/js/asidenav.js"></script>
-    <script src="/static/assets/layer/layer.js"></script>
-    <script type="text/javascript">
-    function goto(target){
+    <div class="control-sidebar-bg"></div>
+    <div id="updatePsd" style="display: none">
+        <div class="form-group" style="height: 32px; display: block;margin-top: 20px">
+            <label for="oldPassword" class="col-sm-2 control-label"
+                   style="height: 34px; display: inline-block; line-height: 34px;">原始密码:</label>
+            <div class="col-sm-10">
+                <input type="password" name="oldPassword" id="oldPassword" autocomplete="off" class="form-control"
+                       placeholder="请输入原始密码"/>
+            </div>
+        </div>
+        <div class="form-group" style="height: 32px; display: block;">
+            <label for="newPassword" class="col-sm-2 control-label"
+                   style="height: 34px; display: inline-block; line-height: 34px;">新密码:</label>
+            <div class="col-sm-10">
+                <input type="password" name="newPassword" id="newPassword" autocomplete="off" class="form-control"
+                       placeholder="请输入5-20位由数字，字母或下划线组成的密码"/>
+            </div>
+        </div>
+        <div class="form-group" style="height: 32px; display: block;">
+            <label for="confirmNewPassword" class="col-sm-2 control-label"
+                   style="height: 34px; display: inline-block; line-height: 34px;">确认新密码:</label>
+            <div class="col-sm-10">
+                <input type="password" name="confirmNewPassword" id="confirmNewPassword" autocomplete="off"
+                       class="form-control" placeholder="请输入5-20位由数字，字母或下划线组成的密码"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-2">
+                <button type="button" id="submitted" class="btn btn-primary btn-block">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ./wrapper -->
+<!-- REQUIRED JS SCRIPTS -->
+<script src="/static/assets/jquery/jquery-2.2.4.min.js"></script>
+<script src="/static/assets/bootstrap3/js/bootstrap.min.js"></script>
+<script src="/static/assets/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/static/js/app/app.min.js"></script>
+<script src="/static/js/app/app_iframe.min.js"></script>
+<script src="/static/assets/jquery-asidenav/js/asidenav.js"></script>
+<script src="/static/assets/layer/layer.js"></script>
+<script type="text/javascript">
+    function goto(target) {
         target.close = true;
         target.urlType = "absolute";
         addTabs(target);
     }
 
-    function goHome(){
-        // goto({
-        //     id:"0000",
-        //     url:"",
-        //     title:"主页"
-        // });
+    function goHome() {
+        goto({
+            id: "0000",
+            url: "/demo/demo/personnel/index",
+            title: "主页"
+        });
     }
 
-    $(function() {
+    $(function () {
         goHome();
 
         //密码修改后提交
         $("#submitted").click(
-            function() {
+            function () {
                 var oldPassword = $.trim(window.parent.document
                     .getElementById('oldPassword').value);
                 var newPassword = $.trim(window.parent.document
                     .getElementById('newPassword').value);
                 var confirmNewPassword = $.trim(window.parent.document
-                    .getElementById('iConfirmNewPassword').value);
+                    .getElementById('confirmNewPassword').value);
 
-                if (oldPassword == '' || oldPassword == 'null') {
-                    layer.msg('原始密码不能为空!');
-                } else if (newPassword == '' || newPassword == 'null') {
-                    layer.msg('新密码不能为空!');
-                } else if (newPassword == oldPassword) {
-                    layer.msg('新密码不能和原始密码一样!');
-                } else if (newPassword.length < 6 || newPassword.length > 20) {
-                    layer.msg('新密码长度应该在6-20');
-                } else if (confirmNewPassword == '' || confirmNewPassword == 'null') {
-                    layer.msg('确认新密码不能为空！');
-                } else if (confirmNewPassword.length < 6 || confirmNewPassword.length > 20) {
-                    layer.msg('确认新密码长度应该在6-20');
+                if (!oldPassword) {
+                    layer.msg("请输入旧密码");
+                } else if (!newPassword || !/^\w{6,20}$/.test(newPassword)) {
+                    layer.msg("请输入新密码（长度为6-20位，包含下划线、数字、字母）");
                 } else if (confirmNewPassword != newPassword) {
-                    layer.msg('两次新密码输入不一致！');
+                    layer.msg("两次密码输入不一致");
                 } else {
                     $.post("/demo/update/password", {
                         'oldPassword': oldPassword,
                         'newPassword': newPassword
-                    }, function(response) {
-                        if (response.status == 1) {
-                            layer.alert("修改成功", function() {
-                                window.location = "/demo/logout";
+                    }, function (response) {
+                        if (response.success === true) {
+                            layer.alert("修改成功", function (index) {
+                                history.go(0);
                             });
                         } else {
-                            layer.alert("修改失败", function() {
-
+                            layer.alert("修改失败", function (index) {
+                                layer.close(index);
                             });
                         }
-
                     });
                 }
             })
@@ -245,7 +223,7 @@
 
         return [w + "px", h + "px"];
     }
-    </script>
+</script>
 </body>
 
 </html>

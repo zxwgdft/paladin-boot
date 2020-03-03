@@ -1,9 +1,9 @@
 package com.paladin.demo.controller;
 
+import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.sys.SysUserService;
-import com.paladin.common.core.CommonUserSession;
 import com.paladin.framework.GlobalProperties;
 import com.paladin.framework.common.R;
 import com.paladin.framework.service.UserSession;
@@ -64,7 +64,7 @@ public class LoginController {
             if (children.size() > 0) {
                 sb.append("<li class=\"treeview\"><a class=\"nav-link\"");
                 if (href != null && href.length() > 0) {
-                    sb.append(" onclick=\"addTabs({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',urlType: 'absolute',url: '")
+                    sb.append(" onclick=\"goto({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',url: '")
                             .append(href).append("'});\"");
                 }
 
@@ -75,7 +75,7 @@ public class LoginController {
             } else {
                 sb.append("<li><a class=\"nav-link\"");
                 if (href != null) {
-                    sb.append(" onclick=\"addTabs({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',urlType: 'absolute',url: '")
+                    sb.append(" onclick=\"goto({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',url: '")
                             .append(href).append("'});\"");
                 }
                 sb.append("><i class=\"").append(icon).append("\"></i> <span>").append(op.getName()).append("</span></a></li>");

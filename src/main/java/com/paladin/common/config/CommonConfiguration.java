@@ -1,15 +1,17 @@
 package com.paladin.common.config;
 
+import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
 import com.paladin.common.core.DefaultVersionContainerDAO;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.template.TontoDialect;
-import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.VersionContainerDAO;
 import io.buji.pac4j.realm.Pac4jRealm;
+import io.buji.pac4j.token.Pac4jToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -39,7 +41,9 @@ public class CommonConfiguration {
     @Bean("casRealm")
     @ConditionalOnProperty(prefix = "paladin", value = "shiro-cas-enabled", havingValue = "true", matchIfMissing = false)
     public Pac4jRealm getCasRealm() {
-        return new CommonCasUserRealm();
+        CommonCasUserRealm realm = new CommonCasUserRealm();
+        realm.setAuthenticationTokenClass(Pac4jToken.class);
+        return realm;
     }
 
     /**
@@ -53,7 +57,8 @@ public class CommonConfiguration {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
         hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
-        realm.setCredentialsMatcher(new HashedCredentialsMatcher());
+        realm.setCredentialsMatcher(hashedCredentialsMatcher);
+        realm.setAuthenticationTokenClass(UsernamePasswordToken.class);
         return realm;
     }
 

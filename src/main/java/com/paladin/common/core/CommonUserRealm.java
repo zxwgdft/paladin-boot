@@ -14,11 +14,6 @@ public class CommonUserRealm extends AuthorizingRealm {
     @Autowired
     private SysUserService sysUserService;
 
-    public CommonUserRealm() {
-        super();
-        setAuthenticationTokenClass(UsernamePasswordToken.class);
-    }
-
     /**
      * 认证信息.(身份验证) : Authentication 是用来验证用户身份
      *

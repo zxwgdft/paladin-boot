@@ -20,11 +20,6 @@ public class CommonCasUserRealm extends Pac4jRealm {
     @Autowired
     private SysUserService sysUserService;
 
-    public CommonCasUserRealm() {
-        super();
-        this.setAuthenticationTokenClass(Pac4jToken.class);
-    }
-
     /**
      * 认证信息.(身份验证) : Authentication 是用来验证用户身份
      *

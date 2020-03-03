@@ -61,7 +61,6 @@ public class SysUserService extends ServiceSupport<SysUser> {
     }
 
 
-
     /**
      * 验证账号
      *
