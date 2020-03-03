@@ -13,7 +13,7 @@ var App = function () {
 
     var basePath = '/';
 
-    var globalImgPath = 'static/image/';
+    var globalImgPath = 'static/img/';
 
     var globalPluginsPath = 'static/assets/adminLTE/plugins/';
 

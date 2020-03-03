@@ -3,15 +3,13 @@ package com.paladin;
 import com.paladin.framework.GlobalProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import tk.mybatis.spring.annotation.MapperScan;
 
 
 @SpringBootApplication
-@EnableWebMvc
 @EnableScheduling
+@MapperScan({"com.paladin.common.mapper", "com.paladin.data.mapper", "com.paladin.demo.mapper"})
 public class Application {
 
     public static void main(String[] args) {

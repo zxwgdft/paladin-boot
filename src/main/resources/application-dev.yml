@@ -35,7 +35,7 @@ spring:
 
 paladin:
   shiro-cas-enabled: false
-  shiro-enabled: false
+  shiro-enabled: true
   shiro:
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS30
