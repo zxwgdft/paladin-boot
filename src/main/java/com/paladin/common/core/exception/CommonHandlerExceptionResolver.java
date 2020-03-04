@@ -2,6 +2,7 @@ package com.paladin.common.core.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paladin.framework.common.HttpCode;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,14 +24,24 @@ public class CommonHandlerExceptionResolver implements HandlerExceptionResolver 
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             if (handlerMethod.getMethodAnnotation(ResponseBody.class) != null) {
+                String errorMessage = "";
+
+                if (ex instanceof BusinessException) {
+                    errorMessage = ex.getMessage();
+                    log.debug("业务异常", ex);
+                } else if (ex instanceof SystemException) {
+                    errorMessage = ex.getMessage();
+                    log.error("系统异常", ex);
+                } else {
+                    errorMessage = "系统异常";
+                    log.error("其他异常", ex);
+                }
+
                 MappingJackson2JsonView jsonView = new MappingJackson2JsonView(objectMapper);
-                jsonView.addStaticAttribute("message", ex.getMessage());
+                jsonView.addStaticAttribute("message", errorMessage);
                 jsonView.addStaticAttribute("success", false);
                 jsonView.addStaticAttribute("code", HttpCode.FAILURE);
 
-                if (ex instanceof SystemException) {
-                    log.error("异常", ex);
-                }
 
                 return new ModelAndView(jsonView);
             } else {

@@ -119,6 +119,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
         }
 
         String salt = SecureUtil.createSalte();
+        newPassword = SecureUtil.createPassword(newPassword, salt);
 
         SysUser updateUser = new SysUser();
         updateUser.setId(user.getId());
