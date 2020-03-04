@@ -37,11 +37,11 @@ function generateToolBar(toolBtn) {
             toolBtn = [toolBtn];
         }
 
-        toolBtn.sort(function(a, b) {
+        toolBtn.sort(function (a, b) {
             return (a.order > b.order) ? 1 : -1;
         });
 
-        toolBtn.forEach(function(b) {
+        toolBtn.forEach(function (b) {
             var a = b.showIn == 'view' ? ' tonto-model-tool-view-btn' : (b.showIn == 'edit' ? ' tonto-model-tool-edit-btn' : '');
             if (b.name) {
                 html += '<a class="btn' + a + '" id="' + b.id + '" href="javascript:void(0)">' + (b.icon ? '<i class="' + b.icon + '"></i>' : '') + b.name + '</a>\n';
@@ -206,7 +206,7 @@ function generateEditFormHtml(options, hide) {
         });
     }
 
-    options.formButtonBar.sort(function(a, b) {
+    options.formButtonBar.sort(function (a, b) {
         return (a.order > b.order) ? 1 : -1;
     });
 
@@ -215,7 +215,7 @@ function generateEditFormHtml(options, hide) {
         html += '<div class="form-group' + (formButtonBarClass ? ' ' + formButtonBarClass : '') + '">\n';
         var firstBtn = true,
             btnWidth = options.formButtonBar.length > 2 ? 'col-sm-1' : 'col-sm-2';
-        options.formButtonBar.forEach(function(a) {
+        options.formButtonBar.forEach(function (a) {
             html += firstBtn ? '<div class="' + btnWidth + ' col-sm-offset-3">\n' : '<div class="' + btnWidth + ' col-sm-offset-1">\n';
             html += '<button type="' + a.type + '" id="' + a.id + '" class="' + a.class + '">' + a.name + '</button>\n';
             html += '</div>\n';
@@ -309,7 +309,7 @@ function generateViewFormHtml(options) {
 }
 
 // Model实体类对象
-var _Model = function(name, column, options) {
+var _Model = function (name, column, options) {
     var that = this;
     that.name = name;
     that.status = "view";
@@ -328,7 +328,7 @@ var _Model = function(name, column, options) {
     that.formCancelBtn = $("#" + name + "_form_cancel_btn");
     that.formBody = $("#" + name + "_form");
 
-    that.editBtn.click(function() {
+    that.editBtn.click(function () {
         that.toEdit();
     });
 
@@ -336,7 +336,7 @@ var _Model = function(name, column, options) {
 
     // 注入域构建器
     if (that.columns) {
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             column.fieldBuilder = _FieldBuilderContainer[column.inputType];
             if (!column.fieldBuilder && console) {
                 console.log("找不到对应的域构造器[inputType:" + column.inputType + "]");
@@ -351,7 +351,7 @@ var _Model = function(name, column, options) {
         pattern: "normal", // edit:只能编辑,view:只能查看
         extraParam: null, // 可以为方法或对象，用于扩展表单外提交的字段
         beforeSubmit: null, // 提交表单前调取的方法，如果返回false则不提交
-        successCallback: function(data) { //成功提交表单后回调
+        successCallback: function (data) { //成功提交表单后回调
             $.successMessage("保存成功");
             that.setData(data)
             that.toView();
@@ -363,12 +363,12 @@ var _Model = function(name, column, options) {
 
     // 编辑提交按钮点击事件
     if (typeof that.config.submitClick === 'function') {
-        that.formSubmitBtn.click(function() {
+        that.formSubmitBtn.click(function () {
             that.config.submitClick(that);
         });
     } else if (options.server === false) {
         // 非服务端时，不提交后台，直接前端保存
-        that.formSubmitBtn.click(function() {
+        that.formSubmitBtn.click(function () {
             if (that.formBody.valid()) {
                 var d = that.getFormData();
                 that.setData(d);
@@ -379,11 +379,11 @@ var _Model = function(name, column, options) {
 
     // 编辑取消按钮点击事件
     if (typeof that.config.formCancelEventHandler === 'function') {
-        that.formCancelBtn.click(function() {
+        that.formCancelBtn.click(function () {
             that.config.formCancelEventHandler(that);
         });
     } else {
-        that.formCancelBtn.click(function() {
+        that.formCancelBtn.click(function () {
             that.toView(false);
         });
     }
@@ -392,7 +392,7 @@ var _Model = function(name, column, options) {
     if (that.formBody) {
         that.formBody.createForm({
             // 在表单提交前调用
-            beforeCallback: function(formData) {
+            beforeCallback: function (formData) {
                 // 扩展参数
                 var extraParam = that.config.extraParam;
                 if (extraParam) {
@@ -433,7 +433,7 @@ var _Model = function(name, column, options) {
     if (that.columns) {
 
         // 建立依赖关系
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             if (column.dependency) {
                 that.dependency[column.name] = [{
                     target: column.name,
@@ -466,7 +466,7 @@ var _Model = function(name, column, options) {
         }
 
         // 初始化接口
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             var fun = column.fieldBuilder.initHandler;
             if (typeof fun === 'function') {
                 column.fieldBuilder.initHandler(column, that);
@@ -481,7 +481,7 @@ var _Model = function(name, column, options) {
     }
 }
 // 获取列
-_Model.prototype.getColumn = function(columnName) {
+_Model.prototype.getColumn = function (columnName) {
     for (var i = 0; i < this.columns.length; i++) {
         if (this.columns[i].name == columnName) {
             return this.columns[i];
@@ -490,7 +490,7 @@ _Model.prototype.getColumn = function(columnName) {
     return null;
 }
 // 设置数据，
-_Model.prototype.setData = function(data) {
+_Model.prototype.setData = function (data) {
     var that = this;
     that.data = data;
 
@@ -507,7 +507,7 @@ _Model.prototype.setData = function(data) {
     }
 
     if (that.columns) {
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             column.fieldBuilder.setDataHandler(column, data, that);
         });
     }
@@ -519,12 +519,12 @@ _Model.prototype.setData = function(data) {
     }
 }
 // 填充视图
-_Model.prototype.fillViewBody = function() {
+_Model.prototype.fillViewBody = function () {
     var that = this,
         data = that.data;
     if (that.columns) {
         that.filling = true;
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             column.fieldBuilder.fillView(column, data, that);
         });
 
@@ -537,12 +537,12 @@ _Model.prototype.fillViewBody = function() {
     }
 }
 // 填充编辑
-_Model.prototype.fillEditBody = function() {
+_Model.prototype.fillEditBody = function () {
     var that = this,
         data = that.data;
     if (that.columns) {
         that.filling = true;
-        that.columns.forEach(function(column) {
+        that.columns.forEach(function (column) {
             if (column.editable === false) {
                 column.fieldBuilder.fillView(column, data, that, column.fieldBuilder.getEditTarget(column, that));
             } else {
@@ -558,7 +558,7 @@ _Model.prototype.fillEditBody = function() {
     }
 }
 // 切编辑
-_Model.prototype.toEdit = function(refill) {
+_Model.prototype.toEdit = function (refill) {
     var that = this;
     that.container.find(".tonto-model-tool-view-btn").hide();
     that.container.find(".tonto-model-tool-edit-btn").show();
@@ -568,7 +568,7 @@ _Model.prototype.toEdit = function(refill) {
     that.status = 'edit';
 }
 // 切视图
-_Model.prototype.toView = function(refill) {
+_Model.prototype.toView = function (refill) {
     var that = this;
     that.container.find(".tonto-model-tool-view-btn").show();
     that.container.find(".tonto-model-tool-edit-btn").hide();
@@ -578,7 +578,7 @@ _Model.prototype.toView = function(refill) {
     that.status = 'view';
 }
 // 是否在依赖值中
-_Model.prototype.isInDependencyValues = function(val, vals) {
+_Model.prototype.isInDependencyValues = function (val, vals) {
     // 是否在依赖值内
     if (val != null && val != undefined && val !== "") {
         if ($.isArray(val)) {
@@ -609,7 +609,7 @@ _Model.prototype.isInDependencyValues = function(val, vals) {
     return false;
 }
 // 是否满足依赖
-_Model.prototype.isDependencySatisfy = function(dependencies, data) {
+_Model.prototype.isDependencySatisfy = function (dependencies, data) {
     // 是否满足依赖
     for (var i = 0; i < dependencies.length; i++) {
         var dep = dependencies[i];
@@ -620,7 +620,7 @@ _Model.prototype.isDependencySatisfy = function(dependencies, data) {
     return true;
 }
 // 检查视图状态下依赖
-_Model.prototype.checkViewDependency = function() {
+_Model.prototype.checkViewDependency = function () {
     // 检查VIEW页面依赖
     var that = this,
         data = that.data;
@@ -639,7 +639,7 @@ _Model.prototype.checkViewDependency = function() {
     }
 }
 // 检查编辑状态下依赖
-_Model.prototype.checkEditDependency = function() {
+_Model.prototype.checkEditDependency = function () {
     // 检查EDIT页面依赖
     var that = this;
     for (var o in that.dependency) {
@@ -678,12 +678,12 @@ _Model.prototype.checkEditDependency = function() {
     }
 }
 // 获取编辑中数据对象
-_Model.prototype.getFormData = function() {
+_Model.prototype.getFormData = function () {
     // TODO 附件等处理
     var jsonData = this.formBody.serializeArray();
     var d = {},
         that = this;
-    jsonData.forEach(function(item) {
+    jsonData.forEach(function (item) {
         if (d[item.name]) {
             d[item.name] = d[item.name] + "," + item.value;
         } else {
@@ -691,7 +691,7 @@ _Model.prototype.getFormData = function() {
         }
     });
 
-    that.columns.forEach(function(column) {
+    that.columns.forEach(function (column) {
         column.fieldBuilder.getFormData(column, d, that);
     });
 
@@ -700,8 +700,8 @@ _Model.prototype.getFormData = function() {
 
 var _FieldBuilderContainer = {};
 // 在域构建器每个方法前插入，如果列中已经声明方法，则优先列中声明方法
-var _insertBefore = function(name, face, caller) {
-    return function() {
+var _insertBefore = function (name, face, caller) {
+    return function () {
         var column = arguments[0];
         if (column && typeof column[name] === 'function') {
             return column[name].call(caller, arguments);
@@ -710,13 +710,14 @@ var _insertBefore = function(name, face, caller) {
         }
     }
 }
-var _FieldBuilder = function(name, interfaces) {
+var _FieldBuilder = function (name, interfaces) {
     var that = this;
     that.name = name;
     that.originInterfaces = interfaces;
     var defaultInterfaces = {
-        initHandler: function(column, model) {},
-        setDataHandler: function(column, data, model) {
+        initHandler: function (column, model) {
+        },
+        setDataHandler: function (column, data, model) {
             // 插入数据时候调用
             if (data && column.separator) {
                 // 如果有分隔符，则初始化分割字符串
@@ -730,38 +731,38 @@ var _FieldBuilder = function(name, interfaces) {
                 }
             }
         },
-        formDataHandler: function(column, formData, model) {
+        formDataHandler: function (column, formData, model) {
             // 提交表单数据调用
             return;
         },
-        getFormData: function(column, data, model) {
+        getFormData: function (column, data, model) {
             // 获取表单列编辑数据
             delete data[column.name];
             if (column.editDisplay !== "hide") {
                 return data[column.name] = this.getEditValue(column, model);
             }
         },
-        dependTrigger: function(column, model) {
+        dependTrigger: function (column, model) {
             // 依赖域变化注册，监听依赖域变更
-            model.editBody.find("[name='" + column.name + "']").change(function() {
+            model.editBody.find("[name='" + column.name + "']").change(function () {
                 if (model.filling !== true) {
                     model.checkEditDependency();
                 }
             });
         },
-        getEditValue: function(column, model) {
+        getEditValue: function (column, model) {
             // 获取域EDIT页面值
             return model.editBody.find("[name='" + column.name + "']").val();
         },
-        getEditTarget: function(column, model) {
+        getEditTarget: function (column, model) {
             // 获取编辑目标
             return model.editBody.find("[name='" + column.name + "']");
         },
-        getViewTarget: function(column, model) {
+        getViewTarget: function (column, model) {
             // 获取视图目标
             return model.viewBody.find("[name='" + column.name + "']");
         },
-        hideView: function(column, model, target) {
+        hideView: function (column, model, target) {
             // 默认class:form-control的div下有label和一个div，div下包含了具体控件
             var p = target || this.getViewTarget(column, model);
             if (p.length == 0) return;
@@ -773,7 +774,7 @@ var _FieldBuilder = function(name, interfaces) {
                 f.hide();
             }
         },
-        showView: function(column, model, target) {
+        showView: function (column, model, target) {
             // 显示视图域
             var p = target || this.getViewTarget(column, model);
             var d = p.is("div") ? p : p.parent();
@@ -781,7 +782,7 @@ var _FieldBuilder = function(name, interfaces) {
             d.prev().show();
             d.parent().show();
         },
-        fillView: function(column, data, model, target) {
+        fillView: function (column, data, model, target) {
             // VIEW页面填充值时候调用
             var p = target || this.getViewTarget(column, model);
             if (!p || p.length == 0) return;
@@ -795,7 +796,7 @@ var _FieldBuilder = function(name, interfaces) {
                 p.text("无");
             }
         },
-        hideEdit: function(column, model, target) {
+        hideEdit: function (column, model, target) {
             // 隐藏编辑域
             var p = target || this.getEditTarget(column, model);
             if (!p || p.length == 0) return;
@@ -807,7 +808,7 @@ var _FieldBuilder = function(name, interfaces) {
                 f.hide();
             }
         },
-        showEdit: function(column, model) {
+        showEdit: function (column, model) {
             // 显示编辑域
             var p = model.editBody.find("[name='" + column.name + "']");
             if (!p || p.length == 0) return;
@@ -816,7 +817,7 @@ var _FieldBuilder = function(name, interfaces) {
             d.prev().show();
             d.parent().show();
         },
-        fillEdit: function(column, data, model, target) {
+        fillEdit: function (column, data, model, target) {
             // EDIT页面填充值时候调用        
 
             var input = target || this.getEditTarget(column, model);
@@ -841,16 +842,16 @@ var _FieldBuilder = function(name, interfaces) {
                 }
             }
         },
-        getRequiredIcon: function(column, options) {
+        getRequiredIcon: function (column, options) {
             return column.required === 'required' ? '<i class="required-label fa fa-asterisk"></i>' : '';
         },
-        getViewColSize: function(column, colspan, options) {
+        getViewColSize: function (column, colspan, options) {
             return column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
         },
-        getEditColSize: function(column, colspan, options) {
+        getEditColSize: function (column, colspan, options) {
             return column.colCount ? column.colCount : ((colspan - 1) * (options.inputSize + options.labelSize) + options.inputSize);
         },
-        generateViewFormHtml: function(column, isFirst, options) {
+        generateViewFormHtml: function (column, isFirst, options) {
             var colspan = column.colspan || 1;
             var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
             html += '<div class="col-sm-' + this.getViewColSize(column, colspan, options) + '">\n';
@@ -861,7 +862,7 @@ var _FieldBuilder = function(name, interfaces) {
                 html: html
             };
         },
-        generateEditFormHtml: function(column, isFirst, options) {
+        generateEditFormHtml: function (column, isFirst, options) {
             var colspan = column.colspan || 1,
                 required = column.required === 'required',
                 requiredIcon = required ? '<i class="required-label fa fa-asterisk"></i>' : '';
@@ -911,7 +912,7 @@ var _textFieldBuilder = new _FieldBuilder("TEXT", {});
 
 // 数字域构建器
 var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
@@ -928,7 +929,7 @@ var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
             p.text("无");
         }
     },
-    hideEdit: function(column, model, target) {
+    hideEdit: function (column, model, target) {
         var p = target || this.getEditTarget(column, model);
         if (!p || p.length == 0) return;
 
@@ -950,7 +951,7 @@ var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
             }
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
 
@@ -990,7 +991,7 @@ var _numberFieldBuilder = new _FieldBuilder("NUMBER", {
 
 // 大文本域构建器
 var _textAreaFieldBuilder = new _FieldBuilder("TEXTAREA", {
-    generateViewFormHtml: function(column, isFirst, options) {
+    generateViewFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
         html += '<div class="col-sm-' + this.getViewColSize(column, colspan, options) + '">\n';
@@ -1001,7 +1002,7 @@ var _textAreaFieldBuilder = new _FieldBuilder("TEXTAREA", {
             html: html
         };
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required';
 
@@ -1032,14 +1033,14 @@ var _textAreaFieldBuilder = new _FieldBuilder("TEXTAREA", {
 
 // 日期域构建器
 var _dateFieldBuilder = new _FieldBuilder("DATE", {
-    setDataHandler: function(column, data, model) {
+    setDataHandler: function (column, data, model) {
         // 插入数据时候调用
         var v = data && data[column.name];
         if (typeof v === 'number') {
-            data[column.name] = dateFormat(v);
+            data[column.name] = $.formatDate(v, "yyyy-MM-dd");
         }
     },
-    hideEdit: function(column, model, target) {
+    hideEdit: function (column, model, target) {
         var p = target || this.getEditTarget(column, model);
         if (!p || p.length == 0) return;
         var d = p.parent().parent(),
@@ -1050,7 +1051,7 @@ var _dateFieldBuilder = new _FieldBuilder("DATE", {
             f.hide();
         }
     },
-    showEdit: function(column, model, target) {
+    showEdit: function (column, model, target) {
         var p = target || this.getEditTarget(column, model);
         if (!p || p.length == 0) return;
         var d = p.parent().parent();
@@ -1058,7 +1059,7 @@ var _dateFieldBuilder = new _FieldBuilder("DATE", {
         d.prev().show();
         d.parent().show();
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
 
@@ -1089,7 +1090,14 @@ var _dateFieldBuilder = new _FieldBuilder("DATE", {
 // 时间域构建器
 var _timeFieldBuilder = new _FieldBuilder("TIME",
     $.extend(_dateFieldBuilder.originInterfaces, {
-        generateEditFormHtml: function(column, isFirst, options) {
+        setDataHandler: function (column, data, model) {
+            // 插入数据时候调用
+            var v = data && data[column.name];
+            if (typeof v === 'number') {
+                data[column.name] = $.formatDate(v, "yyyy-MM-dd hh:mm:ss");
+            }
+        },
+        generateEditFormHtml: function (column, isFirst, options) {
             var colspan = column.colspan || 1,
                 required = column.required === 'required';
 
@@ -1120,17 +1128,17 @@ var _timeFieldBuilder = new _FieldBuilder("TIME",
 
 // 下拉框域构建器
 var _selectFieldBuilder = new _FieldBuilder("SELECT", {
-    initHandler: function(column, model) {
+    initHandler: function (column, model) {
         if (column.multiple === true) {
             column.separator = column.separator || ',';
         }
     },
-    getDataName: function(column, v) {
+    getDataName: function (column, v) {
         if (column.multiple === true) {
             if (v) {
                 if (!$.isArray(v)) return v;
                 var vs = [];
-                v.forEach(function(vi) {
+                v.forEach(function (vi) {
                     var a = $.getConstantEnumValue(column.enum, vi);
                     a && vs.push(a);
                 });
@@ -1143,7 +1151,7 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
         }
         return v;
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
@@ -1156,7 +1164,7 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
             p.text("无");
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         // EDIT页面填充值时候调用
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
@@ -1190,7 +1198,7 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
             }
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required',
             multiple = column.multiple === true;
@@ -1226,26 +1234,26 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
 
 // 下拉框域构建器
 var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
-    initHandler: function(column, model) {
+    initHandler: function (column, model) {
         if (column.multiple === true) {
             column.separator = column.separator || ',';
         }
         this.getDataFromServer(column, model);
     },
-    getDataFromServer: function(column, model) {
+    getDataFromServer: function (column, model) {
         var that = this;
-        $.getAjax(column.url, function(data) {
+        $.getAjax(column.url, function (data) {
             column.serverData = data;
             column.serverDataGot = true;
             that.fillDataFromServer(column, model);
         });
     },
-    fillDataFromServer: function(column, model) {
+    fillDataFromServer: function (column, model) {
         var input = this.getEditTarget(column, model);
         if (column.editable !== false && column.serverData && input.length > 0) {
             var k = column.idField || 'id',
                 n = column.nameField || 'name';
-            column.serverData.forEach(function(d) {
+            column.serverData.forEach(function (d) {
                 input.append('<option value="' + d[k] + '">' + d[n] + '</option>');
             });
 
@@ -1256,7 +1264,8 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 width: '100%',
                 allowClear: true
             });
-        };
+        }
+        ;
 
         if (model.status == 'view') {
             this.fillView(column, model.data, model);
@@ -1270,7 +1279,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             }
         }
     },
-    getDataName: function(column, v) {
+    getDataName: function (column, v) {
         if (column.serverData) {
             var k = column.idField || 'id',
                 n = column.nameField || 'name';
@@ -1278,7 +1287,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 if (v) {
                     if ($.isArray(v)) {
                         var vs = [];
-                        v.forEach(function(vi) {
+                        v.forEach(function (vi) {
                             for (var i = 0; i < column.serverData.length; i++) {
                                 var a = column.serverData[i];
                                 if (a[k] == vi) {
@@ -1303,7 +1312,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
         }
         return v;
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         if (column.serverDataGot === true) {
             var p = target || this.getViewTarget(column, model);
             if (!p || p.length == 0) return;
@@ -1319,7 +1328,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             }
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         if (column.serverDataGot === true) {
             var input = target || this.getEditTarget(column, model);
             if (!input && input.length == 0) return;
@@ -1349,7 +1358,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             }
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required',
             multiple = column.multiple === true;
@@ -1384,17 +1393,17 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
 
 // 树形下拉框域构建器
 var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
-    initHandler: function(column, model) {
+    initHandler: function (column, model) {
         if (column.multiple === true) {
             column.separator = column.separator || ',';
         }
         this.getDataFromServer(column, model);
         this.initRemoveButton(column, model);
     },
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         return column.selectItem ? column.selectItem.value : null;
     },
-    formDataHandler: function(column, formData, model) {
+    formDataHandler: function (column, formData, model) {
         if (column.editDisplay !== "hide") {
             var setted = false;
             for (var i = 0; i < formData.length; i++) {
@@ -1415,10 +1424,10 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             }
         }
     },
-    getDataFromServer: function(column, model) {
+    getDataFromServer: function (column, model) {
         var that = this;
-        $.getAjax(column.url, function(data) {            
-            if(typeof column.selectDataFilter === 'function') {
+        $.getAjax(column.url, function (data) {
+            if (typeof column.selectDataFilter === 'function') {
                 data = column.selectDataFilter(column, data);
             }
 
@@ -1431,22 +1440,22 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             var treeList = [],
                 treeData = null;
             if (data) {
-                if (!$.isArray(data)) data = [data];               
+                if (!$.isArray(data)) data = [data];
                 if (column.isListData) {
-                    data.forEach(function(item) {
+                    data.forEach(function (item) {
                         item.text = item[n];
                         item.keyValue = item[k];
 
                         var pid = item[k];
-                        children = $.grep(data, function(n, i) {
+                        children = $.grep(data, function (n, i) {
                             return n[p] == pid;
                         });
 
-                        item.nodes = children && children.length == 0 ? null: children;
+                        item.nodes = children && children.length == 0 ? null : children;
                         treeList.push(item);
                     });
 
-                    treeData = $.grep(data, function(n, i) {
+                    treeData = $.grep(data, function (n, i) {
                         if (rv) {
                             return n[p] == rv;
                         } else {
@@ -1454,9 +1463,9 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
                         }
                     });
                 } else {
-                    var g = function(items) {
+                    var g = function (items) {
                         var nodes = [];
-                        items.forEach(function(item) {
+                        items.forEach(function (item) {
                             var node = {
                                 text: item[n],
                                 keyValue: item[k],
@@ -1486,7 +1495,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             that.fillDataFromServer(column, model);
         });
     },
-    fillDataFromServer: function(column, model) {
+    fillDataFromServer: function (column, model) {
         this.initTreeSelect(column, model);
 
         if (model.status == 'view') {
@@ -1501,24 +1510,24 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             }
         }
     },
-    initRemoveButton: function(column, model) {
+    initRemoveButton: function (column, model) {
         var that = this;
-        $("#tonto-tree-select-remove-" + column.name).click(function() {
+        $("#tonto-tree-select-remove-" + column.name).click(function () {
             that.setSelectItem(column, model, null);
         });
     },
-    initTreeSelect: function(column, model) {
+    initTreeSelect: function (column, model) {
         if (column.editable === false) return;
         var that = this;
         var input = that.getEditTarget(column, model);
         if (!input && input.length == 0) return;
-        input.click(function() {
+        input.click(function () {
             layer.open({
                 type: 1,
                 title: column.selectTitle || " ",
                 content: "<div class='tonto-tree-select-div'></div>",
                 area: ['350px', '460px'],
-                success: function(layero, index) {
+                success: function (layero, index) {
                     if (!column.serverTreeData) return;
 
                     var $tree = $(layero).find('.tonto-tree-select-div');
@@ -1527,8 +1536,8 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
                         levels: column.treeSelectLevel || 1
                     });
 
-                    $tree.on('nodeSelected', function(event, data) {
-                        var item = { name: data.text, value: data.keyValue };
+                    $tree.on('nodeSelected', function (event, data) {
+                        var item = {name: data.text, value: data.keyValue};
                         if (column.viewPathName === true) {
                             item.name = that.getDataName(column, item.value);
                         }
@@ -1550,7 +1559,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             });
         });
     },
-    setSelectItem: function(column, model, item, target) {
+    setSelectItem: function (column, model, item, target) {
         column.selectItem = item;
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
@@ -1574,14 +1583,14 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             }
         }
     },
-    getDataName: function(column, v) {
+    getDataName: function (column, v) {
         if (column.serverTreeListData) {
             if (column.multiple === true) {
                 // 待做
             } else {
                 if (v || v === 0) {
                     if (column.viewPathName === true) {
-                        var g = function(items, str) {
+                        var g = function (items, str) {
                             for (var i = 0; i < items.length; i++) {
                                 var item = items[i];
                                 if (item.keyValue == v) {
@@ -1610,7 +1619,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
         }
         return v;
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         if (column.serverDataGot === true) {
             var p = target || this.getViewTarget(column, model);
             if (!p || p.length == 0) return;
@@ -1626,7 +1635,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             }
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         if (column.serverDataGot === true) {
             var ov = data ? data[column.name] : null;
             var v = this.getDataName(column, ov);
@@ -1640,7 +1649,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             }
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required',
             multiple = column.multiple === true;
@@ -1676,7 +1685,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
 
 // 附件域构建器
 var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
-    setDataHandler: function(column, data, model) {
+    setDataHandler: function (column, data, model) {
         // 解析的附件
         if (!data) return;
 
@@ -1687,7 +1696,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             data[column.name] = v.split(column.separator || ",");
         }
     },
-    getFormData: function(column, data, model) {
+    getFormData: function (column, data, model) {
         delete data[column.name];
         delete data[column.fileName];
         if (column.editDisplay !== "hide") {
@@ -1695,7 +1704,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             var previews = column.inputAttachment.fileinput('getPreview');
             var attachments = "";
             if (previews && previews.config && previews.config.length > 0) {
-                previews.config.forEach(function(p) {
+                previews.config.forEach(function (p) {
                     attachments += p.key + ",";
                 });
             }
@@ -1707,14 +1716,14 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             if (files) {
                 var fileArr = [];
 
-                files.forEach(function(file) {
+                files.forEach(function (file) {
                     fileArr.push(file);
                 });
                 data[column.fileName] = fileArr;
             }
         }
     },
-    formDataHandler: function(column, formData, model) {
+    formDataHandler: function (column, formData, model) {
         var maxFileCount = column.maxFileCount || 5,
             fileName = column.fileName,
             fileCount = 0,
@@ -1733,7 +1742,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             var previews = column.inputAttachment.fileinput('getPreview');
             var attachments = "";
             if (previews && previews.config && previews.config.length > 0) {
-                previews.config.forEach(function(p) {
+                previews.config.forEach(function (p) {
                     attachments += p.key + ",";
                     fileCount++;
                 });
@@ -1750,7 +1759,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             // 动态加入未上传的文件数据
             var files = column.inputAttachment.fileinput('getFileStack');
             if (files) {
-                files.forEach(function(file) {
+                files.forEach(function (file) {
                     formData.push({
                         name: fileName,
                         value: file,
@@ -1767,15 +1776,15 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             }
         }
     },
-    dependTrigger: function(column, model) {
+    dependTrigger: function (column, model) {
         // 不能被依赖
         console && console.log("附件不应该被依赖");
     },
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         // 获取文件数据暂不支持
         console && console.log("暂不实现文件数据获取");
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var name = column.name,
             atts = data && data[column.fileName];
 
@@ -1822,7 +1831,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             attDiv.html(html);
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         var name = column.fileName,
             atts = data ? data[name] : null,
             fileInput = target || model.editBody.find("[name='" + column.fileName + "']");
@@ -1832,7 +1841,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         var initialPreview = [];
         var initialPreviewConfig = [];
         if (atts) {
-            atts.forEach(function(att) {
+            atts.forEach(function (att) {
                 initialPreview.push(att.url);
                 initialPreviewConfig.push({
                     caption: att.filename,
@@ -1853,7 +1862,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             layoutTemplates: {
                 actionUpload: '' //去除上传预览缩略图中的上传图片；
             },
-            allowedPreviewTypes:['image'],
+            allowedPreviewTypes: ['image'],
             uploadAsync: false,
             maxFileCount: column.maxFileCount || 5,
             allowedFileExtensions: column.allowedFileExtensions || ["jpeg", "jpg", "png", "gif"],
@@ -1866,7 +1875,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             initialPreviewConfig: initialPreviewConfig
         });
     },
-    generateViewFormHtml: function(column, isFirst, options) {
+    generateViewFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
         html += '<div name="' + column.name + '" class="col-sm-' + this.getViewColSize(column, colspan, options) + '"></div>\n';
@@ -1875,7 +1884,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             html: html
         };
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
@@ -1892,18 +1901,18 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
 
 // 单选构建器
 var _radioFieldBuilder = new _FieldBuilder("RADIO", {
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         return model.editBody.find("input[name='" + column.name + "']:checked").val();
     },
-    dependTrigger: function(column, model) {
+    dependTrigger: function (column, model) {
         // 这里使用icheck 所以调用ifChecked事件
-        model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function() {
+        model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function () {
             if (model.filling !== true) {
                 model.checkEditDependency();
             }
         });
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
@@ -1919,7 +1928,7 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
             p.text("无");
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
 
@@ -1936,7 +1945,7 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
                 input.text("无");
             }
         } else {
-            input.each(function() {
+            input.each(function () {
                 var a = $(this);
                 if (a.val() == ov) {
                     a.iCheck('check');
@@ -1944,7 +1953,7 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
             });
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
@@ -1959,36 +1968,36 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
 
 // 多选选构建器
 var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
-    setDataHandler: function(column, data, model) {
+    setDataHandler: function (column, data, model) {
         // 解析的附件
         var v = data && data[column.name];
         if (v) {
             data[column.name] = v.split(column.separator || ",");
         }
     },
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         var vals = [];
-        model.editBody.find("input[name='" + column.name + "']:checked").each(function() {
+        model.editBody.find("input[name='" + column.name + "']:checked").each(function () {
             vals.push($(this).val());
         });
         return vals.join();
     },
-    dependTrigger: function(column, model) {
+    dependTrigger: function (column, model) {
         // 这里使用icheck 所以调用ifChecked事件
-        model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function() {
+        model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function () {
             if (model.filling !== true) {
                 model.checkEditDependency();
             }
         });
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
 
         if (v) {
             var t = [];
-            v.forEach(function(a) {
+            v.forEach(function (a) {
                 t.push(column.enum ? $.getConstantEnumValue(column.enum, a) : a);
             });
 
@@ -2001,7 +2010,7 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
             p.text("无");
         }
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
 
@@ -2010,7 +2019,7 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
                 v = column.enum && ov ? $.getConstantEnumValue(column.enum, ov) : null,
                 t = [];
             if (v) {
-                v.forEach(function(a) {
+                v.forEach(function (a) {
                     t.push(column.enum ? $.getConstantEnumValue(column.enum, a) : a);
                 });
             }
@@ -2021,13 +2030,13 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
         } else {
             var v = data ? data[column.name] : null;
             if (v) {
-                v.forEach(function(a) {
+                v.forEach(function (a) {
                     model.editBody.find("input[name='" + column.name + "'][value='" + a + "']").iCheck('check');
                 });
             }
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
@@ -2042,17 +2051,17 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
 
 // 标签域构建器
 var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
-    setDataHandler: function(column, data, model) {
+    setDataHandler: function (column, data, model) {
         // 解析的附件
         var v = data && data[column.name];
         if (v) {
             data[column.name] = v.split(column.separator || ",");
         }
     },
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         return model.editBody.find("input[name='" + column.name + "']").tagsinput("items");
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
@@ -2066,19 +2075,20 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
             p.text("无");
         }
     },
-    fillEdit: function(column, data, model, target) {
-        var input = target || this.getEditTarget(column, model);;
+    fillEdit: function (column, data, model, target) {
+        var input = target || this.getEditTarget(column, model);
+        ;
         if (!input && input.length == 0) return;
         input.tagsinput("removeAll");
         var v = data ? data[column.name] : null;
 
         if (v) {
-            v.forEach(function(a) {
+            v.forEach(function (a) {
                 input.tagsinput('add', a);
             });
         }
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
@@ -2096,7 +2106,7 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
 
 // 子模块域构建器
 var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         if (column.contentMap) {
             var datas = [];
             for (var o in column.contentMap) {
@@ -2106,7 +2116,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         }
         return null;
     },
-    getFormData: function(column, data) {
+    getFormData: function (column, data) {
         var datas = [];
         if (column.contentMap) {
             for (var o in column.contentMap) {
@@ -2115,7 +2125,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         }
         data[column.name] = datas;
     },
-    fillView: function(column, data, model, target) {
+    fillView: function (column, data, model, target) {
         var that = this,
             div = target || this.getViewTarget(column, model),
             ul = $('<ul class="products-list product-list-in-box"></ul>');
@@ -2124,12 +2134,12 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         div.append(ul);
         var subData = data ? data[column.name] : null;
         if (subData) {
-            subData.forEach(function(d) {
+            subData.forEach(function (d) {
                 that.fillSubView(column, d, model, ul);
             });
         }
     },
-    fillSubView: function(column, data, model, contentContainer) {
+    fillSubView: function (column, data, model, contentContainer) {
         var itemHtml, that = this;
         if (typeof column.createSubDataHtml === 'function') {
             itemHtml = column.createSubDataHtml();
@@ -2147,7 +2157,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
         contentContainer.append(itemHtml);
     },
-    fillSubEdit: function(column, data, model, id) {
+    fillSubEdit: function (column, data, model, id) {
         var contentContainer = column.contentContainer,
             itemHtml, that = this;
         if (typeof column.createSubDataHtml === 'function') {
@@ -2187,19 +2197,19 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             div.html(itemHtml);
         }
 
-        div.find('#' + column.name + '_sub_edit_btn').click(function() {
+        div.find('#' + column.name + '_sub_edit_btn').click(function () {
             that.openSubEditor(column, com, model);
         });
 
-        div.find('#' + column.name + '_sub_remove_btn').click(function() {
-            layer.confirm('确定删除吗?', function(layerIndex) {
+        div.find('#' + column.name + '_sub_remove_btn').click(function () {
+            layer.confirm('确定删除吗?', function (layerIndex) {
                 delete column.contentMap[id];
                 div.remove();
                 layer.close(layerIndex);
             });
         });
     },
-    fillEdit: function(column, data, model, target) {
+    fillEdit: function (column, data, model, target) {
         var that = this,
             div = target || this.getEditTarget(column, model);
 
@@ -2208,7 +2218,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         if (!column.hasEdited) {
             var contentContainer = $('<ul class="products-list product-list-in-box"></ul>'),
                 addSubModelBtn = column.addSubModelBtn ? column.addSubModelBtn :
-                $('<div class="dotted-line-btn"><a href="javascript:void(0)" ><i class="glyphicon glyphicon-plus"></i>' + (column.addSubModelBtnTitle ? column.addSubModelBtnTitle : '添加选项') + '</a></div>');
+                    $('<div class="dotted-line-btn"><a href="javascript:void(0)" ><i class="glyphicon glyphicon-plus"></i>' + (column.addSubModelBtnTitle ? column.addSubModelBtnTitle : '添加选项') + '</a></div>');
             div.append(contentContainer);
             div.append(addSubModelBtn);
             column.contentContainer = contentContainer;
@@ -2216,19 +2226,19 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
             var subData = data ? data[column.name] : null;
             if (subData) {
-                subData.forEach(function(d) {
+                subData.forEach(function (d) {
                     that.fillSubEdit(column, d, model, null);
                 });
             }
 
-            addSubModelBtn.click(function() {
+            addSubModelBtn.click(function () {
                 that.openSubEditor(column, null, model);
             });
 
             column.hasEdited = true;
         }
     },
-    openSubEditor: function(column, com, model) {
+    openSubEditor: function (column, com, model) {
         var that = this;
         var subOp = column.subModelOptions;
         subOp.id = subOp.id || column.name + "_" + new Date().getTime();
@@ -2256,16 +2266,16 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         html = "<div style='padding-top:50px;padding-bottom:50px;padding-right:10px;padding-left:10px'>" + html + "</div>";
         var layerOption = subOp.layerOption || {};
         layerOption = $.extend({
-                success: function(layero, index) {
-                    $.initComponment($(layero));
-                    $("#" + subOp.id + '_edit_cancel_btn').click(function() {
+                success: function (layero, index) {
+                    $.initComponent($(layero));
+                    $("#" + subOp.id + '_edit_cancel_btn').click(function () {
                         layer.close(index);
                     });
 
                     var subModel = new tonto.Model(subOp.id, subOp.columns, {
                         server: false,
                         pattern: "edit",
-                        submitClick: function() {
+                        submitClick: function () {
                             if (subModel.formBody.valid()) {
                                 var d = subModel.getFormData();
                                 if (typeof column.beforeAddHandler === 'function') {
@@ -2290,7 +2300,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             layerOption);
         var index = $.openPageLayer(html, layerOption);
     },
-    generateViewFormHtml: function(column, isFirst, options) {
+    generateViewFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
         html += '<div name="' + column.name + '" class="col-sm-' + this.getViewColSize(column, colspan, options) + '"></div>\n';
@@ -2299,7 +2309,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             html: html
         };
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required';
 
@@ -2314,30 +2324,30 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
 // 子模块域构建器
 var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
-    initHandler: function(column, model) {
+    initHandler: function (column, model) {
         if (model.config.pattern != 'view') {
             var that = this;
             column.editor = UE.getEditor(model.name + '_' + column.name + '_editor');
-            column.editor.ready(function() {
+            column.editor.ready(function () {
                 that.fillEdit(column, model.data, model);
                 column.editorReady = true;
             })
         }
 
         if (model.config.pattern != 'edit') {
-            $("#" + model.name + '_' + column.name + '_editor_show_btn').click(function() {
+            $("#" + model.name + '_' + column.name + '_editor_show_btn').click(function () {
                 var content = model.data ? model.data[column.name] : '';
                 $.openPageLayer('<div style="padding:40px;padding-right:55px">' + content + '</div>');
             });
         }
     },
-    getEditValue: function(column, model) {
+    getEditValue: function (column, model) {
         return column.editor.getContent();
     },
-    getFormData: function(column, data) {
+    getFormData: function (column, data) {
         data[column.name] = column.editor.getContent();
     },
-    formDataHandler: function(column, formData, model) {
+    formDataHandler: function (column, formData, model) {
         var content = column.editor.getContent();
 
         if (!content && column.required === 'required') {
@@ -2352,16 +2362,16 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
             required: false
         });
     },
-    fillView: function(column, data, model) {
+    fillView: function (column, data, model) {
 
     },
-    fillEdit: function(column, data, model) {
+    fillEdit: function (column, data, model) {
         if (column.editorReady === true) {
             var content = data ? data[column.name] : '';
             column.editor.setContent(content);
         }
     },
-    generateViewFormHtml: function(column, isFirst, options) {
+    generateViewFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan;
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + column.title + '：</label>\n';
         html += '<div name="' + column.name + '" class="col-sm-' + this.getViewColSize(column, colspan, options) + '"><label class="control-label">' +
@@ -2372,7 +2382,7 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
             html: html
         };
     },
-    generateEditFormHtml: function(column, isFirst, options) {
+    generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || options.maxColspan,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';

@@ -54,7 +54,7 @@ public class TemporaryFileHelper {
      */
     public TemporaryFileOutputStream createFileOutputStream(String name, String suffix) {
 
-        String id = UUIDUtil.createUUID();
+        String id = UUIDUtil.create32UUID();
 
         if (name == null) {
             name = "";

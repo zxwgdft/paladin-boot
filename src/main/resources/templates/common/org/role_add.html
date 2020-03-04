@@ -34,7 +34,7 @@
     $(function() {
     	var html = generateEditHtml(options);
         $(".content").html(html);
-       	$.initComponment($(".content"));
+       	$.initComponent($(".content"));
         
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",

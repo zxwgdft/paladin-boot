@@ -63,7 +63,7 @@
         $.getAjax("/demo/demo/personnel/get?id=" + $("#id").val(), function(data) {
             var html = generateHtml(options);
             $(".content").html(html);
-            $.initComponment($(".content"));
+            $.initComponent($(".content"));
             var model = new tonto.Model("model", options.columns, {
                 beforeSubmit: function(formData) {
                     return true;

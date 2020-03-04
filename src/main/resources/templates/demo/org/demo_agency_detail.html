@@ -45,7 +45,7 @@
         $.getAjax("/demo/demo/agency/get?id="+$("#id").val(), function(data) {
             var html = generateHtml(options);
             $(".content").html(html);
-            $.initComponment($(".content"));
+            $.initComponent($(".content"));
            
             var model = new tonto.Model("model", options.columns);
             model.setData(data);
