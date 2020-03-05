@@ -53,6 +53,8 @@ public class FileResourceContainer implements SpringContainer {
 
     private static FileResource convert(SysAttachment attachment) {
         FileResource fr = new FileResource();
+        fr.setId(attachment.getId());
+
         String suffix = attachment.getSuffix();
         String name = attachment.getName() + (suffix == null ? "" : suffix);
         fr.setName(name);
@@ -65,6 +67,9 @@ public class FileResourceContainer implements SpringContainer {
         } else {
             fr.setThumbnailUrl(url);
         }
+
+        fr.setSize(attachment.getSize());
+
         return fr;
     }
 

@@ -566,50 +566,16 @@ if (!Array.prototype.forEach) {
         loadAttachment: function (id, callback) {
             $.getAjax("/common/attachment/" + id, function (data) {
                 if (typeof callback === 'function') {
-                    callback($.parseAttachmentData(data));
+                    callback(data);
                 }
             });
         },
         loadAttachments: function (ids, callback) {
             $.postAjax("/common/attachment", {id: ids}, function (data) {
-                var result = {};
-                if (data && data.length > 0) {
-                    data.forEach(function (i) {
-                        result[i.id] = $.parseAttachmentData(i);
-                    });
-                }
                 if (typeof callback === 'function') {
-                    callback(result);
+                    callback(data);
                 }
             });
-        },
-        parseAttachmentData: function (data) {
-            if (data) {
-                if ($.isArray(data)) {
-                    var result = [];
-                    data.forEach(function (item) {
-                        result.push({
-                            id: item.id,
-                            name: item.name,
-                            filename: item.name + item.suffix,
-                            url: "/file/" + item.pelativePath,
-                            size: item.size,
-                            type: item.type
-                        });
-                    });
-                    return result;
-                } else {
-                    return [{
-                        id: data.id,
-                        name: data.name,
-                        filename: data.name + data.suffix,
-                        url: "/file/" + data.pelativePath,
-                        size: data.size,
-                        type: data.type
-                    }]
-                }
-            }
-            return null;
         }
     });
 
@@ -948,7 +914,17 @@ function _initCommon(container) {
 
     // 必须在icheck后面，否则需要更改源代码适用icheck
     container.find('.tonto-multiple-select').each(function () {
-        $(this).select2({
+        // select2 插件，暂时弃用
+        // $(this).select2({
+        //     placeholder: $(this).attr("placeholder") || "请选择", //未选择时显示文本
+        //     maximumSelectionSize: $(this).attr("max-selection-size") || null, //显示最大选项数目
+        //     multiple: true,
+        //     width: '100%',
+        //     allowClear: true
+        // });
+
+        $(this).selectpicker({
+            liveSearch: true,
             placeholder: $(this).attr("placeholder") || "请选择", //未选择时显示文本
             maximumSelectionSize: $(this).attr("max-selection-size") || null, //显示最大选项数目
             multiple: true,
@@ -956,7 +932,6 @@ function _initCommon(container) {
             allowClear: true
         });
     });
-
 
     // 初始化常量下拉框
     container.find(".tonto-select-constant").each(function () {

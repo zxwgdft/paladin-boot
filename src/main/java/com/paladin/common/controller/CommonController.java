@@ -2,8 +2,10 @@ package com.paladin.common.controller;
 
 import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.ConstantsContainer.KeyValue;
+import com.paladin.common.core.FileResourceContainer;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.sys.SysAttachmentService;
+import com.paladin.common.service.sys.vo.FileResource;
 import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
@@ -39,15 +41,15 @@ public class CommonController {
     @ApiOperation(value = "通过ID获取附件")
     @GetMapping("/attachment/{id}")
     @ResponseBody
-    public R<SysAttachment> getAttachment(@PathVariable("id") String id) {
-        return R.success(attachmentService.get(id));
+    public R<FileResource> getAttachment(@PathVariable("id") String id) {
+        return R.success(FileResourceContainer.getFileResource(id));
     }
 
     @ApiOperation(value = "通过ID获取多个附件")
     @GetMapping("/attachment")
     @ResponseBody
-    public R<List<SysAttachment>> getAttachments(@RequestParam("id[]") String[] ids) {
-        return R.success(attachmentService.getAttachments(ids));
+    public R<List<FileResource>> getAttachments(@RequestParam("id[]") String[] ids) {
+        return R.success(FileResourceContainer.getFileResources(ids));
     }
 
     @ApiOperation(value = "上传附件文件")

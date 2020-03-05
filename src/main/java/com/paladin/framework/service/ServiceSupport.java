@@ -957,6 +957,8 @@ public abstract class ServiceSupport<Model> {
             BaseModel baseModel = (BaseModel) model;
             baseModel.setCreateTime(now);
             baseModel.setCreateBy(uid);
+            baseModel.setUpdateBy(uid);
+            baseModel.setUpdateTime(now);
             baseModel.setDeleted(false);
         }
     }

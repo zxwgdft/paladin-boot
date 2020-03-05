@@ -1257,12 +1257,19 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 input.append('<option value="' + d[k] + '">' + d[n] + '</option>');
             });
 
-            input.select2({
-                placeholder: input.attr("placeholder") || "请选择", //未选择时显示文本
-                maximumSelectionSize: column.maxSelectionSize || null, //显示最大选项数目
-                multiple: column.multiple !== false,
-                width: '100%',
-                allowClear: true
+            // input.select2({
+            //     placeholder: input.attr("placeholder") || "请选择", //未选择时显示文本
+            //     maximumSelectionSize: column.maxSelectionSize || null, //显示最大选项数目
+            //     multiple: column.multiple !== false,
+            //     width: '100%',
+            //     allowClear: true
+            // });
+
+            input.selectpicker({
+                width: 'auto',
+                liveSearch: true,        // 开启搜索框
+                maxOptions: column.maxSelectionSize || false, //显示最大选项数目
+                noneSelectedText: column.noneSelectedText || '没有选中任何项', //多选未选中任意选项提示
             });
         }
         ;
@@ -1691,7 +1698,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
 
         var filename = column.fileName,
             v = data[column.name];
-        data[filename] = $.parseAttachmentData(data[filename]);
+        if (!$.isArray(data[filename])) {
+            data[filename] = [data[filename]];
+        }
+
         if (v) {
             data[column.name] = v.split(column.separator || ",");
         }
@@ -1795,10 +1805,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             var html = '<ul class="mailbox-attachments clearfix">';
             for (var i = 0; i < atts.length; i++) {
                 var b = atts[i];
-                var k = b.filename.lastIndexOf(".");
+                var k = b.name.lastIndexOf(".");
                 var suffix = "";
                 if (k >= 0) {
-                    suffix = b.filename.substring(k + 1).toLowerCase();
+                    suffix = b.name.substring(k + 1).toLowerCase();
                 }
 
                 var header = "";
@@ -1822,8 +1832,8 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
                 html +=
                     '<li>' + header +
                     '    <div class="mailbox-attachment-info">' +
-                    '        <a target="_blank" href="' + b.url + '" class="mailbox-attachment-name"><i class="fa fa-camera"></i>' + b.filename + '</a>' +
-                    '        <span class="mailbox-attachment-size">' + (Math.floor(b.size / 1024) + "KB") + '<a target="_blank" download="' + b.filename + '" href="' + b.url + '" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a></span>' +
+                    '        <a target="_blank" href="' + b.url + '" class="mailbox-attachment-name"><i class="fa fa-camera"></i>' + b.name + '</a>' +
+                    '        <span class="mailbox-attachment-size">' + (Math.floor(b.size / 1024) + "KB") + '<a target="_blank" download="' + b.name + '" href="' + b.url + '" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a></span>' +
                     '    </div>' +
                     '</li>';
             }
@@ -1844,7 +1854,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             atts.forEach(function (att) {
                 initialPreview.push(att.url);
                 initialPreviewConfig.push({
-                    caption: att.filename,
+                    caption: att.name,
                     size: att.size,
                     key: att.id
                 });

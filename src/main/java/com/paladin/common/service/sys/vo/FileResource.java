@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class FileResource {
 
+    private String id;
     private String name;
     private long size;
     private String url;

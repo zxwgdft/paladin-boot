@@ -44,6 +44,10 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         String staticPath = webProperties.getStaticPath();
         String faviconPath = webProperties.getFaviconPath();
 
+        if (!filePath.startsWith("file:")) {
+            filePath = "file:" + filePath;
+        }
+
         registry.addResourceHandler("/static/**").addResourceLocations(staticPath);
         registry.addResourceHandler("/file/**").addResourceLocations(filePath);
         registry.addResourceHandler("/favicon.ico").addResourceLocations(faviconPath);
