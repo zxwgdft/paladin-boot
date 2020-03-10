@@ -1,7 +1,7 @@
 package com.paladin.framework.service;
 
-import com.paladin.framework.utils.reflect.NameUtil;
-import com.paladin.framework.utils.reflect.ReflectUtil;
+import com.paladin.framework.utils.reflect.Entity;
+import com.paladin.framework.utils.reflect.EntityField;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
@@ -149,35 +149,60 @@ public class GeneralCriteriaBuilder {
             synchronized (buildCache) {
                 builder = buildCache.get(clazz);
                 if (builder == null) {
-
-                    // 根据get方法上的QueryCondition注解作为构建单元
-                    builder = new Builder(entityType);
-                    Method[] methods = clazz.getMethods();
-
-                    for (Method method : methods) {
-                        QueryCondition condition = method.getAnnotation(QueryCondition.class);
-                        if (condition != null && ReflectUtil.isGetMethod(method)) {
-                            String name = condition.name();
-
-                            // 默认使用方法对应的field名作为column
-                            if ("".equals(name))
-                                name = NameUtil.removeGetOrSet(method.getName());
-
-                            Class<?> entityClass = condition.entityClass();
-                            if (entityClass == Object.class) {
-                                entityClass = entityType;
-                            }
-                            BuildUnit unit = new BuildUnit(name, entityClass, condition.type(), method, condition.nullable());
-                            builder.buildUnits.add(unit);
-                        }
-                    }
+                    builder = new Builder(entityType, clazz);
                 }
             }
         }
 
         return builder;
-
     }
+
+    private static void buildCriteria(Criteria criteria, Condition condition) {
+        buildCriteria(criteria, condition.name, condition.type, condition.value, true);
+    }
+
+    /**
+     * 根据Example动态SQL规则转化查询条件
+     */
+    private static void buildCriteria(Criteria criteria, String property, QueryType type, Object value, boolean nullable) {
+
+        if (type == QueryType.EQUAL) {
+            if (value == null) {
+                if (nullable) {
+                    criteria.andIsNull(property);
+                }
+            } else {
+                criteria.andEqualTo(property, value);
+            }
+        } else if (type == QueryType.NOT_EQUAL) {
+            criteria.andNotEqualTo(property, value);
+        } else if (type == QueryType.IS_NULL) {
+            criteria.andIsNull(property);
+        } else if (type == QueryType.IS_NOT_NULL) {
+            criteria.andIsNotNull(property);
+        } else if (value != null) {
+            if (type == QueryType.GREAT_THAN) {
+                criteria.andGreaterThan(property, value);
+            } else if (type == QueryType.GREAT_EQUAL) {
+                criteria.andGreaterThanOrEqualTo(property, value);
+            } else if (type == QueryType.LESS_THAN) {
+                criteria.andLessThan(property, value);
+            } else if (type == QueryType.LESS_EQUAL) {
+                criteria.andLessThanOrEqualTo(property, value);
+            } else if (type == QueryType.LIKE) {
+                criteria.andLike(property, "%" + value + "%");
+            } else if (type == QueryType.IN) {
+                if (value.getClass().isArray()) {
+                    criteria.andIn(property, Arrays.asList(value));
+                } else if (value instanceof List) {
+                    criteria.andIn(property, (List) value);
+                } else {
+                    criteria.andIn(property, Arrays.asList(value));
+                }
+            }
+        }
+    }
+
 
     /**
      * 查询对象构建器
@@ -195,12 +220,30 @@ public class GeneralCriteriaBuilder {
     private static class Builder {
 
         private Class<?> entityClass;
+        private Class<?> queryClass;
+        private ArrayList<BuildUnit> buildUnits;
 
-        private Builder(Class<?> entityClass) {
+        private Builder(Class<?> entityClass, Class<?> queryClass) {
             this.entityClass = entityClass;
+            this.queryClass = queryClass;
+            this.buildUnits = new ArrayList<BuildUnit>();
+
+            for (EntityField entityField : Entity.getEntity(queryClass).getEntityFields()) {
+                QueryCondition condition = entityField.getAnnotation(QueryCondition.class);
+                if (condition != null) {
+                    String name = condition.name();
+
+                    // 默认使用方法对应的field名作为column
+                    if ("".equals(name)) {
+                        name = entityField.getName();
+                    }
+
+                    BuildUnit unit = new BuildUnit(name, condition.type(), entityField.getGetMethod(), condition.nullable());
+                    buildUnits.add(unit);
+                }
+            }
         }
 
-        private ArrayList<BuildUnit> buildUnits = new ArrayList<BuildUnit>();
 
         private Example build(Object queryParam) {
 
@@ -263,51 +306,6 @@ public class GeneralCriteriaBuilder {
 
     }
 
-    private static void buildCriteria(Criteria criteria, Condition condition) {
-        buildCriteria(criteria, condition.name, condition.type, condition.value, true);
-    }
-
-    /**
-     * 根据Example动态SQL规则转化查询条件
-     */
-    private static void buildCriteria(Criteria criteria, String property, QueryType type, Object value, boolean nullable) {
-
-        if (type == QueryType.EQUAL) {
-            if (value == null) {
-                if (nullable) {
-                    criteria.andIsNull(property);
-                }
-            } else {
-                criteria.andEqualTo(property, value);
-            }
-        } else if (type == QueryType.NOT_EQUAL) {
-            criteria.andNotEqualTo(property, value);
-        } else if (type == QueryType.IS_NULL) {
-            criteria.andIsNull(property);
-        } else if (type == QueryType.IS_NOT_NULL) {
-            criteria.andIsNotNull(property);
-        } else if (value != null) {
-            if (type == QueryType.GREAT_THAN) {
-                criteria.andGreaterThan(property, value);
-            } else if (type == QueryType.GREAT_EQUAL) {
-                criteria.andGreaterThanOrEqualTo(property, value);
-            } else if (type == QueryType.LESS_THAN) {
-                criteria.andLessThan(property, value);
-            } else if (type == QueryType.LESS_EQUAL) {
-                criteria.andLessThanOrEqualTo(property, value);
-            } else if (type == QueryType.LIKE) {
-                criteria.andLike(property, "%" + value + "%");
-            } else if (type == QueryType.IN) {
-                if (value.getClass().isArray()) {
-                    criteria.andIn(property, Arrays.asList(value));
-                } else if (value instanceof List) {
-                    criteria.andIn(property, (List) value);
-                } else {
-                    criteria.andIn(property, Arrays.asList(value));
-                }
-            }
-        }
-    }
 
     /**
      * 构建单元
@@ -321,16 +319,12 @@ public class GeneralCriteriaBuilder {
         private String name;
         private Method getMethod;
         private boolean nullable;
-        // 用于连接查询，暂时搁置
-        @SuppressWarnings("unused")
-        private Class<?> entityClass;
 
-        private BuildUnit(String name, Class<?> entityClass, QueryType type, Method getMethod, boolean nullable) {
+        private BuildUnit(String name, QueryType type, Method getMethod, boolean nullable) {
             this.nullable = nullable;
             this.name = name;
             this.type = type;
             this.getMethod = getMethod;
-            this.entityClass = entityClass;
         }
 
     }

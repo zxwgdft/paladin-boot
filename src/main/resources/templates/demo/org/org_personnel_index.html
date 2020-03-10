@@ -13,7 +13,17 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
-	                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" name="name" th:value="${query?.name}"
+                                   placeholder="请输入查询的姓名"/>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="identificationType" class="form-control tonto-select-constant"
+                                    th:attr="selectedvalue=${query?.identificationType}" enumcode="identification-type">
+                                <option value="">请选择查询证件类型</option>
+                            </select>
+                        </div>
+	                    <div class="col-md-8">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
