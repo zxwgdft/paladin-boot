@@ -91,6 +91,8 @@ public class TemporaryFileHelper {
      * @param minutes
      */
     public void clearTemporaryFile(int minutes) {
+        log.info("开始清理过期临时文件");
+
         Path root = Paths.get(tempPath);
         long time = System.currentTimeMillis() - 60L * 1000 * minutes;
 

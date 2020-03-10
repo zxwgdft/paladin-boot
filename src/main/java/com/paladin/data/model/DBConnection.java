@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Table(name = "db_connection")
-public class DBConnection extends BaseModel {
+public class DBConnection {
 
     @Id
     private String name;

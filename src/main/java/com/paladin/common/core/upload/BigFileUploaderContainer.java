@@ -82,6 +82,8 @@ public class BigFileUploaderContainer {
     }
 
     public void cleanUploader(int minutes) {
+        log.info("开始清理大文件上传中无效文件碎片");
+
         long time = System.currentTimeMillis() - 60L * 1000 * minutes;
         Iterator<Map.Entry<String, BigFileUploader>> it = bigFileUploaderMap.entrySet().iterator();
         while (it.hasNext()) {

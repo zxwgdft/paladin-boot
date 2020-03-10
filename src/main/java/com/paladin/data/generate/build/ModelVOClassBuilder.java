@@ -13,6 +13,15 @@ import java.util.*;
 @Component
 public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
+    protected boolean need(GenerateColumnOption columnOption) {
+        DbBuildColumn buildColumn = columnOption.getBuildColumnOption();
+        return columnOption.isPrimary() || (buildColumn != null && judge(buildColumn.getEditable()));
+    }
+
+    private boolean judge(Integer i) {
+        return i != null && i == 1;
+    }
+
     public String buildContent(GenerateTableOption tableOption) {
 
         Set<Class<?>> importClassSet = new HashSet<>();
@@ -28,12 +37,7 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
             }
         }
 
-        Collections.sort(columnOptions, new Comparator<GenerateColumnOption>() {
-            @Override
-            public int compare(GenerateColumnOption o1, GenerateColumnOption o2) {
-                return o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex();
-            }
-        });
+        Collections.sort(columnOptions, (o1, o2) -> o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex());
 
         for (GenerateColumnOption columnOption : columnOptions) {
             Class<?> clazz = columnOption.getFieldType();
@@ -71,29 +75,13 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
         sb.append(" {\n\n");
 
         for (GenerateColumnOption columnOption : columnOptions) {
-
             sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
-
-            if (columnOption.isPrimary()) {
-            }
-
-            sb.append(tab).append("private ").append(columnOption.getFieldType().getSimpleName()).append(" ").append(columnOption.getFieldName())
+            sb.append(tab).append("private ")
+                    .append(columnOption.getFieldType().getSimpleName())
+                    .append(" ")
+                    .append(columnOption.getFieldName())
                     .append(";\n\n");
         }
-
-//		for (GenerateColumnOption columnOption : columnOptions) {
-//
-//			String fieldName = columnOption.getFieldName();
-//			String className = columnOption.getFieldType().getSimpleName();
-//
-//			// getMethod
-//			sb.append(tab).append("public ").append(className).append(" ").append(NameUtil.addGet(fieldName)).append("() {\n").append(tab).append(tab)
-//					.append("return ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-//
-//			// setMethod
-//			sb.append(tab).append("public void ").append(NameUtil.addSet(fieldName)).append("(").append(className).append(" ").append(fieldName).append(") {\n")
-//					.append(tab).append(tab).append("this.").append(fieldName).append(" = ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-//		}
 
         sb.append("}");
 
@@ -113,11 +101,6 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
     @Override
     public String getClassName(GenerateTableOption tableOption) {
         return tableOption.getModelName() + "VO";
-    }
-
-    protected boolean need(GenerateColumnOption columnOption) {
-        DbBuildColumn buildColumn = columnOption.getBuildColumnOption();
-        return columnOption.isPrimary() || buildColumn != null;
     }
 
 }

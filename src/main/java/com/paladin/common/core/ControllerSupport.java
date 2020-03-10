@@ -29,7 +29,7 @@ public class ControllerSupport {
             result[i++] = new String[]{error.getCode(), error.getField(), error.getDefaultMessage()};
         }
 
-        return R.fail(HttpCode.BAD_REQUEST, "参数验证失败", result);
+        return R.fail(HttpCode.PARAMETER_VALID_FAIL, "参数验证失败", result);
     }
 
     protected <T> T beanCopy(Object source, T target) {

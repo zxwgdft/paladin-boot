@@ -58,7 +58,12 @@ public class DemoPersonnelController extends ControllerSupport {
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {
         return R.success(beanCopy(demoPersonnelService.get(id), new DemoPersonnelVO()));
-    }
+
+
+
+
+
+
 
     @GetMapping("/add")
     public String addInput() {

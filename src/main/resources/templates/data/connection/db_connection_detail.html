@@ -38,9 +38,10 @@
         $.getAjax("/data/connection/get?id="+$("#id").val(), function(data) {
             var html = generateHtml(options);
             $(".content").html(html);
+            $.initComponent($(".content"));
+
             var model = new tonto.Model("model", options.columns);
             model.setData(data);
-            $.initComponent($(".content"));
         });
     });
     </script>

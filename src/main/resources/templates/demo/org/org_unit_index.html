@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/demo/header"/>
+
+<body>
+<tt:constant enumcode="unit-type,"/>
+<section class="content-header">
+    <h1>单位管理</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+                <div class="btn-group">
+                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/demo/footer"/>
+<script type="text/javascript" src="/static/assets/bootstrap-table/treetable.js"></script>
+<script type="text/javascript">
+    var table;
+    $(function () {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "单位名称", field: "name", align: "left"},
+                    {title: "单位类型", field: "type", enumcode: "unit-type"},
+                    {title: "联系人", field: "contact"},
+                    {title: "联系电话", field: "contactPhone"},
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function (e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function (e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/demo/org/unit/find',
+            toolbar: "#toolbar",
+            showRefresh: true,
+            pagination: false, //分页请设置为false
+            treeView: true, //是否开启树视图
+            treeId: "id", //id字段
+            treeParentFilter: true, //过滤掉父节点不正确的（置为空）
+            treeParentField: "parentId", //父ID字段
+            treeField: "name", //展示树的字段
+            showColumns: true
+        });
+    }
+
+    function add() {
+        window.location = '/demo/org/unit/add';
+    }
+
+    function detail(row) {
+        window.location = '/demo/org/unit/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function () {
+                $.getAjax('/demo/org/unit/delete?id=' + row.id, function () {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+</script>
+</body>
+
+</html>

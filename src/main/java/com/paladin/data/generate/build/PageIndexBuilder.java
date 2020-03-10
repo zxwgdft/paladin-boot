@@ -2,10 +2,7 @@ package com.paladin.data.generate.build;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -28,6 +25,9 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
 		HashSet<String> enumcodes = new HashSet<>();
 		StringBuilder sb = new StringBuilder();
 		List<GenerateColumnOption> columnOptions = tableOption.getColumnOptions();
+
+		Collections.sort(columnOptions, (o1, o2) -> o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex());
+
 		for (GenerateColumnOption columnOption : columnOptions) {
 			DbBuildColumn buildOption = columnOption.getBuildColumnOption();
 

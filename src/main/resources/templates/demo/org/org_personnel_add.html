@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/demo/header"/>
+
+<body>
+<tt:constant enumcode="sex-type,identification-type,nation-type,"/>
+<section class="content-header">
+    <h1>人员管理</h1>
+    <ol class="breadcrumb">
+        <li><a href="/demo/org/personnel/index"><i class="fa fa-table"></i>列表</a></li>
+        <li class="active">新增</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a href="/demo/org/personnel/index" class="btn btn-primary btn-block">返回</a>
+</div>
+<div th:include="/demo/footer"/>
+<script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "新增",
+        url: "/demo/org/personnel/save",
+        columns: [
+            {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
+            {title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT"},
+            {
+                title: "证件类型",
+                name: "identificationType",
+                enum: "identification-type",
+                required: "required",
+                inputType: "SELECT"
+            },
+            {title: "证件号码", name: "identificationNo", required: "required", maxLength: 32, inputType: "TEXT"},
+            {
+                // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
+                title: "所属机构",
+                name: "unitId",
+                inputType: "SELECT-TREE-SERVER",
+                url: "/demo/org/unit/find/tree",
+                layerWidth: "500px",
+                required: "required",
+                isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
+                idField: "id",
+                nameField: "name"
+            },
+            {title: "出生日期", name: "birthday", inputType: "DATE"},
+            {
+                title: "手机号码",
+                name: "cellphone",
+                maxLength: 20,
+                inputType: "TEXT",
+                attr: {
+                    "data-type": "cellphone",
+                    "placeholder": "请输入本人的手机号码"
+                    // 可以增加dom的属性，例如添加数据类型和最大长度用于验证
+                }
+            },
+            {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
+            {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"}
+        ]
+    }
+
+    $(function () {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponent($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern: "edit",
+            successCallback: function () {
+                $.successAlert("保存成功", function () {
+                    window.location = "/demo/org/personnel/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+</script>
+</body>
+
+</html>

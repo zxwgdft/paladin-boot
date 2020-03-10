@@ -52,9 +52,6 @@ public class DbBuildColumn {
     // 是否可编辑
     private Integer editable;
 
-    // 是否新增
-    private Integer addable;
-
     // 是否大文本
     private Integer largeText;
 

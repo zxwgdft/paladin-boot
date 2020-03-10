@@ -93,14 +93,7 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
         Class<?> baseModelType = getBaseModelType(tableOption);
         List<GenerateColumnOption> columnOptions = getNeedColumnOption(tableOption, baseModelType);
 
-        Collections.sort(columnOptions, new Comparator<GenerateColumnOption>() {
-
-            @Override
-            public int compare(GenerateColumnOption o1, GenerateColumnOption o2) {
-                return o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex();
-            }
-
-        });
+        Collections.sort(columnOptions, (o1, o2) -> o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex());
 
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
@@ -159,20 +152,6 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
             sb.append(tab).append("private ").append(columnOption.getFieldType().getSimpleName()).append(" ").append(columnOption.getFieldName())
                     .append(";\n\n");
         }
-
-//        for (GenerateColumnOption columnOption : columnOptions) {
-//
-//            String fieldName = columnOption.getFieldName();
-//            String className = columnOption.getFieldType().getSimpleName();
-//
-//            // getMethod
-//            sb.append(tab).append("public ").append(className).append(" ").append(NameUtil.addGet(fieldName)).append("() {\n").append(tab).append(tab)
-//                    .append("return ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-//
-//            // setMethod
-//            sb.append(tab).append("public void ").append(NameUtil.addSet(fieldName)).append("(").append(className).append(" ").append(fieldName).append(") {\n")
-//                    .append(tab).append(tab).append("this.").append(fieldName).append(" = ").append(fieldName).append(";\n").append(tab).append("}\n\n");
-//        }
 
         sb.append("}");
 

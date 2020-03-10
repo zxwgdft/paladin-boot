@@ -30,18 +30,8 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 		HashSet<String> enumcodes = new HashSet<>();
 		StringBuilder sb = new StringBuilder();
 		List<GenerateColumnOption> columnOptions = tableOption.getColumnOptions();
-		Collections.sort(columnOptions, new Comparator<GenerateColumnOption>() {
-			public int compare(GenerateColumnOption o1, GenerateColumnOption o2) {
-				Integer oi1 = o1.getColumn().getOrderIndex();
-				Integer oi2 = o2.getColumn().getOrderIndex();
 
-				if (oi1 == null)
-					return -1;
-				if (oi2 == null)
-					return 1;
-				return oi1 - oi2;
-			}
-		});
+		Collections.sort(columnOptions, (o1, o2) -> o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex());
 
 		sb.append("[\n");
 		for (GenerateColumnOption columnOption : columnOptions) {

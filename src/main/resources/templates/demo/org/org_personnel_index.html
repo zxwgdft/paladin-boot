@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/${mainModel}/header" />
+<head th:include="/demo/header" />
 
 <body>
-    ${enumcodes}
+    <tt:constant enumcode="sex-type,identification-type,nation-type,"/>
     <section class="content-header">
-        <h1>${mainTitle}</h1>
+        <h1>人员管理</h1>
     </section>
     <section class="content">
         <div class="box box-solid">
@@ -23,8 +23,8 @@
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
                 </form>
-                <input type="hidden" id="pageLimit" th:value="${r'${query?.limit}'}" />
-                <input type="hidden" id="pageOffset" th:value="${r'${query?.offset}'}" />
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
             </div>
         </div>
         <div class="box box-solid" style="margin-top:20px">
@@ -38,7 +38,7 @@
             </div>
         </div>
     </section>
-    <div th:include="/${mainModel}/footer" />
+    <div th:include="/demo/footer" />
     <script type="text/javascript">
     var table;
     $(function() {
@@ -50,7 +50,13 @@
             idField: "id",
             columns: [
                 [
-${tableColumns}
+                    { title: "姓名", field: "name" },
+                    { title: "性别", field: "sex", enumcode: "sex-type" },
+					{ title: "所属机构", field: "unitId" },
+					{ title: "证件类型", field: "identificationType", enumcode: "identification-type" },
+					{ title: "证件号码", field: "identificationNo" },
+					{ title: "出生日期", field: "birthday" ,formatter: "date" },
+					{ title: "手机号码", field: "cellphone" },
                     {
                         title: "操作",
                         align: "center",
@@ -71,9 +77,9 @@ ${tableColumns}
                     }
                 ]
             ],
-            url: '${searchUrl}',
+            url: '/demo/org/personnel/find/page',
             searchbar: '#searchbar',
-            exportUrl: '${exportUrl}',
+            exportUrl: '/demo/org/personnel/export',
             showExportor: true,
             showColumns: true,
             pagination: true,
@@ -83,17 +89,17 @@ ${tableColumns}
     }
 
     function add() {
-        window.location = '${addUrl}';
+        window.location = '/demo/org/personnel/add';
     }
 
     function detail(row) {
-        window.location = '${detailUrl}' + (row ? ('?id=' + row.id) : '');
+        window.location = '/demo/org/personnel/detail' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function() {
-                $.getAjax('${removeUrl}?id=' + row.id, function() {
+                $.getAjax('/demo/org/personnel/delete?id=' + row.id, function() {
                     $.successMessage("删除成功");
                     table.refresh();
                 });

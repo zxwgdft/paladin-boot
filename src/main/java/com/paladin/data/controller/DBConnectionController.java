@@ -21,7 +21,6 @@ import com.paladin.data.service.vo.DBConnectionVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.spring.DevelopCondition;
-import com.paladin.framework.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Controller;
@@ -34,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -85,8 +86,7 @@ public class DBConnectionController extends ControllerSupport {
             return validErrorHandler(bindingResult);
         }
         DBConnection model = beanCopy(dbConnectionDTO, new DBConnection());
-        String id = UUIDUtil.createUUID();
-        model.setName(id);
+        String id = model.getName();
         if (connectionService.save(model) > 0) {
             return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
         }

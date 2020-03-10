@@ -9,8 +9,7 @@ import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.service.VersionContainer;
 import com.paladin.framework.service.VersionContainerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class PermissionContainer implements VersionContainer {
-
-	private static Logger logger = LoggerFactory.getLogger(PermissionContainer.class);
-
+	
 	@Autowired
 	private OrgPermissionService orgPermissionService;
 
@@ -43,7 +41,7 @@ public class PermissionContainer implements VersionContainer {
 	 * 初始化权限
 	 */
 	public void initPermission() {
-		logger.info("------------初始化权限开始------------");
+		log.info("------------初始化权限开始------------");
 
 		Map<String, OrgPermission> permissionMap = new HashMap<>();
 		List<OrgPermission> orgPermissions = orgPermissionService.findAll();
@@ -52,14 +50,14 @@ public class PermissionContainer implements VersionContainer {
 		}
 		this.permissionMap = permissionMap;
 		initRole();
-		logger.info("------------初始化权限结束------------");
+		log.info("------------初始化权限结束------------");
 	}
 
 	/**
 	 * 初始化角色和角色授予的权限
 	 */
 	public void initRole() {
-		logger.info("------------初始化角色开始------------");
+		log.info("------------初始化角色开始------------");
 		List<OrgRole> orgRoles = orgRoleService.findAll();
 		Map<String, Role> roleMap = new HashMap<>();
 		for (OrgRole orgRole : orgRoles) {
@@ -93,7 +91,7 @@ public class PermissionContainer implements VersionContainer {
 
 		this.systemAdminRole = systemAdminRole;
 		this.roleMap = roleMap;
-		logger.info("------------初始化权限结束------------");
+		log.info("------------初始化权限结束------------");
 	}
 
 	/**

@@ -35,16 +35,16 @@
     $(function() {
         var html = generateEditHtml(options);
         $(".content").html(html);
+        $.initComponent($(".content"));
         var model = new tonto.Model("model", options.columns, {
-            pattern: "edit",
-            successCallback: function() {
-                $.successAlert("保存成功", function() {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
                     window.location = "/data/connection/index";
                 });
             }
         });
         model.setData(null);
-        $.initComponent($(".content"));
     });
     </script>
 </body>
