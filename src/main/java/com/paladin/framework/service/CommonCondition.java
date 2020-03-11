@@ -5,12 +5,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD,ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommonCondition {
-	
-	public String name();
-	public QueryType type();
-	public String value() default "";
-	public Class<?> valueType() default String.class;
+
+    String name();
+
+    QueryType type();
+
+    String value() default "";
+
+    Class<?> valueType() default String.class;
 }

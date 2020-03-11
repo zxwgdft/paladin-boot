@@ -220,12 +220,10 @@ public class GeneralCriteriaBuilder {
     private static class Builder {
 
         private Class<?> entityClass;
-        private Class<?> queryClass;
         private ArrayList<BuildUnit> buildUnits;
 
         private Builder(Class<?> entityClass, Class<?> queryClass) {
             this.entityClass = entityClass;
-            this.queryClass = queryClass;
             this.buildUnits = new ArrayList<BuildUnit>();
 
             for (EntityField entityField : Entity.getEntity(queryClass).getEntityFields()) {

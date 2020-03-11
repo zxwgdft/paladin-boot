@@ -8,6 +8,8 @@ import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.exception.SystemExceptionCode;
 import com.paladin.framework.mybatis.CustomMapper;
 import com.paladin.framework.utils.convert.SimpleConvertUtil;
+import com.paladin.framework.utils.reflect.Entity;
+import com.paladin.framework.utils.reflect.EntityField;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import tk.mybatis.mapper.entity.EntityColumn;
@@ -38,6 +40,7 @@ public abstract class ServiceSupport<Model> {
 
     @SuppressWarnings("unchecked")
     public ServiceSupport() {
+        // 获取泛型类，该泛型类应该是对应数据库某表的实体类类型
         Class<?> clazz = ReflectUtil.getSuperClassArgument(this.getClass(), ServiceSupport.class, 0);
         if (clazz == null) {
             log.warn("[" + this.getClass().getName() + "]的实现类没有明确定义[" + ServiceSupport.class.getName() + "]的泛型，无法为其注册SqlMapper");
@@ -64,20 +67,52 @@ public abstract class ServiceSupport<Model> {
     protected String[] orderByProperties;
     protected OrderType[] orderByTypes;
     protected boolean hasOrderBy = false;
-    protected boolean isAllwaysOrderFirst = false;
+    protected boolean isAlwaysOrderFirst = false;
+
+    // 主键方法
+    private Method[] pkGetMethods; // 主键对应get方法
+    private Method[] pkSetMethods; // 主键对应set方法
+    private Object lock = new Object();
 
     /**
      * 初始化
      */
     public void init() {
-
         if (BaseModel.class.isAssignableFrom(modelType)) {
             isBaseModel = true;
         }
 
+        Class<?> type = this.getClass();
+
+        /*
+         * 初始化通用排序
+         */
+        CommonOrderBy orderBy = type.getAnnotation(CommonOrderBy.class);
+        if (orderBy != null) {
+            isAlwaysOrderFirst = orderBy.orderByFirst();
+            int size = Math.min(orderBy.property().length, orderBy.type().length);
+            if (size > 0) {
+                orderByProperties = new String[size];
+                orderByTypes = new OrderType[size];
+                for (int i = 0; i < size; i++) {
+                    orderByProperties[i] = orderBy.property()[i];
+                    orderByTypes[i] = orderBy.type()[i];
+                }
+                hasOrderBy = true;
+            }
+        }
+
+        /*
+         * 如果没有排序规则，但是是基础对象则默认倒叙创建时间
+         */
+        if (!hasOrderBy && isBaseModel) {
+            orderByProperties = new String[]{BaseModel.FIELD_CREATE_TIME};
+            orderByTypes = new OrderType[]{OrderType.DESC};
+            hasOrderBy = true;
+        }
+
         // 通用查询条件
 
-        Class<?> type = this.getClass();
         CommonCondition commonCondtion = type.getAnnotation(CommonCondition.class);
         CommonConditions commonCondtions = type.getAnnotation(CommonConditions.class);
 
@@ -96,48 +131,19 @@ public abstract class ServiceSupport<Model> {
             commonConditions.add(new Condition(BaseModel.FIELD_DELETED, QueryType.EQUAL, BaseModel.BOOLEAN_NO));
         }
 
-        if (commonConditions.size() > 0) {
+        // 根据通用查询条件和通用排序构建通用Example
+        if (commonConditions.size() > 0 || hasOrderBy) {
             hasCommonCondition = true;
             commonExample = new Example(modelType);
-            GeneralCriteriaBuilder.buildAnd(commonExample, commonConditions);
-        }
-
-        /*
-         * 初始化通用排序
-         */
-        QueryOrderBy orderBy = type.getAnnotation(QueryOrderBy.class);
-        if (orderBy != null) {
-
-            isAllwaysOrderFirst = orderBy.orderByFirst();
-
-            int size = Math.min(orderBy.property().length, orderBy.type().length);
-            if (size > 0) {
-
-                orderByProperties = new String[size];
-                orderByTypes = new OrderType[size];
-
-                for (int i = 0; i < size; i++) {
-                    orderByProperties[i] = orderBy.property()[i];
-                    orderByTypes[i] = orderBy.type()[i];
-                }
-
-                hasOrderBy = true;
+            if (commonConditions.size() > 0) {
+                GeneralCriteriaBuilder.buildAnd(commonExample, commonConditions);
+            }
+            if (hasOrderBy) {
+                buildOrderBy(commonExample);
             }
         }
 
-        /*
-         * 如果没有排序规则，但是是基础对象则默认倒叙创建时间
-         */
-        if (!hasOrderBy && isBaseModel) {
-            orderByProperties = new String[]{BaseModel.FIELD_CREATE_TIME};
-            orderByTypes = new OrderType[]{OrderType.DESC};
-            hasOrderBy = true;
-        }
-
-        if (hasCommonCondition) {
-            buildOrderBy(commonExample);
-        }
-
+        // 获取主键get,set方法
         if (pkGetMethods == null) {
             synchronized (lock) {
                 if (pkGetMethods == null) {
@@ -151,8 +157,9 @@ public abstract class ServiceSupport<Model> {
                         int i = 0;
                         for (EntityColumn column : pkColumns) {
                             String property = column.getProperty();
-                            pkGetMethods[i] = ReflectUtil.getGetMethod(property, modelType);
-                            pkSetMethods[i++] = ReflectUtil.getSetMethod(property, modelType, String.class);
+                            EntityField entityField = Entity.getEntity(modelType).getEntityField(property);
+                            pkGetMethods[i] = entityField.getGetMethod();
+                            pkSetMethods[i++] = entityField.getSetMethod();
                         }
                     }
                 }
@@ -191,28 +198,23 @@ public abstract class ServiceSupport<Model> {
         return new Condition(name, queryType, o1);
     }
 
-    private Method[] pkGetMethods; // 主键对应get方法
-    private Method[] pkSetMethods; // 主键对应set方法, 只保存String类型的主键
-    private Object lock = new Object();
 
     /**
-     * 获取主键
+     * 获取主键，如果是多个主键将返回数组
      *
      * @param model
      * @return
      */
     protected Object getPKValue(Model model) {
-        if (model == null)
+        if (model == null || pkGetMethods.length == 0) {
             return null;
-
-        if (pkGetMethods.length == 0)
-            return null;
+        }
 
         if (pkGetMethods.length == 1) {
             try {
                 return pkGetMethods[0].invoke(model);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-
+                log.error("无法调用主键相应GET方法：" + pkGetMethods[0].getName(), e);
             }
         } else {
             Object[] pkObjects = new Object[pkGetMethods.length];
@@ -221,11 +223,11 @@ public abstract class ServiceSupport<Model> {
                 try {
                     pkObjects[i] = method.invoke(model);
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    log.error("无法调用主键相应GET方法：" + method.getName(), e);
                 }
             }
             return pkObjects;
         }
-
         return null;
     }
 
@@ -236,45 +238,42 @@ public abstract class ServiceSupport<Model> {
      * @return
      */
     protected boolean judgeHasPKValue(Model model) {
-        if (model == null)
+        if (model == null || pkGetMethods.length == 0) {
             return false;
-
-        if (pkGetMethods.length == 0)
-            return false;
+        }
 
         for (Method method : pkGetMethods) {
             try {
                 Object value = method.invoke(model);
-                if (value == null || "".equals(value))
+                if (value == null || "".equals(value)) {
                     return false;
+                }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-
+                log.error("无法调用主键相应GET方法：" + method.getName(), e);
             }
         }
+
         return true;
     }
 
     /**
-     * 检查是否是空字符串ID
+     * 检查主键是否是空字符串，如果是则置为null
      *
      * @param model
      */
     protected void checkEmptyId(Model model) {
-        if (model == null)
+        if (model == null || pkGetMethods.length == 0) {
             return;
-
-        if (pkGetMethods.length == 0)
-            return;
+        }
 
         for (int i = 0; i < pkGetMethods.length; i++) {
             Method getMethod = pkGetMethods[i];
             try {
-                Object value = getMethod.invoke(model);
-                if ("".equals(value)) {
-                    value = null;
-                    pkSetMethods[i].invoke(model, value);
+                if ("".equals(getMethod.invoke(model))) {
+                    pkSetMethods[i].invoke(model, null);
                 }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                log.error("无法调用主键相应GET或SET方法：" + getMethod.getName() + "/" + pkSetMethods[i].getName(), e);
             }
         }
     }
@@ -283,14 +282,14 @@ public abstract class ServiceSupport<Model> {
     // 通用业务方法
     // -----------------------------------------------------
 
-    private CustomMapper<Model> cusomMapper;
+    private CustomMapper<Model> customMapper;
 
     public CustomMapper<Model> getSqlMapper() {
-        return cusomMapper;
+        return customMapper;
     }
 
-    public void setSqlMapper(CustomMapper<Model> cusomMapper) {
-        this.cusomMapper = cusomMapper;
+    public void setSqlMapper(CustomMapper<Model> customMapper) {
+        this.customMapper = customMapper;
     }
 
     public Model get(Object pk) {
@@ -324,7 +323,7 @@ public abstract class ServiceSupport<Model> {
             String orderByClause = null;
             boolean hasFirst = false;
 
-            if (isAllwaysOrderFirst) {
+            if (isAlwaysOrderFirst) {
                 orderByClause = example.getOrderByClause();
                 if (orderByClause != null && orderByClause.length() > 0) {
                     example.setOrderByClause("");

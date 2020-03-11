@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommonConditions {
 	
-	public CommonCondition[] value();
+	CommonCondition[] value();
 	
 }

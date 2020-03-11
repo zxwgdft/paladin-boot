@@ -47,7 +47,6 @@ public class QueryHandlerInterceptor implements HandlerInterceptor {
 
     private static class QueryMethodShell {
         QueryInputMethod queryMethod;
-
         private QueryMethodShell(QueryInputMethod queryMethod) {
             this.queryMethod = queryMethod;
         }
