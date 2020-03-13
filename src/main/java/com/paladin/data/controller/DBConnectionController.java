@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -87,7 +85,7 @@ public class DBConnectionController extends ControllerSupport {
         }
         DBConnection model = beanCopy(dbConnectionDTO, new DBConnection());
         String id = model.getName();
-        if (connectionService.save(model) > 0) {
+        if (connectionService.save(model)) {
             return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
         }
         return R.fail("保存失败");
@@ -101,7 +99,7 @@ public class DBConnectionController extends ControllerSupport {
         }
         String id = dbConnectionDTO.getName();
         DBConnection model = beanCopy(dbConnectionDTO, connectionService.get(id));
-        if (connectionService.update(model) > 0) {
+        if (connectionService.update(model)) {
             return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
         }
         return R.fail("修改失败");

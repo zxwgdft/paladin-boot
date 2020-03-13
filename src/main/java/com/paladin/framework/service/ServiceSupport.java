@@ -304,6 +304,23 @@ public abstract class ServiceSupport<Model> {
         return getSqlMapper().selectByPrimaryKey(pk);
     }
 
+    /**
+     * 根据主键获取对象
+     *
+     * @param pk      主键
+     * @param VOClass view object class
+     * @return
+     */
+    public <T> T get(Object pk, Class<T> VOClass) {
+        Model model = getSqlMapper().selectByPrimaryKey(pk);
+        if (model != null) {
+            if (VOClass != modelType) {
+                return SimpleBeanCopyUtil.simpleCopy(model, VOClass);
+            }
+        }
+        return (T) model;
+    }
+
     // -----------------------------------------------------
     // 查询，包含权限判断
     // -----------------------------------------------------
@@ -401,7 +418,9 @@ public abstract class ServiceSupport<Model> {
             if (selections == null) {
                 List<String> list = new ArrayList<>();
                 for (EntityField entityField : Entity.getEntity(clazz).getEntityFields()) {
-                    list.add(entityField.getName());
+                    if (entityField.getAnnotation(IgnoreSelection.class) == null) {
+                        list.add(entityField.getName());
+                    }
                 }
                 selections = list.toArray(new String[list.size()]);
                 selectionCacheMap.put(clazz, selections);
@@ -435,11 +454,11 @@ public abstract class ServiceSupport<Model> {
             if (List.class.isAssignableFrom(clazz)) {
                 List list = (List) searchParam;
                 for (Object param : list) {
-                    buildExample(example, param);
+                    example = buildExample(example, param);
                 }
             } else if (clazz.isArray()) {
                 for (int i = 0; i < Array.getLength(searchParam); i++) {
-                    buildExample(example, Array.get(searchParam, i));
+                    example = buildExample(example, Array.get(searchParam, i));
                 }
             } else {
                 example = ExampleHelper.buildQuery(example, searchParam);
@@ -473,7 +492,7 @@ public abstract class ServiceSupport<Model> {
             if (searchParam instanceof Example) {
                 example = (Example) searchParam;
             } else {
-                buildExample(null, searchParam);
+                example = buildExample(null, searchParam);
             }
         }
 
@@ -800,7 +819,7 @@ public abstract class ServiceSupport<Model> {
         if (result == null || result.size() == 0) {
             page.setTotal(0L);
         }
-        return new PageResult<T>(page);
+        return new PageResult<T>(page, result);
     }
 
     /**
@@ -839,10 +858,10 @@ public abstract class ServiceSupport<Model> {
      * @param model 实体类
      * @return
      */
-    public int save(Model model) {
+    public boolean save(Model model) {
         checkEmptyId(model);
         saveModelWrap(model);
-        return getSqlMapper().insert(model);
+        return getSqlMapper().insert(model) > 0;
     }
 
     /**
@@ -851,7 +870,7 @@ public abstract class ServiceSupport<Model> {
      * @param model 实体类
      * @return
      */
-    public int saveOrUpdate(Model model) {
+    public boolean saveOrUpdate(Model model) {
         if (judgeHasPKValue(model)) {
             return update(model);
         } else {
@@ -865,9 +884,9 @@ public abstract class ServiceSupport<Model> {
      * @param model 实体类
      * @return
      */
-    public int updateSelective(Model model) {
+    public boolean updateSelective(Model model) {
         updateModelWrap(model);
-        return getSqlMapper().updateByPrimaryKeySelective(model);
+        return getSqlMapper().updateByPrimaryKeySelective(model) > 0;
     }
 
     /**
@@ -876,9 +895,9 @@ public abstract class ServiceSupport<Model> {
      * @param model 实体类
      * @return
      */
-    public int update(Model model) {
+    public boolean update(Model model) {
         updateModelWrap(model);
-        return getSqlMapper().updateByPrimaryKey(model);
+        return getSqlMapper().updateByPrimaryKey(model) > 0;
     }
 
     /**

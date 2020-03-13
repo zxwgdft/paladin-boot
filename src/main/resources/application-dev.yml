@@ -6,6 +6,8 @@ logging:
       paladin:
         common:
           mapper: debug
+        demo:
+          mapper: debug
 
 server:
   port: 8011
@@ -52,6 +54,10 @@ paladin:
       mapper-location: classpath:dynamic/mapper/**/*.xml
       type-aliases-package: com.paladin.demo.dynamic.model
     source[0]:
-      name: mysql
+      name: mysql1
+      url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+      username: root
+    source[1]:
+      name: mysql2
       url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
       username: root

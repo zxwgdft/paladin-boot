@@ -1,16 +1,16 @@
 package com.paladin.common.service.sys;
 
 import com.paladin.common.PaladinProperties;
-import com.paladin.common.mapper.sys.SysUserMapper;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.*;
+import com.paladin.framework.service.Condition;
+import com.paladin.framework.service.QueryType;
+import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.ValidateUtil;
 import com.paladin.framework.utils.secure.SecureUtil;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -19,9 +19,6 @@ import java.util.regex.Pattern;
 
 @Service
 public class SysUserService extends ServiceSupport<SysUser> {
-
-    @Autowired
-    private SysUserMapper sysUserMapper;
 
     @Resource
     private PaladinProperties paladinProperties;
@@ -39,7 +36,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
      * @param type
      * @return
      */
-    public int createUserAccount(String account, String userId, Integer type) {
+    public boolean createUserAccount(String account, String userId, Integer type) {
 
         if (account == null || !validateAccount(account)) {
             throw new BusinessException("账号不符合规则或者已经存在该账号");
@@ -75,11 +72,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
             return false;
         }
 
-        Example example = ExampleHelper.buildAnd(SysUser.class, new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account));
-
-        // example.and()
-
-        return sysUserMapper.selectCountByExample(example) == 0;
+        return searchCount(new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account)) == 0;
     }
 
     /**
@@ -128,13 +121,13 @@ public class SysUserService extends ServiceSupport<SysUser> {
         updateUser.setIsFirstLogin(0);// 密码强制修改后该状态值设为0
         updateUser.setUpdateTime(new Date());
 
-        int effect = updateSelective(updateUser);
+        boolean success = updateSelective(updateUser);
 
-        if (effect > 0) {
+        if (success) {
             SecurityUtils.getSubject().logout();
         }
 
-        return effect > 0;
+        return success;
     }
 
     public void updateLastTime(String account) {
@@ -143,7 +136,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
         SysUser user = new SysUser();
         user.setId(sysUser.getId());
         user.setLastLoginTime(new Date());
-        sysUserMapper.updateByPrimaryKeySelective(user);
+        updateSelective(user);
     }
 
 }

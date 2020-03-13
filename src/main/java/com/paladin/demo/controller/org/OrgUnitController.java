@@ -44,7 +44,7 @@ public class OrgUnitController extends ControllerSupport {
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {
-        return R.success(beanCopy(orgUnitService.get(id), new OrgUnitVO()));
+        return R.success(orgUnitService.get(id, OrgUnitVO.class));
     }
 
     @GetMapping("/add")
@@ -68,7 +68,7 @@ public class OrgUnitController extends ControllerSupport {
         String id = UUIDUtil.createUUID();
         model.setId(id);
         if (orgUnitService.saveUnit(model)) {
-            return R.success(beanCopy(orgUnitService.get(id), new OrgUnitVO()));
+            return R.success(orgUnitService.get(id, OrgUnitVO.class));
         }
         return R.fail("保存失败");
     }
@@ -82,7 +82,7 @@ public class OrgUnitController extends ControllerSupport {
         String id = orgUnitDTO.getId();
         OrgUnit model = beanCopy(orgUnitDTO, orgUnitService.get(id));
         if (orgUnitService.updateUnit(model)) {
-            return R.success(beanCopy(orgUnitService.get(id), new OrgUnitVO()));
+            return R.success(orgUnitService.get(id, OrgUnitVO.class));
         }
         return R.fail("更新失败");
     }

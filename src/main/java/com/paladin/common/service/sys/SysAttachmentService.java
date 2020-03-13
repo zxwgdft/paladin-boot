@@ -405,7 +405,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
      * @return
      */
     public int deleteAttachments(String... ids) {
-        return removeByCondition(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
+        return remove(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
     }
 
 

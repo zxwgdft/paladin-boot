@@ -15,13 +15,13 @@ public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {
     @Autowired
     private SysVisitCacheMapper visitCacheMapper;
 
-    public int putCache(HttpServletRequest request, String key, String content) {
+    public boolean putCache(HttpServletRequest request, String key, String content) {
         if (content == null || content.length() == 0 || content.length() > 400) {
-            return 0;
+            return false;
         }
         String ip = WebUtil.getIpAddress(request);
         if (ip == null || ip.length() == 0) {
-            return 0;
+            return false;
         }
         SysVisitCache cache = visitCacheMapper.getCache(key, ip);
         if (cache == null) {

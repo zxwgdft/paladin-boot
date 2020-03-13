@@ -6,8 +6,5 @@
 		SELECT  'mysql' AS name, now() AS time
 	</select>
 	
-	<select id="getDemoFromSqlServer" resultType="com.paladin.demo.dynamic.model.DynamicDemo" flushCache="true">
-		SELECT 'sqlserver' AS name, GETDATE() AS time
-	</select>
-	
+
 </mapper>

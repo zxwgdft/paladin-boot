@@ -40,13 +40,13 @@ public class ${upperModelName}Controller extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = ${upperModelName}Query.class, paramIndex = 0)
     public Object findPage(${upperModelName}Query query) {
-        return R.success(${lowerModelName}Service.searchPage(query));
+        return R.success(${lowerModelName}Service.searchPage(query, ${upperModelName}VO.class));
     }
     
     @GetMapping("${getDetailRM}")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {   	
-        return R.success(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+    public Object getDetail(@RequestParam String id) {
+        return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
     }
     
     @GetMapping("${addRM}")
@@ -69,8 +69,8 @@ public class ${upperModelName}Controller extends ControllerSupport {
         ${upperModelName} model = beanCopy(${lowerModelName}DTO, new ${upperModelName}());
 		String id = UUIDUtil.createUUID();
 		model.set${primaryName}(id);
-		if (${lowerModelName}Service.save(model) > 0) {
-			return R.success(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+		if (${lowerModelName}Service.save(model)) {
+			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
 		}
 		return R.fail("保存失败");
 	}
@@ -83,8 +83,8 @@ public class ${upperModelName}Controller extends ControllerSupport {
 		}
 		String id = ${lowerModelName}DTO.getId();
 		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.get(id));
-		if (${lowerModelName}Service.update(model) > 0) {
-			return R.success(beanCopy(${lowerModelName}Service.get(id), new ${upperModelName}VO()));
+		if (${lowerModelName}Service.update(model)) {
+			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
 		}
 		return R.fail("更新失败");
 	}

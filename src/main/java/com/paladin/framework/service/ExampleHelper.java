@@ -303,10 +303,8 @@ public class ExampleHelper {
                 }
 
             }
-
             return example;
         }
-
     }
 
 

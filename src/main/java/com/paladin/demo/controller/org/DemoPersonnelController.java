@@ -88,7 +88,7 @@ public class DemoPersonnelController extends ControllerSupport {
         DemoPersonnel model = beanCopy(demoPersonnelDTO, new DemoPersonnel());
         String id = UUIDUtil.createUUID();
         model.setId(id);
-        if (demoPersonnelService.save(model) > 0) {
+        if (demoPersonnelService.save(model)) {
             return R.success(beanCopy(demoPersonnelService.get(id), new DemoPersonnelVO()));
         }
         return R.fail("保存失败");
@@ -114,7 +114,7 @@ public class DemoPersonnelController extends ControllerSupport {
         demoPersonnelDTO.setProfilePhoto(attachmentService.splicingAttachmentId(attachments));
 
         model = beanCopy(demoPersonnelDTO, model);
-        if (demoPersonnelService.update(model) > 0) {
+        if (demoPersonnelService.update(model)) {
             return R.success(beanCopy(demoPersonnelService.get(id), new DemoPersonnelVO()));
         }
         return R.fail("更新失败");

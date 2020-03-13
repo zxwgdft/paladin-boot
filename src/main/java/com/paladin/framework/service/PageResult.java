@@ -1,7 +1,6 @@
 package com.paladin.framework.service;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,8 +35,13 @@ public class PageResult<T> {
         this.limit = page.getPageSize();
         this.total = page.getTotal();
         this.data = page;
+    }
 
-        PageHelper.clearPage();
+    public PageResult(Page page, List<T> data) {
+        this.page = page.getPageNum();
+        this.limit = page.getPageSize();
+        this.total = page.getTotal();
+        this.data = data;
     }
 
     public <E> PageResult<E> convert(Class<E> target) {

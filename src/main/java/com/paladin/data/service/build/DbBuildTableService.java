@@ -11,19 +11,19 @@ import java.util.List;
 @Service
 public class DbBuildTableService extends ServiceSupport<DbBuildTable> {
 
-	public DbBuildTable getDbBuildColumn(String connectionName, String tableName) {
-		List<DbBuildTable> result = searchAll(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, connectionName),
-				new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, tableName));
-		if (result != null && result.size() > 0) {
-			return result.get(0);
-		}
+    public DbBuildTable getDbBuildColumn(String connectionName, String tableName) {
+        List<DbBuildTable> result = searchAll(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, connectionName),
+                new Condition(DbBuildTable.COLUMN_FIELD_TABLE_NAME, QueryType.EQUAL, tableName));
+        if (result != null && result.size() > 0) {
+            return result.get(0);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public int removeByTable(String dbName, String tableName) {
-		return removeByCondition(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, dbName),
-				new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, tableName));
-	}
+    public int removeByTable(String dbName, String tableName) {
+        return remove(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, dbName),
+                new Condition(DbBuildTable.COLUMN_FIELD_TABLE_NAME, QueryType.EQUAL, tableName));
+    }
 
 }
