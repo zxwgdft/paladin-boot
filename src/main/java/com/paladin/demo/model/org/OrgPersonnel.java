@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter 
 public class OrgPersonnel extends BaseModel {
 
-	// 
+    public static final String FIELD_IDENTIFICATION_NO = "identificationNo";
+    //
 	@Id
 	private String id;
 

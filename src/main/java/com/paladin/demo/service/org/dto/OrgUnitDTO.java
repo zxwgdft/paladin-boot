@@ -39,4 +39,6 @@ public class OrgUnitDTO {
     @NotNull(message = "排序号不能为空")
     private Integer orderNo;
 
+
+
 }

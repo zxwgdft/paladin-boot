@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
 
 
+
 }

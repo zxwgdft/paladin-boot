@@ -1,6 +1,7 @@
 package com.paladin.common.core.export;
 
 import com.paladin.common.core.export.ExportCondition.ExportColumn;
+import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.excel.write.ExcelWriter;
 import com.paladin.framework.excel.write.ValueFormator;
@@ -42,7 +43,7 @@ public class ExportUtil {
             throw new BusinessException("需要导出的数据为空");
         }
 
-        List<WriteColumn> writeColumns = new ArrayList<WriteColumn>();
+        List<WriteColumn> writeColumns = new ArrayList<>();
         Map<String, ValueFormator> valueFormatMap = condition.getExcelValueFormatMap();
 
         for (ExportColumn column : columns) {

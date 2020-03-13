@@ -44,6 +44,7 @@ public class ExportCondition {
         return SCOPE_ALL.equals(dataScope);
     }
 
+
     @Getter
     @Setter
     public static class ExportColumn {
