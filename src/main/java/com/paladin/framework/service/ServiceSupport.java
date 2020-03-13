@@ -419,7 +419,10 @@ public abstract class ServiceSupport<Model> {
                 List<String> list = new ArrayList<>();
                 for (EntityField entityField : Entity.getEntity(clazz).getEntityFields()) {
                     if (entityField.getAnnotation(IgnoreSelection.class) == null) {
-                        list.add(entityField.getName());
+                        String fieldName = entityField.getName();
+                        if (Entity.getEntity(modelType).getEntityField(fieldName) != null) {
+                            list.add(fieldName);
+                        }
                     }
                 }
                 selections = list.toArray(new String[list.size()]);

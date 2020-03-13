@@ -40,6 +40,9 @@ public class OrgPersonnelVO {
     // 民族
     private Integer nation;
 
+    // 可以不写该变量，返回json时仍旧会根据getUnitName方法返回数据，这里写是为了导出excel用
+    private String unitName;
+
     // 返回单位名称
     public String getUnitName() {
         return OrgUnitContainer.getUnitName(unitId);

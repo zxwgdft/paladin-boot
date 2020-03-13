@@ -127,9 +127,9 @@ public class OrgPersonnelController extends ControllerSupport {
             if (query != null) {
                 if (condition.isExportAll()) {
                     // orgPersonnelService.searchAll(query) 也可以替换为 orgPersonnelService.searchPage(query, OrgPersonnelVO.class)，从而在VO类中做一定处理
-                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchAll(query), OrgPersonnel.class));
+                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchAll(OrgPersonnelVO.class, query), OrgPersonnelVO.class));
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchPage(query).getData(), OrgPersonnel.class));
+                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchPage(query, OrgPersonnelVO.class).getData(), OrgPersonnelVO.class));
                 }
             }
             return R.fail("导出数据失败：请求参数错误");
