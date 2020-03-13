@@ -7,6 +7,7 @@ import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.exception.SystemExceptionCode;
 import com.paladin.framework.mybatis.CustomMapper;
+import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import com.paladin.framework.utils.convert.SimpleConvertUtil;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
@@ -17,18 +18,16 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.OrderBy;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 /**
  * <h2>业务支持类</h2>
- * <p>
  * 提供一些简单业务方法
- * </p>
- * <p>
  * 通过{@link ServiceSupportConatiner}自动注册sqlMapper
- * </p>
+ * 简单模式下会忽略通用筛查、排序条件
  *
  * @param <Model> 实体类
  * @author TontoZhou
@@ -36,9 +35,14 @@ import java.util.*;
 @Slf4j
 public abstract class ServiceSupport<Model> {
 
+    /**
+     * 选择项缓存
+     */
+    private static Map<Class, String[]> selectionCacheMap = new HashMap<>();
+
+
     protected Class<Model> modelType; // 业务对应类
 
-    @SuppressWarnings("unchecked")
     public ServiceSupport() {
         // 获取泛型类，该泛型类应该是对应数据库某表的实体类类型
         Class<?> clazz = ReflectUtil.getSuperClassArgument(this.getClass(), ServiceSupport.class, 0);
@@ -50,19 +54,14 @@ public abstract class ServiceSupport<Model> {
 
     // -------------------------- 初始化配置 --------------------------
 
-    protected List<Condition> commonConditions = new ArrayList<>(); // 通用查询条件
-    protected Example commonExample;
-    protected boolean hasCommonCondition = false; // 是否有通用查询条件
 
+    protected Condition[] commonConditions; // 通用查询条件
     protected boolean isBaseModel = false; // 是否基于基础模型
 
-    /*
-     * 动态Example
-     */
-    protected boolean hasDynamicCondition = false;
+    protected String[] ignoreSelections; // 列表查询时忽略字段（例如某些大文本，并不需要在列表查询中返回）
 
     /*
-     * 排序
+     * 排序属性
      */
     protected String[] orderByProperties;
     protected OrderType[] orderByTypes;
@@ -72,7 +71,7 @@ public abstract class ServiceSupport<Model> {
     // 主键方法
     private Method[] pkGetMethods; // 主键对应get方法
     private Method[] pkSetMethods; // 主键对应set方法
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
     /**
      * 初始化
@@ -112,36 +111,27 @@ public abstract class ServiceSupport<Model> {
         }
 
         // 通用查询条件
+        List<Condition> commonConditionList = new ArrayList<>();
 
-        CommonCondition commonCondtion = type.getAnnotation(CommonCondition.class);
-        CommonConditions commonCondtions = type.getAnnotation(CommonConditions.class);
+        CommonCondition commonCondition = type.getAnnotation(CommonCondition.class);
+        CommonConditions commonConditions = type.getAnnotation(CommonConditions.class);
 
-        if (commonCondtion != null) {
-            commonConditions.add(createCondition(commonCondtion));
+        if (commonCondition != null) {
+            commonConditionList.add(convert2Condition(commonCondition));
         }
 
-        if (commonCondtions != null) {
-            for (CommonCondition cc : commonCondtions.value()) {
-                commonConditions.add(createCondition(cc));
+        if (commonConditions != null) {
+            for (CommonCondition cc : commonConditions.value()) {
+                commonConditionList.add(convert2Condition(cc));
             }
         }
 
         // 如果是逻辑删除模型，则所有查询中需要过滤删除数据
         if (isBaseModel) {
-            commonConditions.add(new Condition(BaseModel.FIELD_DELETED, QueryType.EQUAL, BaseModel.BOOLEAN_NO));
+            commonConditionList.add(new Condition(BaseModel.FIELD_DELETED, QueryType.EQUAL, BaseModel.BOOLEAN_NO));
         }
 
-        // 根据通用查询条件和通用排序构建通用Example
-        if (commonConditions.size() > 0 || hasOrderBy) {
-            hasCommonCondition = true;
-            commonExample = new Example(modelType);
-            if (commonConditions.size() > 0) {
-                GeneralCriteriaBuilder.buildAnd(commonExample, commonConditions);
-            }
-            if (hasOrderBy) {
-                buildOrderBy(commonExample);
-            }
-        }
+        this.commonConditions = commonConditionList.toArray(new Condition[commonConditionList.size()]);
 
         // 获取主键get,set方法
         if (pkGetMethods == null) {
@@ -166,19 +156,30 @@ public abstract class ServiceSupport<Model> {
             }
         }
 
+
+        // 获取忽略查询项
+        List<String> ignoreSelectionList = new ArrayList<>();
+        for (EntityField entityField : Entity.getEntity(modelType).getEntityFields()) {
+            if (entityField.getAnnotation(IgnoreSelection.class) != null) {
+                ignoreSelectionList.add(entityField.getName());
+            }
+        }
+
+        ignoreSelections = ignoreSelectionList.toArray(new String[ignoreSelectionList.size()]);
     }
 
+
     /**
-     * 创建通用查询条件
+     * 转换通用查询条件注解
      *
-     * @param commonCondtion
-     * @return
+     * @param commonCondition 通用查询条件注解
+     * @return 返回通用查询条件
      */
-    private Condition createCondition(CommonCondition commonCondtion) {
-        String v1 = commonCondtion.value();
-        Class<?> type = commonCondtion.valueType();
-        String name = commonCondtion.name();
-        QueryType queryType = commonCondtion.type();
+    protected Condition convert2Condition(CommonCondition commonCondition) {
+        String v1 = commonCondition.value();
+        Class<?> type = commonCondition.valueType();
+        String name = commonCondition.name();
+        QueryType queryType = commonCondition.type();
 
         Object o1 = null;
 
@@ -200,10 +201,10 @@ public abstract class ServiceSupport<Model> {
 
 
     /**
-     * 获取主键，如果是多个主键将返回数组
+     * 获取主键
      *
-     * @param model
-     * @return
+     * @param model 实体类 实体类
+     * @return 主键值，如果是多个主键将返回数组
      */
     protected Object getPKValue(Model model) {
         if (model == null || pkGetMethods.length == 0) {
@@ -233,8 +234,9 @@ public abstract class ServiceSupport<Model> {
 
     /**
      * 判断是否存在主键
+     * 多主键下，只要一个主键存在空则算为空主键
      *
-     * @param model
+     * @param model 实体类
      * @return
      */
     protected boolean judgeHasPKValue(Model model) {
@@ -259,7 +261,7 @@ public abstract class ServiceSupport<Model> {
     /**
      * 检查主键是否是空字符串，如果是则置为null
      *
-     * @param model
+     * @param model 实体类
      */
     protected void checkEmptyId(Model model) {
         if (model == null || pkGetMethods.length == 0) {
@@ -292,6 +294,12 @@ public abstract class ServiceSupport<Model> {
         this.customMapper = customMapper;
     }
 
+    /**
+     * 根据主键获取对象
+     *
+     * @param pk 主键
+     * @return
+     */
     public Model get(Object pk) {
         return getSqlMapper().selectByPrimaryKey(pk);
     }
@@ -301,23 +309,50 @@ public abstract class ServiceSupport<Model> {
     // -----------------------------------------------------
 
     /**
-     * 获取一个干净的当前Example
+     * 获取Example（可以考虑线程变量，但是好像意义不大，并且可能出现查询冲突）
      *
+     * @return new Example
+     */
+    public Example getExample() {
+        return new Example(modelType);
+    }
+
+
+    /**
+     * 构建通用部分，该部分条件添加在最后一组criteria，
+     * 在存在多个criteria,并且有or条件时会出现不正确结果，
+     * 如果有这种复查查询SQL，请改为xml中写sql形式，或手动自行调整
+     *
+     * @param example 查询标准集
      * @return
      */
-    protected Example getClearCurrentExample() {
-        return GeneralCriteriaBuilder.getClearCurrentExample(modelType);
+    public Example buildCommon(Example example) {
+        if (commonConditions.length > 0 || hasOrderBy) {
+            if (example == null) {
+                example = getExample();
+            }
+            if (commonConditions.length > 0) {
+                ExampleHelper.buildCurrent(example, commonConditions);
+            }
+            if (hasOrderBy) {
+                buildCommonOrderBy(example);
+            }
+        }
+        return example;
     }
 
     /**
-     * 构建排序
+     * 构建通用排序
+     * 如果isAlwaysOrderFirst = true，通用部分排序将调整到最前
+     * 该方法应该总是在Example构建排序的最后，避免排序位置错误
      *
-     * @param example
+     * @param example 查询标准集
+     * @return
      */
-    protected Example buildOrderBy(Example example) {
+    public Example buildCommonOrderBy(Example example) {
         if (hasOrderBy) {
             if (example == null) {
-                example = getClearCurrentExample();
+                example = getExample();
             }
 
             String orderByClause = null;
@@ -344,57 +379,122 @@ public abstract class ServiceSupport<Model> {
                 example.setOrderByClause(orderByClause + "," + example.getOrderByClause());
             }
         }
-
         return example;
     }
 
-    /**
-     * 构建动态查询条件
-     *
-     * @param example
-     * @return
-     */
-    protected Example buildDynamicCondition(Example example) {
-        return example;
-    }
 
     /**
-     * 查找所有结果
+     * 构建selection，根据class中字段名称来构建
+     * <p>
+     * ServiceSupport下其他查询<b>返回结果集<b/>的方法会调用该方法，用于动态生成查询字段
      *
+     * @param example 查询标准集
+     * @param clazz   对应结果集对象类
      * @return
      */
-    public List<Model> findAll() {
-        return findAll(false);
-    }
-
-    /**
-     * 查找所有结果
-     *
-     * @param simple 是否简单模式
-     * @return
-     */
-    public List<Model> findAll(boolean simple) {
-
-        if (simple) {
-            return getSqlMapper().selectAll();
-        }
-
-        Example example = null;
-
-        if (hasCommonCondition) {
-            if (hasDynamicCondition) {
-                example = GeneralCriteriaBuilder.buildAnd(modelType, commonConditions);
-                example = buildDynamicCondition(example);
-            } else {
-                // commonExample 已经排序过
-                return getSqlMapper().selectByExample(commonExample);
+    public Example buildSelection(Example example, Class<?> clazz) {
+        if (modelType != clazz) {
+            if (example == null) {
+                example = getExample();
             }
-        } else if (hasDynamicCondition) {
-            example = buildDynamicCondition(null);
+            String[] selections = selectionCacheMap.get(clazz);
+            if (selections == null) {
+                List<String> list = new ArrayList<>();
+                for (EntityField entityField : Entity.getEntity(clazz).getEntityFields()) {
+                    list.add(entityField.getName());
+                }
+                selections = list.toArray(new String[list.size()]);
+                selectionCacheMap.put(clazz, selections);
+            }
+            example.selectProperties(selections);
+        } else if (ignoreSelections.length > 0) {
+            example.excludeProperties(ignoreSelections);
+        }
+        return example;
+    }
+
+
+    /**
+     * 构建查询条件
+     * <p>
+     * 该部分条件添加在最后一组criteria，如果需要添加一组新的criteria，应该在调用该方法前调用example的创建criteria方法
+     *
+     * @param example     查询标准集
+     * @param searchParam Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @return
+     */
+    public Example buildExample(Example example, Object searchParam) {
+        if (example == null) {
+            example = getExample();
         }
 
-        example = buildOrderBy(example);
+        if (searchParam instanceof Condition) {
+            example = ExampleHelper.buildCurrent(example, (Condition) searchParam);
+        } else {
+            Class<?> clazz = searchParam.getClass();
+            if (List.class.isAssignableFrom(clazz)) {
+                List list = (List) searchParam;
+                for (Object param : list) {
+                    buildExample(example, param);
+                }
+            } else if (clazz.isArray()) {
+                for (int i = 0; i < Array.getLength(searchParam); i++) {
+                    buildExample(example, Array.get(searchParam, i));
+                }
+            } else {
+                example = ExampleHelper.buildQuery(example, searchParam);
+            }
+        }
 
+        return example;
+    }
+
+    /**
+     * 构建或创建一个Example
+     *
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @return
+     */
+    public Example buildOrCreateExample(Object searchParam) {
+        return buildOrCreateExample(searchParam, modelType, false);
+    }
+
+    /**
+     * 构建或创建一个Example
+     *
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param VOClass     view object class
+     * @param simple      是否简单模式
+     * @return
+     */
+    public Example buildOrCreateExample(Object searchParam, Class<?> VOClass, boolean simple) {
+        Example example = null;
+        if (searchParam != null) {
+            if (searchParam instanceof Example) {
+                example = (Example) searchParam;
+            } else {
+                buildExample(null, searchParam);
+            }
+        }
+
+        if (VOClass != modelType) {
+            example = buildSelection(example, VOClass);
+        }
+
+        if (!simple) {
+            example = buildCommon(example);
+        }
+
+        return example;
+    }
+
+    /**
+     * 根据标准查询
+     *
+     * @param example 查询标准集
+     * @return
+     */
+    public List<Model> selectByExample(Example example) {
         if (example == null) {
             return getSqlMapper().selectAll();
         } else {
@@ -403,45 +503,98 @@ public abstract class ServiceSupport<Model> {
     }
 
     /**
-     * 分页查找
+     * 根据标准查询
      *
-     * @param offset
-     * @param limit
+     * @param VOClass view object class
+     * @param example 查询标准集
      * @return
      */
-    public PageResult<Model> findPage(int offset, int limit) {
-        return findPage(offset, limit, false);
+    public <T> List<T> selectByExample(Class<T> VOClass, Example example) {
+        List<Model> result;
+
+        if (example == null) {
+            result = getSqlMapper().selectAll();
+        } else {
+            result = getSqlMapper().selectByExample(example);
+        }
+
+        if (VOClass != modelType) {
+            return SimpleBeanCopyUtil.simpleCopyList(result, VOClass);
+        } else {
+            return (List<T>) result;
+        }
     }
 
     /**
-     * 分页查找
+     * 查找所有结果
      *
-     * @param offset
-     * @param limit
-     * @param simple 是否简单模式
      * @return
      */
-    public PageResult<Model> findPage(int offset, int limit, boolean simple) {
-        if (limit > OffsetPage.MAX_LIMIT) {
-            limit = OffsetPage.MAX_LIMIT;
-        }
+    public List<Model> findAll() {
+        return findAll(modelType, false);
+    }
 
-        Page<Model> page = PageHelper.offsetPage(offset, limit);
-        try {
-            List<Model> result = findAll(simple);
-            if (result == null || result.size() == 0) {
-                page.setTotal(0L);
-            }
-            return new PageResult<Model>(page);
-        } finally {
-            PageHelper.clearPage();
-        }
+    /**
+     * 查询所有结果，并返回对应view object
+     *
+     * @param VOClass view object class
+     * @return
+     */
+    public <T> List<T> findAll(Class<T> VOClass) {
+        return findAll(VOClass, false);
+    }
+
+    /**
+     * 查找所有结果
+     *
+     * @param simple  是否简单模式
+     * @param VOClass view object class
+     * @return
+     */
+    public <T> List<T> findAll(Class<T> VOClass, boolean simple) {
+        return searchAll(null, VOClass, simple);
+    }
+
+    /**
+     * 分页查找所有
+     *
+     * @param offset 偏移量
+     * @param limit  页大小
+     * @return
+     */
+    public PageResult<Model> findPage(int offset, int limit) {
+        return findPage(offset, limit, modelType, false);
+    }
+
+    /**
+     * 分页查找所有
+     *
+     * @param offset  偏移量
+     * @param limit   页大小
+     * @param VOClass view object class
+     * @return
+     */
+    public <T> PageResult<T> findPage(int offset, int limit, Class<T> VOClass) {
+        return findPage(offset, limit, VOClass, false);
+    }
+
+    /**
+     * 分页查找所有
+     *
+     * @param offset  偏移量
+     * @param limit   页大小
+     * @param VOClass view object class
+     * @param simple  是否简单模式
+     * @return
+     */
+    public <T> PageResult<T> findPage(int offset, int limit, Class<T> VOClass, boolean simple) {
+        return searchPage(null, offset, limit, VOClass, simple);
     }
 
     /**
      * 查找唯一数据
      *
-     * @param conditions
+     * @param conditions 查询条件
      * @return
      */
     public Model searchOne(Condition... conditions) {
@@ -451,7 +604,7 @@ public abstract class ServiceSupport<Model> {
     /**
      * 查找唯一数据
      *
-     * @param searchParam
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @return
      */
     public Model searchOne(Object searchParam) {
@@ -461,353 +614,243 @@ public abstract class ServiceSupport<Model> {
     /**
      * 查找唯一数据
      *
-     * @param searchParam
-     * @param simple
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param simple      是否简单模式
      * @return
      */
-    @SuppressWarnings("unchecked")
     public Model searchOne(Object searchParam, boolean simple) {
-        Example example = null;
-
-        if (searchParam instanceof Example) {
-
-            example = (Example) searchParam;
-
-        } else if (searchParam instanceof Condition) {
-
-            Condition condition = (Condition) searchParam;
-            example = GeneralCriteriaBuilder.buildAnd(modelType, condition);
-
-        } else {
-
-            Class<?> clazz = searchParam.getClass();
-
-            if (List.class.isAssignableFrom(clazz)) {
-                List<Condition> list = (List<Condition>) searchParam;
-                /*
-                 * 对于list，array暂时只处理Condition情况，对于其他多条件传入日后补充
-                 */
-                example = GeneralCriteriaBuilder.buildAnd(modelType, list);
-            } else if (clazz.isArray()) {
-                Condition[] array = (Condition[]) searchParam;
-                example = GeneralCriteriaBuilder.buildAnd(modelType, Arrays.asList(array));
-            } else {
-                example = GeneralCriteriaBuilder.buildQuery(modelType, searchParam);
+        List<Model> result = searchAll(searchParam, modelType, simple);
+        if (result != null) {
+            int size = result.size();
+            if (size == 1) {
+                return result.get(0);
+            } else if (size > 1) {
+                throw new BusinessException("存在多个符合条件结果");
             }
         }
-
-        // 如果是简单模式，则不考虑通用条件和动态条件
-        if (!simple) {
-
-            if (hasCommonCondition) {
-
-                if (example != null) {
-                    example = GeneralCriteriaBuilder.buildAnd(example, commonConditions);
-                }
-
-                if (hasDynamicCondition) {
-                    example = buildDynamicCondition(example);
-                } else {
-                    if (example == null) {
-                        throw new BusinessException("无法查到唯一数据");
-                    }
-                }
-            } else if (hasDynamicCondition) {
-                example = buildDynamicCondition(example);
-            }
-
-        }
-
-        example = buildOrderBy(example);
-
-        if (example == null) {
-            throw new BusinessException("无法查到唯一数据");
-        } else {
-            return getSqlMapper().selectOneByExample(example);
-        }
+        return null;
     }
 
     /**
-     * 条件过滤查询(非简单模式)
+     * 条件过滤查询
      *
-     * @param conditions
+     * @param conditions 查询条件
      * @return
      */
     public List<Model> searchAll(Condition... conditions) {
-        return searchAll(conditions, false);
+        return searchAll(conditions, modelType, false);
     }
 
     /**
-     * 条件过滤查询(非简单模式)
+     * 条件过滤查询
      *
-     * @param searchParam
+     * @param VOClass    view object class
+     * @param conditions 查询条件
+     * @return
+     */
+    public <T> List<T> searchAll(Class<T> VOClass, Condition... conditions) {
+        return searchAll(conditions, VOClass, false);
+    }
+
+    /**
+     * 条件过滤查询
+     *
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @return
      */
     public List<Model> searchAll(Object searchParam) {
-        return searchAll(searchParam, false);
+        return searchAll(searchParam, modelType, false);
     }
+
+    /**
+     * 条件过滤查询
+     *
+     * @param VOClass     view object class
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @return
+     */
+    public <T> List<T> searchAll(Class<T> VOClass, Object searchParam) {
+        return searchAll(searchParam, VOClass, false);
+    }
+
 
     /**
      * 条件过滤查询（简单模式下将不会考虑通用条件和动态条件）
      *
-     * @param searchParam <ul>
-     *                    <li>{@link Condition}单个条件或者它的数组和集合</li>
-     *                    <li>基于注解和{@link GeneralCriteriaBuilder}的查询类实例</li>
-     *                    </ul>
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param VOClass     view object class
      * @param simple      是否简单模式
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public List<Model> searchAll(Object searchParam, boolean simple) {
-
-        Example example = null;
-
-        if (searchParam instanceof Example) {
-            example = (Example) searchParam;
-        } else if (searchParam instanceof Condition) {
-            Condition condition = (Condition) searchParam;
-            example = GeneralCriteriaBuilder.buildAnd(modelType, condition);
-        } else {
-            Class<?> clazz = searchParam.getClass();
-
-            if (List.class.isAssignableFrom(clazz)) {
-                List<Condition> list = (List<Condition>) searchParam;
-                /*
-                 * 对于list，array暂时只处理Condition情况，对于其他多条件传入日后补充
-                 */
-                example = GeneralCriteriaBuilder.buildAnd(modelType, list);
-            } else if (clazz.isArray()) {
-                Condition[] array = (Condition[]) searchParam;
-                example = GeneralCriteriaBuilder.buildAnd(modelType, Arrays.asList(array));
-            } else {
-                example = GeneralCriteriaBuilder.buildQuery(modelType, searchParam);
-            }
-        }
-
-        // 如果是简单模式，则不考虑通用条件和动态条件
-        if (!simple) {
-            if (hasCommonCondition) {
-
-                if (example != null) {
-                    example = GeneralCriteriaBuilder.buildAnd(example, commonConditions);
-                }
-
-                if (hasDynamicCondition) {
-                    example = buildDynamicCondition(example);
-                } else {
-                    if (example == null) {
-                        return getSqlMapper().selectByExample(commonExample);
-                    }
-                }
-            } else if (hasDynamicCondition) {
-                example = buildDynamicCondition(example);
-            }
-        }
-
-        example = buildOrderBy(example);
-
-        if (example == null) {
-            return getSqlMapper().selectAll();
-        } else {
-            return getSqlMapper().selectByExample(example);
-        }
+    public <T> List<T> searchAll(Object searchParam, Class<T> VOClass, boolean simple) {
+        Example example = buildOrCreateExample(searchParam, VOClass, simple);
+        return selectByExample(VOClass, example);
     }
 
+
     /**
-     * 条件过滤分页查询（非简单模式）
+     * 条件过滤分页查询
      *
-     * @param offset
-     * @param limit
-     * @param conditions
+     * @param offset     偏移量
+     * @param limit      页大小
+     * @param conditions 查询条件
      * @return
      */
     public PageResult<Model> searchPage(int offset, int limit, Condition... conditions) {
-        return searchPage(conditions, offset, limit, false);
+        return searchPage(conditions, offset, limit, modelType, false);
     }
 
+
     /**
-     * 条件过滤分页查询（非简单模式）
+     * 条件过滤分页查询
      *
-     * @param page
-     * @param conditions
+     * @param offset     偏移量
+     * @param limit      页大小
+     * @param VOClass    view object class
+     * @param conditions 查询条件
      * @return
      */
-    public PageResult<Model> searchPage(OffsetPage page, Condition... conditions) {
-        return searchPage(conditions, page.getOffset(), page.getLimit(), false);
+    public <T> PageResult<T> searchPage(int offset, int limit, Class<T> VOClass, Condition... conditions) {
+        return searchPage(conditions, offset, limit, VOClass, false);
     }
 
     /**
-     * 条件过滤分页查询（非简单模式）
+     * 条件过滤分页查询
      *
-     * @param searchParam
+     * @param offset      偏移量
+     * @param limit       页大小
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @return
+     */
+    public PageResult<Model> searchPage(int offset, int limit, Object searchParam) {
+        return searchPage(searchParam, offset, limit, modelType, false);
+    }
+
+    /**
+     * 条件过滤分页查询
+     *
+     * @param offset      偏移量
+     * @param limit       页大小
+     * @param VOClass     view object class
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @return
+     */
+    public <T> PageResult<T> searchPage(int offset, int limit, Class<T> VOClass, Object searchParam) {
+        return searchPage(searchParam, offset, limit, VOClass, false);
+    }
+
+    /**
+     * 条件过滤分页查询
+     *
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @return
      */
     public PageResult<Model> searchPage(Object searchParam) {
-        return searchPage(searchParam, false);
+        return searchPage(searchParam, modelType, false);
     }
 
     /**
-     * 条件过滤分页查询（简单模式下将不会考虑通用条件和动态条件）
+     * 条件过滤分页查询
      *
-     * @param searchParam
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param VOClass     view object class
+     * @return
+     */
+    public <T> PageResult<T> searchPage(Object searchParam, Class<T> VOClass) {
+        return searchPage(searchParam, VOClass, false);
+    }
+
+    /**
+     * 条件过滤分页查询
+     *
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param VOClass     view object class
      * @param simple      是否简单模式
      * @return
      */
-    public PageResult<Model> searchPage(Object searchParam, boolean simple) {
-        if (searchParam == null)
-            return searchPage(searchParam, 0, OffsetPage.DEFAULT_LIMIT, simple);
-
+    public <T> PageResult<T> searchPage(Object searchParam, Class<T> VOClass, boolean simple) {
+        if (searchParam == null) {
+            return searchPage(null, 0, OffsetPage.DEFAULT_LIMIT, VOClass, simple);
+        }
         if (searchParam instanceof OffsetPage) {
             OffsetPage page = (OffsetPage) searchParam;
-            return searchPage(searchParam, page.getOffset(), page.getLimit(), simple);
+            return searchPage(searchParam, page.getOffset(), page.getLimit(), VOClass, simple);
         } else {
-            return searchPage(searchParam, 0, OffsetPage.DEFAULT_LIMIT, simple);
+            return searchPage(searchParam, 0, OffsetPage.DEFAULT_LIMIT, VOClass, simple);
         }
     }
 
-    /**
-     * 条件过滤分页查询（非简单模式）
-     *
-     * @param searchParam
-     * @param offset
-     * @param limit
-     * @return
-     */
-    public PageResult<Model> searchPage(Object searchParam, int offset, int limit) {
-        return searchPage(searchParam, offset, limit, false);
-    }
 
     /**
-     * 条件过滤分页查询（非简单模式）
+     * 条件过滤分页查询
      *
-     * @param searchParam
-     * @param page
-     * @return
-     */
-    public PageResult<Model> searchPage(Object searchParam, OffsetPage page) {
-        return searchPage(searchParam, page.getOffset(), page.getLimit(), false);
-    }
-
-    /**
-     * 条件过滤分页查询（简单模式下将不会考虑通用条件和动态条件）
-     *
-     * @param searchParam
-     * @param offset
-     * @param limit
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param offset      偏移量
+     * @param limit       页大小
+     * @param VOClass     view object class
      * @param simple      是否简单模式
      * @return
      */
-    public PageResult<Model> searchPage(Object searchParam, int offset, int limit, boolean simple) {
+    public <T> PageResult<T> searchPage(Object searchParam, int offset, int limit, Class<T> VOClass, boolean simple) {
         if (limit > OffsetPage.MAX_LIMIT) {
             limit = OffsetPage.MAX_LIMIT;
         }
-
-        Page<Model> page = PageHelper.offsetPage(offset, limit);
-        try {
-            List<Model> result = searchAll(searchParam, simple);
-            if (result == null || result.size() == 0) {
-                page.setTotal(0L);
-            }
-            return new PageResult<Model>(page);
-        } finally {
-            PageHelper.clearPage();
+        Page<T> page = PageHelper.offsetPage(offset, limit);
+        List<T> result = searchAll(searchParam, VOClass, simple);
+        if (result == null || result.size() == 0) {
+            page.setTotal(0L);
         }
-    }
-
-    /**
-     * 获取一个分页
-     *
-     * @param query
-     * @return
-     */
-    public <E> Page<E> getPage(OffsetPage query) {
-        int limit = query.getLimit();
-        int offset = query.getOffset();
-
-        if (limit > OffsetPage.MAX_LIMIT) {
-            limit = OffsetPage.MAX_LIMIT;
-        }
-        return PageHelper.offsetPage(offset, limit);
+        return new PageResult<T>(page);
     }
 
     /**
      * 查询记录数
      *
-     * @param searchParam
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @return
      */
-    public int searchAllCount(Object searchParam) {
-        return searchAllCount(searchParam, false);
+    public int searchCount(Object searchParam) {
+        return searchCount(searchParam, false);
     }
 
     /**
      * 查询记录数
      *
-     * @param searchParam
-     * @param simple
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param simple      是否简单模式
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public int searchAllCount(Object searchParam, boolean simple) {
-
-        Example example = null;
-        if (searchParam instanceof Example) {
-            example = (Example) searchParam;
-        } else if (searchParam instanceof Condition) {
-            Condition condition = (Condition) searchParam;
-            example = GeneralCriteriaBuilder.buildAnd(modelType, condition);
-        } else {
-            Class<?> clazz = searchParam.getClass();
-            if (List.class.isAssignableFrom(clazz)) {
-                List<Condition> list = (List<Condition>) searchParam;
-                /*
-                 * 对于list，array暂时只处理Condition情况，对于其他多条件传入日后补充
-                 */
-                example = GeneralCriteriaBuilder.buildAnd(modelType, list);
-            } else if (clazz.isArray()) {
-                Condition[] array = (Condition[]) searchParam;
-                example = GeneralCriteriaBuilder.buildAnd(modelType, Arrays.asList(array));
-            } else {
-                example = GeneralCriteriaBuilder.buildQuery(modelType, searchParam);
-            }
-        }
-
-        // 如果是简单模式，则不考虑通用条件和动态条件
-        if (!simple) {
-            if (hasCommonCondition) {
-                if (example != null) {
-                    example = GeneralCriteriaBuilder.buildAnd(example, commonConditions);
-                }
-
-                if (hasDynamicCondition) {
-                    example = buildDynamicCondition(example);
-                } else {
-                    if (example == null) {
-                        return getSqlMapper().selectCountByExample(commonExample);
-                    }
-                }
-            } else if (hasDynamicCondition) {
-                example = buildDynamicCondition(example);
-            }
-        }
-
+    public int searchCount(Object searchParam, boolean simple) {
+        Example example = buildOrCreateExample(searchParam, modelType, simple);
         if (example == null) {
-            example = new Example(modelType);
+            example = getExample();
         }
-
         return getSqlMapper().selectCountByExample(example);
     }
+
 
     // -----------------------------------------------------
     // 修改保存删除
     // -----------------------------------------------------
 
+    /**
+     * 保存插入
+     *
+     * @param model 实体类
+     * @return
+     */
     public int save(Model model) {
         checkEmptyId(model);
         saveModelWrap(model);
         return getSqlMapper().insert(model);
     }
 
+    /**
+     * 如果存在主键值则进行更新，没有则进行插入
+     *
+     * @param model 实体类
+     * @return
+     */
     public int saveOrUpdate(Model model) {
         if (judgeHasPKValue(model)) {
             return update(model);
@@ -816,16 +859,34 @@ public abstract class ServiceSupport<Model> {
         }
     }
 
+    /**
+     * 更新实体类中字段不为空的数据
+     *
+     * @param model 实体类
+     * @return
+     */
     public int updateSelective(Model model) {
         updateModelWrap(model);
         return getSqlMapper().updateByPrimaryKeySelective(model);
     }
 
+    /**
+     * 更新整个实体类（包括空字段）
+     *
+     * @param model 实体类
+     * @return
+     */
     public int update(Model model) {
         updateModelWrap(model);
         return getSqlMapper().updateByPrimaryKey(model);
     }
 
+    /**
+     * 删除主键对应数据（如果是基于BaseModel的进行逻辑删除）
+     *
+     * @param pk 主键
+     * @return
+     */
     public boolean removeByPrimaryKey(Object pk) {
         if (isBaseModel) {
             Model model = getSqlMapper().selectByPrimaryKey(pk);
@@ -842,77 +903,32 @@ public abstract class ServiceSupport<Model> {
     /**
      * 根据条件删除
      *
-     * @param conditions
+     * @param conditions 查询条件
      * @return
      */
-    public int removeByCondition(Condition... conditions) {
-        return removeByExample(conditions, false);
+    public int remove(Condition... conditions) {
+        return remove(conditions, false);
     }
 
     /**
      * 根据条件删除
      *
-     * @param searchParam
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @return
      */
-    public int removeByExample(Object searchParam) {
-        return removeByExample(searchParam, false);
+    public int remove(Object searchParam) {
+        return remove(searchParam, false);
     }
 
     /**
      * 根据条件删除
      *
-     * @param searchParam <ul>
-     *                    <li>{@link Condition}单个条件或者它的数组和集合</li>
-     *                    <li>基于注解和{@link GeneralCriteriaBuilder}的查询类实例</li>
-     *                    </ul>
+     * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
+     * @param simple      是否简单模式
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public int removeByExample(Object searchParam, boolean simple) {
-        Example example = null;
-
-        if (searchParam instanceof Example) {
-            example = (Example) searchParam;
-        } else if (searchParam instanceof Condition) {
-            Condition condition = (Condition) searchParam;
-            example = GeneralCriteriaBuilder.buildAnd(modelType, condition);
-        } else {
-            Class<?> clazz = searchParam.getClass();
-
-            if (List.class.isAssignableFrom(clazz)) {
-                List<Condition> list = (List<Condition>) searchParam;
-                /*
-                 * 对于list，array暂时只处理Condition情况，对于其他多条件传入日后补充
-                 */
-                example = GeneralCriteriaBuilder.buildAnd(modelType, list);
-            } else if (clazz.isArray()) {
-                Condition[] array = (Condition[]) searchParam;
-                example = GeneralCriteriaBuilder.buildAnd(modelType, Arrays.asList(array));
-            } else {
-                example = GeneralCriteriaBuilder.buildQuery(modelType, searchParam);
-            }
-        }
-
-        // 如果是简单模式，则不考虑通用条件和动态条件
-        if (!simple) {
-            if (hasCommonCondition) {
-                if (example != null) {
-                    example = GeneralCriteriaBuilder.buildAnd(example, commonConditions);
-                }
-
-                if (hasDynamicCondition) {
-                    example = buildDynamicCondition(example);
-                } else {
-                    if (example == null) {
-                        return getSqlMapper().selectCountByExample(commonExample);
-                    }
-                }
-            } else if (hasDynamicCondition) {
-                example = buildDynamicCondition(example);
-            }
-        }
-
+    public int remove(Object searchParam, boolean simple) {
+        Example example = buildOrCreateExample(searchParam, modelType, simple);
         if (isBaseModel) {
             try {
                 Model model = modelType.newInstance();
@@ -930,7 +946,7 @@ public abstract class ServiceSupport<Model> {
     /**
      * 更新操作前需要对数据包裹，例如设置更新操作人与操作时间
      *
-     * @param model
+     * @param model 实体类
      */
     public void updateModelWrap(Model model) {
         if (isBaseModel) {
@@ -946,7 +962,7 @@ public abstract class ServiceSupport<Model> {
     /**
      * 保存操作前需要对数据包裹，例如设置创建操作人与操作时间
      *
-     * @param model
+     * @param model 实体类
      */
     public void saveModelWrap(Model model) {
         if (isBaseModel) {
@@ -967,13 +983,41 @@ public abstract class ServiceSupport<Model> {
     //
     // -----------------------------------------------------
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    /**
+     * 获取一个分页
+     *
+     * @param query
+     * @return
+     */
+    public <E> Page<E> getPage(OffsetPage query) {
+        int limit = query.getLimit();
+        int offset = query.getOffset();
+
+        if (limit > OffsetPage.MAX_LIMIT) {
+            limit = OffsetPage.MAX_LIMIT;
+        }
+        return PageHelper.offsetPage(offset, limit);
+    }
+
+
+    /**
+     * 获取一个空的分页结果
+     *
+     * @param offsetPage 分页对象
+     * @return
+     */
     public PageResult getEmptyPageResult(OffsetPage offsetPage) {
         Page page = new Page(offsetPage.getOffset(), offsetPage.getLimit());
         page.setTotal(0L);
         return new PageResult(page);
     }
 
+    /**
+     * 获取一个空的分页结果
+     *
+     * @param page
+     * @return
+     */
     public <T> PageResult<T> getEmptyPageResult(Page<T> page) {
         page.setTotal(0L);
         return new PageResult<T>(page);

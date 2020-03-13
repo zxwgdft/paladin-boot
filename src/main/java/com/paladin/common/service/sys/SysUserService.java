@@ -75,7 +75,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
             return false;
         }
 
-        Example example = GeneralCriteriaBuilder.buildAnd(SysUser.class, new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account));
+        Example example = ExampleHelper.buildAnd(SysUser.class, new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account));
 
         // example.and()
 

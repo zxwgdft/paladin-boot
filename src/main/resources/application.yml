@@ -23,7 +23,9 @@ spring:
       content-type: text/html
 
 mapper:
-  mappers: com.paladin.framework.mybatis.CustomMapper
+  mappers:
+    - com.paladin.framework.mybatis.CustomMapper
+    - com.paladin.framework.mybatis.CustomSelectMapper
   enumAsSimpleType: true
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml

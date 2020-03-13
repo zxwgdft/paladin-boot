@@ -21,139 +21,154 @@ import java.util.List;
  *
  * @author TontZhou
  */
-public class GeneralCriteriaBuilder {
+public class ExampleHelper {
 
     private static HashMap<Class<?>, Builder> buildCache = new HashMap<Class<?>, Builder>();
 
-    private static ThreadLocal<HashMap<Class<?>, Example>> local_example = new ThreadLocal<HashMap<Class<?>, Example>>() {
-        public HashMap<Class<?>, Example> initialValue() {
-            return new HashMap<Class<?>, Example>();
-        }
-    };
 
     /**
-     * 获取干净的基于线程变量的Example实例
+     * 根据注解构建创建查询条件（当前criteria，而不是新增，如需要应该在调用前手动new一个criteria）
+     *
+     * @param example
+     * @param queryParam 查询条件参数
+     * @return
      */
-    public static Example getClearCurrentExample(Class<?> entityClass) {
-        Example example = getCurrentExample(entityClass);
-        example.clear();
-        return example;
+    public static Example buildQuery(Example example, Object queryParam) {
+        if (queryParam == null) {
+            return example;
+        }
+        return getBuilder(queryParam.getClass()).build(example, queryParam);
     }
 
     /**
-     * 获取当前线程Example
-     * <p>
-     * 注意：基于该类的大多数方法都使用了线程变量的Example，除非想使用Example来实现复杂查询，否则尽量使用本类提供的其他方法
-     * </p>
+     * 增加Example的查询条件(new and criteria)
+     *
+     * @param example
+     * @param conditions 查询条件
+     * @return
      */
-    public static Example getCurrentExample(Class<?> entityClass) {
-        HashMap<Class<?>, Example> map = local_example.get();
-        Example example = map.get(entityClass);
-        if (example == null) {
-            synchronized (local_example) {
-                if (example == null) {
-                    example = new Example(entityClass);
-                    map.put(entityClass, example);
-                }
-            }
-        }
-        return example;
-    }
-
-    /**
-     * 根据注解构建一个查询的example，可查看{@link Builder}
-     */
-    public static Example buildQuery(Class<?> entityType, Object queryParam) {
-        if (queryParam == null)
-            return null;
-        return getBuilder(entityType, queryParam).build(queryParam);
-    }
-
-    /**
-     * 增加Example的查询条件
-     */
-    public static Example buildAnd(Example example, List<Condition> conditions) {
-
-        List<Criteria> criterias = example.getOredCriteria();
-        Criteria criteria = null;
-
-        if (criterias.size() == 0) {
-            criteria = example.createCriteria();
-        } else {
-            criteria = criterias.get(criterias.size() - 1);
-        }
-
-        for (Condition condition : conditions)
+    public static Example buildNewAnd(Example example, Condition... conditions) {
+        Criteria criteria = example.createCriteria();
+        for (Condition condition : conditions) {
             buildCriteria(criteria, condition);
+        }
+        example.and(criteria);
+        return example;
+    }
 
+
+    /**
+     * 增加Example的查询条件(new or criteria)
+     *
+     * @param example
+     * @param conditions 查询条件
+     * @return
+     */
+    public static Example buildNewOr(Example example, Condition... conditions) {
+        Criteria criteria = example.createCriteria();
+        for (Condition condition : conditions) {
+            buildCriteria(criteria, condition);
+        }
+        example.or(criteria);
+        return example;
+    }
+
+
+    /**
+     * 增加Example的查询条件(and)
+     *
+     * @param example
+     * @param property  属性名称
+     * @param queryType 条件类型
+     * @param value     值
+     * @return
+     */
+    public static Example buildNewAnd(Example example, String property, QueryType queryType, Object value) {
+        Criteria criteria = example.createCriteria();
+        buildCriteria(criteria, property, queryType, value, true);
+        example.and(criteria);
         return example;
     }
 
     /**
-     * 增加Example的查询条件
+     * 增加Example的查询条件(and)
+     *
+     * @param example
+     * @param property  属性名称
+     * @param queryType 条件类型
+     * @param value     值
+     * @return
      */
-    public static Example buildAnd(Example example, String property, QueryType queryType, Object value) {
+    public static Example buildNewOr(Example example, String property, QueryType queryType, Object value) {
+        Criteria criteria = example.createCriteria();
+        buildCriteria(criteria, property, queryType, value, true);
+        example.and(criteria);
+        return example;
+    }
 
-        List<Criteria> criterias = example.getOredCriteria();
-        Criteria criteria = null;
 
-        if (criterias.size() == 0) {
-            criteria = example.createCriteria();
-        } else {
-            criteria = criterias.get(criterias.size() - 1);
+    /**
+     * 增加Example的查询条件(在当前criteria下增加条件，如果没有则创建)
+     *
+     * @param example
+     * @param conditions 查询条件
+     * @return
+     */
+    public static Example buildCurrent(Example example, Condition... conditions) {
+        Criteria criteria = getCurrentCriteria(example);
+        for (Condition condition : conditions) {
+            buildCriteria(criteria, condition);
         }
+        return example;
+    }
 
+    /**
+     * 增加Example的查询条件(在当前criteria下增加条件，如果没有则创建)
+     *
+     * @param example
+     * @param property  属性名称
+     * @param queryType 条件类型
+     * @param value     值
+     * @return
+     */
+    public static Example buildCurrent(Example example, String property, QueryType queryType, Object value) {
+        Criteria criteria = getCurrentCriteria(example);
         buildCriteria(criteria, property, queryType, value, true);
         return example;
     }
 
     /**
-     * 注意：该Example为线程变量，会清空Example后填入查询条件，应当作为创建Example来用
+     * 获取当前criteria，如果没有则创建
+     *
+     * @param example
+     * @return
      */
-    public static Example buildAnd(Class<?> entityType, List<Condition> conditions) {
-        Example example = getClearCurrentExample(entityType);
-        Criteria criteria = example.createCriteria();
-        for (Condition condition : conditions)
-            buildCriteria(criteria, condition);
-        return example;
-    }
-
-    /**
-     * 注意：该Example为线程变量，会清空Example后填入查询条件，应当作为创建Example来用
-     */
-    public static Example buildAnd(Class<?> entityType, Condition condition) {
-        Example example = getClearCurrentExample(entityType);
-        Criteria criteria = example.createCriteria();
-        buildCriteria(criteria, condition);
-        return example;
-    }
-
-    /**
-     * 注意：该Example为线程变量，会清空Example后填入查询条件，应当作为创建Example来用
-     */
-    public static Example buildAnd(Class<?> entityType, String property, QueryType queryType, Object value) {
-        Example example = getClearCurrentExample(entityType);
-        Criteria criteria = example.createCriteria();
-        buildCriteria(criteria, property, queryType, value, true);
-        return example;
+    private static Criteria getCurrentCriteria(Example example) {
+        List<Criteria> oredCriteria = example.getOredCriteria();
+        int size = oredCriteria.size();
+        if (size == 0) {
+            return example.createCriteria();
+        } else if (size == 1) {
+            return oredCriteria.get(0);
+        } else {
+            return oredCriteria.get(size - 1);
+        }
     }
 
     /**
      * 获取查询条件构建起
      */
-    private static Builder getBuilder(Class<?> entityType, Object queryParam) {
-        Class<?> clazz = queryParam.getClass();
-        Builder builder = buildCache.get(clazz);
+    private static Builder getBuilder(Class<?> queryParamClass) {
+        Builder builder = buildCache.get(queryParamClass);
         if (builder == null) {
             // 同步创建Builder
             synchronized (buildCache) {
-                builder = buildCache.get(clazz);
+                builder = buildCache.get(queryParamClass);
                 if (builder == null) {
-                    builder = new Builder(entityType, clazz);
+                    builder = new Builder(queryParamClass);
                 }
             }
         }
-
         return builder;
     }
 
@@ -208,7 +223,7 @@ public class GeneralCriteriaBuilder {
      * 查询对象构建器
      * <ul>
      * 规则
-     * <li>基于{@link QuerySort}构建排序</li>
+     * <li>基于{@link QuerySort},{@link QuerySorts}构建排序</li>
      * <li>基于{@link QueryCondition}构建简单查询条件（AND）</li>
      * <li></li>
      * <li></li>
@@ -219,13 +234,10 @@ public class GeneralCriteriaBuilder {
      */
     private static class Builder {
 
-        private Class<?> entityClass;
         private ArrayList<BuildUnit> buildUnits;
 
-        private Builder(Class<?> entityClass, Class<?> queryClass) {
-            this.entityClass = entityClass;
+        private Builder(Class<?> queryClass) {
             this.buildUnits = new ArrayList<BuildUnit>();
-
             for (EntityField entityField : Entity.getEntity(queryClass).getEntityFields()) {
                 QueryCondition condition = entityField.getAnnotation(QueryCondition.class);
                 if (condition != null) {
@@ -242,50 +254,43 @@ public class GeneralCriteriaBuilder {
             }
         }
 
-
-        private Example build(Object queryParam) {
-
-            Example example = getClearCurrentExample(entityClass);
-
+        private Example build(Example example, Object queryParam) {
             boolean hasSort = false;
             if (queryParam instanceof QuerySort) {
-
                 QuerySort sortQuery = (QuerySort) queryParam;
                 String sort = sortQuery.getSort();
-                if (sort != null) {
+                if (sort != null && sort.length() > 0) {
                     String order = sortQuery.getOrder();
-                    if ("asc".equals(order)) {
+                    hasSort = true;
+                    if ("asc".equalsIgnoreCase(order)) {
                         example.orderBy(sort).asc();
                     } else {
                         example.orderBy(sort).desc();
                     }
                 }
-
-                hasSort = true;
             } else if (queryParam instanceof QuerySorts) {
-
-                QuerySorts sortQuerys = (QuerySorts) queryParam;
-                String[] orders = sortQuerys.getOrder();
-                String[] sorts = sortQuerys.getSort();
-
+                QuerySorts querySorts = (QuerySorts) queryParam;
+                String[] orders = querySorts.getOrder();
+                String[] sorts = querySorts.getSort();
                 for (int i = 0; orders.length > i && sorts.length > i; i++) {
                     String order = orders[i];
                     String sort = sorts[i];
-                    if ("asc".equals(order)) {
-                        example.orderBy(sort).asc();
-                    } else {
-                        example.orderBy(sort).desc();
+                    if (sort != null && sort.length() > 0) {
+                        hasSort = true;
+                        if ("asc".equalsIgnoreCase(order)) {
+                            example.orderBy(sort).asc();
+                        } else {
+                            example.orderBy(sort).desc();
+                        }
                     }
-                    hasSort = true;
                 }
             }
 
             if (buildUnits.size() == 0 && !hasSort) {
-                return example;
+                return null;
             }
 
-            Criteria criteria = example.createCriteria();
-
+            Criteria criteria = getCurrentCriteria(example);
             for (BuildUnit bu : buildUnits) {
                 QueryType type = bu.type;
                 String property = bu.name;
@@ -324,7 +329,6 @@ public class GeneralCriteriaBuilder {
             this.type = type;
             this.getMethod = getMethod;
         }
-
     }
 
 
