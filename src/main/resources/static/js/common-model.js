@@ -1038,6 +1038,10 @@ var _dateFieldBuilder = new _FieldBuilder("DATE", {
         var v = data && data[column.name];
         if (typeof v === 'number') {
             data[column.name] = $.formatDate(v, "yyyy-MM-dd");
+        } else if (v && v.length > 10) {
+            // 前端可能返回 yyyy-MM-dd hh:mm:ss格式，这里简单处理
+            v = v.substr(0, 10);
+            data[column.name] = v;
         }
     },
     hideEdit: function (column, model, target) {
@@ -1095,6 +1099,10 @@ var _timeFieldBuilder = new _FieldBuilder("TIME",
             var v = data && data[column.name];
             if (typeof v === 'number') {
                 data[column.name] = $.formatDate(v, "yyyy-MM-dd hh:mm:ss");
+            } else if (v && v.length == 10) {
+                // 前端可能返回 yyyy-MM-dd格式，这里简单处理
+                v = v + ' 00:00:00';
+                data[column.name] = v;
             }
         },
         generateEditFormHtml: function (column, isFirst, options) {
@@ -1698,8 +1706,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
 
         var filename = column.fileName,
             v = data[column.name];
-        if (!$.isArray(data[filename])) {
-            data[filename] = [data[filename]];
+
+        var files = data[filename];
+        if (files && !$.isArray(files)) {
+            data[filename] = [files];
         }
 
         if (v) {
@@ -1798,10 +1808,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         var name = column.name,
             atts = data && data[column.fileName];
 
-        if (atts) {
-            var attDiv = target || this.getViewTarget(column, model);
-            if (attDiv.length == 0) return;
+        var attDiv = target || this.getViewTarget(column, model);
+        if (attDiv.length == 0) return;
 
+        if (atts) {
             var html = '<ul class="mailbox-attachments clearfix">';
             for (var i = 0; i < atts.length; i++) {
                 var b = atts[i];
@@ -1839,6 +1849,8 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             }
             html += "</ul>";
             attDiv.html(html);
+        } else {
+            attDiv.html("");
         }
     },
     fillEdit: function (column, data, model, target) {
@@ -2332,7 +2344,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
     }
 });
 
-// 子模块域构建器
+// 富文本编辑域构建器
 var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
     initHandler: function (column, model) {
         if (model.config.pattern != 'view') {

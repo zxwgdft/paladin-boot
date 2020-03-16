@@ -51,7 +51,7 @@ public class FileResourceContainer implements SpringContainer {
         return null;
     }
 
-    private static FileResource convert(SysAttachment attachment) {
+    public static FileResource convert(SysAttachment attachment) {
         FileResource fr = new FileResource();
         fr.setId(attachment.getId());
 

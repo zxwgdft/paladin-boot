@@ -8050,6 +8050,7 @@
              * editor.getActionUrl('imageManager'); //返回 "/ueditor/php/controller.php?action=listimage"
              * ```
              */
+            // edit by tonto
             getActionUrl: function(action) {
                 var actionName = this.getOpt(action) || action;
                 if (actionName === 'image') {
@@ -8057,7 +8058,8 @@
                 }
 
                 if (actionName === 'imageManager') {
-                    return "/common/resource/images";
+                    // 多图片，没用，需要的话需要修改相应代码
+                    return "/common/upload/files";
                 }
 
                 console.log("没有实现功能[action：" + actionName + "]");
@@ -24751,10 +24753,12 @@
 
                             // edit by tonto
                             if($.ajaxResponseCheck(json)){
-                                json = $.parseAttachmentData(json.result);
+                                json = json.data;
                                 if($.isArray(json)) {
                                 	json = json[0];
                                 }
+
+                                json.filename = json.name;
                                 
                                 loader = me.document.getElementById(loadingId);
                                 loader.setAttribute('src', json.url);

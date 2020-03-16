@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class OrgPersonnelController extends ControllerSupport {
 
     @Autowired
     private OrgPersonnelService orgPersonnelService;
+
 
     // @QueryInputMethod 用于查询回显，加载页面时会尝试去读取query参数
     @GetMapping("/index")
@@ -72,15 +74,16 @@ public class OrgPersonnelController extends ControllerSupport {
     // 新增人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/save")
     @ResponseBody
-    public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+    public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult, @RequestParam(required = false) MultipartFile[] attachmentFiles) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
             return validErrorHandler(bindingResult);
         }
-        OrgPersonnel model = beanCopy(orgPersonnelDTO, new OrgPersonnel());
+
         String id = UUIDUtil.createUUID();
-        model.setId(id);
-        if (orgPersonnelService.save(model)) {
+        orgPersonnelDTO.setId(id);
+
+        if (orgPersonnelService.savePersonnel(orgPersonnelDTO)) {
             // 保存成功后直接返回完整对象
             return R.success(orgPersonnelService.get(id, OrgPersonnelVO.class));
         }
@@ -90,14 +93,14 @@ public class OrgPersonnelController extends ControllerSupport {
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/update")
     @ResponseBody
-    public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+    public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult, @RequestParam(required = false) MultipartFile[] attachmentFiles) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
             return validErrorHandler(bindingResult);
         }
+
         String id = orgPersonnelDTO.getId();
-        OrgPersonnel model = beanCopy(orgPersonnelDTO, orgPersonnelService.get(id));
-        if (orgPersonnelService.update(model)) {
+        if (orgPersonnelService.updatePersonnel(orgPersonnelDTO)) {
             // 更新成功后直接返回完整对象
             return R.success(orgPersonnelService.get(id, OrgPersonnelVO.class));
         }

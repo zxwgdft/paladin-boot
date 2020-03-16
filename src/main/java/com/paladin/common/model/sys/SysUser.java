@@ -30,9 +30,9 @@ public class SysUser extends BaseModel implements Serializable {
      */
     public final static Integer TYPE_ADMIN = 1;
     /**
-     * 应用管理员账号
+     * 用户账号
      */
-    public final static Integer TYPE_APP_ADMIN = 3;
+    public final static Integer TYPE_USER = 3;
 
 
     public final static String FIELD_ACCOUNT = "account";

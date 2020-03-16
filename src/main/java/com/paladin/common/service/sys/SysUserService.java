@@ -1,6 +1,7 @@
 package com.paladin.common.service.sys;
 
 import com.paladin.common.PaladinProperties;
+import com.paladin.common.mapper.sys.SysUserMapper;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.Condition;
@@ -10,6 +11,7 @@ import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.ValidateUtil;
 import com.paladin.framework.utils.secure.SecureUtil;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +24,9 @@ public class SysUserService extends ServiceSupport<SysUser> {
 
     @Resource
     private PaladinProperties paladinProperties;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
 
     private Pattern accountPattern = Pattern.compile("^\\w{6,30}$");
@@ -128,6 +133,10 @@ public class SysUserService extends ServiceSupport<SysUser> {
         }
 
         return success;
+    }
+
+    public boolean updateUserAccount(String userId, String originAccount, String newAccount) {
+        return sysUserMapper.updateAccount(userId, originAccount, newAccount) > 0;
     }
 
     public void updateLastTime(String account) {

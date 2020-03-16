@@ -405,7 +405,10 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
      * @return
      */
     public int deleteAttachments(String... ids) {
-        return remove(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
+        if (ids != null && ids.length > 0) {
+            return remove(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
+        }
+        return 0;
     }
 
 
@@ -453,7 +456,10 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
                     deleteIdList.add(oid);
                 }
             }
-            deleteAttachments(deleteIdList.toArray(new String[deleteIdList.size()]));
+
+            if(deleteIdList.size() >0) {
+                deleteAttachments(deleteIdList.toArray(new String[deleteIdList.size()]));
+            }
         }
 
         if (attachmentFiles != null) {

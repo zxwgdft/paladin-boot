@@ -55,18 +55,18 @@ public class CommonController {
     @ApiOperation(value = "上传附件文件")
     @PostMapping("/upload/file")
     @ResponseBody
-    public R<SysAttachment> uploadFile(@RequestParam("file") MultipartFile file) {
-        return R.success(attachmentService.createAttachment(file));
+    public R<FileResource> uploadFile(@RequestParam("file") MultipartFile file) {
+        return R.success(FileResourceContainer.convert(attachmentService.createAttachment(file)));
     }
 
     @ApiOperation(value = "上传多个附件文件")
     @PostMapping("/upload/files")
     @ResponseBody
-    public R<SysAttachment[]> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-        SysAttachment[] result = new SysAttachment[files.length];
+    public R<FileResource[]> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+        FileResource[] result = new FileResource[files.length];
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
-            result[i] = attachmentService.createAttachment(file);
+            result[i] = FileResourceContainer.convert(attachmentService.createAttachment(file));
         }
         return R.success(result);
     }
@@ -74,29 +74,29 @@ public class CommonController {
     @ApiOperation(value = "上传base64格式的附件文件")
     @PostMapping("/upload/file/base64")
     @ResponseBody
-    public R<SysAttachment> uploadFileByBase64(@RequestParam String fileStr, @RequestParam(required = false) String filename) {
+    public R<FileResource> uploadFileByBase64(@RequestParam String fileStr, @RequestParam(required = false) String filename) {
         if (fileStr == null || fileStr.length() == 0) {
             return R.fail("上传文件为空");
         }
         SysAttachment result = attachmentService.createAttachment(fileStr, filename == null || filename.length() == 0 ? "附件" : filename);
-        return R.success(result);
+        return R.success(FileResourceContainer.convert(result));
     }
 
     @ApiOperation(value = "上传图片，图片过大会被压缩")
     @PostMapping("/upload/picture")
     @ResponseBody
-    public R<SysAttachment> uploadPicture(@RequestParam("file") MultipartFile file,
-                                          @RequestParam(required = false) Integer thumbnailWidth,
-                                          @RequestParam(required = false) Integer thumbnailHeight) {
-        return R.success(attachmentService.createPictureAndThumbnail(file, null, thumbnailWidth, thumbnailHeight));
+    public R<FileResource> uploadPicture(@RequestParam("file") MultipartFile file,
+                                         @RequestParam(required = false) Integer thumbnailWidth,
+                                         @RequestParam(required = false) Integer thumbnailHeight) {
+        return R.success(FileResourceContainer.convert(attachmentService.createPictureAndThumbnail(file, null, thumbnailWidth, thumbnailHeight)));
     }
 
     @ApiOperation(value = "上传base64格式图片，图片过大会被压缩")
     @PostMapping("/upload/picture/base64")
     @ResponseBody
-    public R<SysAttachment> uploadPictureBase64(@RequestParam String base64Str, @RequestParam(required = false) String filename,
-                                                @RequestParam(required = false) Integer thumbnailWidth, @RequestParam(required = false) Integer thumbnailHeight) {
-        return R.success(attachmentService.createPictureAndThumbnail(base64Str, filename, thumbnailWidth, thumbnailHeight));
+    public R<FileResource> uploadPictureBase64(@RequestParam String base64Str, @RequestParam(required = false) String filename,
+                                               @RequestParam(required = false) Integer thumbnailWidth, @RequestParam(required = false) Integer thumbnailHeight) {
+        return R.success(FileResourceContainer.convert(attachmentService.createPictureAndThumbnail(base64Str, filename, thumbnailWidth, thumbnailHeight)));
     }
 
     @GetMapping("/container/index")

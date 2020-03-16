@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/demo/header"/>
+<link rel="stylesheet" href="/static/assets/ueditor/themes/default/css/ueditor.min.css" />
 
 <body>
 <tt:constant enumcode="sex-type,identification-type,nation-type,"/>
@@ -18,6 +19,8 @@
     <a href="/demo/org/personnel/index" class="btn btn-primary btn-block">返回</a>
 </div>
 <div th:include="/demo/footer"/>
+<script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/assets/ueditor/ueditor.all.min.js"></script>
 <script type="text/javascript">
     var options = {
         id: "model",
@@ -26,6 +29,7 @@
         url: "/demo/org/personnel/save",
         columns: [
             {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
+            {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
             {title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT"},
             {
                 title: "证件类型",
@@ -60,7 +64,16 @@
                 }
             },
             {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
-            {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"}
+            {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
+            {title: "简历", name: "resume", inputType: "EDITOR"},
+            {
+                title: "附件",
+                name: "attachment",
+                inputType: "ATTACHMENT",
+                fileName: "attachmentFiles",
+                allowedFileExtensions: ["jpeg", "jpg", "png", "gif", "txt", "pdf", "xlsx", "xls", "doc", "docx", "rar", "zip", "mp4"]
+            }
+
         ]
     }
 

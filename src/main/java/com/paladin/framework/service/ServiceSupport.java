@@ -783,17 +783,13 @@ public abstract class ServiceSupport<Model> {
         if (limit > OffsetPage.MAX_LIMIT) {
             limit = OffsetPage.MAX_LIMIT;
         }
-        try {
-            Page<T> page = PageHelper.offsetPage(offset, limit);
-            List<T> result = searchAll(searchParam, VOClass, simple);
-            if (result == null || result.size() == 0) {
-                page.setTotal(0L);
-            }
-            return new PageResult<T>(page, result);
-        } finally {
-            // 避免报错后形成遗留的线程变量，被下次SQL查询使用到（正常情况并不需要）
-            PageHelper.clearPage();
+
+        Page<T> page = PageHelper.offsetPage(offset, limit);
+        List<T> result = searchAll(searchParam, VOClass, simple);
+        if (result == null || result.size() == 0) {
+            page.setTotal(0L);
         }
+        return new PageResult<T>(page, result);
     }
 
     /**
