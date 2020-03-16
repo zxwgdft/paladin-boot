@@ -29,3 +29,7 @@ mapper:
   enumAsSimpleType: true
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
+
+pagehelper:
+  # 分页合理化（解决选择一个较大页码翻页后，选择搜索条件，搜索结果为总页数为1，但是页码大于1导致不出现结果问题）
+  reasonable: true

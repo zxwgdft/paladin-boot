@@ -69,8 +69,8 @@ public abstract class ServiceSupport<Model> {
     protected boolean isAlwaysOrderFirst = false;
 
     // 主键方法
-    private Method[] pkGetMethods; // 主键对应get方法
-    private Method[] pkSetMethods; // 主键对应set方法
+    protected Method[] pkGetMethods; // 主键对应get方法
+    protected Method[] pkSetMethods; // 主键对应set方法
     private final Object lock = new Object();
 
     /**
@@ -237,7 +237,6 @@ public abstract class ServiceSupport<Model> {
      * 多主键下，只要一个主键存在空则算为空主键
      *
      * @param model 实体类
-     * @return
      */
     protected boolean judgeHasPKValue(Model model) {
         if (model == null || pkGetMethods.length == 0) {
@@ -298,7 +297,6 @@ public abstract class ServiceSupport<Model> {
      * 根据主键获取对象
      *
      * @param pk 主键
-     * @return
      */
     public Model get(Object pk) {
         return getSqlMapper().selectByPrimaryKey(pk);
@@ -309,7 +307,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param pk      主键
      * @param VOClass view object class
-     * @return
      */
     public <T> T get(Object pk, Class<T> VOClass) {
         Model model = getSqlMapper().selectByPrimaryKey(pk);
@@ -341,7 +338,6 @@ public abstract class ServiceSupport<Model> {
      * 如果有这种复查查询SQL，请改为xml中写sql形式，或手动自行调整
      *
      * @param example 查询标准集
-     * @return
      */
     public Example buildCommon(Example example) {
         if (commonConditions.length > 0 || hasOrderBy) {
@@ -364,7 +360,6 @@ public abstract class ServiceSupport<Model> {
      * 该方法应该总是在Example构建排序的最后，避免排序位置错误
      *
      * @param example 查询标准集
-     * @return
      */
     public Example buildCommonOrderBy(Example example) {
         if (hasOrderBy) {
@@ -407,7 +402,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param example 查询标准集
      * @param clazz   对应结果集对象类
-     * @return
      */
     public Example buildSelection(Example example, Class<?> clazz) {
         if (modelType != clazz) {
@@ -443,7 +437,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param example     查询标准集
      * @param searchParam Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public Example buildExample(Example example, Object searchParam) {
         if (example == null) {
@@ -475,7 +468,6 @@ public abstract class ServiceSupport<Model> {
      * 构建或创建一个Example
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public Example buildOrCreateExample(Object searchParam) {
         return buildOrCreateExample(searchParam, modelType, false);
@@ -487,7 +479,6 @@ public abstract class ServiceSupport<Model> {
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param VOClass     view object class
      * @param simple      是否简单模式
-     * @return
      */
     public Example buildOrCreateExample(Object searchParam, Class<?> VOClass, boolean simple) {
         Example example = null;
@@ -514,7 +505,6 @@ public abstract class ServiceSupport<Model> {
      * 根据标准查询
      *
      * @param example 查询标准集
-     * @return
      */
     public List<Model> selectByExample(Example example) {
         if (example == null) {
@@ -529,7 +519,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param VOClass view object class
      * @param example 查询标准集
-     * @return
      */
     public <T> List<T> selectByExample(Class<T> VOClass, Example example) {
         List<Model> result;
@@ -549,8 +538,6 @@ public abstract class ServiceSupport<Model> {
 
     /**
      * 查找所有结果
-     *
-     * @return
      */
     public List<Model> findAll() {
         return findAll(modelType, false);
@@ -560,7 +547,6 @@ public abstract class ServiceSupport<Model> {
      * 查询所有结果，并返回对应view object
      *
      * @param VOClass view object class
-     * @return
      */
     public <T> List<T> findAll(Class<T> VOClass) {
         return findAll(VOClass, false);
@@ -571,7 +557,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param simple  是否简单模式
      * @param VOClass view object class
-     * @return
      */
     public <T> List<T> findAll(Class<T> VOClass, boolean simple) {
         return searchAll(null, VOClass, simple);
@@ -582,7 +567,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param offset 偏移量
      * @param limit  页大小
-     * @return
      */
     public PageResult<Model> findPage(int offset, int limit) {
         return findPage(offset, limit, modelType, false);
@@ -594,7 +578,6 @@ public abstract class ServiceSupport<Model> {
      * @param offset  偏移量
      * @param limit   页大小
      * @param VOClass view object class
-     * @return
      */
     public <T> PageResult<T> findPage(int offset, int limit, Class<T> VOClass) {
         return findPage(offset, limit, VOClass, false);
@@ -607,7 +590,6 @@ public abstract class ServiceSupport<Model> {
      * @param limit   页大小
      * @param VOClass view object class
      * @param simple  是否简单模式
-     * @return
      */
     public <T> PageResult<T> findPage(int offset, int limit, Class<T> VOClass, boolean simple) {
         return searchPage(null, offset, limit, VOClass, simple);
@@ -617,7 +599,6 @@ public abstract class ServiceSupport<Model> {
      * 查找唯一数据
      *
      * @param conditions 查询条件
-     * @return
      */
     public Model searchOne(Condition... conditions) {
         return searchOne(conditions, false);
@@ -627,7 +608,6 @@ public abstract class ServiceSupport<Model> {
      * 查找唯一数据
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public Model searchOne(Object searchParam) {
         return searchOne(searchParam, false);
@@ -638,7 +618,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param simple      是否简单模式
-     * @return
      */
     public Model searchOne(Object searchParam, boolean simple) {
         List<Model> result = searchAll(searchParam, modelType, simple);
@@ -657,7 +636,6 @@ public abstract class ServiceSupport<Model> {
      * 条件过滤查询
      *
      * @param conditions 查询条件
-     * @return
      */
     public List<Model> searchAll(Condition... conditions) {
         return searchAll(conditions, modelType, false);
@@ -668,7 +646,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param VOClass    view object class
      * @param conditions 查询条件
-     * @return
      */
     public <T> List<T> searchAll(Class<T> VOClass, Condition... conditions) {
         return searchAll(conditions, VOClass, false);
@@ -678,7 +655,6 @@ public abstract class ServiceSupport<Model> {
      * 条件过滤查询
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public List<Model> searchAll(Object searchParam) {
         return searchAll(searchParam, modelType, false);
@@ -689,7 +665,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param VOClass     view object class
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public <T> List<T> searchAll(Class<T> VOClass, Object searchParam) {
         return searchAll(searchParam, VOClass, false);
@@ -702,7 +677,6 @@ public abstract class ServiceSupport<Model> {
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param VOClass     view object class
      * @param simple      是否简单模式
-     * @return
      */
     public <T> List<T> searchAll(Object searchParam, Class<T> VOClass, boolean simple) {
         Example example = buildOrCreateExample(searchParam, VOClass, simple);
@@ -716,7 +690,6 @@ public abstract class ServiceSupport<Model> {
      * @param offset     偏移量
      * @param limit      页大小
      * @param conditions 查询条件
-     * @return
      */
     public PageResult<Model> searchPage(int offset, int limit, Condition... conditions) {
         return searchPage(conditions, offset, limit, modelType, false);
@@ -730,7 +703,6 @@ public abstract class ServiceSupport<Model> {
      * @param limit      页大小
      * @param VOClass    view object class
      * @param conditions 查询条件
-     * @return
      */
     public <T> PageResult<T> searchPage(int offset, int limit, Class<T> VOClass, Condition... conditions) {
         return searchPage(conditions, offset, limit, VOClass, false);
@@ -742,7 +714,6 @@ public abstract class ServiceSupport<Model> {
      * @param offset      偏移量
      * @param limit       页大小
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public PageResult<Model> searchPage(int offset, int limit, Object searchParam) {
         return searchPage(searchParam, offset, limit, modelType, false);
@@ -755,7 +726,6 @@ public abstract class ServiceSupport<Model> {
      * @param limit       页大小
      * @param VOClass     view object class
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public <T> PageResult<T> searchPage(int offset, int limit, Class<T> VOClass, Object searchParam) {
         return searchPage(searchParam, offset, limit, VOClass, false);
@@ -765,7 +735,6 @@ public abstract class ServiceSupport<Model> {
      * 条件过滤分页查询
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public PageResult<Model> searchPage(Object searchParam) {
         return searchPage(searchParam, modelType, false);
@@ -776,7 +745,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param VOClass     view object class
-     * @return
      */
     public <T> PageResult<T> searchPage(Object searchParam, Class<T> VOClass) {
         return searchPage(searchParam, VOClass, false);
@@ -788,7 +756,6 @@ public abstract class ServiceSupport<Model> {
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param VOClass     view object class
      * @param simple      是否简单模式
-     * @return
      */
     public <T> PageResult<T> searchPage(Object searchParam, Class<T> VOClass, boolean simple) {
         if (searchParam == null) {
@@ -811,25 +778,28 @@ public abstract class ServiceSupport<Model> {
      * @param limit       页大小
      * @param VOClass     view object class
      * @param simple      是否简单模式
-     * @return
      */
     public <T> PageResult<T> searchPage(Object searchParam, int offset, int limit, Class<T> VOClass, boolean simple) {
         if (limit > OffsetPage.MAX_LIMIT) {
             limit = OffsetPage.MAX_LIMIT;
         }
-        Page<T> page = PageHelper.offsetPage(offset, limit);
-        List<T> result = searchAll(searchParam, VOClass, simple);
-        if (result == null || result.size() == 0) {
-            page.setTotal(0L);
+        try {
+            Page<T> page = PageHelper.offsetPage(offset, limit);
+            List<T> result = searchAll(searchParam, VOClass, simple);
+            if (result == null || result.size() == 0) {
+                page.setTotal(0L);
+            }
+            return new PageResult<T>(page, result);
+        } finally {
+            // 避免报错后形成遗留的线程变量，被下次SQL查询使用到（正常情况并不需要）
+            PageHelper.clearPage();
         }
-        return new PageResult<T>(page, result);
     }
 
     /**
      * 查询记录数
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public int searchCount(Object searchParam) {
         return searchCount(searchParam, false);
@@ -840,7 +810,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param simple      是否简单模式
-     * @return
      */
     public int searchCount(Object searchParam, boolean simple) {
         Example example = buildOrCreateExample(searchParam, modelType, simple);
@@ -859,7 +828,6 @@ public abstract class ServiceSupport<Model> {
      * 保存插入
      *
      * @param model 实体类
-     * @return
      */
     public boolean save(Model model) {
         checkEmptyId(model);
@@ -871,7 +839,6 @@ public abstract class ServiceSupport<Model> {
      * 如果存在主键值则进行更新，没有则进行插入
      *
      * @param model 实体类
-     * @return
      */
     public boolean saveOrUpdate(Model model) {
         if (judgeHasPKValue(model)) {
@@ -885,7 +852,6 @@ public abstract class ServiceSupport<Model> {
      * 更新实体类中字段不为空的数据
      *
      * @param model 实体类
-     * @return
      */
     public boolean updateSelective(Model model) {
         updateModelWrap(model);
@@ -896,7 +862,6 @@ public abstract class ServiceSupport<Model> {
      * 更新整个实体类（包括空字段）
      *
      * @param model 实体类
-     * @return
      */
     public boolean update(Model model) {
         updateModelWrap(model);
@@ -907,7 +872,6 @@ public abstract class ServiceSupport<Model> {
      * 删除主键对应数据（如果是基于BaseModel的进行逻辑删除）
      *
      * @param pk 主键
-     * @return
      */
     public boolean removeByPrimaryKey(Object pk) {
         if (isBaseModel) {
@@ -926,7 +890,6 @@ public abstract class ServiceSupport<Model> {
      * 根据条件删除
      *
      * @param conditions 查询条件
-     * @return
      */
     public int remove(Condition... conditions) {
         return remove(conditions, false);
@@ -936,7 +899,6 @@ public abstract class ServiceSupport<Model> {
      * 根据条件删除
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
-     * @return
      */
     public int remove(Object searchParam) {
         return remove(searchParam, false);
@@ -947,7 +909,6 @@ public abstract class ServiceSupport<Model> {
      *
      * @param searchParam Example、Condition、QueryCondition注解的实体类，或者是这几类的集合
      * @param simple      是否简单模式
-     * @return
      */
     public int remove(Object searchParam, boolean simple) {
         Example example = buildOrCreateExample(searchParam, modelType, simple);
@@ -1009,7 +970,6 @@ public abstract class ServiceSupport<Model> {
      * 获取一个分页
      *
      * @param query
-     * @return
      */
     public <E> Page<E> getPage(OffsetPage query) {
         int limit = query.getLimit();
@@ -1026,7 +986,6 @@ public abstract class ServiceSupport<Model> {
      * 获取一个空的分页结果
      *
      * @param offsetPage 分页对象
-     * @return
      */
     public PageResult getEmptyPageResult(OffsetPage offsetPage) {
         Page page = new Page(offsetPage.getOffset(), offsetPage.getLimit());
@@ -1034,15 +993,5 @@ public abstract class ServiceSupport<Model> {
         return new PageResult(page);
     }
 
-    /**
-     * 获取一个空的分页结果
-     *
-     * @param page
-     * @return
-     */
-    public <T> PageResult<T> getEmptyPageResult(Page<T> page) {
-        page.setTotal(0L);
-        return new PageResult<T>(page);
-    }
 
 }
