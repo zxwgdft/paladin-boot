@@ -10,6 +10,8 @@ import java.util.Date;
 @Setter
 public class SysLoggerLogin {
 
+    public final static String FIELD_CREATE_TIME = "createTime";
+
     //
     @Id
     private String id;

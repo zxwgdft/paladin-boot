@@ -21,126 +21,145 @@ import java.util.Map;
 @Slf4j
 @Component
 public class PermissionContainer implements VersionContainer {
-	
-	@Autowired
-	private OrgPermissionService orgPermissionService;
 
-	@Autowired
-	private OrgRoleService orgRoleService;
+    @Autowired
+    private OrgPermissionService orgPermissionService;
 
-	@Autowired
-	private OrgRolePermissionService orgRolePermissionService;
+    @Autowired
+    private OrgRoleService orgRoleService;
 
-	private volatile Map<String, Role> roleMap;
+    @Autowired
+    private OrgRolePermissionService orgRolePermissionService;
 
-	private volatile Map<String, OrgPermission> permissionMap;
+    private volatile Map<String, Role> roleMap;
 
-	private volatile Role systemAdminRole;
+    private volatile Map<String, OrgPermission> permissionMap;
 
-	/**
-	 * 初始化权限
-	 */
-	public void initPermission() {
-		log.info("------------初始化权限开始------------");
+    private volatile Role systemAdminRole;
 
-		Map<String, OrgPermission> permissionMap = new HashMap<>();
-		List<OrgPermission> orgPermissions = orgPermissionService.findAll();
-		for (OrgPermission orgPermission : orgPermissions) {
-			permissionMap.put(orgPermission.getId(), orgPermission);
-		}
-		this.permissionMap = permissionMap;
-		initRole();
-		log.info("------------初始化权限结束------------");
-	}
+    /**
+     * 初始化权限
+     */
+    public void initPermission() {
+        log.info("------------初始化权限开始------------");
 
-	/**
-	 * 初始化角色和角色授予的权限
-	 */
-	public void initRole() {
-		log.info("------------初始化角色开始------------");
-		List<OrgRole> orgRoles = orgRoleService.findAll();
-		Map<String, Role> roleMap = new HashMap<>();
-		for (OrgRole orgRole : orgRoles) {
-			Role role = new Role(orgRole);
-			roleMap.put(role.getId(), role);
-		}
+        Map<String, OrgPermission> permissionMap = new HashMap<>();
+        List<OrgPermission> orgPermissions = orgPermissionService.findAll();
+        for (OrgPermission orgPermission : orgPermissions) {
+            permissionMap.put(orgPermission.getId(), orgPermission);
+        }
+        this.permissionMap = permissionMap;
+        initRole();
+        log.info("------------初始化权限结束------------");
+    }
 
-		List<OrgRolePermission> orgRolePermissions = orgRolePermissionService.findAll();
+    /**
+     * 初始化角色和角色授予的权限
+     */
+    public void initRole() {
+        log.info("------------初始化角色开始------------");
+        List<OrgRole> orgRoles = orgRoleService.findAll();
+        Map<String, Role> roleMap = new HashMap<>();
+        for (OrgRole orgRole : orgRoles) {
+            Role role = new Role(orgRole);
+            roleMap.put(role.getId(), role);
+        }
 
-		for (OrgRolePermission orgRolePermission : orgRolePermissions) {
-			String roleId = orgRolePermission.getRoleId();
-			String permissionId = orgRolePermission.getPermissionId();
+        List<OrgRolePermission> orgRolePermissions = orgRolePermissionService.findAll();
 
-			OrgPermission permission = permissionMap.get(permissionId);
-			Role role = roleMap.get(roleId);
-			role.addPermission(permission, permissionMap);
-		}
+        for (OrgRolePermission orgRolePermission : orgRolePermissions) {
+            String roleId = orgRolePermission.getRoleId();
+            String permissionId = orgRolePermission.getPermissionId();
 
-		for (Role role : roleMap.values()) {
-			role.initMenuPermission();
-		}
+            OrgPermission permission = permissionMap.get(permissionId);
+            Role role = roleMap.get(roleId);
+            role.addPermission(permission, permissionMap);
+        }
 
-		// 创建系统管理员角色及菜单
-		Role systemAdminRole = new Role();
-		for (OrgPermission orgPermission : permissionMap.values()) {
-			if (orgPermission.getIsAdmin() == BaseModel.BOOLEAN_YES) {
-				systemAdminRole.addPermission(orgPermission, permissionMap);
-			}
-		}
-		systemAdminRole.initMenuPermission();
+        for (Role role : roleMap.values()) {
+            role.initMenuPermission();
+        }
 
-		this.systemAdminRole = systemAdminRole;
-		this.roleMap = roleMap;
-		log.info("------------初始化权限结束------------");
-	}
+        // 创建系统管理员角色及菜单
+        Role systemAdminRole = new Role();
+        for (OrgPermission orgPermission : permissionMap.values()) {
+            if (orgPermission.getIsAdmin() == BaseModel.BOOLEAN_YES) {
+                systemAdminRole.addPermission(orgPermission, permissionMap);
+            }
+        }
+        systemAdminRole.initMenuPermission();
 
-	/**
-	 * 获取角色
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Role getRole(String id) {
-		return roleMap.get(id);
-	}
+        this.systemAdminRole = systemAdminRole;
+        this.roleMap = roleMap;
+        log.info("------------初始化权限结束------------");
+    }
 
-	/**
-	 * 获取系统管理员角色
-	 * 
-	 * @return
-	 */
-	public Role getSystemAdminRole() {
-		return systemAdminRole;
-	}
-	
-	/**
-	 * 获取角色列表
-	 * @return
-	 */
-	public List<Role> getRoles(){
-		return new ArrayList<>(roleMap.values());
-	}
-	
-	@Override
-	public String getId() {
-		return "permission_container";
-	}
+    /**
+     * 获取角色
+     *
+     * @param id
+     * @return
+     */
+    public Role getRole(String id) {
+        return roleMap.get(id);
+    }
 
-	private static PermissionContainer container;
+    /**
+     * 获取多个角色
+     *
+     * @param ids
+     * @return
+     */
+    public List<Role> getRoles(String[] ids) {
+        if (ids == null || ids.length == 0) return null;
+        List<Role> roles = new ArrayList<>(ids.length);
+        for (String id : ids) {
+            Role role = roleMap.get(id);
+            if (role != null) {
+                roles.add(role);
+            }
+        }
+        return roles;
+    }
 
-	public static PermissionContainer getInstance() {
-		return container;
-	}
-	
-	public static void updateData() {
-		VersionContainerManager.versionChanged(container.getId());
-	}
+    /**
+     * 获取系统管理员角色
+     *
+     * @return
+     */
+    public Role getSystemAdminRole() {
+        return systemAdminRole;
+    }
 
-	@Override
-	public boolean versionChangedHandle(long version) {
-		initPermission();
-		container = this;
-		return true;
-	}
+    /**
+     * 获取角色列表
+     *
+     * @return
+     */
+    public List<Role> getRoles() {
+        return new ArrayList<>(roleMap.values());
+    }
+
+    @Override
+    public String getId() {
+        return "permission_container";
+    }
+
+    private static PermissionContainer container;
+
+    public static PermissionContainer getInstance() {
+        return container;
+    }
+
+    public static void updateData() {
+        VersionContainerManager.versionChanged(container.getId());
+    }
+
+    @Override
+    public boolean versionChangedHandle(long version) {
+        initPermission();
+        container = this;
+        return true;
+    }
 
 }

@@ -41,10 +41,16 @@ public class OrgRoleController extends ControllerSupport {
         return "/common/org/role_index";
     }
 
+    @RequestMapping("/find/page")
+    @ResponseBody
+    public Object findPage(OrgRoleQueryDTO query) {
+        return R.success(orgRoleService.searchPage(query));
+    }
+
     @RequestMapping("/find/all")
     @ResponseBody
     public Object findAll(OrgRoleQueryDTO query) {
-        return R.success(orgRoleService.searchPage(query));
+        return R.success(orgRoleService.searchAll(query));
     }
 
     @RequestMapping("/get")

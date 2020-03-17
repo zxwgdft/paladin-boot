@@ -2,10 +2,14 @@ package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysUserService;
+import com.paladin.framework.service.UserSession;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -19,6 +23,9 @@ public class CommonCasUserRealm extends Pac4jRealm {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private UserSessionFactory userSessionFactory;
 
     /**
      * 认证信息.(身份验证) : Authentication 是用来验证用户身份
@@ -37,15 +44,7 @@ public class CommonCasUserRealm extends Pac4jRealm {
         String username = principal.getName();
         SysUser sysUser = sysUserService.getUserByAccount(username);
 
-        if (sysUser == null) {
-            throw new UnknownAccountException("账号不存在");
-        }
-
-        if (sysUser.getState() != SysUser.STATE_ENABLED) {
-            throw new LockedAccountException("账号被锁定不可用，请联系管理员"); // 帐号锁定
-        }
-
-        CommonUserSession userSession = new CommonUserSession(sysUser.getId(), username, username);
+        UserSession userSession = userSessionFactory.createUserSession(sysUser);
         List<Object> principals = Arrays.asList(userSession, principal);
         PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(principalCollection, token.getCredentials());

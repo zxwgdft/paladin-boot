@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/demo/header"/>
-<link rel="stylesheet" href="/static/assets/ueditor/themes/default/css/ueditor.min.css" />
+<link rel="stylesheet" href="/static/assets/ueditor/themes/default/css/ueditor.min.css"/>
 
 <body>
 <tt:constant enumcode="sex-type,identification-type,nation-type,"/>
@@ -32,7 +32,7 @@
             columns: [
                 {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
                 {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
-                {title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT"},
+
                 {
                     title: "证件类型",
                     name: "identificationType",
@@ -47,12 +47,23 @@
                     name: "unitId",
                     inputType: "SELECT-TREE-SERVER",
                     url: "/demo/org/unit/find/tree",
-                    layerWidth: "500px",
+                    layerWidth: "500px", // 弹出框宽度
                     required: "required",
                     isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
                     idField: "id",
                     nameField: "name"
                 },
+                {
+                    title: "角色",
+                    name: "roles",
+                    required: "required",
+                    inputType: "SELECT-SERVER",
+                    multiple: true,
+                    url: "/common/org/role/find/all",
+                    idField: "id",
+                    nameField: "roleName"
+                },
+                {title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT"},
                 {title: "出生日期", name: "birthday", inputType: "DATE"},
                 {
                     title: "手机号码",

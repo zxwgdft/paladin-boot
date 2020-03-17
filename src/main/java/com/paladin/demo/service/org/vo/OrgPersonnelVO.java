@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 public class OrgPersonnelVO {
 
+
     //
     private String id;
 
@@ -46,6 +47,10 @@ public class OrgPersonnelVO {
 
     // 账号
     private String account;
+
+    // 角色
+    @IgnoreSelection
+    private String roles;
 
     // 简历
     @IgnoreSelection

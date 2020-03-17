@@ -1274,7 +1274,7 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
             // });
 
             input.selectpicker({
-                width: 'auto',
+                width: '100%',
                 liveSearch: true,        // 开启搜索框
                 maxOptions: column.maxSelectionSize || false, //显示最大选项数目
                 noneSelectedText: column.noneSelectedText || '没有选中任何项', //多选未选中任意选项提示

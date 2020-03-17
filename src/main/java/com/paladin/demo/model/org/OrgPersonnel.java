@@ -13,6 +13,10 @@ import java.util.Date;
 public class OrgPersonnel extends BaseModel {
 
     public static final String FIELD_IDENTIFICATION_NO = "identificationNo";
+
+    public final static String FIELD_UNIT_ID = "unitId";
+    public static final String FIELD_ID = "id";
+
     //
     @Id
     private String id;
@@ -46,6 +50,9 @@ public class OrgPersonnel extends BaseModel {
 
     // 账号
     private String account;
+
+    // 角色
+    private String roles;
 
     // 简历
     @IgnoreSelection

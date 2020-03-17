@@ -59,10 +59,23 @@ public class OrgUnitContainer implements VersionContainer {
             }
         }
 
+        for (Unit unit : rootList) {
+            initSelfAndChildrenIds(unit);
+        }
+
         OrgUnitContainer.unitMap = Collections.unmodifiableMap(unitMap);
         OrgUnitContainer.rootList = Collections.unmodifiableList(rootList);
     }
 
+    private List<String> initSelfAndChildrenIds(Unit unit) {
+        List<String> ids = new ArrayList<>(1 + unit.getChildren().size());
+        ids.add(unit.getId());
+        for (Unit child : unit.getChildren()) {
+            ids.addAll(initSelfAndChildrenIds(child));
+        }
+        unit.setSelfAndChildrenIds(ids);
+        return ids;
+    }
 
     private final static String container_id = "org_unit_container";
 
@@ -140,6 +153,9 @@ public class OrgUnitContainer implements VersionContainer {
 
         // 下级
         private List<Unit> children;
+
+        @JsonIgnore
+        public List<String> selfAndChildrenIds;
 
     }
 

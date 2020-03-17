@@ -4,9 +4,14 @@ import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.SysUserService;
+import com.paladin.demo.core.DemoUserSession;
 import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
+import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
+import com.paladin.demo.service.org.dto.PersonnelPermissionQuery;
+import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +78,41 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
 
         SimpleBeanCopyUtil.simpleCopy(orgPersonnelDTO, orgPersonnel);
         return update(orgPersonnel);
+    }
+
+    public PageResult<OrgPersonnelVO> findPersonnel(OrgPersonnelQuery query) {
+
+        DemoUserSession userSession = DemoUserSession.getCurrentUserSession();
+        int roleLevel = userSession.getRoleLevel();
+
+        PersonnelPermissionQuery permissionQuery = null;
+        if (roleLevel >= DemoUserSession.ROLE_LEVEL_APP_ADMIN) {
+            // 可以查询所有，不设置过滤条件
+        } else {
+            permissionQuery = new PersonnelPermissionQuery();
+            if (roleLevel >= DemoUserSession.ROLE_LEVEL_UNIT_ADMIN) {
+                String unitId = userSession.getUnitId();
+                if (unitId != null && unitId.length() > 0) {
+                    OrgUnitContainer.Unit unit = OrgUnitContainer.getUnit(unitId);
+                    if (unit != null) {
+                        List<String> ids = unit.getSelfAndChildrenIds();
+                        if (ids.size() == 1) {
+                            permissionQuery.setUnitId(ids.get(0));
+                        } else {
+                            permissionQuery.setUnitIds(ids);
+                        }
+                    } else {
+                        permissionQuery.setId(userSession.getUserId());
+                    }
+                } else {
+                    permissionQuery.setId(userSession.getUserId());
+                }
+            } else {
+                permissionQuery.setId(userSession.getUserId());
+            }
+        }
+
+        return searchPage(query.getOffset(), query.getLimit(), OrgPersonnelVO.class,
+                permissionQuery == null ? query : new Object[]{query, permissionQuery});
     }
 }

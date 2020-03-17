@@ -47,7 +47,7 @@ public class OrgPersonnelController extends ControllerSupport {
     public Object findPage(OrgPersonnelQuery query) {
         // OrgPersonnel应尽量与数据表对应，不做扩展，并且可能带有一些系统自带自带，所以应该有专门的VO对象用于返回数据
         // 当然为了效率与简单，也可以直接返回OrgPersonnel对象，一般并不会有太大问题
-        return R.success(orgPersonnelService.searchPage(query, OrgPersonnelVO.class));
+        return R.success(orgPersonnelService.findPersonnel(query));
     }
 
     // 获取详细数据

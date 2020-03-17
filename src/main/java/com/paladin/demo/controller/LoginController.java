@@ -1,9 +1,9 @@
 package com.paladin.demo.controller;
 
-import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.sys.SysUserService;
+import com.paladin.demo.core.DemoUserSession;
 import com.paladin.framework.GlobalProperties;
 import com.paladin.framework.common.R;
 import com.paladin.framework.service.UserSession;
@@ -36,7 +36,7 @@ public class LoginController {
     @ApiOperation(value = "主页面")
     @GetMapping(value = "/index")
     public Object main(HttpServletRequest request) {
-        CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+        DemoUserSession userSession = DemoUserSession.getCurrentUserSession();
         ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
         model.addObject("name", userSession.getUserName());
 

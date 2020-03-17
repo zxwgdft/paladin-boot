@@ -2,6 +2,7 @@ package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysUserService;
+import com.paladin.framework.service.UserSession;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -13,6 +14,9 @@ public class CommonUserRealm extends AuthorizingRealm {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private UserSessionFactory userSessionFactory;
 
     /**
      * 认证信息.(身份验证) : Authentication 是用来验证用户身份
@@ -32,12 +36,8 @@ public class CommonUserRealm extends AuthorizingRealm {
             throw new UnknownAccountException();
         }
 
-        if (sysUser.getState() != SysUser.STATE_ENABLED) {
-            throw new DisabledAccountException(); // 帐号锁定
-        }
-
         // 创建用户session，存储相关信息（角色，权限等）
-        CommonUserSession userSession = new CommonUserSession(sysUser.getId(), username, username);
+        UserSession userSession = userSessionFactory.createUserSession(sysUser);
 
         // 加密方式交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
         // usersession 对象会存入session属性中，与session保持同步，并在session中实现权限控制

@@ -57,8 +57,12 @@ public class OrgPersonnelDTO {
     // 民族
     private Integer nation;
 
+    // 角色
+    @Length(max = 200, message = "角色选择过多")
+    private String roles;
+
     // 简历
-    @Length(max = 6000, message = "简历长度不能大于6000")
+    @Length(max = 10000, message = "简历长度不能大于10000")
     private String resume;
 
     // 附件
