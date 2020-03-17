@@ -18,8 +18,10 @@ public class OrgPermission extends BaseModel {
     // 权限名称
     private String name;
 
+    // 权限对应URL
     private String url;
 
+    // 权限对应code
     private String code;
 
     // 是否菜单
