@@ -82,6 +82,10 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
 
     public PageResult<OrgPersonnelVO> findPersonnel(OrgPersonnelQuery query) {
 
+        // 增加数据权限过滤
+        // 应用管理员级别可以查看所有人员数据
+        // 机构管理员可以查看所管辖机构及以下单位人员数据
+        // 个人只能查看自己的数据
         DemoUserSession userSession = DemoUserSession.getCurrentUserSession();
         int roleLevel = userSession.getRoleLevel();
 
@@ -112,6 +116,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
             }
         }
 
+        // 多个查询条件可以数组或列表组合，他们会在同一个标准下（Example.Criteria）
         return searchPage(query.getOffset(), query.getLimit(), OrgPersonnelVO.class,
                 permissionQuery == null ? query : new Object[]{query, permissionQuery});
     }
