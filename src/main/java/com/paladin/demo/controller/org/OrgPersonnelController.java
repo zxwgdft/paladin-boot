@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -74,7 +73,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 新增人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/save")
     @ResponseBody
-    public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult, @RequestParam(required = false) MultipartFile[] attachmentFiles) {
+    public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
             return validErrorHandler(bindingResult);
@@ -93,7 +92,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/update")
     @ResponseBody
-    public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult, @RequestParam(required = false) MultipartFile[] attachmentFiles) {
+    public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
             return validErrorHandler(bindingResult);

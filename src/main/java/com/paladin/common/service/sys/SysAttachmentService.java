@@ -80,7 +80,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     public List<SysAttachment> createAttachments(MultipartFile[] files) {
         List<SysAttachment> attachments = new ArrayList<>(files.length);
         for (MultipartFile file : files) {
-            attachments.add(createPictureAndThumbnail(file, null));
+            attachments.add(createAttachment(file, null));
         }
         return attachments;
     }
@@ -92,7 +92,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
      * @return
      */
     public SysAttachment createAttachment(MultipartFile file) {
-        return createPictureAndThumbnail(file, null);
+        return createAttachment(file, null);
     }
 
     /**
@@ -105,6 +105,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     public SysAttachment createAttachment(MultipartFile file, String filename) {
         FileCreateParam param = new FileCreateParam();
         param.setFileContent(file);
+        param.setType(SysAttachment.TYPE_FILE);
         if (filename != null && filename.length() > 0) {
             param.setFilename(filename);
         }
@@ -122,6 +123,10 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     public SysAttachment createAttachment(String base64str, String filename) {
         FileCreateParam param = new FileCreateParam();
         param.setFileContent(base64str);
+        param.setType(SysAttachment.TYPE_FILE);
+        if (filename != null && filename.length() > 0) {
+            param.setFilename(filename);
+        }
         return createFile(param);
     }
 
@@ -233,7 +238,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
 
     /**
-     * 创建文件
+     * 创建文件附件
      *
      * @param param
      * @return
@@ -278,7 +283,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     }
 
     /**
-     * 创建图片，并根据条件缩放
+     * 保存文件附件
      *
      * @param param
      * @param attachment
@@ -457,7 +462,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
                 }
             }
 
-            if(deleteIdList.size() >0) {
+            if (deleteIdList.size() > 0) {
                 deleteAttachments(deleteIdList.toArray(new String[deleteIdList.size()]));
             }
         }
