@@ -42,6 +42,12 @@ public class Permission extends WildcardPermission {
     @Getter(AccessLevel.NONE)
     private String parentsPath;
 
+    // 是否根权限
+    private boolean isRoot;
+
+    // 是否根菜单权限
+    private boolean isRootMenu;
+
     public Permission(OrgPermission source) {
         super(source.getCode());
 
@@ -80,6 +86,8 @@ public class Permission extends WildcardPermission {
         }
 
         this.parentMenuPermission = lastMenuPermission;
+        this.isRoot = parent == null;
+        this.isRootMenu = parentMenuPermission == null;
     }
 
     public void setParent(Permission parent) {

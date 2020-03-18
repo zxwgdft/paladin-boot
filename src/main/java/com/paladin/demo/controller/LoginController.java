@@ -1,7 +1,6 @@
 package com.paladin.demo.controller;
 
 import com.paladin.common.core.permission.Menu;
-import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
 import com.paladin.framework.GlobalProperties;
@@ -49,12 +48,10 @@ public class LoginController {
 
     private void createMenuHtml(Collection<Menu> menus, StringBuilder sb) {
         for (Menu menu : menus) {
-            OrgPermission op = menu.getSource();
             Collection<Menu> children = menu.getChildren();
+            String href = menu.isOwned() ? menu.getUrl() : null;
 
-            String href = menu.isOwned() ? op.getUrl() : null;
-
-            String icon = op.getMenuIcon();
+            String icon = menu.getIcon();
             if (icon != null && icon.length() > 0) {
                 icon = "fa iconfont icon" + icon;
             } else {
@@ -64,21 +61,21 @@ public class LoginController {
             if (children.size() > 0) {
                 sb.append("<li class=\"treeview\"><a class=\"nav-link\"");
                 if (href != null && href.length() > 0) {
-                    sb.append(" onclick=\"goto({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',url: '")
+                    sb.append(" onclick=\"goto({id:'").append(menu.getId()).append("',title: '").append(menu.getName()).append("',url: '")
                             .append(href).append("'});\"");
                 }
 
-                sb.append("><i class=\"").append(icon).append("\"></i><span>").append(op.getName()).append(
+                sb.append("><i class=\"").append(icon).append("\"></i><span>").append(menu.getName()).append(
                         "</span><span class=\"pull-right-container\"><i class=\"fa fa-angle-left pull-right\"></i></span></a><ul class=\"treeview-menu\">");
                 createMenuHtml(children, sb);
                 sb.append("</ul></li>");
             } else {
                 sb.append("<li><a class=\"nav-link\"");
                 if (href != null) {
-                    sb.append(" onclick=\"goto({id:'").append(op.getId()).append("',title: '").append(op.getName()).append("',url: '")
+                    sb.append(" onclick=\"goto({id:'").append(menu.getId()).append("',title: '").append(menu.getName()).append("',url: '")
                             .append(href).append("'});\"");
                 }
-                sb.append("><i class=\"").append(icon).append("\"></i> <span>").append(op.getName()).append("</span></a></li>");
+                sb.append("><i class=\"").append(icon).append("\"></i> <span>").append(menu.getName()).append("</span></a></li>");
             }
         }
     }

@@ -99,38 +99,31 @@ public class RoleContainer implements VersionContainer {
 
         if (ownedPermission != null) {
             for (Permission permission : ownedPermission) {
-                OrgPermission source = permission.getSource();
-                if (source.getIsMenu() == BaseModel.BOOLEAN_YES) {
+                if (permission.isMenu()) {
                     String pid = permission.getId();
                     Menu menu = menuMap.get(pid);
                     if (menu == null) {
                         menu = new Menu(permission, true);
                         menuMap.put(pid, menu);
 
-                        boolean isRoot = true;
-                        Permission parent = permission.getParent();
+                        Permission parent = permission.getParentMenuPermission();
                         while (parent != null) {
-                            Menu parentMenu = menuMap.get(parent.getId());
+                            String parentId = parent.getId();
+                            Menu parentMenu = menuMap.get(parentId);
                             if (parentMenu != null) {
-                                menu.setParent(parentMenu);
                                 parentMenu.getChildren().add(menu);
-                                isRoot = false;
                                 break;
-                            }
-
-                            if (parent.getSource().getIsMenu() == BaseModel.BOOLEAN_YES) {
+                            } else {
                                 parentMenu = new Menu(parent, false);
-                                menuMap.put(parentMenu.getId(), parentMenu);
-
-                                menu.setParent(parentMenu);
+                                menuMap.put(parentId, parentMenu);
                                 parentMenu.getChildren().add(menu);
-
-                                menu = parentMenu;
                             }
-                            parent = parent.getParent();
+
+                            menu = parentMenu;
+                            parent = parent.getParentMenuPermission();
                         }
 
-                        if (isRoot) {
+                        if (menu.isRoot()) {
                             rootMenu.put(menu.getId(), menu);
                         }
                     } else {
@@ -139,7 +132,6 @@ public class RoleContainer implements VersionContainer {
                 }
             }
         }
-
         return new ArrayList<>(rootMenu.values());
     }
 
