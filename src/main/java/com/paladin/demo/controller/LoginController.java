@@ -1,6 +1,6 @@
 package com.paladin.demo.controller;
 
-import com.paladin.common.core.permission.MenuPermission;
+import com.paladin.common.core.permission.Menu;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
@@ -40,19 +40,19 @@ public class LoginController {
         ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
         model.addObject("name", userSession.getUserName());
 
-        Collection<MenuPermission> menus = userSession.getMenuResources();
+        Collection<Menu> menus = userSession.getMenuResources();
         StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
         createMenuHtml(menus, sb);
         model.addObject("menuHtml", sb.toString());
         return model;
     }
 
-    private void createMenuHtml(Collection<MenuPermission> menus, StringBuilder sb) {
-        for (MenuPermission menu : menus) {
+    private void createMenuHtml(Collection<Menu> menus, StringBuilder sb) {
+        for (Menu menu : menus) {
             OrgPermission op = menu.getSource();
-            Collection<MenuPermission> children = menu.getChildren();
+            Collection<Menu> children = menu.getChildren();
 
-            String href = menu.isMenu() && menu.isOwned() ? op.getUrl() : null;
+            String href = menu.isOwned() ? op.getUrl() : null;
 
             String icon = op.getMenuIcon();
             if (icon != null && icon.length() > 0) {

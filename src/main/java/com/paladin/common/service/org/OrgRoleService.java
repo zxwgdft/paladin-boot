@@ -1,6 +1,6 @@
 package com.paladin.common.service.org;
 
-import com.paladin.common.core.permission.PermissionContainer;
+import com.paladin.common.core.permission.RoleContainer;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.framework.common.BaseModel;
@@ -46,7 +46,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
 
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
         update(model);
-        PermissionContainer.updateData();
+        RoleContainer.updateData();
         return true;
     }
 
@@ -56,7 +56,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
         model.setIsDefault(BaseModel.BOOLEAN_NO);
         save(model);
-        PermissionContainer.updateData();
+        RoleContainer.updateData();
         return true;
     }
 

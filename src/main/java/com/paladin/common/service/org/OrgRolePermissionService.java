@@ -1,6 +1,7 @@
 package com.paladin.common.service.org;
 
 import com.paladin.common.core.permission.PermissionContainer;
+import com.paladin.common.core.permission.RoleContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
 import com.paladin.common.model.org.OrgRolePermission;
 import com.paladin.framework.service.ServiceSupport;
@@ -31,7 +32,7 @@ public class OrgRolePermissionService extends ServiceSupport<OrgRolePermission> 
 			orgRolePermissionMapper.insertByBatch(roleId, permissionIds);
 		}
 
-		PermissionContainer.updateData();
+		RoleContainer.updateData();
 		return true;
 	}
 

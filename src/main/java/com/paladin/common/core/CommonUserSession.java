@@ -1,9 +1,10 @@
 package com.paladin.common.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paladin.common.core.permission.MenuPermission;
-import com.paladin.common.core.permission.PermissionContainer;
+import com.paladin.common.core.permission.Menu;
 import com.paladin.common.core.permission.Role;
+import com.paladin.common.core.permission.RoleContainer;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.UserSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -74,7 +75,7 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
         for (int i = 0; i < roleIds.length; i++) {
             String roleId = roleIds[i];
             if (roleId != null) {
-                Role role = PermissionContainer.getInstance().getRole(roleId);
+                Role role = RoleContainer.getRole(roleId);
                 if (role != null) {
                     roleIdList.add(roleId);
                     roleLevel = Math.max(roleLevel, role.getRoleLevel());
@@ -100,24 +101,32 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
      *
      * @return
      */
-    public Collection<MenuPermission> getMenuResources() {
-        PermissionContainer container = PermissionContainer.getInstance();
+    public List<Menu> getMenuResources() {
         if (isSystemAdmin) {
-            return container.getSystemAdminRole().getMenuPermissions();
+            return RoleContainer.getSystemAdminRole().getRootMenus();
         }
 
         if (roleIds.size() == 1) {
-            return container.getRole(roleIds.get(0)).getMenuPermissions();
+            Role role = RoleContainer.getRole(roleIds.get(0));
+            if (role == null) {
+                throw new BusinessException("登录用户角色异常");
+            }
+            return role.getRootMenus();
         }
 
         ArrayList<Role> roles = new ArrayList<>(roleIds.size());
         for (String rid : roleIds) {
-            Role role = container.getRole(rid);
+            Role role = RoleContainer.getRole(rid);
             if (role != null) {
                 roles.add(role);
             }
         }
-        return Role.getMultiRoleMenuPermission(roles);
+
+        if (roles.size() == 0) {
+            throw new BusinessException("登录用户角色异常");
+        }
+
+        return RoleContainer.getMultiRoleMenu(roles);
     }
 
     @Override
@@ -136,23 +145,32 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
     @Override
     @JsonIgnore
     public Collection<Permission> getObjectPermissions() {
-        PermissionContainer container = PermissionContainer.getInstance();
         if (isSystemAdmin) {
-            return container.getSystemAdminRole().getPermissionObjects();
+            return (List) RoleContainer.getSystemAdminRole().getPermissions();
         }
 
         if (roleIds.size() == 1) {
-            return container.getRole(roleIds.get(0)).getPermissionObjects();
+            Role role = RoleContainer.getRole(roleIds.get(0));
+            if (role == null) {
+                return null;
+            } else {
+                return (List) role.getPermissions();
+            }
         }
 
         ArrayList<Role> roles = new ArrayList<>(roleIds.size());
         for (String rid : roleIds) {
-            Role role = container.getRole(rid);
+            Role role = RoleContainer.getRole(rid);
             if (role != null) {
                 roles.add(role);
             }
         }
-        return Role.getMultiRolePermissionObject(roles);
+
+        if (roles.size() == 0) {
+            return null;
+        }
+
+        return (List) RoleContainer.getMultiRolePermission(roles);
     }
 
     @Override

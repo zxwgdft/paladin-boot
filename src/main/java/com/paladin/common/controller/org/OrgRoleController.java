@@ -55,7 +55,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @RequestMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {
+    public Object getDetail(@RequestParam String id) {
         return R.success(beanCopy(orgRoleService.get(id), new OrgRoleVO()));
     }
 
