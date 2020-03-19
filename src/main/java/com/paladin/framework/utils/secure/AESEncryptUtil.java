@@ -4,7 +4,10 @@ package com.paladin.framework.utils.secure;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -51,10 +54,36 @@ public class AESEncryptUtil {
     }
 
 
+    public static String createKeyString() {
+        KeyGenerator keygen = null;
+        try {
+            keygen = KeyGenerator.getInstance("AES");
+            SecretKey deskey = keygen.generateKey();
+            return Base64.encodeBase64String(deskey.getEncoded());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("创建Key异常", e);
+        }
+    }
+
+    public static byte[] createKey() {
+        KeyGenerator keygen = null;
+        try {
+            keygen = KeyGenerator.getInstance("AES");
+            SecretKey deskey = keygen.generateKey();
+            return deskey.getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("创建Key异常", e);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         String encrypted = encrypt("呀哈哈", "bMFmZY9W1FRdkbqqAi9JWQ", true);
         System.out.println(encrypted);
         String decrypted = decrypt(encrypted, "bMFmZY9W1FRdkbqqAi9JWQ");
         System.out.println(decrypted);
+
+
+        System.out.println(createKeyString());
+
     }
 }
