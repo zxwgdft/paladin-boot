@@ -9,6 +9,7 @@ import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.common.service.org.vo.OrgRoleVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.utils.UUIDUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,6 +73,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @RequestMapping("/save")
     @ResponseBody
+    @RequiresPermissions("sys:role:save")
     public Object save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -86,6 +88,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @RequestMapping("/update")
     @ResponseBody
+    @RequiresPermissions("sys:role:update")
     public Object update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -114,6 +117,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @RequestMapping("/grant")
     @ResponseBody
+    @RequiresPermissions("sys:role:grant")
     public Object grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
         return orgRolePermissionService.grantAuthorization(roleId, permissionIds) ? R.success() : R.fail("授权失败");
     }
