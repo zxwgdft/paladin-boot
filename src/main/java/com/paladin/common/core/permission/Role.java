@@ -2,7 +2,6 @@ package com.paladin.common.core.permission;
 
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.framework.common.BaseModel;
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.Collections;
@@ -32,9 +31,7 @@ public class Role {
 
     private List<Menu> rootMenus;
     private List<Permission> permissions;
-
-    @Getter(AccessLevel.NONE)
-    private Set<String> permissionCodeSet;
+    private Set<String> permissionCodes;
 
     // 默认角色、系统管理员
     public Role(String id, String roleName, int roleLevel) {
@@ -59,7 +56,7 @@ public class Role {
             permissionCodeSet.add(permission.getSource().getCode());
         }
         this.rootMenus = Collections.unmodifiableList(rootMenus);
-        this.permissionCodeSet = Collections.unmodifiableSet(permissionCodeSet);
+        this.permissionCodes = Collections.unmodifiableSet(permissionCodeSet);
         this.permissions = Collections.unmodifiableList(ownedPermissions);
     }
 
@@ -71,7 +68,7 @@ public class Role {
      * @return
      */
     public boolean hasPermission(String code) {
-        return permissionCodeSet.contains(code);
+        return permissionCodes.contains(code);
     }
 
 

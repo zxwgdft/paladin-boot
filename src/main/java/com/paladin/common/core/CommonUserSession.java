@@ -10,10 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 通用用户会话信息
@@ -171,6 +168,37 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
 
         return (List) RoleContainer.getMultiRolePermission(roles);
     }
+
+    /**
+     * 获取所有权限的CODE集合，可用于简单方式判断权限
+     */
+    @JsonIgnore
+    public Set<String> getPermissionCodes() {
+        if (isSystemAdmin) {
+            return RoleContainer.getSystemAdminRole().getPermissionCodes();
+        }
+
+        if (roleIds.size() == 1) {
+            Role role = RoleContainer.getRole(roleIds.get(0));
+            if (role == null) {
+                return null;
+            } else {
+                return role.getPermissionCodes();
+            }
+        }
+
+
+        Set<String> codeSet = new HashSet<>();
+        for (String rid : roleIds) {
+            Role role = RoleContainer.getRole(rid);
+            if (role != null) {
+                codeSet.addAll(role.getPermissionCodes());
+            }
+        }
+
+        return codeSet;
+    }
+
 
     @Override
     @JsonIgnore

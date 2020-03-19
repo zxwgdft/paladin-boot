@@ -3,13 +3,12 @@ package com.paladin.common.controller;
 import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.ConstantsContainer.KeyValue;
 import com.paladin.common.core.FileResourceContainer;
+import com.paladin.common.core.permission.NeedAdmin;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
-import com.paladin.framework.common.HttpCode;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.UserSession;
 import com.paladin.framework.service.VersionContainerManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -101,56 +100,45 @@ public class CommonController {
 
     @GetMapping("/container/index")
     public String containerIndex() {
-        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            return "/common/container/index";
-        }
-        return "/common/error/error";
+        return "/common/container/index";
     }
 
     @ApiOperation(value = "获取所有容器")
     @GetMapping("/container/find/all")
     @ResponseBody
     public R findContainers() {
-        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            List<VersionContainerManager.VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
-            List<Map<String, Object>> result = new ArrayList<>();
+        List<VersionContainerManager.VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
+        List<Map<String, Object>> result = new ArrayList<>();
 
-            for (VersionContainerManager.VersionObject versionObject : versionObjects) {
-                Map<String, Object> objectMap = new HashMap<>();
-                objectMap.put("id", versionObject.getId());
-                objectMap.put("updateTime", versionObject.getUpdateTime());
-                objectMap.put("version", versionObject.getVersion());
-                result.add(objectMap);
-            }
-            return R.success(result);
+        for (VersionContainerManager.VersionObject versionObject : versionObjects) {
+            Map<String, Object> objectMap = new HashMap<>();
+            objectMap.put("id", versionObject.getId());
+            objectMap.put("updateTime", versionObject.getUpdateTime());
+            objectMap.put("version", versionObject.getVersion());
+            result.add(objectMap);
         }
-        return R.fail(HttpCode.UNAUTHORIZED);
+        return R.success(result);
     }
 
     @ApiOperation(value = "重启容器")
     @GetMapping("/container/restart")
     @ResponseBody
+    @NeedAdmin
     public R restartContainer(@RequestParam String container) {
-        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            long t1 = System.currentTimeMillis();
-            VersionContainerManager.versionChanged(container);
-            long t2 = System.currentTimeMillis();
-            return R.success(t2 - t1);
-        }
-        return R.fail(HttpCode.UNAUTHORIZED);
+        long t1 = System.currentTimeMillis();
+        VersionContainerManager.versionChanged(container);
+        long t2 = System.currentTimeMillis();
+        return R.success(t2 - t1);
     }
 
     @ApiOperation(value = "重启所有容器")
     @GetMapping("/container/restart/all")
     @ResponseBody
     public R restartAllContainer() {
-        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            long t1 = System.currentTimeMillis();
-            VersionContainerManager.versionChanged();
-            long t2 = System.currentTimeMillis();
-            return R.success(t2 - t1);
-        }
-        return R.fail(HttpCode.UNAUTHORIZED);
+        long t1 = System.currentTimeMillis();
+        VersionContainerManager.versionChanged();
+        long t2 = System.currentTimeMillis();
+        return R.success(t2 - t1);
     }
 
     @ApiOperation(value = "异常测试")

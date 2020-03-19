@@ -5,6 +5,7 @@ import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
 import com.paladin.common.core.DefaultVersionContainerDAO;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
+import com.paladin.common.core.permission.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
@@ -111,6 +112,16 @@ public class CommonConfiguration {
     @Bean
     public QueryMethodInterceptor getQueryMethodInterceptor() {
         return new QueryMethodInterceptor();
+    }
+
+    /**
+     * 自定义判断权限AOP
+     *
+     * @return
+     */
+    @Bean
+    public PermissionMethodInterceptor getPermissionMethodInterceptor() {
+        return new PermissionMethodInterceptor();
     }
 
 
