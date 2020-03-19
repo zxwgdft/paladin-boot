@@ -23,7 +23,6 @@ import java.util.List;
  */
 public class CommonUserSession extends UserSession implements AuthorizationInfo {
 
-    public static final int ROLE_LEVEL_SYSTEM_ADMIN = 999999;
 
     /**
      * 非超级管理员初始化方法
@@ -47,7 +46,7 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
      */
     public CommonUserSession(String userId, String userName, String account) {
         super(userId, userName, account);
-        this.roleLevel = ROLE_LEVEL_SYSTEM_ADMIN;
+        this.roleLevel = RoleContainer.ROLE_LEVEL_SYS_ADMIN;
         this.isSystemAdmin = true;
     }
 

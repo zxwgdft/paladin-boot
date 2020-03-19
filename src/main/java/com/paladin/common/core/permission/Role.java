@@ -36,16 +36,21 @@ public class Role {
     @Getter(AccessLevel.NONE)
     private Set<String> permissionCodeSet;
 
+    // 默认角色、系统管理员
+    public Role(String id, String roleName, int roleLevel) {
+        this.id = id;
+        this.roleName = roleName;
+        this.isDefault = true;
+        this.enable = true;
+    }
 
     public Role(OrgRole orgRole) {
-        if (orgRole != null) {
-            this.source = orgRole;
-            this.id = orgRole.getId();
-            this.roleName = orgRole.getRoleName();
-            this.roleLevel = orgRole.getRoleLevel();
-            this.isDefault = orgRole.getIsDefault() == BaseModel.BOOLEAN_YES;
-            this.enable = orgRole.getEnable() == BaseModel.BOOLEAN_YES;
-        }
+        this.source = orgRole;
+        this.id = orgRole.getId();
+        this.roleName = orgRole.getRoleName();
+        this.roleLevel = orgRole.getRoleLevel();
+        this.isDefault = orgRole.getIsDefault() == BaseModel.BOOLEAN_YES;
+        this.enable = orgRole.getEnable() == BaseModel.BOOLEAN_YES;
     }
 
     public void setPermission(List<Permission> ownedPermissions, List<Menu> rootMenus) {

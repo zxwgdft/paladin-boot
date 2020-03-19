@@ -17,6 +17,10 @@ import java.util.*;
 @Component
 public class RoleContainer implements VersionContainer {
 
+    public static final String ROLE_SYS_ADMIN = "admin";
+    public static final int ROLE_LEVEL_SYS_ADMIN = 999999;
+
+
     @Autowired
     private OrgRoleService orgRoleService;
 
@@ -71,7 +75,7 @@ public class RoleContainer implements VersionContainer {
         }
 
         // 创建系统管理员角色及菜单
-        Role systemAdminRole = new Role(null);
+        Role systemAdminRole = new Role(ROLE_SYS_ADMIN, "系统管理员", ROLE_LEVEL_SYS_ADMIN);
         List<Permission> ownedPermission = new ArrayList<>();
         for (Permission permission : PermissionContainer.getAllPermission()) {
             if (permission.getSource().getIsAdmin() == BaseModel.BOOLEAN_YES) {
