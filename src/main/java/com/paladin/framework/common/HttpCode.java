@@ -25,9 +25,10 @@ public enum HttpCode implements IResultCode {
 
     UNAUTHORIZED(401, "请求身份未验证"),
 
+    FORBIDDEN(403, "没有访问或操作权限"),
+
     // 自定义状态
     PARAMETER_VALID_FAIL(490, "请求参数验证失败"),
-    NO_PERMISSION(491, "请求没有权限"),
 
     // 以下状态码大多数情况不会在我们的业务代码中返回，可以忽略，主要处理上面几个常用状态就行
 
@@ -69,7 +70,6 @@ public enum HttpCode implements IResultCode {
 
     PAYMENT_REQUIRED(402, "Payment Required"),
 
-    FORBIDDEN(403, "Forbidden"),
 
     METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
 

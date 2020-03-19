@@ -48,6 +48,12 @@ public class Permission extends WildcardPermission {
     // 是否根菜单权限
     private boolean isRootMenu;
 
+    // 是否叶节点
+    private boolean isLeaf;
+
+    // 是否可授权
+    private boolean grantable;
+
     public Permission(OrgPermission source) {
         super(source.getCode());
 
@@ -55,6 +61,7 @@ public class Permission extends WildcardPermission {
         this.source = source;
         this.isMenu = source.getIsMenu() == BaseModel.BOOLEAN_YES;
         this.isAdmin = source.getIsAdmin() == BaseModel.BOOLEAN_YES;
+        this.grantable = source.getGrantable() == BaseModel.BOOLEAN_YES;
         this.children = new ArrayList<>();
     }
 
@@ -88,6 +95,7 @@ public class Permission extends WildcardPermission {
         this.parentMenuPermission = lastMenuPermission;
         this.isRoot = parent == null;
         this.isRootMenu = parentMenuPermission == null;
+        this.isLeaf = children.size() == 0;
     }
 
     public void setParent(Permission parent) {
@@ -103,5 +111,6 @@ public class Permission extends WildcardPermission {
     public boolean isParent(String id) {
         return parentsPath != null && parentsPath.contains(id);
     }
+
 
 }

@@ -8,6 +8,7 @@ import com.paladin.demo.service.org.dto.OrgUnitDTO;
 import com.paladin.demo.service.org.vo.OrgUnitVO;
 import com.paladin.framework.common.R;
 import com.paladin.framework.utils.UUIDUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +61,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @PostMapping("/save")
     @ResponseBody
+    @RequiresPermissions("org:unit:save")
     public Object save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -75,6 +77,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @PostMapping("/update")
     @ResponseBody
+    @RequiresPermissions("org:unit:update")
     public Object update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -89,6 +92,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
+    @RequiresPermissions("org:unit:delete")
     public Object delete(@RequestParam String id) {
         return orgUnitService.removeUnit(id) ? R.success() : R.fail("保存失败");
     }

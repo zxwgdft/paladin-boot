@@ -334,7 +334,7 @@ if (!Array.prototype.forEach) {
             } else {
                 if (code == 401) {
                     $.ajaxUnLoginHandler();
-                } else if (code == 491) {
+                } else if (code == 403) {
                     $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
                 } else if (code == 490) {
                     $.validErrorHandler(response);
@@ -362,7 +362,7 @@ if (!Array.prototype.forEach) {
                 } else {
                     if (code == 401) {
                         $.ajaxUnLoginHandler(callback);
-                    } else if (code == 491) {
+                    } else if (code == 403) {
                         $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
                     } else if (code == 490) {
                         $.validErrorHandler(response);
@@ -2081,7 +2081,7 @@ function _initForm(container) {
                     } else {
                         if (code == 401) {
                             $.ajaxUnLoginHandler();
-                        } else if (code == 491) {
+                        } else if (code == 403) {
                             $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
                         } else if (code == 490) {
                             $.validErrorHandler(response);

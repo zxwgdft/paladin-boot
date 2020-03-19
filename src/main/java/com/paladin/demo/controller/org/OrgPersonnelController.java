@@ -14,6 +14,7 @@ import com.paladin.framework.excel.write.ValueFormator;
 import com.paladin.framework.service.QueryInputMethod;
 import com.paladin.framework.service.QueryOutputMethod;
 import com.paladin.framework.utils.UUIDUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +74,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 新增人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/save")
     @ResponseBody
+    @RequiresPermissions("org:personnel:save")
     public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
@@ -92,6 +94,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/update")
     @ResponseBody
+    @RequiresPermissions("org:personnel:update")
     public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 返回固定格式校验错误数据，用于展示
@@ -109,6 +112,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 删除数据
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
+    @RequiresPermissions("org:personnel:delete")
     public Object delete(@RequestParam String id) {
         // 根据主键删除
         return orgPersonnelService.removeByPrimaryKey(id) ? R.success() : R.fail("保存失败");
@@ -117,6 +121,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 导出Excel
     @PostMapping(value = "/export")
     @ResponseBody
+    @RequiresPermissions("org:personnel:export")
     public Object export(@RequestBody OrgPersonnelExportCondition condition) {
         if (condition == null) {
             return R.fail("导出失败：请求参数异常");

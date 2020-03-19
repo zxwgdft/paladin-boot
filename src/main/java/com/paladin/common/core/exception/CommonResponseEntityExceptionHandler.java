@@ -4,6 +4,7 @@ import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class CommonResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Object> businessExceptionHandler(BusinessException ex, WebRequest request) {
         return handleExceptionInternal(ex, R.fail(ex.getMessage(), ex.getData()), new HttpHeaders(), ex.getHttpStatus(), request);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Object> unauthorizedExceptionHandler(BusinessException ex, WebRequest request) {
+        return handleExceptionInternal(ex, R.fail("没有权限访问"), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(SystemException.class)
