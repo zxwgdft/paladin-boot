@@ -46,8 +46,18 @@ public class FileCreateParam {
 
 
     public void setFileContent(MultipartFile file) {
-        if (this.filename == null || this.filename.length() == 0) {
-            this.filename = file.getOriginalFilename();
+        if (filename == null || filename.length() == 0) {
+            filename = file.getOriginalFilename();
+            // IE文件名会包含路径，这里需要处理掉
+            int i = filename.lastIndexOf("\\");
+            if (i > -1) {
+                filename = filename.substring(i + 1);
+            }
+
+            i = filename.lastIndexOf("/");
+            if (i > -1) {
+                filename = filename.substring(i + 1);
+            }
         }
         this.size = file.getSize();
         try {
@@ -62,5 +72,6 @@ public class FileCreateParam {
         this.size = data.length;
         this.input = new ByteArrayInputStream(data);
     }
+
 
 }
