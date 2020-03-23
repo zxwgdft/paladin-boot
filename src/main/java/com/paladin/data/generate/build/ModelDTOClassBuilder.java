@@ -3,11 +3,14 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
+import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -68,6 +71,11 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
                     importClassSet.add(Length.class);
                 }
             }
+
+            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                importClassSet.add(MultipartFile.class);
+            }
         }
 
         String tab = "\t";
@@ -125,6 +133,16 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
                     .append(" ")
                     .append(columnOption.getFieldName())
                     .append(";\n\n");
+
+            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+            // 是否附件
+            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                sb.append(tab).append("private MultipartFile[] ")
+                        .append(NameUtil.firstUpperCase(columnOption.getFieldName()))
+                        .append("File")
+                        .append(";\n\n");
+            }
+
         }
 
         sb.append("}");

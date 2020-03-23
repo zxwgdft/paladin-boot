@@ -30,6 +30,11 @@ public class ${upperModelName}Controller extends ControllerSupport {
     @Autowired
     private ${upperModelName}Service ${lowerModelName}Service;
 
+    <#if attachmentField??>
+    @Autowired
+    private SysAttachmentService attachmentService;
+    </#if>
+
     @GetMapping("${indexRM}")
     @QueryInputMethod(queryClass = ${upperModelName}Query.class)
     public String index() {
@@ -66,9 +71,22 @@ public class ${upperModelName}Controller extends ControllerSupport {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-        ${upperModelName} model = beanCopy(${lowerModelName}DTO, new ${upperModelName}());
-		String id = UUIDUtil.createUUID();
-		model.set${primaryName}(id);
+
+		${upperModelName} model = beanCopy(${lowerModelName}DTO, new ${upperModelName}());
+	    String id = UUIDUtil.createUUID();
+    	model.set${primaryName}(id);
+
+        <#if attachmentField??>
+        List<SysAttachment> attachments = attachmentService.mergeAttachments(
+                ${lowerModelName}DTO.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}File());
+
+        if (attachments != null && attachments.size() > ${attachmentSize}) {
+            throw new BusinessException("附件数量不能超过${attachmentSize}个");
+        }
+
+        model.set${attachmentField}(attachmentService.splicingAttachmentId(attachments));
+        </#if>
+
 		if (${lowerModelName}Service.save(model)) {
 			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
 		}
@@ -82,7 +100,20 @@ public class ${upperModelName}Controller extends ControllerSupport {
 			return validErrorHandler(bindingResult);
 		}
 		String id = ${lowerModelName}DTO.getId();
-		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.get(id));
+		${upperModelName} model = ${lowerModelName}Service.get(id);
+
+		<#if attachmentField??>
+        List<SysAttachment> attachments = attachmentService.replaceAndMergeAttachments(
+                        model.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}File());
+
+        if (attachments != null && attachments.size() > ${attachmentSize}) {
+            throw new BusinessException("附件数量不能超过${attachmentSize}个");
+        }
+
+        ${lowerModelName}DTO.set${attachmentField}(attachmentService.splicingAttachmentId(attachments));
+        </#if>
+
+		model = beanCopy(${lowerModelName}DTO, model);
 		if (${lowerModelName}Service.update(model)) {
 			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
 		}

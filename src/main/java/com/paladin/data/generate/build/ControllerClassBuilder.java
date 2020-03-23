@@ -1,124 +1,147 @@
 package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateBuilderContainer;
+import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
+import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.utils.reflect.NameUtil;
-
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import org.springframework.stereotype.Component;
-
 @Component
 public class ControllerClassBuilder extends SpringBootClassBuilder {
 
-	private static Template template = FreemarkerUtil.getTemplate("/template_controller.temp");
+    private static Template template = FreemarkerUtil.getTemplate("/template_controller.temp");
 
-	public String buildContent(GenerateTableOption tableOption) {
-		StringWriter writer = new StringWriter();
+    public String buildContent(GenerateTableOption tableOption) {
+        StringWriter writer = new StringWriter();
 
-		HashMap<String, Object> params = new HashMap<>();
 
-		params.put("package", getClassPackage(tableOption));
+        HashMap<String, Object> params = new HashMap<>();
 
-		StringBuilder sb = new StringBuilder();
+        params.put("package", getClassPackage(tableOption));
 
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.EXPORT_QUERY_DTO, tableOption)).append(";\n");
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL, tableOption)).append(";\n");
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.SERVICE, tableOption)).append(";\n");
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.QUERY_DTO, tableOption)).append(";\n");
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_DTO, tableOption)).append(";\n");
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_VO, tableOption)).append(";\n");
+        StringBuilder sb = new StringBuilder();
 
-		params.put("imports", sb.toString());
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.EXPORT_QUERY_DTO, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.SERVICE, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.QUERY_DTO, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_DTO, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_VO, tableOption)).append(";\n");
 
-		params.put("upperModelName", tableOption.getModelName());
-		params.put("lowerModelName", NameUtil.firstLowerCase(tableOption.getModelName()));
-		params.put("primaryName", NameUtil.firstUpperCase(tableOption.getFirstPrimaryName()));
+        for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
+            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+            // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
+            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
 
-		params.put("baseRequestMapping", getBaseRequestMapping(tableOption));
+                Integer count = columnOption.getBuildColumnOption().getAttachmentCount();
+                if (count == null || count < 0) {
+                    count = 5;
+                }
 
-		params.put("indexRM", getIndexRequestMapping(tableOption));
-		params.put("findPageRM", getFindPageRequestMapping(tableOption));
-		params.put("addRM", getAddRequestMapping(tableOption));
-		params.put("detailRM", getDetailRequestMapping(tableOption));
-		params.put("getDetailRM", getGetDetailRequestMapping(tableOption));
-		params.put("saveRM", getSaveRequestMapping(tableOption));
-		params.put("updateRM", getUpdateRequestMapping(tableOption));
-		params.put("deleteRM", getDeleteRequestMapping(tableOption));
-		params.put("exportRM", getExportRequestMapping(tableOption));
+                params.put("attachmentSize", count);
 
-		params.put("indexPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_INDEX, tableOption));
-		params.put("addPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_ADD, tableOption));
-		params.put("detailPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_DETAIL, tableOption));
+                sb.append("import com.paladin.framework.exception.BusinessException;\n");
+                sb.append("import com.paladin.common.model.sys.SysAttachment;\n");
+                sb.append("import com.paladin.common.service.sys.SysAttachmentService;\n");
+                sb.append("import java.util.List;\n");
 
-		try {
-			template.process(params, writer);
-		} catch (TemplateException | IOException e) {
-			throw new RuntimeException("生成文档失败", e);
-		}
-		return writer.toString();
-	}
+                break;
+            }
+        }
 
-	public String getBaseRequestMapping(GenerateTableOption tableOption) {
-		String table = tableOption.getTable().getName();
-		String path = "/" + tableOption.getModel() + "/" + table.replaceAll("_", "/");
-		return path;
-	}
+        params.put("imports", sb.toString());
 
-	public String getIndexRequestMapping(GenerateTableOption tableOption) {
-		return "/index";
-	}
+        params.put("upperModelName", tableOption.getModelName());
+        params.put("lowerModelName", NameUtil.firstLowerCase(tableOption.getModelName()));
+        params.put("primaryName", NameUtil.firstUpperCase(tableOption.getFirstPrimaryName()));
 
-	public String getFindPageRequestMapping(GenerateTableOption tableOption) {
-		return "/find/page";
-	}
-	
-	public String getExportRequestMapping(GenerateTableOption tableOption) {
-		return "/export";
-	}
-	
-	public String getAddRequestMapping(GenerateTableOption tableOption) {
-		return "/add";
-	}
+        params.put("baseRequestMapping", getBaseRequestMapping(tableOption));
 
-	public String getDetailRequestMapping(GenerateTableOption tableOption) {
-		return "/detail";
-	}
+        params.put("indexRM", getIndexRequestMapping(tableOption));
+        params.put("findPageRM", getFindPageRequestMapping(tableOption));
+        params.put("addRM", getAddRequestMapping(tableOption));
+        params.put("detailRM", getDetailRequestMapping(tableOption));
+        params.put("getDetailRM", getGetDetailRequestMapping(tableOption));
+        params.put("saveRM", getSaveRequestMapping(tableOption));
+        params.put("updateRM", getUpdateRequestMapping(tableOption));
+        params.put("deleteRM", getDeleteRequestMapping(tableOption));
+        params.put("exportRM", getExportRequestMapping(tableOption));
 
-	public String getGetDetailRequestMapping(GenerateTableOption tableOption) {
-		return "/get";
-	}
+        params.put("indexPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_INDEX, tableOption));
+        params.put("addPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_ADD, tableOption));
+        params.put("detailPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_DETAIL, tableOption));
 
-	public String getSaveRequestMapping(GenerateTableOption tableOption) {
-		return "/save";
-	}
+        try {
+            template.process(params, writer);
+        } catch (TemplateException | IOException e) {
+            throw new RuntimeException("生成文档失败", e);
+        }
+        return writer.toString();
+    }
 
-	public String getUpdateRequestMapping(GenerateTableOption tableOption) {
-		return "/update";
-	}
+    public String getBaseRequestMapping(GenerateTableOption tableOption) {
+        String table = tableOption.getTable().getName();
+        String path = "/" + tableOption.getModel() + "/" + table.replaceAll("_", "/");
+        return path;
+    }
 
-	public String getDeleteRequestMapping(GenerateTableOption tableOption) {
-		return "/delete";
-	}
+    public String getIndexRequestMapping(GenerateTableOption tableOption) {
+        return "/index";
+    }
 
-	@Override
-	public BuilderType getBuilderType() {
-		return BuilderType.CONTROLLER;
-	}
+    public String getFindPageRequestMapping(GenerateTableOption tableOption) {
+        return "/find/page";
+    }
 
-	@Override
-	public String getPackage(GenerateTableOption tableOption) {
-		return "controller";
-	}
+    public String getExportRequestMapping(GenerateTableOption tableOption) {
+        return "/export";
+    }
 
-	@Override
-	public String getClassName(GenerateTableOption tableOption) {
-		return tableOption.getModelName() + "Controller";
-	}
+    public String getAddRequestMapping(GenerateTableOption tableOption) {
+        return "/add";
+    }
+
+    public String getDetailRequestMapping(GenerateTableOption tableOption) {
+        return "/detail";
+    }
+
+    public String getGetDetailRequestMapping(GenerateTableOption tableOption) {
+        return "/get";
+    }
+
+    public String getSaveRequestMapping(GenerateTableOption tableOption) {
+        return "/save";
+    }
+
+    public String getUpdateRequestMapping(GenerateTableOption tableOption) {
+        return "/update";
+    }
+
+    public String getDeleteRequestMapping(GenerateTableOption tableOption) {
+        return "/delete";
+    }
+
+    @Override
+    public BuilderType getBuilderType() {
+        return BuilderType.CONTROLLER;
+    }
+
+    @Override
+    public String getPackage(GenerateTableOption tableOption) {
+        return "controller";
+    }
+
+    @Override
+    public String getClassName(GenerateTableOption tableOption) {
+        return tableOption.getModelName() + "Controller";
+    }
 
 }

@@ -1,8 +1,13 @@
 package com.paladin.data.generate.build;
 
+import com.paladin.common.core.FileResourceContainer;
+import com.paladin.common.service.sys.vo.FileResource;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
+import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.service.IgnoreSelection;
+import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +44,8 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
         Collections.sort(columnOptions, (o1, o2) -> o1.getColumn().getOrderIndex() - o2.getColumn().getOrderIndex());
 
+        boolean hasAttachment = false;
+
         for (GenerateColumnOption columnOption : columnOptions) {
             Class<?> clazz = columnOption.getFieldType();
 
@@ -47,6 +54,15 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
             if (!clazz.isPrimitive() && !clazz.getName().matches("^java.lang.[^.]"))
                 importClassSet.add(clazz);
+
+            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                importClassSet.add(FileResource.class);
+                importClassSet.add(FileResourceContainer.class);
+                importClassSet.add(IgnoreSelection.class);
+                importClassSet.add(List.class);
+                hasAttachment = true;
+            }
         }
 
         String tab = "\t";
@@ -76,11 +92,32 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
         for (GenerateColumnOption columnOption : columnOptions) {
             sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
+            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                sb.append(tab).append("@IgnoreSelection\n");
+            }
             sb.append(tab).append("private ")
                     .append(columnOption.getFieldType().getSimpleName())
                     .append(" ")
                     .append(columnOption.getFieldName())
                     .append(";\n\n");
+        }
+
+        if (hasAttachment) {
+            for (GenerateColumnOption columnOption : columnOptions) {
+                Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+                if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                    sb.append(tab).append("public List<FileResource> get")
+                            .append(NameUtil.firstUpperCase(columnOption.getFieldName())).append("File() {\n");
+                    sb.append(tab).append(tab).append("if (").append(columnOption.getFieldName()).append(" != null && ")
+                            .append(columnOption.getFieldName()).append(".length() > 0) {\n");
+                    sb.append(tab).append(tab).append(tab).append("return FileResourceContainer.getFileResources(")
+                            .append(columnOption.getFieldName()).append(".split(\",\"));\n");
+                    sb.append(tab).append(tab).append("}\n");
+                    sb.append(tab).append(tab).append("return null;\n");
+                    sb.append(tab).append("}\n");
+                }
+            }
         }
 
         sb.append("}");
