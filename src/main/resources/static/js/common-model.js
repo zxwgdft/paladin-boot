@@ -1887,7 +1887,8 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             allowedPreviewTypes: ['image'],
             uploadAsync: false,
             maxFileCount: column.maxFileCount || 5,
-            allowedFileExtensions: column.allowedFileExtensions || ["jpeg", "jpg", "png", "gif"],
+            allowedFileExtensions: column.allowedFileExtensions || (column.isPicture === true ? ["jpeg", "jpg", "png", "gif"] :
+                ["jpeg", "jpg", "png", "gif", "txt", "pdf", "xlsx", "xls", "doc", "docx", "rar", "zip", "mp4"]),
             overwriteInitial: false,
             dropZoneEnabled: false, // 禁止拖拽
             ajaxDelete: false, // 扩展定义配置，不进行后台删除操作

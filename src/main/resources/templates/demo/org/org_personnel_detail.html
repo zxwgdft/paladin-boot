@@ -74,16 +74,46 @@
                         "data-type": "cellphone",
                         "placeholder": "请输入本人的手机号码"
                         // 可以增加dom的属性，例如添加数据类型和最大长度用于验证
-                    }
+                    },
+                    // 性别男时候才能选择手机号码，如果值为多个可以在数组后面继续添加
+                    dependency: ["sex", "1"]
                 },
                 {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
                 {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
                 {title: "简历", name: "resume", inputType: "EDITOR"},
                 {
+                    // 子项添加，未做保存处理，如果要后台保存，需要json格式而不能form格式
+                    title: "地址",
+                    name: "address",
+                    required: "required",
+                    inputType: "SUB-MODEL",
+                    subViewField: "personnelName",
+                    addSubModelBtnTitle: '添加地址',
+                    // colCount: 5,
+                    subTitleViewHtmml: function (data) {
+                        var html = '<span class="product-description" style="line-height:34px">' + data.city + "-" + data.address + '</span>';
+                        return html;
+                    },
+                    subModelOptions: {
+                        headBorder: false,
+                        hearderBox: false,
+                        server: false,
+                        layerOption: {
+                            height: 300,
+                            width: 600
+                        },
+                        columns: [
+                            {title: "所在地区", name: "city", inputType: "TEXT", required: "required"},
+                            {title: "详细地址", name: "address", inputType: "TEXT", required: "required"}
+                        ]
+                    }
+                },
+                {
                     title: "附件",
                     name: "attachment",
                     inputType: "ATTACHMENT",
                     fileName: "attachmentFiles",
+                    isPicture: false, // 如果是图片则只能接收后缀["jpeg", "jpg", "png", "gif"]，优先级低于allowedFileExtensions
                     allowedFileExtensions: ["jpeg", "jpg", "png", "gif", "txt", "pdf", "xlsx", "xls", "doc", "docx", "rar", "zip", "mp4"]
                 }
             ]
@@ -94,7 +124,22 @@
             $(".content").html(html);
             $.initComponent($(".content"));
 
-            var model = new tonto.Model("model", options.columns);
+            var model = new tonto.Model("model", options.columns, {
+                // extraParam: null, // 可以为方法或对象，用于扩展表单外提交的字段
+                // 提交表单前调取的方法，如果返回false则不提交
+                // beforeSubmit: function (formData) {
+                // },
+                // 如果想通过自己的方式提交数据，则可以配置submitClick，
+                // 以下代码直接读取了编辑中的表单数据并设置为数据源，然后切换到view状态，达到不提交服务器的作用
+                // 还可以在这里通过json格式提交复杂对象请求，例如上面的地址
+                // submitClick: function(that){
+                //     if (that.formBody.valid()) {
+                //         var d = that.getFormData();
+                //         that.setData(d);
+                //         that.toView();
+                //     }
+                // },
+            });
             model.setData(data);
         });
     });
