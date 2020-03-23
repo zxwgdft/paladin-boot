@@ -21,10 +21,6 @@ public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
 
     /**
      * 重写该方法保证异常正确抛出,需要多个Realm支持不同Token，否则会出现异常覆盖
-     *
-     * @param realms
-     * @param token
-     * @return
      */
     @Override
     protected AuthenticationInfo doMultiRealmAuthentication(Collection<Realm> realms, AuthenticationToken token) {
@@ -53,6 +49,7 @@ public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
                     info = realm.getAuthenticationInfo(token);
                 } catch (Throwable throwable) {
 
+                    // 记录异常
                     if (throwable instanceof AuthenticationException) {
                         authException = (AuthenticationException) throwable;
                     } else {
@@ -72,6 +69,7 @@ public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
             }
         }
 
+        // 存在异常直接抛出
         if (authException != null) {
             throw authException;
         }
