@@ -53,7 +53,6 @@ public class CommonShiroFilterFactoryBean extends ShiroFilterFactoryBean {
 
         private String[] staticPrefixs;
         private String[] authPrefixs;
-        private String[] referers;
 
         protected UnStaticShiroFilter(WebSecurityManager webSecurityManager, FilterChainResolver resolver, ShiroProperties shiroProperties) {
             super();
@@ -75,11 +74,6 @@ public class CommonShiroFilterFactoryBean extends ShiroFilterFactoryBean {
             if (authRsPrefix != null && authRsPrefix.length() > 0) {
                 authPrefixs = authRsPrefix.split(",");
             }
-
-            String referers = shiroProperties.getReferers();
-            if (referers != null && referers.length() > 0) {
-                this.referers = referers.split(",");
-            }
         }
 
         protected void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, final FilterChain chain)
@@ -88,25 +82,6 @@ public class CommonShiroFilterFactoryBean extends ShiroFilterFactoryBean {
             // -------------- add by TontoZhou-----------------
             if (servletRequest instanceof HttpServletRequest) {
                 HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-
-                // 简单处理CSRF攻击，判断Referer头属性是否为服务器本身
-                String referer = httpRequest.getHeader("Referer");
-                if (referers != null && referer != null) {
-                    boolean hasReferer = true;
-                    referer = referer.trim();
-                    for (String r : referers) {
-                        if (referer.startsWith(r)) {
-                            hasReferer = false;
-                            break;
-                        }
-                    }
-
-                    if (hasReferer) {
-                        // 存在则直接返回不处理
-                        return;
-                    }
-                }
-
                 String requestUrl = httpRequest.getRequestURI();
 
                 // 过滤静态资源，防止静态资源读取session等操作
