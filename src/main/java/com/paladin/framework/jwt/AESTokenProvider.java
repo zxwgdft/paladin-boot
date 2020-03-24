@@ -1,31 +1,23 @@
 package com.paladin.framework.jwt;
 
-import com.paladin.framework.utils.others.RandomUtil;
+import com.paladin.framework.utils.secure.AESEncryptUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.codec.binary.Base64;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
-public class SHATokenProvider implements TokenProvider {
+public class AESTokenProvider implements TokenProvider {
 
     private long tokenExpireMilliseconds;
     private String issuer;
-
     private byte[] keyBytes;
 
-    public static SHATokenProvider randomInstance() {
-        SHATokenProvider tokenProvider = new SHATokenProvider();
-        // 随机生成
-        String str = RandomUtil.getRandomString(125);
-        Key key = new SecretKeySpec(str.getBytes(),
-                SignatureAlgorithm.HS512.getJcaName());
-
-        tokenProvider.keyBytes = key.getEncoded();
+    public static AESTokenProvider randomInstance() {
+        AESTokenProvider tokenProvider = new AESTokenProvider();
+        tokenProvider.keyBytes = AESEncryptUtil.createKey();
         tokenProvider.tokenExpireMilliseconds = 30 * 60 * 1000;
         return tokenProvider;
     }

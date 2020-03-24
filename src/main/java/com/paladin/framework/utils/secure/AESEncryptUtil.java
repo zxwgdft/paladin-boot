@@ -5,7 +5,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.NoSuchAlgorithmException;
 
@@ -30,8 +29,8 @@ public class AESEncryptUtil {
         }
     };
 
-    //bMFmZY9W1FRdkbqqAi9JWQ
 
+    // 加密
     public static String encrypt(String content, String key, boolean urlSafe) throws Exception {
         byte[] raw = Base64.decodeBase64(key);
         SecretKeySpec keySpec = new SecretKeySpec(raw, "AES");
@@ -40,7 +39,6 @@ public class AESEncryptUtil {
         byte[] encrypted = cipher.doFinal(content.getBytes());
         return urlSafe ? Base64.encodeBase64URLSafeString(encrypted) : Base64.encodeBase64String(encrypted);
     }
-
 
     // 解密
     public static String decrypt(String content, String key) throws Exception {
@@ -53,37 +51,40 @@ public class AESEncryptUtil {
         return new String(original);
     }
 
-
     public static String createKeyString() {
-        KeyGenerator keygen = null;
+        return createKeyString(128);
+    }
+
+    public static String createKeyString(int length) {
         try {
-            keygen = KeyGenerator.getInstance("AES");
-            SecretKey deskey = keygen.generateKey();
-            return Base64.encodeBase64String(deskey.getEncoded());
+            KeyGenerator keygen = KeyGenerator.getInstance("AES");
+            keygen.init(length);
+            return Base64.encodeBase64String(keygen.generateKey().getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("创建Key异常", e);
         }
     }
 
     public static byte[] createKey() {
-        KeyGenerator keygen = null;
+        return createKey(128);
+    }
+
+    public static byte[] createKey(int length) {
         try {
-            keygen = KeyGenerator.getInstance("AES");
-            SecretKey deskey = keygen.generateKey();
-            return deskey.getEncoded();
+            KeyGenerator keygen = KeyGenerator.getInstance("AES");
+            keygen.init(length);
+            return keygen.generateKey().getEncoded();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("创建Key异常", e);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        String encrypted = encrypt("呀哈哈", "bMFmZY9W1FRdkbqqAi9JWQ", true);
-        System.out.println(encrypted);
-        String decrypted = decrypt(encrypted, "bMFmZY9W1FRdkbqqAi9JWQ");
-        System.out.println(decrypted);
-
-
-        System.out.println(createKeyString());
-
+        String key = createKeyString();
+        System.out.println("key:" + key);
+        String encrypted = encrypt("呀哈哈", key, true);
+        System.out.println("encrypted:" + encrypted);
+        String decrypted = decrypt(encrypted, key);
+        System.out.println("decrypted:" + decrypted);
     }
 }

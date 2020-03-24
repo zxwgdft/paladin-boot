@@ -27,6 +27,7 @@ public class RSATokenProvider implements TokenProvider {
         try {
             key = RSAEncryptUtil.getRSAKey("jwt", 1024);
         } catch (Exception e) {
+            e.printStackTrace();
             // 不会报错
         }
         tokenProvider.publicKey = key.getPublicKey();
