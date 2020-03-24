@@ -17,114 +17,99 @@ import java.io.Serializable;
 
 @Slf4j
 public class PaladinWebSessionManager extends DefaultWebSessionManager {
-	
-	private String tokenField;	
-	private boolean isCluster = false;
 
-	public PaladinWebSessionManager(ShiroProperties shiroProperties) {
-		super();
-		isCluster = shiroProperties.isRedisEnabled();
-		tokenField = shiroProperties.getTokenField();
-		if (tokenField != null && tokenField.length() == 0) {
-			tokenField = null;
-		}
-	}
+    private String tokenField;
+    // 是否redis持久化session
+    private boolean isRedis = false;
 
-	@Override
-	public Serializable getSessionId(SessionKey key) {
-		Serializable id = key.getSessionId();
-		if (id == null && WebUtils.isWeb(key)) {
-			ServletRequest request = WebUtils.getRequest(key);
-			ServletResponse response = WebUtils.getResponse(key);
-			if (tokenField != null) {
-				String token = ((HttpServletRequest) request).getHeader(tokenField);
-				// 优先考虑TOKEN机制
-				if (token != null && token.length() != 0) {
-					// 复制与父类代码
-					request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, ShiroHttpServletRequest.URL_SESSION_ID_SOURCE);
-					request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);
-					// automatically mark it valid here. If it is invalid, the
-					// onUnknownSession method below will be invoked and we'll remove the attribute
-					// at that time.
-					request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);
-					// always set rewrite flag - SHIRO-361
-					request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());
+    public PaladinWebSessionManager(ShiroProperties shiroProperties) {
+        super();
+        isRedis = shiroProperties.isRedisEnabled();
+        tokenField = shiroProperties.getTokenField();
+        if (tokenField != null && tokenField.length() == 0) {
+            tokenField = null;
+        }
+    }
 
-					return token;
-				} else {
-					return getSessionId(request, response);
-				}
-			} else {
-				return getSessionId(request, response);
-			}
-		}
-		return id;
-	}
+    @Override
+    public Serializable getSessionId(SessionKey key) {
+        Serializable id = key.getSessionId();
+        if (id == null && WebUtils.isWeb(key)) {
+            ServletRequest request = WebUtils.getRequest(key);
+            ServletResponse response = WebUtils.getResponse(key);
+            if (tokenField != null) {
+                String token = ((HttpServletRequest) request).getHeader(tokenField);
+                // 优先考虑TOKEN机制
+                if (token != null && token.length() != 0) {
+                    // 复制与父类代码
+                    request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, ShiroHttpServletRequest.URL_SESSION_ID_SOURCE);
+                    request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);
+                    // automatically mark it valid here. If it is invalid, the
+                    // onUnknownSession method below will be invoked and we'll remove the attribute
+                    // at that time.
+                    request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);
+                    // always set rewrite flag - SHIRO-361
+                    request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());
 
-	/**
-	 * 重写检索session方法，在request上缓存session对象，从而减少session的读取
-	 */
-	protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
+                    return token;
+                } else {
+                    return getSessionId(request, response);
+                }
+            } else {
+                return getSessionId(request, response);
+            }
+        }
+        return id;
+    }
 
-		if (!isCluster) {
-			return super.retrieveSession(sessionKey);
-		}
+    /**
+     * 重写检索session方法，在request上缓存session对象，从而减少session的读取
+     */
+    protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
 
-		Serializable sessionId = getSessionId(sessionKey);
-		if (sessionId == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a session could not be found.", sessionKey);
-			}
+        if (!isRedis) {
+            return super.retrieveSession(sessionKey);
+        }
 
-			return null;
-		}
+        Serializable sessionId = getSessionId(sessionKey);
+        if (sessionId == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a session could not be found.", sessionKey);
+            }
 
-		/*
-		 * 首先从request中获取session，否则从数据库中检索
-		 */
+            return null;
+        }
 
-		ServletRequest request = null;
-		if (sessionKey instanceof WebSessionKey) {
-			request = ((WebSessionKey) sessionKey).getServletRequest();
-		}
+        /*
+         * 首先从request中获取session，否则从数据库中检索
+         */
 
-		if (request != null) {
-			Object s = request.getAttribute(sessionId.toString());
-			if (s != null) {
-				return (Session) s;
-			}
-		}
+        ServletRequest request = null;
+        if (sessionKey instanceof WebSessionKey) {
+            request = ((WebSessionKey) sessionKey).getServletRequest();
+        }
 
-		Session s = retrieveSessionFromDataSource(sessionId);
-		if (s == null) {
-			// session ID was provided, meaning one is expected to be found, but
-			// we couldn't find one:
-			String msg = "Could not find session with ID [" + sessionId + "]";
-			throw new UnknownSessionException(msg);
-		}
+        if (request != null) {
+            Object s = request.getAttribute(sessionId.toString());
+            if (s != null) {
+                return (Session) s;
+            }
+        }
 
-		// 保存session到request
-		if (request != null) {
-			request.setAttribute(sessionId.toString(), s);
-		}
+        Session s = retrieveSessionFromDataSource(sessionId);
+        if (s == null) {
+            // session ID was provided, meaning one is expected to be found, but
+            // we couldn't find one:
+            String msg = "Could not find session with ID [" + sessionId + "]";
+            throw new UnknownSessionException(msg);
+        }
 
-		return s;
-	}
+        // 保存session到request
+        if (request != null) {
+            request.setAttribute(sessionId.toString(), s);
+        }
 
-	public String getTokenField() {
-		return tokenField;
-	}
-
-	public void setTokenField(String tokenField) {
-		this.tokenField = tokenField;
-	}
-
-	public boolean isCluster() {
-		return isCluster;
-	}
-
-	public void setCluster(boolean isCluster) {
-		this.isCluster = isCluster;
-	}
-
+        return s;
+    }
+    
 }

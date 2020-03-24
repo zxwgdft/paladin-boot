@@ -6,7 +6,7 @@ import org.apache.shiro.session.mgt.SessionContext;
 import org.apache.shiro.session.mgt.SessionFactory;
 
 @Slf4j
-public class ClusterSessionFactory implements SessionFactory {
+public class ControlledSessionFactory implements SessionFactory {
 
     /*
      * 使用 {@link com.paladin.configuration.ShiroRedisSessionDAO.ControlledSession}
