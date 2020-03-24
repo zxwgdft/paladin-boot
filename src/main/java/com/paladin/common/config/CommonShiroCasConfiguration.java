@@ -6,7 +6,7 @@ import com.paladin.framework.shiro.ShiroCasProperties;
 import com.paladin.framework.shiro.filter.PaladinCasAuthenticationFilter;
 import com.paladin.framework.shiro.filter.PaladinCasLogoutFilter;
 import com.paladin.framework.shiro.filter.PaladinShiroCallbackLogic;
-import com.paladin.framework.shiro.session.ClusterSessionFactory;
+import com.paladin.framework.shiro.session.ControlledSessionFactory;
 import com.paladin.framework.shiro.session.PaladinWebSessionManager;
 import com.paladin.framework.shiro.session.ShiroRedisSessionDAO;
 import io.buji.pac4j.context.ShiroSessionStore;
@@ -76,7 +76,7 @@ public class CommonShiroCasConfiguration {
             sessionManager.setSessionDAO(redisSessionDAO);
             // 用户权限，认证等缓存设置，因为验证权限部分用其他方式实现，所以不需要缓存
             // sessionManager.setCacheManager(new RedisCacheManager());
-            sessionManager.setSessionFactory(new ClusterSessionFactory());
+            sessionManager.setSessionFactory(new ControlledSessionFactory());
         }
 
         // session 监听

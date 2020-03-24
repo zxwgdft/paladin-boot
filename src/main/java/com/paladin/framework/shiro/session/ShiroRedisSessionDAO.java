@@ -144,7 +144,11 @@ public class ShiroRedisSessionDAO implements SessionDAO {
                     cacheSessioin(session.getId(), session);
                     controlledSession.isContentChanged = false;
                 } else {
-
+                    /**
+                     * accessTimeUpdateInterval 参数为访问时间更新间隔
+                     * 如果间隔小于等于0，则每次都进行更新
+                     * 这次访问时间与上次访问时间间隔小于参数间隔时间，则不进行缓存过期时间的更新，防止短时间内多次无意义的更新时间
+                     */
                     if (shiroProperties.getAccessTimeUpdateInterval() <= 0) {
                         cacheSessioin(session.getId(), session);
                     } else {
@@ -185,10 +189,8 @@ public class ShiroRedisSessionDAO implements SessionDAO {
     }
 
     /**
-     * 可控制的session，对session内容的修改进行了判断，用于判断是否只是更新了session的最好访问时间
+     * 可控制的session，对session内容的修改进行了判断，用于判断是否只是更新了session的最后访问时间
      *
-     * @author TontoZhou
-     * @since 2018年3月20日
      */
     public static class ControlledSession extends SimpleSession {
 

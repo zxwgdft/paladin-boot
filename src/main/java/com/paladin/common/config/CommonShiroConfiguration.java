@@ -2,11 +2,10 @@ package com.paladin.common.config;
 
 import com.paladin.framework.shiro.CommonShiroFilterFactoryBean;
 import com.paladin.framework.shiro.MultiRealmAuthenticator;
-import com.paladin.framework.shiro.ShiroCasProperties;
 import com.paladin.framework.shiro.ShiroProperties;
 import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
 import com.paladin.framework.shiro.filter.PaladinLogoutFilter;
-import com.paladin.framework.shiro.session.ClusterSessionFactory;
+import com.paladin.framework.shiro.session.ControlledSessionFactory;
 import com.paladin.framework.shiro.session.PaladinWebSessionManager;
 import com.paladin.framework.shiro.session.ShiroRedisSessionDAO;
 import org.apache.shiro.authc.AbstractAuthenticator;
@@ -54,8 +53,8 @@ public class CommonShiroConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
-    public ShiroRedisSessionDAO redisSessionDAO(ShiroCasProperties shiroCasProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
-        ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroCasProperties, jdkRedisTemplate);
+    public ShiroRedisSessionDAO redisSessionDAO(ShiroProperties shiroProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
+        ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroProperties, jdkRedisTemplate);
         return sessionDao;
     }
 
@@ -68,7 +67,7 @@ public class CommonShiroConfiguration {
             sessionManager.setSessionDAO(redisSessionDAO);
             // 用户权限，认证等缓存设置，因为验证权限部分用其他方式实现，所以不需要缓存
             // sessionManager.setCacheManager(new RedisCacheManager());
-            sessionManager.setSessionFactory(new ClusterSessionFactory());
+            sessionManager.setSessionFactory(new ControlledSessionFactory());
         }
 
         // session 监听

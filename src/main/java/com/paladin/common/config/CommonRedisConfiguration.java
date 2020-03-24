@@ -70,7 +70,7 @@ public class CommonRedisConfiguration extends CachingConfigurerSupport {
     }
 
     @Bean("stringRedisTemplate")
-    public RedisTemplate<String, String> getStringRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+    public StringRedisTemplate getStringRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         return new StringRedisTemplate(jedisConnectionFactory);
     }
 
