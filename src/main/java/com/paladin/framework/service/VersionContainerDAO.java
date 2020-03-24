@@ -9,11 +9,11 @@ import java.util.Date;
  */
 public interface VersionContainerDAO {
 	
-	public Long getVersion(String containerId) ;
+	Long getVersion(String containerId) ;
 	
-	public int saveContainer(String containerId, Long version, Date updateTime);
+	int saveContainer(String containerId, Long version, Date updateTime);
 	
-	public int updateVersion(String containerId, Long originVersion, Long currentVersion, Date updateTime);
+	int updateVersion(String containerId, Long originVersion, Long currentVersion, Date updateTime);
 	
 	
 }
