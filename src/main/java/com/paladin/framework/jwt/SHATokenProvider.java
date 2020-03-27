@@ -9,14 +9,14 @@ import org.apache.commons.codec.binary.Base64;
 import java.util.Date;
 import java.util.Map;
 
-public class AESTokenProvider implements TokenProvider {
+public class SHATokenProvider implements TokenProvider {
 
     private long tokenExpireMilliseconds;
     private String issuer;
     private byte[] keyBytes;
 
-    public static AESTokenProvider randomInstance() {
-        AESTokenProvider tokenProvider = new AESTokenProvider();
+    public static SHATokenProvider randomInstance() {
+        SHATokenProvider tokenProvider = new SHATokenProvider();
         tokenProvider.keyBytes = AESEncryptUtil.createKey();
         tokenProvider.tokenExpireMilliseconds = 30 * 60 * 1000;
         return tokenProvider;
