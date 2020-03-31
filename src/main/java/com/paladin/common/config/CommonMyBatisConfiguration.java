@@ -1,6 +1,5 @@
 package com.paladin.common.config;
 
-import com.paladin.framework.mybatis.EnumTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,9 @@ public class CommonMyBatisConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        // 不使用CODE ENUM形式的常量处理
         // 修改mybatis默认枚举处理器
-        sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().setDefaultEnumTypeHandler(EnumTypeHandler.class);
+        // sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().setDefaultEnumTypeHandler(EnumTypeHandler.class);
     }
 
 

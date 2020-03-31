@@ -77,8 +77,9 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatterForFieldType(Date.class, new DateFormatter());
-        registry.addConverterFactory(new Integer2EnumConverterFactory());
-        registry.addConverterFactory(new String2EnumConverterFactory());
+        // 不使用CODE ENUM形式的常量处理
+        //registry.addConverterFactory(new Integer2EnumConverterFactory());
+        //registry.addConverterFactory(new String2EnumConverterFactory());
     }
 
     /**
