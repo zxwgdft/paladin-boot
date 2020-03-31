@@ -61,7 +61,7 @@ import java.util.Map;
 public class CommonShiroCasConfiguration {
 
     @Bean
-    @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "paladin.shiro", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
     public ShiroRedisSessionDAO redisSessionDAO(ShiroCasProperties shiroCasProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
         ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroCasProperties, jdkRedisTemplate);
         return sessionDao;

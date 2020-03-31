@@ -12,7 +12,7 @@ public interface SpringContainer {
      *
      * @return
      */
-    default public boolean initialize() {
+    default boolean initialize() {
         return true;
     }
 
@@ -23,7 +23,7 @@ public interface SpringContainer {
      *
      * @return
      */
-    default public boolean afterInitialize() {
+    default boolean afterInitialize() {
         return true;
     }
 
@@ -34,7 +34,7 @@ public interface SpringContainer {
      *
      * @return
      */
-    default public int order() {
+    default int order() {
         return 0;
     }
 

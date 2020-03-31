@@ -25,7 +25,7 @@ public class ShiroProperties {
     /**
      * session 保存在redis中key的前缀
      */
-    private String sessionPrefix = "shiro-session";
+    private String sessionPrefix = "session_";
 
     /**
      * session 在redis中缓存时间

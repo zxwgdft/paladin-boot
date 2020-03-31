@@ -10,11 +10,10 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 /**
@@ -28,50 +27,38 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 public class CommonRedisConfiguration extends CachingConfigurerSupport {
 
     @Bean
-    public JedisConnectionFactory getJedisConnectionFactory(RedisProperties redisProperties) {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
-        configuration.setDatabase(0);
-        configuration.setPassword(RedisPassword.of(redisProperties.getPassword()));
-        JedisConnectionFactory factory = new JedisConnectionFactory(configuration);
-        return factory;
-    }
-
-    @Bean
-    public CacheManager cacheManager(JedisConnectionFactory jedisConnectionFactory) {
-        RedisCacheManager redisCacheManager = RedisCacheManager.create(jedisConnectionFactory);
+    public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisCacheManager redisCacheManager = RedisCacheManager.create(lettuceConnectionFactory);
         return redisCacheManager;
     }
 
     @Bean("jdkRedisTemplate")
-    public RedisTemplate<String, Object> getJdkRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+    public RedisTemplate<String, Object> getJdkRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
         return redisTemplate;
     }
 
     @Bean("jsonRedisTemplate")
-    public RedisTemplate<String, Object> getJsonRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+    public RedisTemplate<String, Object> getJsonRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setKeySerializer(redisTemplate.getStringSerializer());
         redisTemplate.setHashKeySerializer(redisTemplate.getStringSerializer());
 
         // 使用Jackson2JsonRedisSerialize 替换默认序列化
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        GenericJackson2JsonRedisSerializer jackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
 
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
         return redisTemplate;
     }
 
     @Bean("stringRedisTemplate")
-    public StringRedisTemplate getStringRedisTemplate(JedisConnectionFactory jedisConnectionFactory) {
-        return new StringRedisTemplate(jedisConnectionFactory);
+    public StringRedisTemplate getStringRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+        return new StringRedisTemplate(lettuceConnectionFactory);
     }
 
 }

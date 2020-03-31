@@ -20,14 +20,13 @@ spring:
     url: jdbc:mysql://localhost:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
   redis:
-    database: 0
     host: 127.0.0.1
-    jedis:
+    lettuce:
       pool:
-        max-active: 8
+        max-active: 16
         max-idle: 8
-        max-wait: -1
-        min-idle: 0
+        max-wait: 5000
+        min-idle: 4
     password: ''
     port: 6379
     timeout: 500

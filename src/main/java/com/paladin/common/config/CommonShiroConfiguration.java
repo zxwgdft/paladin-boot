@@ -19,8 +19,6 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -49,10 +47,8 @@ import java.util.Map;
 @EnableConfigurationProperties(ShiroProperties.class)
 public class CommonShiroConfiguration {
 
-    private static Logger logger = LoggerFactory.getLogger(CommonShiroConfiguration.class);
-
     @Bean
-    @ConditionalOnProperty(prefix = "paladin", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "paladin.shiro", value = "redis-enabled", havingValue = "true", matchIfMissing = false)
     public ShiroRedisSessionDAO redisSessionDAO(ShiroProperties shiroProperties, RedisTemplate<String, Object> jdkRedisTemplate) {
         ShiroRedisSessionDAO sessionDao = new ShiroRedisSessionDAO(shiroProperties, jdkRedisTemplate);
         return sessionDao;
