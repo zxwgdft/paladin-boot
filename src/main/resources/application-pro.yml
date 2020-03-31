@@ -29,7 +29,7 @@ spring:
         min-idle: 4
     password: ''
     port: 6379
-    timeout: 500
+    timeout: 1000
 
 # 自定义配置
 paladin:

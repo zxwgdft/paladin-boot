@@ -29,7 +29,7 @@ spring:
         min-idle: 0
     password: ''
     port: 6379
-    timeout: 500
+    timeout: 1000
   thymeleaf:
     cache: false
 

@@ -36,7 +36,6 @@
         <net.coobird.version>0.4.9</net.coobird.version>
         <com.alibaba.druid.version>1.1.21</com.alibaba.druid.version>
         <org.freemarker.version>2.3.29</org.freemarker.version>
-        <io.lettuce.version>5.2.2.RELEASE</io.lettuce.version>
     </properties>
 
     <!-- Add typical dependencies for a web application -->
@@ -77,7 +76,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -250,12 +249,6 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${org.freemarker.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.lettuce</groupId>
-            <artifactId>lettuce-core</artifactId>
-            <version>${io.lettuce.version}</version>
         </dependency>
 
     </dependencies>
