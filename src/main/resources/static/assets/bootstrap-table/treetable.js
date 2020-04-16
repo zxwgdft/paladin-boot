@@ -160,7 +160,7 @@
     //重写bootstrapTable的initPagination方法
     BootstrapTable.prototype.initPagination = function () {
         //理论情况下，treegrid是不支持分页的，所以默认分页参数为false
-        this.options.pagination = false;
+        //this.options.pagination = false;
          //调用“父类”的“虚方法”
         _initPagination.apply(this, Array.prototype.slice.apply(arguments));
     };
