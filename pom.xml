@@ -290,7 +290,7 @@
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
-                    <include>**/*.temp</include>
+                    <include>**/*.*</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>

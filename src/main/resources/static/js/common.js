@@ -833,6 +833,91 @@ function _initCommon(container) {
         container = $("body");
     }
 
+    // 初始化常量下拉框
+    container.find(".tonto-select-constant").each(function () {
+        var $s = $(this);
+        var enumcode = $s.attr("enumcode");
+        if (enumcode) {
+            if ($s.is("select")) {
+                var enumvalues = window._constant_cache[enumcode];
+                if (enumvalues) {
+                    enumvalues.forEach(function (a) {
+                        $s.append("<option value='" + a.key + "'>" + a.value + "</option>");
+                    });
+                }
+                var selectedvalue = $s.attr("selectedvalue");
+                if (selectedvalue) {
+                    if ($s.attr("multiple")) {
+                        $s.val(selectedvalue.split(",")).trigger('change');
+                        ;
+                    } else {
+                        $s.val(selectedvalue);
+                    }
+                }
+            } else if ($s.is("p")) {
+                var code = $s.attr("enum-code-value");
+                if (code) {
+                    $s.html($.getConstantEnumValue(enumcode, code) || "无");
+                }
+            }
+        }
+    });
+
+    // 初始化常量单选Radio
+    container.find(".tonto-radio-constant").each(function () {
+        var $s = $(this);
+        var enumcode = $s.attr("enumcode");
+        if (enumcode) {
+            var name = $s.attr("name") || $s.attr("id");
+            var selectedvalue = $s.attr("selectedvalue");
+            var enumvalues = window._constant_cache[enumcode];
+            if (enumvalues) {
+                var checked = false;
+                enumvalues.forEach(function (a) {
+                    if ((selectedvalue && selectedvalue == a.key) || (!selectedvalue && !checked)) {
+                        $s.append('<label class="control-label radio-label"><input type="radio" checked="checked" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
+                        checked = true;
+                    } else {
+                        $s.append('<label class="control-label radio-label"><input type="radio" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
+                    }
+                });
+            }
+        }
+    });
+
+    // 初始化常量多选checkbox
+    container.find(".tonto-checkbox-constant").each(function () {
+        var $s = $(this);
+        var enumcode = $s.attr("enumcode");
+        if (enumcode) {
+            var name = $s.attr("name") || $s.attr("id");
+            var selectedvalue = $s.attr("selectedvalue");
+            if (selectedvalue) {
+                selectedvalue = selectedvalue.split(",");
+            }
+            var enumvalues = window._constant_cache[enumcode];
+            var isChecked = function (key) {
+                if (selectedvalue) {
+                    for (var i = 0; i < selectedvalue.length; i++) {
+                        if (key == selectedvalue[i]) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            if (enumvalues) {
+                enumvalues.forEach(function (a) {
+                    if (isChecked(a.key)) {
+                        $s.append('<label class="control-label radio-label"><input type="checkbox" checked="checked" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
+                    } else {
+                        $s.append('<label class="control-label radio-label"><input type="checkbox" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
+                    }
+                });
+            }
+        }
+    });
+
     // 关键词搜索框添加绑定回车函数，需要避免多个回车事件
     container.find('.tonto-btn-search').each(function () {
         var btn = $(this);
@@ -933,90 +1018,7 @@ function _initCommon(container) {
         });
     });
 
-    // 初始化常量下拉框
-    container.find(".tonto-select-constant").each(function () {
-        var $s = $(this);
-        var enumcode = $s.attr("enumcode");
-        if (enumcode) {
-            if ($s.is("select")) {
-                var enumvalues = window._constant_cache[enumcode];
-                if (enumvalues) {
-                    enumvalues.forEach(function (a) {
-                        $s.append("<option value='" + a.key + "'>" + a.value + "</option>");
-                    });
-                }
-                var selectedvalue = $s.attr("selectedvalue");
-                if (selectedvalue) {
-                    if ($s.attr("multiple")) {
-                        $s.val(selectedvalue.split(",")).trigger('change');
-                        ;
-                    } else {
-                        $s.val(selectedvalue);
-                    }
-                }
-            } else if ($s.is("p")) {
-                var code = $s.attr("enum-code-value");
-                if (code) {
-                    $s.html($.getConstantEnumValue(enumcode, code) || "无");
-                }
-            }
-        }
-    });
 
-    // 初始化常量单选Radio
-    container.find(".tonto-radio-constant").each(function () {
-        var $s = $(this);
-        var enumcode = $s.attr("enumcode");
-        if (enumcode) {
-            var name = $s.attr("name") || $s.attr("id");
-            var selectedvalue = $s.attr("selectedvalue");
-            var enumvalues = window._constant_cache[enumcode];
-            if (enumvalues) {
-                var checked = false;
-                enumvalues.forEach(function (a) {
-                    if ((selectedvalue && selectedvalue == a.key) || (!selectedvalue && !checked)) {
-                        $s.append('<label class="control-label radio-label"><input type="radio" checked="checked" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
-                        checked = true;
-                    } else {
-                        $s.append('<label class="control-label radio-label"><input type="radio" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
-                    }
-                });
-            }
-        }
-    });
-
-    // 初始化常量多选checkbox
-    container.find(".tonto-checkbox-constant").each(function () {
-        var $s = $(this);
-        var enumcode = $s.attr("enumcode");
-        if (enumcode) {
-            var name = $s.attr("name") || $s.attr("id");
-            var selectedvalue = $s.attr("selectedvalue");
-            if (selectedvalue) {
-                selectedvalue = selectedvalue.split(",");
-            }
-            var enumvalues = window._constant_cache[enumcode];
-            var isChecked = function (key) {
-                if (selectedvalue) {
-                    for (var i = 0; i < selectedvalue.length; i++) {
-                        if (key == selectedvalue[i]) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            if (enumvalues) {
-                enumvalues.forEach(function (a) {
-                    if (isChecked(a.key)) {
-                        $s.append('<label class="control-label radio-label"><input type="checkbox" checked="checked" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
-                    } else {
-                        $s.append('<label class="control-label radio-label"><input type="checkbox" name="' + name + '" value="' + a.key + '">&nbsp;&nbsp;' + a.value + '&nbsp;&nbsp;</label>');
-                    }
-                });
-            }
-        }
-    });
 }
 
 // 初始化验证器
