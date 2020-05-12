@@ -160,7 +160,7 @@ function generateEditFormHtml(options, hide) {
                 continue;
             } else if (result.back === true) {
                 i--;
-                currentColspan = currentColspan > 0 ? maxColspan : 0;
+                currentColspan = currentColspan > 0 ? options.maxColspan : 0;
             } else {
                 currentColspan += result.colspan;
             }
@@ -277,7 +277,7 @@ function generateViewFormHtml(options) {
                 continue;
             } else if (result.back === true) {
                 i--;
-                currentColspan = currentColspan > 0 ? maxColspan : 0;
+                currentColspan = currentColspan > 0 ? options.maxColspan : 0;
             } else {
                 currentColspan += colspan;
             }
@@ -808,9 +808,9 @@ var _FieldBuilder = function (name, interfaces) {
                 f.hide();
             }
         },
-        showEdit: function (column, model) {
+        showEdit: function (column, model, target) {
             // 显示编辑域
-            var p = model.editBody.find("[name='" + column.name + "']");
+            var p = target || this.getEditTarget(column, model);
             if (!p || p.length == 0) return;
             var d = p.is("div") ? p : p.parent();
             d.show();

@@ -296,7 +296,7 @@ if (!Array.prototype.forEach) {
         // 参数传递校验错误返回通用处理
         validErrorHandler: function (response) {
             var errorHtml, error = response.data;
-            if (!response.message && $.isArray(error)) {
+            if (error && $.isArray(error)) {
                 var errorHtml = "<ul>数据验证失败："
                 error.forEach(function (item) {
                     var el = item[1];
