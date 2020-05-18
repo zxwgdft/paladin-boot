@@ -22,7 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 @Api("用户认证模块")
 @Controller
@@ -123,6 +125,11 @@ public class LoginController {
             String errorMsg = (String) request.getAttribute(PaladinFormAuthenticationFilter.ERROR_KEY_LOGIN_FAIL_MESSAGE);
             return R.fail(errorMsg == null ? "登录失败" : errorMsg);
         }
+    }
+
+    @GetMapping(value = "/time")
+    public String time() {
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
     }
 
 }

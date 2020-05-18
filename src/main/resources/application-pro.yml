@@ -3,7 +3,7 @@ logging:
     path: /logs
 
 server:
-  port: 8005
+  port: 8900
 spring:
   datasource:
     hikari:
@@ -15,10 +15,10 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 15
     name: common
-    password: ''
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: root
+    url: jdbc:mysql://192.168.31.204:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: netin
+    password: 123456
   redis:
     host: 127.0.0.1
     lettuce:
@@ -42,5 +42,5 @@ paladin:
     cas-server-url: http://10.1.1.123:8768/casServ
     client-server-url: http://172.16.11.135:8010
   web:
-    upload-dir: D:/file/upload/
-    file-path: D:/file/
+    upload-dir: /file/upload/
+    file-path: /file/

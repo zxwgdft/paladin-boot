@@ -248,7 +248,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             throw new BusinessException("上传文件不能大于" + maxFileSize + "MB");
         }
         SysAttachment attachment = new SysAttachment();
-        attachment.setId(UUIDUtil.create32UUID());
+        attachment.setId(UUIDUtil.createUUID());
         attachment.setSize(param.getSize());
         attachment.setType(param.getType());
         attachment.setCreateTime(new Date());
