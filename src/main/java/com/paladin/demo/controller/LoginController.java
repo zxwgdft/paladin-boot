@@ -129,7 +129,7 @@ public class LoginController {
 
     @GetMapping(value = "/time")
     public String time() {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
 
 }

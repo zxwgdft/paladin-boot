@@ -20,8 +20,7 @@ hs_err_pid*
 .settings
 .settings/
 bin/
-target
-target/
+target/**
 .svn/
 
 !target/*.jar

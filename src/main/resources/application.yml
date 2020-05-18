@@ -10,7 +10,7 @@ spring:
       prefix: classpath:/templates
       suffix: .html
   profiles:
-    active: dev
+    active: pro
   servlet:
     multipart:
       max-file-size: 10MB
