@@ -128,6 +128,7 @@ public class LoginController {
     }
 
     @GetMapping(value = "/time")
+    @ResponseBody
     public String time() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }

@@ -16,7 +16,7 @@ spring:
       minimum-idle: 15
     name: common
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://192.168.31.204:3306/common?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.31.204:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: netin
     password: 123456
   redis:
@@ -33,8 +33,8 @@ spring:
 
 # 自定义配置
 paladin:
-  shiro-cas-enabled: true
-  shiro-enabled: false
+  shiro-cas-enabled: false
+  shiro-enabled: true
   shiro:
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS20_PROXY
