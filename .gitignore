@@ -23,7 +23,7 @@ bin/
 target/**
 .svn/
 
-!target/*.jar
+#!target/*.jar
 
 *.iml
 .idea/
