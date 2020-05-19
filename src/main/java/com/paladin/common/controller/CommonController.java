@@ -9,7 +9,8 @@ import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
 import com.paladin.framework.common.R;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.VersionContainerManager;
+import com.paladin.framework.service.DataContainer;
+import com.paladin.framework.service.DataContainerManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,14 +108,12 @@ public class CommonController {
     @GetMapping("/container/find/all")
     @ResponseBody
     public R findContainers() {
-        List<VersionContainerManager.VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
+        List<DataContainer> containers = DataContainerManager.getDataContainers();
         List<Map<String, Object>> result = new ArrayList<>();
 
-        for (VersionContainerManager.VersionObject versionObject : versionObjects) {
+        for (DataContainer container : containers) {
             Map<String, Object> objectMap = new HashMap<>();
-            objectMap.put("id", versionObject.getId());
-            objectMap.put("updateTime", versionObject.getUpdateTime());
-            objectMap.put("version", versionObject.getVersion());
+            objectMap.put("id", container.getId());
             result.add(objectMap);
         }
         return R.success(result);
@@ -126,7 +125,7 @@ public class CommonController {
     @NeedAdmin
     public R restartContainer(@RequestParam String container) {
         long t1 = System.currentTimeMillis();
-        VersionContainerManager.versionChanged(container);
+        DataContainerManager.reloadContainer(container);
         long t2 = System.currentTimeMillis();
         return R.success(t2 - t1);
     }
@@ -136,7 +135,7 @@ public class CommonController {
     @ResponseBody
     public R restartAllContainer() {
         long t1 = System.currentTimeMillis();
-        VersionContainerManager.versionChanged();
+        DataContainerManager.reloadAllContainer();
         long t2 = System.currentTimeMillis();
         return R.success(t2 - t1);
     }

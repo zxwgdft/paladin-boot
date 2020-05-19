@@ -2,8 +2,7 @@ package com.paladin.demo.service.org;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.demo.model.org.OrgUnit;
-import com.paladin.framework.service.VersionContainer;
-import com.paladin.framework.service.VersionContainerManager;
+import com.paladin.framework.service.DataContainer;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +20,7 @@ import java.util.*;
  */
 @Slf4j
 @Component
-public class OrgUnitContainer implements VersionContainer {
+public class OrgUnitContainer implements DataContainer {
 
     @Autowired
     private OrgUnitService orgUnitService;
@@ -29,7 +28,7 @@ public class OrgUnitContainer implements VersionContainer {
     private static Map<String, Unit> unitMap;
     private static List<Unit> rootList;
 
-    public void initialize() {
+    public void load() {
 
         List<OrgUnit> orgUnits = orgUnitService.findAll();
 
@@ -76,25 +75,7 @@ public class OrgUnitContainer implements VersionContainer {
         unit.setSelfAndChildrenIds(ids);
         return ids;
     }
-
-    private final static String container_id = "org_unit_container";
-
-    @Override
-    public String getId() {
-        return container_id;
-    }
-
-    @Override
-    public boolean versionChangedHandle(long version) {
-        initialize();
-        return true;
-    }
-
-    // 更新数据，重新初始化数据
-    public static void updateData() {
-        VersionContainerManager.versionChanged(container_id);
-    }
-
+    
     /**
      * 获取单位
      *

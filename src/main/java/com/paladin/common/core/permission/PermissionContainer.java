@@ -2,8 +2,8 @@ package com.paladin.common.core.permission;
 
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.org.OrgPermissionService;
-import com.paladin.framework.service.VersionContainer;
-import com.paladin.framework.service.VersionContainerManager;
+import com.paladin.framework.service.DataContainer;
+import com.paladin.framework.service.DataContainerManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class PermissionContainer implements VersionContainer {
+public class PermissionContainer implements DataContainer {
 
     @Autowired
     private OrgPermissionService orgPermissionService;
@@ -23,7 +23,7 @@ public class PermissionContainer implements VersionContainer {
     /**
      * 初始化权限
      */
-    public void initPermission() {
+    public void load() {
         log.info("------------初始化权限开始------------");
         Map<String, Permission> permissionMap = new HashMap<>();
         List<Permission> rootPermission = new ArrayList<>();
@@ -60,8 +60,12 @@ public class PermissionContainer implements VersionContainer {
         PermissionContainer.rootPermission = Collections.unmodifiableList(rootPermission);
         PermissionContainer.permissionMap = Collections.unmodifiableMap(permissionMap);
 
-        RoleContainer.updateData();
         log.info("------------初始化权限结束------------");
+    }
+
+    public void reload() {
+        load();
+        DataContainerManager.reloadContainer(RoleContainer.class);
     }
 
 
@@ -88,24 +92,5 @@ public class PermissionContainer implements VersionContainer {
         return permissionMap.get(id);
     }
 
-    private final static String CONTAINER_ID = "permission_container";
-
-    private static PermissionContainer container;
-
-    public static void updateData() {
-        VersionContainerManager.versionChanged(CONTAINER_ID);
-    }
-
-    @Override
-    public String getId() {
-        return CONTAINER_ID;
-    }
-
-    @Override
-    public boolean versionChangedHandle(long version) {
-        initPermission();
-        container = this;
-        return true;
-    }
 
 }

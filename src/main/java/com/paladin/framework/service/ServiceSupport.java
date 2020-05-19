@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * <h2>业务支持类</h2>
  * 提供一些简单业务方法
- * 通过{@link ServiceSupportConatiner}自动注册sqlMapper
+ * 通过{@link ServiceSupportManager}自动注册sqlMapper
  * 简单模式下会忽略通用筛查、排序条件
  *
  * @param <Model> 实体类

@@ -5,8 +5,7 @@ import com.paladin.common.model.org.OrgRolePermission;
 import com.paladin.common.service.org.OrgRolePermissionService;
 import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.service.VersionContainer;
-import com.paladin.framework.service.VersionContainerManager;
+import com.paladin.framework.service.DataContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class RoleContainer implements VersionContainer {
+public class RoleContainer implements DataContainer {
 
     public static final String ROLE_SYS_ADMIN = "admin";
     public static final int ROLE_LEVEL_SYS_ADMIN = 999999;
@@ -34,7 +33,7 @@ public class RoleContainer implements VersionContainer {
     /**
      * 初始化角色和角色授予的权限
      */
-    public void initRole() {
+    public void load() {
         log.info("------------初始化角色开始------------");
 
         List<OrgRolePermission> orgRolePermissions = orgRolePermissionService.findAll();
@@ -88,7 +87,7 @@ public class RoleContainer implements VersionContainer {
         RoleContainer.roleMap = Collections.unmodifiableMap(roleMap);
         RoleContainer.roleList = Collections.unmodifiableList(roleList);
 
-        log.info("------------初始化权限结束------------");
+        log.info("------------初始化角色结束------------");
     }
 
 
@@ -230,29 +229,10 @@ public class RoleContainer implements VersionContainer {
     }
 
 
-    private final static String CONTAINER_ID = "role_container";
-
-    private static RoleContainer container;
-
-    public static void updateData() {
-        VersionContainerManager.versionChanged(CONTAINER_ID);
-    }
-
     // 需要在PermissionContainer之后启动
     public int order() {
         return 99;
     }
 
-    @Override
-    public String getId() {
-        return CONTAINER_ID;
-    }
-
-    @Override
-    public boolean versionChangedHandle(long version) {
-        initRole();
-        container = this;
-        return true;
-    }
 
 }

@@ -1,6 +1,6 @@
 package com.paladin.data.dynamic;
 
-import com.paladin.framework.service.VersionContainer;
+import com.paladin.framework.service.DataContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,8 +15,8 @@ import java.util.Map;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "paladin", value = "dynamic-datasource-enabled", havingValue = "true", matchIfMissing = false)
-public class DataSourceContainer implements VersionContainer {
-    
+public class DataSourceContainer implements DataContainer {
+
     private static String staticLocalSourceName;
     private static DataSource staticLocalDataSource;
 
@@ -28,7 +28,7 @@ public class DataSourceContainer implements VersionContainer {
 
     private static Map<String, DataSourceFacade> dsMap = new HashMap<>();
 
-    public void initialize() {
+    public void load() {
         staticLocalSourceName = properties.getLocalSourceName();
         staticLocalDataSource = localDataSource;
 
@@ -51,14 +51,4 @@ public class DataSourceContainer implements VersionContainer {
         return facade == null ? null : facade.getRealDataSource();
     }
 
-    @Override
-    public boolean versionChangedHandle(long version) {
-        initialize();
-        return false;
-    }
-
-    @Override
-    public String getId() {
-        return "data_source_container";
-    }
 }

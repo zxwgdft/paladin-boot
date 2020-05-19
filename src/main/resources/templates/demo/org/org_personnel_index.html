@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 
 <head th:include="/demo/header"/>
 
@@ -46,7 +46,8 @@
             <table id="dataGrid"></table>
             <div id="toolbar">
                 <div class="btn-group">
-                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    <a shiro:hasPermission="org:personnel:delete" onclick="add()" class="btn btn-default"><i
+                            class="glyphicon glyphicon-plus"></i>新增</a>
                 </div>
             </div>
         </div>

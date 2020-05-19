@@ -2,8 +2,7 @@ package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysConstant;
 import com.paladin.common.service.sys.SysConstantService;
-import com.paladin.framework.service.VersionContainer;
-import com.paladin.framework.service.VersionContainerManager;
+import com.paladin.framework.service.DataContainer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +10,14 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 @Component
-public class ConstantsContainer implements VersionContainer {
+public class ConstantsContainer implements DataContainer {
 
     @Autowired
     private SysConstantService constantService;
@@ -25,6 +27,10 @@ public class ConstantsContainer implements VersionContainer {
     private static Map<String, Map<String, String>> constantKeyMap = new HashMap<>();
 
     private static Map<String, List<KeyValue>> otherConstantMap = new HashMap<>();
+
+    public void load() {
+        initialize(true);
+    }
 
     public synchronized boolean initialize(boolean needReadTable) {
         if (needReadTable) {
@@ -102,17 +108,6 @@ public class ConstantsContainer implements VersionContainer {
         return true;
     }
 
-    @Override
-    public String getId() {
-        return "constants_container";
-    }
-
-    @Override
-    public boolean versionChangedHandle(long version) {
-        initialize(true);
-        container = this;
-        return true;
-    }
 
     public void putConstant(String typeCode, List<KeyValue> list) {
         otherConstantMap.put(typeCode, list);
@@ -122,7 +117,7 @@ public class ConstantsContainer implements VersionContainer {
     private static ConstantsContainer container;
 
     public static void updateData() {
-        VersionContainerManager.versionChanged(container.getId());
+        container.reload();
     }
 
 

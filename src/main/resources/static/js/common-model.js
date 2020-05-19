@@ -2360,7 +2360,7 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
         if (model.config.pattern != 'edit') {
             $("#" + model.name + '_' + column.name + '_editor_show_btn').click(function () {
                 var content = model.data ? model.data[column.name] : '';
-                $.openPageLayer('<div style="padding:40px;padding-right:55px">' + content + '</div>');
+                $.openPageLayer('<div style="padding:40px;padding-right:55px">' + (content || '') + '</div>');
             });
         }
     },
@@ -2391,7 +2391,7 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
     fillEdit: function (column, data, model) {
         if (column.editorReady === true) {
             var content = data ? data[column.name] : '';
-            column.editor.setContent(content);
+            column.editor.setContent(content || '');
         }
     },
     generateViewFormHtml: function (column, isFirst, options) {

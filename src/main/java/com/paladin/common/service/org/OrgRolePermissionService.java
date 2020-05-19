@@ -5,6 +5,7 @@ import com.paladin.common.core.permission.PermissionContainer;
 import com.paladin.common.core.permission.RoleContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
 import com.paladin.common.model.org.OrgRolePermission;
+import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.ServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class OrgRolePermissionService extends ServiceSupport<OrgRolePermission> 
             }
         }
 
-        RoleContainer.updateData();
+        DataContainerManager.reloadContainer(RoleContainer.class);
         return true;
     }
 

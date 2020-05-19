@@ -2,8 +2,9 @@ package com.paladin.demo.service.org;
 
 import com.paladin.demo.model.org.OrgUnit;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.OrderType;
 import com.paladin.framework.service.CommonOrderBy;
+import com.paladin.framework.service.DataContainerManager;
+import com.paladin.framework.service.OrderType;
 import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +16,14 @@ public class OrgUnitService extends ServiceSupport<OrgUnit> {
     @Transactional
     public boolean saveUnit(OrgUnit model) {
         save(model);
-        OrgUnitContainer.updateData();
+        DataContainerManager.reloadContainer(OrgUnitContainer.class);
         return true;
     }
 
     @Transactional
     public boolean updateUnit(OrgUnit model) {
         update(model);
-        OrgUnitContainer.updateData();
+        DataContainerManager.reloadContainer(OrgUnitContainer.class);
         return true;
     }
 
@@ -38,7 +39,7 @@ public class OrgUnitService extends ServiceSupport<OrgUnit> {
         }
 
         removeByPrimaryKey(id);
-        OrgUnitContainer.updateData();
+        DataContainerManager.reloadContainer(OrgUnitContainer.class);
         return true;
     }
 }

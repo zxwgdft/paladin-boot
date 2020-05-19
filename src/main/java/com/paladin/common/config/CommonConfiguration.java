@@ -3,13 +3,13 @@ package com.paladin.common.config;
 import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
-import com.paladin.common.core.DefaultVersionContainerDAO;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.permission.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
+import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
-import com.paladin.framework.service.VersionContainerDAO;
+import com.paladin.framework.service.ServiceSupportManager;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.token.Pac4jToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -84,13 +84,23 @@ public class CommonConfiguration {
     }
 
     /**
-     * 版本容器持久化
+     * 数据容器管理器
      *
      * @return
      */
     @Bean
-    public VersionContainerDAO getVersionContainerDAO() {
-        return new DefaultVersionContainerDAO();
+    public DataContainerManager getDataContainerManager() {
+        return new DataContainerManager();
+    }
+
+    /**
+     * service支持管理器
+     *
+     * @return
+     */
+    @Bean
+    public ServiceSupportManager getServiceSupportConatiner() {
+        return new ServiceSupportManager();
     }
 
 

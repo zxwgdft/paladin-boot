@@ -6,6 +6,7 @@ import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.Condition;
+import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
@@ -46,7 +47,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
 
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
         update(model);
-        RoleContainer.updateData();
+        DataContainerManager.reloadContainer(RoleContainer.class);
         return true;
     }
 
@@ -56,7 +57,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
         model.setIsDefault(BaseModel.BOOLEAN_NO);
         save(model);
-        RoleContainer.updateData();
+        DataContainerManager.reloadContainer(RoleContainer.class);
         return true;
     }
 
