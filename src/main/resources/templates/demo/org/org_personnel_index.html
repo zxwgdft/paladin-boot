@@ -46,12 +46,13 @@
             <table id="dataGrid"></table>
             <div id="toolbar">
                 <div class="btn-group">
-                    <a shiro:hasPermission="org:personnel:delete" onclick="add()" class="btn btn-default"><i
+                    <a shiro:hasPermission="org:personnel:save" onclick="add()" class="btn btn-default"><i
                             class="glyphicon glyphicon-plus"></i>新增</a>
                 </div>
             </div>
         </div>
     </div>
+    <input type="hidden" shiro:hasPermission="org:personnel:delete" id="permission_delete" value="1"/>
 </section>
 <div th:include="/demo/footer"/>
 <script type="text/javascript">
@@ -85,9 +86,11 @@
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
+                            var html = '<button class="detail btn btn-xs btn-info"><i class="glyphicon glyphicon-edit"></i>详情</button>';
+                            if ($("#permission_delete").val()) {
+                                html += '<button class="remove btn btn-xs btn-danger" style="margin-left:10px"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            }
+                            return html;
                         }
                     }
                 ]

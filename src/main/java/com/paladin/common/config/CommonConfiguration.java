@@ -1,5 +1,6 @@
 package com.paladin.common.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
@@ -31,6 +32,11 @@ public class CommonConfiguration {
     @Bean
     public TontoDialect getTontoDialect() {
         return new TontoDialect();
+    }
+
+    @Bean
+    public ShiroDialect getShiroDialect() {
+        return new ShiroDialect();
     }
 
 

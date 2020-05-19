@@ -18,6 +18,7 @@
 <div class="col-sm-2 col-sm-offset-5 btn-back">
     <a href="/demo/org/personnel/index" class="btn btn-primary btn-block">返回</a>
 </div>
+<input type="hidden" shiro:hasPermission="org:personnel:update" id="permission_update" value="1"/>
 <input type="hidden" id="id" th:value="${id}"/>
 <div th:include="/demo/footer"/>
 <script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
@@ -125,6 +126,7 @@
             $.initComponent($(".content"));
 
             var model = new tonto.Model("model", options.columns, {
+                pattern: $("#permission_update").val() ? 'normal' : 'view'
                 // extraParam: null, // 可以为方法或对象，用于扩展表单外提交的字段
                 // 提交表单前调取的方法，如果返回false则不提交
                 // beforeSubmit: function (formData) {
