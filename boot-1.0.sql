@@ -402,26 +402,6 @@ INSERT INTO `sys_constant` VALUES ('sex-type', '1', '男', '1');
 INSERT INTO `sys_constant` VALUES ('unit-type', '1', '公司', '1');
 INSERT INTO `sys_constant` VALUES ('unit-type', '2', '部门', '2');
 
--- ----------------------------
--- Table structure for `sys_container_version`
--- ----------------------------
-DROP TABLE IF EXISTS `sys_container_version`;
-CREATE TABLE `sys_container_version` (
-  `id` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT '容器ID',
-  `version` int(11) NOT NULL COMMENT '版本',
-  `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of sys_container_version
--- ----------------------------
-INSERT INTO `sys_container_version` VALUES ('constants_container', '2', '2019-07-25 10:54:02');
-INSERT INTO `sys_container_version` VALUES ('data_source_container', '0', '2019-08-30 09:00:14');
-INSERT INTO `sys_container_version` VALUES ('org_unit_container', '7', '2020-03-19 11:32:18');
-INSERT INTO `sys_container_version` VALUES ('permission_container', '9', '2020-03-17 11:40:03');
-INSERT INTO `sys_container_version` VALUES ('role_container', '22', '2020-03-19 11:42:53');
-INSERT INTO `sys_container_version` VALUES ('unit_container', '1', null);
 
 -- ----------------------------
 -- Table structure for `sys_logger_login`
