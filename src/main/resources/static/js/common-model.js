@@ -141,11 +141,11 @@ function generateEditFormHtml(options, hide) {
             fieldBuilder = _FieldBuilderContainer[column.inputType];
 
         if (column.editable === false) {
-            result = fieldBuilder.generateViewFormHtml(column, currentColspan == 0 ? true : false, options);
-        } else {
-            result = fieldBuilder.generateEditFormHtml(column, currentColspan == 0 ? true : false, options);
+            // 不显示编辑
+            continue;
         }
 
+        result = fieldBuilder.generateEditFormHtml(column, currentColspan == 0 ? true : false, options);
         colspan = result.colspan;
 
         // 独占一行
@@ -233,7 +233,6 @@ function generateEditFormHtml(options, hide) {
 }
 
 function generateViewHtml(options) {
-    options.editable = false;
     var html = generateBox(options, generateViewFormHtml(options));
     return html;
 }
@@ -543,9 +542,7 @@ _Model.prototype.fillEditBody = function () {
     if (that.columns) {
         that.filling = true;
         that.columns.forEach(function (column) {
-            if (column.editable === false) {
-                column.fieldBuilder.fillView(column, data, that, column.fieldBuilder.getEditTarget(column, that));
-            } else {
+            if (column.editable !== false) {
                 column.fieldBuilder.fillEdit(column, data, that);
             }
         });
@@ -649,7 +646,9 @@ _Model.prototype.checkEditDependency = function () {
         for (var i = 0; i < dependencies.length; i++) {
             var depend = dependencies[i],
                 dependCol = that.getColumn(depend.dependColumn);
-            var val = dependCol.editable === false ? (that.data ? that.data[depend.dependColumn] : null) : dependCol.fieldBuilder.getEditValue(dependCol, that);
+            var val = dependCol.editable === false ?
+                (that.data ? that.data[depend.dependColumn] : null) :
+                dependCol.fieldBuilder.getEditValue(dependCol, that);
 
             if (!that.isInDependencyValues(val, depend.dependValue)) {
                 isOk = false;
@@ -660,17 +659,13 @@ _Model.prototype.checkEditDependency = function () {
         var targetCol = that.getColumn(dependencies[0].target);
         if (isOk) {
             if (targetCol.editDisplay == "show") continue;
-            if (targetCol.editable === false) {
-                targetCol.fieldBuilder.showView(targetCol, that, targetCol.fieldBuilder.getEditTarget(targetCol, that));
-            } else {
+            if (targetCol.editable !== false) {
                 targetCol.fieldBuilder.showEdit(targetCol, that);
             }
             targetCol.editDisplay = "show";
         } else {
             if (targetCol.editDisplay == "hide") continue;
-            if (targetCol.editable === false) {
-                targetCol.fieldBuilder.hideView(targetCol, that, targetCol.fieldBuilder.getEditTarget(targetCol, that));
-            } else {
+            if (targetCol.editable !== false) {
                 targetCol.fieldBuilder.hideEdit(targetCol, that);
             }
             targetCol.editDisplay = "hide";
@@ -819,27 +814,16 @@ var _FieldBuilder = function (name, interfaces) {
         },
         fillEdit: function (column, data, model, target) {
             // EDIT页面填充值时候调用        
-
+            if (column.editable === false) {
+                return;
+            }
             var input = target || this.getEditTarget(column, model);
             if (!input && input.length == 0) return;
-
-            var v = data ? data[column.name] : null,
-                isP = input.is("p");
-
+            var v = data ? data[column.name] : null;
             if (v || v === 0) {
-                if (isP || column.editable === false) {
-                    input.removeClass("text-muted");
-                    input.text(v);
-                } else {
-                    input.val(v);
-                }
+                input.val(v);
             } else {
-                if (isP || column.editable === false) {
-                    input.addClass("text-muted");
-                    input.text("无");
-                } else {
-                    input.val("");
-                }
+                input.val("");
             }
         },
         getRequiredIcon: function (column, options) {
@@ -1174,37 +1158,29 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
     },
     fillEdit: function (column, data, model, target) {
         // EDIT页面填充值时候调用
+        if (column.editable === false) {
+            return;
+        }
+
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
 
-        var ov = data ? data[column.name] : null,
-            isP = input.is("p") || column.editable === false;
+        var ov = data ? data[column.name] : null;
 
-        if (isP) {
-            var v = this.getDataName(column, ov);
-
-            if (v || v === 0) {
-                input.removeClass("text-muted");
-                input.text(v);
+        if (ov || ov === 0) {
+            if (column.multiple === true) {
+                input.val(ov).trigger('change');
             } else {
-                input.addClass("text-muted");
-                input.text("无");
+                input.val(ov);
             }
         } else {
-            if (ov || ov === 0) {
-                if (column.multiple === true) {
-                    input.val(ov).trigger('change');
-                } else {
-                    input.val(ov);
-                }
-            } else {
-                if (column.multiple === true) {
+            if (column.multiple === true) {
 
-                } else {
-                    input.find("option:first").prop("selected", 'selected');
-                }
+            } else {
+                input.find("option:first").prop("selected", 'selected');
             }
         }
+
     },
     generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
@@ -1344,31 +1320,22 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
+
         if (column.serverDataGot === true) {
             var input = target || this.getEditTarget(column, model);
             if (!input && input.length == 0) return;
 
-            var ov = data ? data[column.name] : null,
-                isP = input.is("p") || column.editable === false;
-
-            if (isP) {
-                var v = this.getDataName(column, ov);
-                if (v || v === 0) {
-                    input.removeClass("text-muted");
-                    input.text(v);
-                } else {
-                    input.addClass("text-muted");
-                    input.text("无");
-                }
+            var ov = data ? data[column.name] : null;
+            if (ov || ov === 0) {
+                input.val(ov).trigger('change');
             } else {
-                if (ov || ov === 0) {
-                    input.val(ov).trigger('change');
-                } else {
-                    if (column.multiple === true) {
+                if (column.multiple === true) {
 
-                    } else {
-                        input.find("option:first").prop("selected", 'selected');
-                    }
+                } else {
+                    input.find("option:first").prop("selected", 'selected');
                 }
             }
         }
@@ -1651,6 +1618,10 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
+
         if (column.serverDataGot === true) {
             var ov = data ? data[column.name] : null;
             var v = this.getDataName(column, ov);
@@ -1854,6 +1825,10 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
+
         var name = column.fileName,
             atts = data ? data[name] : null,
             fileInput = target || model.editBody.find("[name='" + column.fileName + "']");
@@ -1939,7 +1914,7 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
         var p = target || this.getViewTarget(column, model);
         if (!p || p.length == 0) return;
         var v = data ? data[column.name] : null;
-        if (column.enum && (v || v === 0)) {
+        if (column.enum) {
             v = $.getConstantEnumValue(column.enum, v);
         }
 
@@ -1952,29 +1927,18 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
         var input = target || this.getEditTarget(column, model);
         if (!input && input.length == 0) return;
-
-        var ov = data ? data[column.name] : null,
-            isP = input.is("p"),
-            v = column.enum && (ov || ov === 0) ? $.getConstantEnumValue(column.enum, ov) : null;
-
-        if (isP) {
-            if (v || v === 0) {
-                input.removeClass("text-muted");
-                input.text(v);
-            } else {
-                input.addClass("text-muted");
-                input.text("无");
+        var ov = data ? data[column.name] : null;
+        input.each(function () {
+            var a = $(this);
+            if (a.val() == ov) {
+                a.iCheck('check');
             }
-        } else {
-            input.each(function () {
-                var a = $(this);
-                if (a.val() == ov) {
-                    a.iCheck('check');
-                }
-            });
-        }
+        });
     },
     generateEditFormHtml: function (column, isFirst, options) {
         var colspan = column.colspan || 1,
@@ -2034,29 +1998,14 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
         }
     },
     fillEdit: function (column, data, model, target) {
-        var input = target || this.getEditTarget(column, model);
-        if (!input && input.length == 0) return;
-
-        if (input.is("p") || column.editable === false) {
-            var ov = data ? data[column.name] : null,
-                v = column.enum && ov ? $.getConstantEnumValue(column.enum, ov) : null,
-                t = [];
-            if (v) {
-                v.forEach(function (a) {
-                    t.push(column.enum ? $.getConstantEnumValue(column.enum, a) : a);
-                });
-            }
-
-            t = t.length > 0 ? t.join("，") : "无"
-            input.removeClass("text-muted");
-            input.text(t);
-        } else {
-            var v = data ? data[column.name] : null;
-            if (v) {
-                v.forEach(function (a) {
-                    model.editBody.find("input[name='" + column.name + "'][value='" + a + "']").iCheck('check');
-                });
-            }
+        if (column.editable === false) {
+            return;
+        }
+        var v = data ? data[column.name] : null;
+        if (v || v === 0) {
+            v.forEach(function (a) {
+                model.editBody.find("input[name='" + column.name + "'][value='" + a + "']").iCheck('check');
+            });
         }
     },
     generateEditFormHtml: function (column, isFirst, options) {
@@ -2099,13 +2048,15 @@ var _tagsinputFieldBuilder = new _FieldBuilder("TAGSINPUT", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
         var input = target || this.getEditTarget(column, model);
-        ;
         if (!input && input.length == 0) return;
         input.tagsinput("removeAll");
         var v = data ? data[column.name] : null;
 
-        if (v) {
+        if (v || v === 0) {
             v.forEach(function (a) {
                 input.tagsinput('add', a);
             });
@@ -2233,6 +2184,10 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         });
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
+
         var that = this,
             div = target || this.getEditTarget(column, model);
 
@@ -2389,6 +2344,9 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
 
     },
     fillEdit: function (column, data, model) {
+        if (column.editable === false) {
+            return;
+        }
         if (column.editorReady === true) {
             var content = data ? data[column.name] : '';
             column.editor.setContent(content || '');
@@ -2452,6 +2410,9 @@ var _areaPickFieldBuilder = new _FieldBuilder("AREA-PICK", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
         // EDIT页面填充值时候调用
         var that = this;
         var v = data ? data[column.name] : null;
@@ -2738,6 +2699,9 @@ var _selectTableServerFieldBuilder = new _FieldBuilder("SELECT-TABLE-SERVER", {
         }
     },
     fillEdit: function (column, data, model, target) {
+        if (column.editable === false) {
+            return;
+        }
         var ov = data ? data[column.name] : null;
         var v = data ? data[column.nameValueField] : null;
         if (v || v === 0) {

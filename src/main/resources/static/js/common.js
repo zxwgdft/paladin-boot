@@ -284,7 +284,7 @@ if (!Array.prototype.forEach) {
             }
 
             return [w + "px", h + "px"];
-	},
+        },
         openLayerEditor: function (subOp) {
             subOp.id = subOp.id || "model_" + new Date().getTime();
             var defaultSubOp = {
@@ -2010,22 +2010,30 @@ function _initEnumConstant(container) {
             }
         },
         getConstantEnumItem: function (enumcode, key) {
-            var items = window._constant_cache[enumcode];
-            if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    if (items[i].key == key) {
-                        return items[i];
+            if (key === true) key = 1;
+            if (key === false) key = 0;
+            if(key || key === 0) {
+                var items = window._constant_cache[enumcode];
+                if (items) {
+                    for (var i = 0; i < items.length; i++) {
+                        if (items[i].key == key) {
+                            return items[i];
+                        }
                     }
                 }
             }
             return null;
         },
         getConstantEnumValue: function (enumcode, key) {
-            var items = window._constant_cache[enumcode];
-            if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    if (items[i].key == key) {
-                        return items[i] && items[i].value;
+            if (key === true) key = 1;
+            if (key === false) key = 0;
+            if(key || key === 0) {
+                var items = window._constant_cache[enumcode];
+                if (items) {
+                    for (var i = 0; i < items.length; i++) {
+                        if (items[i].key == key) {
+                            return items[i] && items[i].value;
+                        }
                     }
                 }
             }
