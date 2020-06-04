@@ -2420,6 +2420,389 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
     }
 });
 
+// 省市区联动控件，需要district相关插件
+var _areaPickFieldBuilder = new _FieldBuilder("AREA-PICK", {
+    getDataName: function (column, v) {
+        if (v || v === 0) {
+            v = getDistrictFullName(v);
+        }
+        return v;
+    },
+    getEditTarget: function (column, model) {
+        // 获取编辑目标
+        return column.editable === false ?
+            model.editBody.find("[name='" + column.name + "']") :
+            model.editBody.find("[name='" + column.name + "_div']");
+    },
+    getEditValue: function (column, model) {
+        var $pick = this.getEditTarget(column, model).find(".pick-show .pick-area");
+        return $pick.attr("data-areacode");
+    },
+    fillView: function (column, data, model, target) {
+        var p = target || this.getViewTarget(column, model);
+        if (!p || p.length == 0) return;
+        var v = data ? data[column.name] : null;
+        v = this.getDataName(column, v);
+        if (v || v === 0) {
+            p.removeClass("text-muted");
+            p.text(v);
+        } else {
+            p.addClass("text-muted");
+            p.text("无");
+        }
+    },
+    fillEdit: function (column, data, model, target) {
+        // EDIT页面填充值时候调用
+        var that = this;
+        var v = data ? data[column.name] : null;
+
+        if (that.pickArea) {
+            that.pickArea.empty();
+        } else {
+            that.pickArea = that.getEditTarget(column, model);
+        }
+
+        var format = v ? getDistrictFullName(v, "/") : "province/city/county";
+        var option = {
+            "format": format, //格式
+            //"display":"block",
+            //"width": 400,//设置“省市县”文本边框的宽度
+            //"height":"48",//设置“省市县”文本边框的高度
+            //"borderColor":"#435abd",//设置“省市县”文本边框的色值
+            //"arrowColor":"#435abd",//设置下拉箭头颜色
+            //"listBdColor": "#435abd",//设置下拉框父元素ul的border色值
+            //"color":"#435abd",//设置“省市县”字体颜色
+            //"fontSize":"15px",//设置字体大小
+            //"hoverColor": "#435abd",
+            //"paddingLeft": "10px",//设置“省”位置处的span相较于边框的距离
+            //"arrowRight": "10px",//设置下拉箭头距离边框右侧的距离
+            //"maxHeight": "250px",
+            "getVal": function () {
+                //这个方法是每次选中一个省、市或者县之后，执行的方法
+                var code = that.getEditValue(column, model);
+                if (code) {
+                    var cs = code.split(",");
+                    code = cs[cs.length - 1];
+                    if (code.endsWith(',')) {
+                        code = code.substring(0, code.length - 1);
+                    }
+                }
+                model.editBody.find("[name='" + column.name + "']").val(code);
+            }
+        };
+
+        var pickOption = column.pickOption;
+        if (pickOption) {
+            option = $.extend(option, pickOption);
+        }
+
+        that.pickArea.pickArea(option);
+    },
+    generateEditFormHtml: function (column, isFirst, options) {
+        var colspan = column.colspan || 1,
+            required = column.required === 'required',
+            multiple = column.multiple === true;
+
+        var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
+        html += '<div name="' + column.name + '_div" class="col-sm-' + this.getEditColSize(column, colspan, options) + ' pick-area">\n';
+        html += '</div>\n';
+        html += '<input type="hidden" name="' + column.name + '">'
+        return {
+            colspan: colspan,
+            html: html
+        };
+    }
+});
+
+// table选择构建域，暂时只支持单选，多选需要记录数据
+var _selectTableServerFieldBuilder = new _FieldBuilder("SELECT-TABLE-SERVER", {
+    initHandler: function (column, model) {
+        if (column.multiple === true) {
+            column.separator = column.separator || ',';
+        }
+
+        column.rowValueField = column.rowValueField || 'id';
+        column.rowNameField = column.rowNameField || 'name';
+        column.nameValueField = column.nameValueField || (column + 'Name');
+
+        this.initTableSelect(column, model);
+        this.initRemoveButton(column, model);
+    },
+    getEditValue: function (column, model) {
+        return column.selectItem ? column.selectItem.value : null;
+    },
+    formDataHandler: function (column, formData, model) {
+        if (column.editDisplay !== "hide") {
+            var setted = false;
+            for (var i = 0; i < formData.length; i++) {
+                if (formData[i].name == column.name) {
+                    formData[i].value = column.selectItem ? column.selectItem.value : null;
+                    setted = true;
+                    break;
+                }
+            }
+
+            if (!setted) {
+                formData.push({
+                    name: column.name,
+                    value: column.selectItem ? column.selectItem.value : null,
+                    type: "text",
+                    required: false
+                });
+            }
+        }
+    },
+    fillDataFromServer: function (column, model) {
+        this.initTreeSelect(column, model);
+
+        if (model.status == 'view') {
+            this.fillView(column, model.data, model);
+        }
+
+        if (model.status == 'edit') {
+            if (column.editable === false) {
+                this.fillView(column, model.data, model, this.getEditTarget(column, model));
+            } else {
+                this.fillEdit(column, model.data, model);
+            }
+        }
+    },
+    initRemoveButton: function (column, model) {
+        var that = this;
+        $("#tonto-table-select-remove-" + column.name).click(function () {
+            that.setSelectItem(column, model, null);
+        });
+    },
+    initTableSelect: function (column, model) {
+        if (column.editable === false) return;
+        var that = this;
+        var input = that.getEditTarget(column, model);
+        if (!input && input.length == 0) return;
+        input.click(function () {
+            var content = '<div class="tonto-tree-select-div" style="padding:10px">';
+
+            var random = new Date().getTime();
+
+            var searchFormId = column.name + "_search_form" + random;
+            var tableId = column.name + "_table" + random;
+            var confirmBtn = column.name + '_confirm_btn' + random;
+            var searchBtn = column.name + '_search_btn' + random;
+            var search = column.search;
+
+            if (search) {
+                if (search.length == 1) {
+                    content +=
+                        '<form id="' + searchFormId + '"><div class="pull-left input-group" style="margin-bottom:10px;width:250px">' +
+                        '   <input class="form-control" name="' + search[0].name + '" type="text" placeholder="' + (search[0].placeholder || '请输入') + '" autocomplete="off">' +
+                        '   <span class="input-group-btn">' +
+                        '        <button id="' + searchBtn + '" class="btn btn-default" type="button" title="Search"><i class="fa fa-search"></i></button>' +
+                        '   </span>' +
+                        '</div></form>';
+                } else {
+                    content += '<form id="' + searchFormId + '" class="form-horizontal form-search">';
+
+                    var surplus = 12;
+                    var cfg = {
+                        colspan: 3,
+                        placeholder: '请输入'
+                    }
+
+                    var hasBtn = false;
+
+                    for (var i = 0; i < search.length; i++) {
+                        var a = search[i];
+                        a = $.extend(cfg, a);
+
+                        if (surplus < a.colspan) {
+                            surplus = 12;
+                            content += '</div>';
+                        }
+
+                        if (surplus == 12) {
+                            content += '<div class="form-group">';
+                        }
+
+                        if (a.isButton === true) {
+                            content += '<div class="col-md-' + a.colspan + '">' +
+                                '<button id="' + searchBtn + '" class="btn btn-primary" type="button"><i class="fa fa-search"></i>查询</button>' +
+                                '</div>';
+                            hasBtn = true;
+                        } else {
+                            content += '<div class="col-md-' + a.colspan + '">' +
+                                '<input class="form-control" name="' + a.name + '" type="text" placeholder="' + a.placeholder + '" autocomplete="off">' +
+                                '</div>';
+                        }
+
+                        surplus -= a.colspan;
+
+                        if (surplus <= 0) {
+                            surplus = 12;
+                            content += '</div>';
+                        }
+                    }
+
+                    if (!hasBtn) {
+                        content += '<div class="col-md-' + surplus + '">' +
+                            '<div class="pull-right">' +
+                            '<button id="' + searchBtn + '" class="btn btn-primary" type="button"><i class="fa fa-search"></i>查询</button>' +
+                            '</div></div>';
+                    }
+
+                    content += '</div></form>';
+                }
+            }
+
+            content += '<table id="' + tableId + '"></table>';
+            content += '<div class="col-sm-2 col-sm-offset-5 btn-back">';
+            content += '<button class="btn btn-primary btn-block" id="' + confirmBtn + '">确定</button>';
+            content += '</div>';
+            content += '</div>';
+
+            $.openPageLayer(content, {
+                title: column.selectTitle || " ",
+                width: column.width || 600,
+                height: column.height || 400,
+                success: function (layero, index) {
+                    if (column.search) {
+                        column.tableOption.searchbar = '#' + searchFormId;
+                    }
+
+                    column.tableOption.clickToSelect = column.tableOption.clickToSelect === false ? false : true;
+
+                    var table = $.createTable("#" + tableId, column.tableOption);
+                    $("#" + searchBtn).click(function () {
+                        table.refresh();
+                    });
+
+                    $("#" + confirmBtn).click(function () {
+                        var result = table.getAllSelections();
+                        if (result && result.length > 0) {
+                            if (typeof column.selectedHandler == 'function') {
+                                var result = column.selectedHandler(selected);
+                                if (result === false) {
+                                    return;
+                                }
+                            }
+
+                            if (result && result !== true) {
+                                item = {
+                                    name: result[0][column.rowNameField],
+                                    value: result[0][column.rowValueField]
+                                };
+                            }
+
+                            that.setSelectItem(column, model, item);
+                            layer.close(index);
+                        } else {
+                            $.errorAlert("请至少选择一个");
+                        }
+                    });
+                }
+            });
+        });
+    },
+    setSelectItem: function (column, model, item, target) {
+        column.selectItem = item;
+        var input = target || this.getEditTarget(column, model);
+        if (!input && input.length == 0) return;
+
+        var v = item ? item.name : '';
+        var isP = input.is("p") || column.editable === false;
+
+        if (isP) {
+            if (v || v === 0) {
+                input.removeClass("text-muted");
+                input.text(v);
+            } else {
+                input.addClass("text-muted");
+                input.text("无");
+            }
+        } else {
+            if (v || v === 0) {
+                input.val(v);
+            } else {
+                input.val('');
+            }
+        }
+    },
+    fillView: function (column, data, model, target) {
+        var p = target || this.getViewTarget(column, model);
+        if (!p || p.length == 0) return;
+        var v = data ? data[column.nameValueField] : null;
+        if (v || v === 0) {
+            p.removeClass("text-muted");
+            p.text(v);
+        } else {
+            p.addClass("text-muted");
+            p.text("无");
+        }
+    },
+    fillEdit: function (column, data, model, target) {
+        var ov = data ? data[column.name] : null;
+        var v = data ? data[column.nameValueField] : null;
+        if (v || v === 0) {
+            this.setSelectItem(column, model, {
+                name: v,
+                value: ov
+            }, target);
+        } else {
+            this.setSelectItem(column, model, null, target);
+        }
+    },
+    hideEdit: function (column, model, target) {
+        // 隐藏编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent().parent();
+        var f = d.parent();
+        d.hide();
+        d.prev().hide();
+        if (f.children(":visible").length == 0) {
+            f.hide();
+        }
+    },
+    showEdit: function (column, model) {
+        // 显示编辑域
+        var p = this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent().parent();
+        d.show();
+        d.prev().show();
+        d.parent().show();
+    },
+    generateEditFormHtml: function (column, isFirst, options) {
+        var colspan = column.colspan || 1,
+            required = column.required === 'required',
+            multiple = column.multiple === true;
+
+        var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
+        html += '<div class="col-sm-' + this.getEditColSize(column, colspan, options) + '">\n';
+        html += '<div class="input-group">'
+
+        var inputAttr = {
+            name: column.name,
+            placeholder: column.placeholder || "请选择" + column.title,
+            class: "form-control",
+            autocomplete: "off",
+            readonly: "readonly",
+            style: "background: rgb(255, 255, 255);",
+            required: required ? "required" : null
+        }
+
+        if (column.attr) {
+            inputAttr = $.extend(inputAttr, column.attr);
+        }
+
+        html += '<input ' + generateTagAttribute(inputAttr) + '/>\n';
+        html += '<span class="input-group-addon" id="tonto-table-select-remove-' + column.name + '" style="cursor:pointer"><i class="glyphicon glyphicon-remove"></i></span>';
+        html += '</div>\n';
+        html += '</div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    }
+});
 if (!window.toton) window.toton = {};
 window.tonto.Model = _Model;
 window.tonto.FieldBuilder = _FieldBuilder;

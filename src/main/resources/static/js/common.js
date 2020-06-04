@@ -284,6 +284,60 @@ if (!Array.prototype.forEach) {
             }
 
             return [w + "px", h + "px"];
+	},
+        openLayerEditor: function (subOp) {
+            subOp.id = subOp.id || "model_" + new Date().getTime();
+            var defaultSubOp = {
+                cancelBtn: false,
+                editFormClass: false,
+                maxColspan: 1,
+                firstLabelSize: 3,
+                inputSize: 8,
+                labelSize: 3,
+                formPaddingLeft: 10,
+                formButtonBar: [{
+                    id: subOp.id + '_edit_cancel_btn',
+                    type: 'button',
+                    name: '取消',
+                    class: 'btn btn-default btn-block',
+                    order: 999
+                }],
+                pattern: "edit"
+            }
+
+            var subOp = $.extend(defaultSubOp, subOp);
+
+
+            var html = generateEditFormHtml(subOp, false);
+            html = "<div style='padding-top:50px;padding-bottom:50px;padding-right:10px;padding-left:10px'>" + html + "</div>";
+            var layerOption = subOp.layerOption || {};
+            layerOption = $.extend({
+                    success: function (layero, index) {
+                        $.initComponent($(layero));
+                        $("#" + subOp.id + '_edit_cancel_btn').click(function () {
+                            layer.close(index);
+                        });
+
+                        if (!subOp.successCallback) {
+                            subOp.successCallback = function () {
+                                //成功提交表单后回调
+                                $.successMessage("保存成功");
+
+                                layer.close(index);
+                            }
+                        } else {
+                            var callback = subOp.successCallback;
+                            subOp.successCallback = function (data) {
+                                callback(data, index);
+                            }
+                        }
+
+                        var subModel = new tonto.Model(subOp.id, subOp.columns, subOp);
+                    }
+                },
+                layerOption);
+
+            var index = $.openPageLayer(html, layerOption);
         }
     });
 
@@ -1264,7 +1318,7 @@ function _initTable() {
      * 其中对table tree做了处理，可以获取指定form中的request param
      */
     var _tonto_table = function (el, options) {
-
+        var $table = $(el);
         var defaultOptions = $.fn.bootstrapTable.defaults;
 
         if (typeof options === 'string') {
@@ -1304,6 +1358,8 @@ function _initTable() {
         }
 
         if (options.columns) {
+            var switchCols = [];
+
             var colInit = function (col) {
                 if (!col) {
                     return;
@@ -1374,8 +1430,57 @@ function _initTable() {
                 if (!col.valign) {
                     col.valign = "middle";
                 }
+
+                if (col.switch === true) {
+                    switchCols.push(col);
+                }
             }
             colInit(options.columns);
+
+            // 开关列处理
+            if (switchCols.length > 0) {
+
+                switchCols.forEach(function (col) {
+                    if (!col.formatter) {
+                        col.formatter = function (value, row, index) {
+                            return '<input switch-row-index="' + index + '" name="' + col.field + '" type="checkbox"  ' + (value ? 'checked="checked"' : '') + '>';
+                        }
+                    }
+                });
+
+                var onResetView = options.onResetView;
+                options.onResetView = function () {
+                    if (typeof onResetView == 'function') {
+                        onResetView();
+                    }
+
+                    switchCols.forEach(function (col) {
+                        $table.find('[name="' + col.field + '"]').each(function () {
+                            var that = $(this);
+                            var index = that.attr("switch-row-index");
+
+                            var switchOption = {
+                                onText: "是",
+                                offText: "否",
+                                size: "small"
+                            }
+
+                            if (col.switchOption) {
+                                $.extend(switchOption, col.switchOption);
+                            }
+
+                            if (typeof col.onSwitchChange == 'function') {
+                                var row = $table.bootstrapTable("getData")[index];
+                                switchOption.onSwitchChange = function (event, state) {
+                                    col.onSwitchChange(row, state, event);
+                                }
+                            }
+
+                            that.bootstrapSwitch(switchOption);
+                        })
+                    })
+                }
+            }
         }
 
         var default_page_size = 15;
@@ -1498,7 +1603,6 @@ function _initTable() {
             }
         }
 
-        var $table = $(el);
         $table.bootstrapTable(options);
         return $table.data('bootstrap.table');
     };
@@ -2049,6 +2153,12 @@ function _initForm(container) {
                 dataType: 'json',
                 type: 'post',
                 beforeSubmit: function (arr, $form, options) {
+                    if (typeof formConfig.beforeCallback === 'function') {
+                        if (formConfig.beforeCallback(arr, $form, options) === false) {
+                            return false;
+                        }
+                    }
+
                     submitBtn.each(function () {
                         var that = $(this);
                         that.data("loading", true);
@@ -2056,10 +2166,6 @@ function _initForm(container) {
                         that.data("originText", text);
                         that.text(text + '中...').prop('disabled', true).addClass('disabled');
                     });
-
-                    if (typeof formConfig.beforeCallback === 'function') {
-                        return formConfig.beforeCallback(arr, $form, options);
-                    }
                 },
                 success: function (response) {
                     if (typeof response === 'string') {

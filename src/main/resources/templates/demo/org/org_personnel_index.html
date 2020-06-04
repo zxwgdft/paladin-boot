@@ -74,6 +74,14 @@
                     {title: "出生日期", field: "birthday", formatter: "date"},
                     {title: "手机号码", field: "cellphone"},
                     {
+                        title: "是否启用",
+                        field: "enabled",
+                        switch: true,
+                        onSwitchChange: function (row, state, event) {
+                            console.log(row);
+                        }
+                    },
+                    {
                         title: "操作",
                         align: "center",
                         width: "200px",
