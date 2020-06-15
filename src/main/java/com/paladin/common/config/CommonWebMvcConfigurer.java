@@ -4,8 +4,7 @@ import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.web.convert.DateFormatter;
-import com.paladin.framework.web.convert.Integer2EnumConverterFactory;
-import com.paladin.framework.web.convert.String2EnumConverterFactory;
+import com.paladin.framework.web.filter.LimitFrameFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -120,7 +119,7 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
 
 
     // 需要跨域修改该代码并注入spring
-    public FilterRegistrationBean<CorsFilter> filterRegistrationBean() {
+    public FilterRegistrationBean<CorsFilter> registerCorsFilter() {
         // 对响应头进行CORS授权
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("*"); // 1允许任何域名使用
@@ -137,4 +136,10 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         return bean;
     }
 
+    public FilterRegistrationBean<LimitFrameFilter> registerLimitFrameFilter() {
+        LimitFrameFilter filter = LimitFrameFilter.createSameOriginInstance();
+        FilterRegistrationBean<LimitFrameFilter> bean = new FilterRegistrationBean<>(filter);
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
 }
