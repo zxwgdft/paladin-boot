@@ -15,15 +15,24 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CommonCasUserRealm extends Pac4jRealm {
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private UserSessionFactory userSessionFactory;
 

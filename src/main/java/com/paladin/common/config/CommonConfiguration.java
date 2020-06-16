@@ -5,6 +5,7 @@ import com.paladin.common.core.CommonAuthenticationListener;
 import com.paladin.common.core.CommonCasUserRealm;
 import com.paladin.common.core.CommonUserRealm;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
+import com.paladin.common.core.log.OperationLogInterceptor;
 import com.paladin.common.core.permission.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
 import com.paladin.framework.service.DataContainerManager;
@@ -19,6 +20,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -140,5 +142,13 @@ public class CommonConfiguration {
         return new PermissionMethodInterceptor();
     }
 
-
+    /**
+     * 操作日志AOP
+     *
+     * @return
+     */
+    @Bean
+    public OperationLogInterceptor getOperationLogInterceptor() {
+        return new OperationLogInterceptor();
+    }
 }

@@ -62,11 +62,11 @@ public class ServiceSupportManager implements SpringContainer {
                 continue;
             } else {
                 support.setSqlMapper(mapper);
-                log.info("===>为[" + support.getClass().getName() + "]注入CustomMapper");
+                log.debug("===>为[" + support.getClass().getName() + "]注入CustomMapper");
             }
 
             support.init();
-            log.info("<===[" + support.getClass().getName() + "]初始化成功");
+            log.debug("<===[" + support.getClass().getName() + "]初始化成功");
         }
 
         return true;

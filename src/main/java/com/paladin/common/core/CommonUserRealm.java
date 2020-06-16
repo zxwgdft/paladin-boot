@@ -9,12 +9,20 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 public class CommonUserRealm extends AuthorizingRealm {
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private SysUserService sysUserService;
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
     @Autowired
     private UserSessionFactory userSessionFactory;
 

@@ -9,6 +9,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DemoUserSessionFactory implements UserSessionFactory {
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private OrgPersonnelService personnelService;
 

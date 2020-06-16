@@ -12,18 +12,26 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.web.subject.WebSubject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Slf4j
-@Component
 public class CommonAuthenticationListener implements AuthenticationListener {
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private SysLoggerLoginService sysLoggerLoginService;
 
+    /**
+     * shiro引用的bean需要加上lazy加载，否则会出现由于bean提前加载而无法实现代理等处理，从而导致事务，切面失效
+     */
+    @Lazy
     @Autowired
     private SysUserService sysUserService;
 
