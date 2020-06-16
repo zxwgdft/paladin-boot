@@ -2003,6 +2003,10 @@ function _initEnumConstant(container) {
     }
 
     $.extend({
+        putConstantEnum: function(enumcode, items){
+            window._constant_cache = window._constant_cache || {};
+            window._constant_cache[enumcode] = items;
+        },
         // 获取常量
         getConstantEnum: function (enumcode) {
             if (enumcode) {

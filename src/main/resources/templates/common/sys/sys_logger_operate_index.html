@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>操作日志管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+            </div>
+        </div>
+    </section>
+    <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+    <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+					{ title: "模块名称", field: "modelName" },
+					{ title: "操作名称", field: "operateName" },
+                    { title: "操作人名称", field: "operateByName" },
+					{ title: "是否成功", field: "isSuccess", formatter:"boolean" },
+					{ title: "操作时间", field: "operateTime" ,formatter: "datetime" },
+					{ title: "操作时长(ms)", field: "operateDuration" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info"><i class="glyphicon glyphicon-edit"></i>详情</button>'
+
+                        }
+                    }
+                ]
+            ],
+            showSearchButton: true,
+            url: '/common/sys/logger/operate/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/common/sys/logger/operate/export',
+            showExportor: true,
+            showColumns: true,
+            pagination: true,
+            //toolbar: "#searchbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/common/sys/logger/operate/add';
+    }
+
+    function detail(row) {
+        window.location = '/common/sys/logger/operate/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    </script>
+</body>
+
+</html>

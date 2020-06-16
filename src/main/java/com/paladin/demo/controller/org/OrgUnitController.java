@@ -1,6 +1,7 @@
 package com.paladin.demo.controller.org;
 
 import com.paladin.common.core.ControllerSupport;
+import com.paladin.common.core.log.OperationLog;
 import com.paladin.demo.model.org.OrgUnit;
 import com.paladin.demo.service.org.OrgUnitContainer;
 import com.paladin.demo.service.org.OrgUnitService;
@@ -62,6 +63,7 @@ public class OrgUnitController extends ControllerSupport {
     @PostMapping("/save")
     @ResponseBody
     @RequiresPermissions("org:unit:save")
+    @OperationLog(model = "机构管理", operate = "机构新增")
     public Object save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -78,6 +80,7 @@ public class OrgUnitController extends ControllerSupport {
     @PostMapping("/update")
     @ResponseBody
     @RequiresPermissions("org:unit:update")
+    @OperationLog(model = "机构管理", operate = "机构更新")
     public Object update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
@@ -93,6 +96,7 @@ public class OrgUnitController extends ControllerSupport {
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     @RequiresPermissions("org:unit:delete")
+    @OperationLog(model = "机构管理", operate = "机构删除")
     public Object delete(@RequestParam String id) {
         return orgUnitService.removeUnit(id) ? R.success() : R.fail("保存失败");
     }

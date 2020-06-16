@@ -2,6 +2,7 @@ package com.paladin.demo.controller.org;
 
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.common.core.log.OperationLog;
 import com.paladin.common.core.permission.NeedPermission;
 import com.paladin.demo.controller.org.dto.OrgPersonnelExportCondition;
 import com.paladin.demo.model.org.OrgPersonnel;
@@ -75,6 +76,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 新增人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/save")
     @ResponseBody
+    @OperationLog(model = "人员管理", operate = "人员新增")
     @RequiresPermissions("org:personnel:save")
     public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -95,6 +97,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/update")
     @ResponseBody
+    @OperationLog(model = "人员管理", operate = "人员更新")
     //@RequiresPermissions("org:personnel:update") // shiro 方式
     @NeedPermission("org:personnel:update")        // 自定义权限方式，直接判断权限code是否相等
     public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
@@ -114,6 +117,7 @@ public class OrgPersonnelController extends ControllerSupport {
     // 删除数据
     @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
+    @OperationLog(model = "人员管理", operate = "人员删除")
     @RequiresPermissions("org:personnel:delete")
     public Object delete(@RequestParam String id) {
         // 根据主键删除

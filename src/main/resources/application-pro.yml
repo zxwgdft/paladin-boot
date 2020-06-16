@@ -10,13 +10,13 @@ spring:
       max-lifetime: 1800000
       maximum-pool-size: 15
       minimum-idle: 15
-    name: common
+    name: boot
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://192.168.31.204:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://172.16.16.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: netin
     password: 123456
   redis:
-    host: 127.0.0.1
+    host: 172.16.16.120
     lettuce:
       pool:
         max-active: 16

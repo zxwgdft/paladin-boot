@@ -1,6 +1,4 @@
 logging:
-  file:
-    path: /logs
   level:
     com:
       paladin:
@@ -16,11 +14,11 @@ server:
 spring:
   datasource:
     name: common
-    password: ''
-    url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: root
+    url: jdbc:mysql://172.16.16.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: netin
+    password: 123456
   redis:
-    host: 127.0.0.1
+    host: 172.16.16.120
     lettuce:
       pool:
         max-active: 8
@@ -46,17 +44,19 @@ paladin:
   web:
     upload-dir: D:/file/upload/
     file-path: D:/file/
-  # 动态数据库配置
-  dynamic-datasource-enabled: true
-  dynamic:
-    mybatis:
-      mapper-location: classpath:dynamic/mapper/**/*.xml
-      type-aliases-package: com.paladin.demo.dynamic.model
-    source[0]:
-      name: mysql1
-      url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-      username: root
-    source[1]:
-      name: mysql2
-      url: jdbc:mysql://localhost:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-      username: root
+# 动态数据库配置
+#  dynamic-datasource-enabled: true
+#  dynamic:
+#    mybatis:
+#      mapper-location: classpath:dynamic/mapper/**/*.xml
+#      type-aliases-package: com.paladin.demo.dynamic.model
+#    source[0]:
+#      name: mysql1
+#      url: jdbc:mysql://172.16.16.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+#      username: netin
+#      password: 123456
+#    source[1]:
+#      name: mysql2
+#      url: jdbc:mysql://172.16.16.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+#      username: netin
+#      password: 123456
