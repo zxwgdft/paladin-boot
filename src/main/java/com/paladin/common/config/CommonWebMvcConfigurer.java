@@ -1,13 +1,12 @@
 package com.paladin.common.config;
 
-import com.paladin.common.core.upload.BigFileUploaderContainer;
-import com.paladin.framework.io.TemporaryFileHelper;
+import com.paladin.framework.GlobalProperties;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.web.convert.DateFormatter;
 import com.paladin.framework.web.filter.LimitFrameFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -25,23 +24,21 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 @Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "paladin", value = "web-enabled", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(CommonWebProperties.class)
 public class CommonWebMvcConfigurer implements WebMvcConfigurer {
 
-    @Resource
-    private CommonWebProperties webProperties;
+    @Value("${paladin.file.base-path}")
+    private String filePath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String filePath = webProperties.getFilePath();
-        String staticPath = webProperties.getStaticPath();
-        String faviconPath = webProperties.getFaviconPath();
+        String filePath = this.filePath;
+        String staticPath = "classpath:/static/";
+        String faviconPath = "classpath:favicon.ico";
 
         if (!filePath.startsWith("file:")) {
             filePath = "file:" + filePath;
@@ -62,10 +59,8 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        String rootView = webProperties.getRootView();
-        if (rootView != null && rootView.length() > 0) {
-            registry.addViewController("/").setViewName(rootView);
-        }
+        String rootView = "redirect:/" + GlobalProperties.project + "/login";
+        registry.addViewController("/").setViewName(rootView);
     }
 
     public void addInterceptors(InterceptorRegistry registry) {
@@ -93,28 +88,6 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         factory.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, "/static/html/error_401.html"));
         factory.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/static/html/error_500.html"));
         return factory;
-    }
-
-    /**
-     * 临时文件助手
-     *
-     * @param commonWebProperties
-     * @return
-     */
-    @Bean
-    public TemporaryFileHelper getTemporaryFileHelper(CommonWebProperties commonWebProperties) {
-        return new TemporaryFileHelper(commonWebProperties.getFilePath());
-    }
-
-    /**
-     * 大文件上传
-     *
-     * @param commonWebProperties
-     * @return
-     */
-    @Bean
-    public BigFileUploaderContainer getBigFileUploaderContainer(CommonWebProperties commonWebProperties) {
-        return new BigFileUploaderContainer(commonWebProperties.getFilePath());
     }
 
 

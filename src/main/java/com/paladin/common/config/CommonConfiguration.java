@@ -5,12 +5,18 @@ import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.log.OperationLogInterceptor;
 import com.paladin.common.core.permission.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
+import com.paladin.common.core.upload.BigFileUploaderContainer;
+import com.paladin.common.service.sys.FileStoreService;
+import com.paladin.common.service.sys.impl.DefaultFileStoreService;
+import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.ServiceSupportManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -100,5 +106,39 @@ public class CommonConfiguration {
     @Bean
     public OperationLogInterceptor getOperationLogInterceptor() {
         return new OperationLogInterceptor();
+    }
+
+
+    /**
+     * 文件存储服务
+     *
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(FileStoreService.class)
+    public FileStoreService getFileStoreService() {
+        return new DefaultFileStoreService();
+    }
+
+    /**
+     * 临时文件助手
+     */
+    @Bean
+    public TemporaryFileHelper getTemporaryFileHelper(Environment env) {
+        String basePath = env.getProperty("paladin.file.base-path");
+        return new TemporaryFileHelper(basePath);
+    }
+
+    /**
+     * 大文件上传
+     */
+    @Bean
+    public BigFileUploaderContainer getBigFileUploaderContainer(Environment env) {
+        String basePath = env.getProperty("paladin.file.base-path");
+        if (!basePath.endsWith("/")) {
+            basePath += "/";
+        }
+        basePath += "upload/";
+        return new BigFileUploaderContainer(basePath);
     }
 }

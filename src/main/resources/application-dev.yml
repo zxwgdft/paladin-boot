@@ -12,6 +12,10 @@ server:
 
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
   datasource:
     name: common
     url: jdbc:mysql://172.16.16.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
@@ -41,9 +45,14 @@ paladin:
     cas-server-login-url: http://58.210.169.168:9091/login
     cas-server-url: http://58.210.169.168:9091
     client-server-url: http://192.168.31.128:8010
-  web:
-    upload-dir: D:/file/upload/
-    file-path: D:/file/
+  file:
+    base-path: D:/file/
+    ftp-host: 172.16.16.120
+    ftp-prot: 21
+    ftp-username: netin
+    ftp-password: 123456
+
+    
 # 动态数据库配置
 #  dynamic-datasource-enabled: true
 #  dynamic:

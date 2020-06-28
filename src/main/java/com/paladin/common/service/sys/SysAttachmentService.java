@@ -1,7 +1,5 @@
 package com.paladin.common.service.sys;
 
-import com.paladin.common.config.CommonWebProperties;
-import com.paladin.common.mapper.sys.SysAttachmentMapper;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.sys.dto.FileCreateParam;
 import com.paladin.framework.common.BaseModel;
@@ -14,15 +12,15 @@ import com.paladin.framework.utils.convert.DateFormatUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,44 +29,21 @@ import java.util.List;
 @Service
 public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
-    @Autowired
-    private SysAttachmentMapper sysAttachmentMapper;
-
-    @Autowired
-    private CommonWebProperties webProperties;
-
-    private long maxFileByteSize;
-    private int maxFileNameSize = 100;
-    private String attachmentPath;
+    // 单位M
+    @Value("${paladin.file.max-file-size:10}")
     private int maxFileSize;
+    private int maxFileNameSize = 100;
+    private int maxFileByteSize;
+
+    @Autowired
+    private FileStoreService fileStoreService;
 
     @PostConstruct
     protected void initialize() {
-        attachmentPath = webProperties.getFilePath();
-        if (attachmentPath.startsWith("file:")) {
-            attachmentPath = attachmentPath.substring(5);
-        }
-
-        attachmentPath = attachmentPath.replaceAll("\\\\", "/");
-
-        if (!attachmentPath.endsWith("/")) {
-            attachmentPath += "/";
-        }
-
-        maxFileSize = webProperties.getFileMaxSize();
         if (maxFileSize <= 0) {
             maxFileSize = 10;
         }
-
         maxFileByteSize = maxFileSize * 1024 * 1024;
-
-        // 创建目录
-        Path root = Paths.get(attachmentPath);
-        try {
-            Files.createDirectories(root);
-        } catch (IOException e) {
-            throw new RuntimeException("创建附件存放目录异常", e);
-        }
     }
 
     /**
@@ -302,14 +277,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             subPath = DateFormatUtil.getThreadSafeFormat("yyyyMMdd").format(new Date());
         }
 
-        Path path = Paths.get(attachmentPath, subPath);
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectory(path);
-            } catch (FileAlreadyExistsException e1) {
-                // 继续
-            }
-        }
+        fileStoreService.checkAndMakeDirectory(subPath);
 
         String relativePath = subPath + "/" + filename;
         attachment.setRelativePath(relativePath);
@@ -339,10 +307,16 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
                 // 创建缩略图
                 input = new ByteArrayInputStream(output.toByteArray());
 
-                String thumbnailRelativePath = subPath + "/t_" + filename;
-                try (OutputStream out = Files.newOutputStream(Paths.get(attachmentPath + thumbnailRelativePath))) {
-                    Thumbnails.of(input).size(thumbnailWidth, thumbnailHeight).toOutputStream(out);
-                }
+
+                output = new ByteArrayOutputStream();
+                Thumbnails.of(input).size(thumbnailWidth, thumbnailHeight).toOutputStream(output);
+
+                input = new ByteArrayInputStream(output.toByteArray());
+
+                String thumbnailName = "t_" + filename;
+                String thumbnailRelativePath = subPath + "/" + thumbnailName;
+
+                fileStoreService.storeFile(input, subPath, thumbnailName);
 
                 attachment.setThumbnailRelativePath(thumbnailRelativePath);
                 input.reset();
@@ -371,22 +345,18 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
                     builder.outputQuality(quality);
                 }
 
-                try (OutputStream out = Files.newOutputStream(Paths.get(attachmentPath + relativePath))) {
-                    builder.toOutputStream(out);
-                }
 
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                builder.toOutputStream(output);
+
+                input = new ByteArrayInputStream(output.toByteArray());
+                fileStoreService.storeFile(input, subPath, filename);
                 created = true;
             }
         }
 
         if (!created) {
-            try (OutputStream out = Files.newOutputStream(Paths.get(attachmentPath + relativePath))) {
-                byte[] buffer = new byte[8192];
-                int len;
-                while ((len = input.read(buffer)) > -1) {
-                    out.write(buffer, 0, len);
-                }
-            }
+            fileStoreService.storeFile(input, subPath, filename);
         }
 
         return attachment;

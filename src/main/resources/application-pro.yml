@@ -1,6 +1,11 @@
 server:
   port: 8900
+
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
   datasource:
     hikari:
       auto-commit: true
@@ -37,6 +42,5 @@ paladin:
     cas-server-login-url: http://10.1.1.123:8768/casServ/login
     cas-server-url: http://10.1.1.123:8768/casServ
     client-server-url: http://172.16.11.135:8010
-  web:
-    upload-dir: /file/upload/
-    file-path: /file/
+  file:
+    base-path: /file/
