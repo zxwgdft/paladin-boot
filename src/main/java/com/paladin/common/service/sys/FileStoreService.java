@@ -24,4 +24,18 @@ public interface FileStoreService {
      */
     void checkAndMakeDirectory(String filePath);
 
+    /**
+     * 文件存储方式
+     * <p>
+     * 对于每个实现类该方式名称应该都不相同
+     *
+     * @return
+     */
+    String getStoreType();
+
+
+    /**
+     * 获取文件访问的URL
+     */
+    String getFileUrl(String relativePath);
 }

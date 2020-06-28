@@ -253,6 +253,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             throw new BusinessException("保存图片文件失败", e);
         }
 
+        attachment.setStoreType(fileStoreService.getStoreType());
         save(attachment);
         return attachment;
     }

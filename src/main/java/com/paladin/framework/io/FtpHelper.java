@@ -207,10 +207,4 @@ public class FtpHelper {
     }
 
 
-    public static void main(String[] args) throws FileNotFoundException {
-        FTPClient ftp = getFTPClient("192.168.31.204", 21, "netin", "123456");
-        uploadFile(ftp, new FileInputStream("d:/mongodb.txt"), "/", "mongodb.txt");
-        closeFTP(ftp);
-        System.exit(0);
-    }
 }

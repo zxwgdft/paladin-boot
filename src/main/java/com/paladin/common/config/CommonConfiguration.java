@@ -8,6 +8,7 @@ import com.paladin.common.core.template.TontoDialect;
 import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.common.service.sys.FileStoreService;
 import com.paladin.common.service.sys.impl.DefaultFileStoreService;
+import com.paladin.common.service.sys.impl.FtpFileStoreService;
 import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.QueryHandlerInterceptor;
@@ -115,9 +116,8 @@ public class CommonConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(FileStoreService.class)
     public FileStoreService getFileStoreService() {
-        return new DefaultFileStoreService();
+        return new FtpFileStoreService();
     }
 
     /**

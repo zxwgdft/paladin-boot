@@ -48,9 +48,10 @@ paladin:
   file:
     base-path: D:/file/
     ftp-host: 172.16.16.120
-    ftp-prot: 21
+    ftp-port: 21
     ftp-username: netin
     ftp-password: 123456
+    ftp-visit-port: 9021
 
     
 # 动态数据库配置

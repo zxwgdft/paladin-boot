@@ -29,6 +29,8 @@ public class SysAttachment {
 
     private Integer type;
 
+    private String storeType;
+
     private String name;
 
     private String suffix;

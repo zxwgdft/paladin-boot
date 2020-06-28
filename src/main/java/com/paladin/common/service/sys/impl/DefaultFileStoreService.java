@@ -72,4 +72,14 @@ public class DefaultFileStoreService implements FileStoreService {
             }
         }
     }
+
+    @Override
+    public String getStoreType() {
+        return "default";
+    }
+
+    @Override
+    public String getFileUrl(String relativePath) {
+        return "/file/" + relativePath;
+    }
 }

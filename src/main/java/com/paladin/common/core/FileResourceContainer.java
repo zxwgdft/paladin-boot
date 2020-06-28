@@ -1,6 +1,7 @@
 package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysAttachment;
+import com.paladin.common.service.sys.FileStoreService;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
 import com.paladin.framework.spring.SpringContainer;
@@ -18,6 +19,9 @@ public class FileResourceContainer implements SpringContainer {
 
     @Autowired
     private SysAttachmentService attachmentService;
+
+    @Autowired
+    private FileStoreService fileStoreService;
 
     private static FileResourceContainer container;
 
@@ -58,12 +62,12 @@ public class FileResourceContainer implements SpringContainer {
         String suffix = attachment.getSuffix();
         String name = attachment.getName() + (suffix == null ? "" : suffix);
         fr.setName(name);
-        String url = "/file/" + attachment.getRelativePath();
+        String url = container.fileStoreService.getFileUrl(attachment.getRelativePath());
         fr.setUrl(url);
 
         String trp = attachment.getThumbnailRelativePath();
         if (trp != null && trp.length() > 0) {
-            fr.setThumbnailUrl("/file/" + trp);
+            fr.setThumbnailUrl(container.fileStoreService.getFileUrl(trp));
         } else {
             fr.setThumbnailUrl(url);
         }
