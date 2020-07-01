@@ -26,6 +26,9 @@ public class FtpFileStoreService implements FileStoreService {
     @Value("${paladin.file.ftp-password}")
     private String password;
 
+    @Value("${paladin.file.ftp-visit-host}")
+    private int visitHost;
+
     @Value("${paladin.file.ftp-visit-port}")
     private int visitPort;
 
@@ -33,7 +36,7 @@ public class FtpFileStoreService implements FileStoreService {
 
     @PostConstruct
     protected void initialize() {
-        baseVisitUrl = "http://" + host + ":" + visitPort + "/";
+        baseVisitUrl = "http://" + visitHost + ":" + visitPort + "/";
     }
 
 
