@@ -13,6 +13,7 @@ import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,25 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
         return update(orgPersonnel);
     }
 
+    /**
+     * 删除人员
+     *
+     * @param id
+     * @return
+     */
+    public boolean removePersonnel(String id) {
+        OrgPersonnel orgPersonnel = get(id);
+        if (orgPersonnel != null) {
+            // 是否要考虑删除附件
+            String atts = orgPersonnel.getAttachment();
+            if (StringUtil.isNotEmpty(atts)) {
+                attachmentService.deleteAttachments(atts.split(","));
+            }
+        }
+        removeByPrimaryKey(id);
+        return true;
+    }
+
     public PageResult<OrgPersonnelVO> findPersonnel(OrgPersonnelQuery query) {
 
         // 增加数据权限过滤
@@ -120,4 +140,6 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
         return searchPage(query.getOffset(), query.getLimit(), OrgPersonnelVO.class,
                 permissionQuery == null ? query : new Object[]{query, permissionQuery});
     }
+
+
 }

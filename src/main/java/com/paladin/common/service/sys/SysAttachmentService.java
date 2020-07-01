@@ -36,6 +36,11 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
     // 单位M
     @Value("${paladin.file.max-file-size:10}")
     private int maxFileSize;
+
+    // 附件删除后保留时间，默认10天，
+    @Value("${paladin.file.expire-day:10}")
+    private int expireDay;
+
     private int maxFileNameSize = 100;
     private int maxFileByteSize;
 
@@ -456,7 +461,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         List<SysAttachment> list = searchAll(
                 new Condition[]{
                         new Condition(SysAttachment.FIELD_DELETED, QueryType.EQUAL, true),
-                        new Condition(SysAttachment.FIELD_DELETE_TIME, QueryType.LESS_THAN, new Date(System.currentTimeMillis() - 10 * 60 * 1000)),
+                        new Condition(SysAttachment.FIELD_DELETE_TIME, QueryType.LESS_THAN, new Date(System.currentTimeMillis() - (expireDay * 60L * 60 * 24 * 1000))),
                 },
                 SysAttachment.class, true);
 

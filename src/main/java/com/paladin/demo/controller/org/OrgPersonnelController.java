@@ -121,7 +121,7 @@ public class OrgPersonnelController extends ControllerSupport {
     @RequiresPermissions("org:personnel:delete")
     public Object delete(@RequestParam String id) {
         // 根据主键删除
-        return orgPersonnelService.removeByPrimaryKey(id) ? R.success() : R.fail("保存失败");
+        return orgPersonnelService.removePersonnel(id) ? R.success() : R.fail("保存失败");
     }
 
     // 导出Excel
