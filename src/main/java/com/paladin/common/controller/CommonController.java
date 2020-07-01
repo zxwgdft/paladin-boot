@@ -99,6 +99,14 @@ public class CommonController {
         return R.success(FileResourceContainer.convert(attachmentService.createPictureAndThumbnail(base64Str, filename, thumbnailWidth, thumbnailHeight)));
     }
 
+    @ApiOperation(value = "清理文件")
+    @GetMapping("/clean/attachment")
+    @ResponseBody
+    public Object cleanAttachment() {
+        int count = attachmentService.cleanAttachmentFile();
+        return R.success("成功清理附件文件" + count + "个");
+    }
+
     @GetMapping("/container/index")
     public String containerIndex() {
         return "/common/container/index";

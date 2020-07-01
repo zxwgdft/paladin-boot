@@ -22,6 +22,7 @@ public class SysAttachment {
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETE_TIME = "deleteTime";
 
 
     @Id
@@ -43,6 +44,8 @@ public class SysAttachment {
 
     private Date createTime;
 
-    private Integer deleted;
+    private Date deleteTime;
+
+    private Boolean deleted;
 
 }

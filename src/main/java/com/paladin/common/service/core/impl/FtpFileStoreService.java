@@ -1,6 +1,6 @@
-package com.paladin.common.service.sys.impl;
+package com.paladin.common.service.core.impl;
 
-import com.paladin.common.service.sys.FileStoreService;
+import com.paladin.common.service.core.FileStoreService;
 import com.paladin.framework.io.FtpHelper;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +41,13 @@ public class FtpFileStoreService implements FileStoreService {
     public void storeFile(InputStream input, String filePath, String fileName) {
         FTPClient ftp = FtpHelper.getFTPClient(host, port, username, password);
         FtpHelper.uploadFile(ftp, input, filePath, fileName);
+        FtpHelper.closeFTP(ftp);
+    }
+
+    @Override
+    public void deleteFile(String filePath, String fileName) {
+        FTPClient ftp = FtpHelper.getFTPClient(host, port, username, password);
+        FtpHelper.deleteFile(ftp, filePath, fileName);
         FtpHelper.closeFTP(ftp);
     }
 

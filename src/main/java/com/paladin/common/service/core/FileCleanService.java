@@ -1,21 +1,20 @@
-package com.paladin.common.config;
+package com.paladin.common.service.core;
 
 import com.paladin.common.core.upload.BigFileUploaderContainer;
+import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.framework.io.TemporaryFileHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
- * 定时任务配置
- *
  * @author TontoZhou
- * @since 2020/2/25
+ * @since 2020/6/30
  */
 @Slf4j
-@Component
-public class ScheduleConfiguration {
+@Service
+public class FileCleanService {
 
     @Autowired(required = false)
     private BigFileUploaderContainer bigFileUploaderContainer;
@@ -23,24 +22,27 @@ public class ScheduleConfiguration {
     @Autowired(required = false)
     private TemporaryFileHelper temporaryFileHelper;
 
-    /**
-     * 大文件上传清理任务
-     */
-    @Scheduled(cron = "0 0 */2 * * ?")
-    public void scheduledCleanUploader() {
+    @Autowired
+    private SysAttachmentService sysAttachmentService;
+
+    @Scheduled(cron = "0 0 2 * * ?")
+    public void scheduledClean() {
+
+        log.info("开始清理无效文件");
+
+        // 大文件上传清理任务
         if (bigFileUploaderContainer != null) {
             bigFileUploaderContainer.cleanUploader(60);
         }
-    }
 
-    /**
-     * 临时文件定时清理
-     */
-    @Scheduled(cron = "0 0 2 * * ?")
-    public void scheduledClean() {
+        // 临时文件定时清理
         if (temporaryFileHelper != null) {
             temporaryFileHelper.clearTemporaryFile(30);
         }
+
+        // 清理附件
+        sysAttachmentService.cleanAttachmentFile();
     }
+
 
 }

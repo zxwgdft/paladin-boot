@@ -1,7 +1,8 @@
-package com.paladin.common.service.sys.impl;
+package com.paladin.common.service.core.impl;
 
-import com.paladin.common.service.sys.FileStoreService;
+import com.paladin.common.service.core.FileStoreService;
 import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
@@ -56,6 +57,16 @@ public class DefaultFileStoreService implements FileStoreService {
             }
         } catch (IOException e) {
             throw new BusinessException("存储文件[" + path + "]失败", e);
+        }
+    }
+
+    @Override
+    public void deleteFile(String subPath, String fileName) {
+        String path = StringUtil.isEmpty(subPath) ? (filePath + fileName) : (filePath + subPath + "/" + fileName);
+        try {
+            Files.delete(Paths.get(path));
+        } catch (IOException e) {
+            throw new BusinessException("删除文件[" + path + "]失败", e);
         }
     }
 

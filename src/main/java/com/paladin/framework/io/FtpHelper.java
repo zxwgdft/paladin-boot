@@ -5,7 +5,10 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * 简单操作FTP工具类 ,此工具类支持中文文件名，不支持中文目录
@@ -27,7 +30,7 @@ public class FtpHelper {
      * @return FTPClient
      */
     public static FTPClient getFTPClient(String ftpHost, int ftpPort,
-                                  String ftpUserName, String ftpPassword) {
+                                         String ftpUserName, String ftpPassword) {
         FTPClient ftp = null;
         try {
             ftp = new FTPClient();
@@ -205,6 +208,6 @@ public class FtpHelper {
 
         return flag;
     }
-
+    
 
 }

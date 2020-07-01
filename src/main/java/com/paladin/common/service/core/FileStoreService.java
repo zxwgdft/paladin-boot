@@ -1,4 +1,4 @@
-package com.paladin.common.service.sys;
+package com.paladin.common.service.core;
 
 import java.io.InputStream;
 
@@ -16,6 +16,12 @@ public interface FileStoreService {
      * @param fileName 文件名称
      */
     void storeFile(InputStream input, String filePath, String fileName);
+
+    /**
+     * 删除文件
+     * @param filePath
+     */
+    void deleteFile(String filePath, String fileName);
 
     /**
      * 检查文件目录是否存在，不存在则创建

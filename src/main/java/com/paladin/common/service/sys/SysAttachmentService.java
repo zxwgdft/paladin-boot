@@ -1,20 +1,23 @@
 package com.paladin.common.service.sys;
 
 import com.paladin.common.model.sys.SysAttachment;
+import com.paladin.common.service.core.FileStoreService;
 import com.paladin.common.service.sys.dto.FileCreateParam;
-import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.Condition;
 import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.framework.utils.convert.DateFormatUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.Thumbnails.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
@@ -26,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
@@ -48,9 +52,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建附件
-     *
-     * @param files
-     * @return
      */
     public List<SysAttachment> createAttachments(MultipartFile[] files) {
         List<SysAttachment> attachments = new ArrayList<>(files.length);
@@ -62,9 +63,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建附件
-     *
-     * @param file
-     * @return
      */
     public SysAttachment createAttachment(MultipartFile file) {
         return createAttachment(file, null);
@@ -72,10 +70,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建附件
-     *
-     * @param file
-     * @param filename
-     * @return
      */
     public SysAttachment createAttachment(MultipartFile file, String filename) {
         FileCreateParam param = new FileCreateParam();
@@ -90,10 +84,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建附件
-     *
-     * @param base64str
-     * @param filename
-     * @return
      */
     public SysAttachment createAttachment(String base64str, String filename) {
         FileCreateParam param = new FileCreateParam();
@@ -117,9 +107,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建图片与缩略图
-     *
-     * @param file
-     * @return
      */
     public SysAttachment createPictureAndThumbnail(MultipartFile file) {
         return createPictureAndThumbnail(file, null, min_thumbnail_width, min_thumbnail_height);
@@ -127,10 +114,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建图片与缩略图
-     *
-     * @param file
-     * @param filename
-     * @return
      */
     public SysAttachment createPictureAndThumbnail(MultipartFile file, String filename) {
         return createPictureAndThumbnail(file, filename, min_thumbnail_width, min_thumbnail_height);
@@ -138,10 +121,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建图片与缩略图
-     *
-     * @param file
-     * @param filename
-     * @return
      */
     public SysAttachment createPictureAndThumbnail(MultipartFile file, String filename, Integer thumbnailWidth,
                                                    Integer thumbnailHeight) {
@@ -155,10 +134,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 创建图片与缩略图
-     *
-     * @param base64str
-     * @param filename
-     * @return
      */
     public SysAttachment createPictureAndThumbnail(String base64str, String filename) {
         return createPictureAndThumbnail(base64str, filename, min_thumbnail_width, min_thumbnail_height);
@@ -227,7 +202,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         attachment.setSize(param.getSize());
         attachment.setType(param.getType());
         attachment.setCreateTime(new Date());
-        attachment.setDeleted(BaseModel.BOOLEAN_NO);
+        attachment.setDeleted(false);
 
         String filename = param.getFilename();
         if (filename != null && filename.length() > 0) {
@@ -382,7 +357,11 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
      */
     public int deleteAttachments(String... ids) {
         if (ids != null && ids.length > 0) {
-            return remove(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
+            Example example = buildOrCreateExample(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)), modelType, false);
+            SysAttachment attachment = new SysAttachment();
+            attachment.setDeleted(true);
+            attachment.setDeleteTime(new Date());
+            return getSqlMapper().updateByExampleSelective(attachment, example);
         }
         return 0;
     }
@@ -401,6 +380,8 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 替换和合并附件
+     * <p>
+     * 会删除附件，所以需要调用该方法时需要考虑是否要添加事务
      *
      * @param originIds
      * @param newIds
@@ -465,6 +446,47 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             return str.substring(0, str.length() - 1);
         }
         return null;
+    }
+
+    /**
+     * 清理删除的附件文件
+     */
+    public int cleanAttachmentFile() {
+        int count = 0;
+        List<SysAttachment> list = searchAll(
+                new Condition[]{
+                        new Condition(SysAttachment.FIELD_DELETED, QueryType.EQUAL, true),
+                        new Condition(SysAttachment.FIELD_DELETE_TIME, QueryType.LESS_THAN, new Date(System.currentTimeMillis() - 10 * 60 * 1000)),
+                },
+                SysAttachment.class, true);
+
+        for (SysAttachment att : list) {
+            String id = att.getId();
+            if (deleteFile(id, att.getRelativePath()) &&
+                    deleteFile(id, att.getThumbnailRelativePath())) {
+                getSqlMapper().deleteByPrimaryKey(id);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private boolean deleteFile(String id, String filePath) {
+        try {
+            if (StringUtil.isNotEmpty(filePath)) {
+                int i = filePath.lastIndexOf('/');
+                if (i >= 0) {
+                    fileStoreService.deleteFile(filePath.substring(0, i), filePath.substring(i + 1));
+                } else {
+                    fileStoreService.deleteFile("", filePath);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("删除附件失败[id:" + id + ",path:" + filePath + "]");
+        }
+        return false;
     }
 
 }
