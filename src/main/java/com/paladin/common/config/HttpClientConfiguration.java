@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
  * OkHttpClient与HttpClient相比最主要的就是API更简单，并且默认设置更合理，性能相差不大，
  * 在运用得当的情况下HttpClient更快，但也更容易出错
  *
- *
  * @author TontoZhou
  * @since 2020/3/26
  */
@@ -69,14 +68,21 @@ public class HttpClientConfiguration {
                 if (response.isSuccessful()) {
                     System.out.println(response.body().string());
                 }
+
+                response.close();
             }
         });
 
         // 同步
+        Response response = null;
         try {
-            client.newCall(request).execute();
+            response = client.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
     }
 
