@@ -53,7 +53,8 @@ paladin:
     ftp-password: 123456
     ftp-visit-host: 172.16.16.120
     ftp-visit-port: 9021
-
+  generate:
+    swagger: true
 
 # 动态数据库配置
 #  dynamic-datasource-enabled: true

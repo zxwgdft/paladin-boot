@@ -13,7 +13,6 @@ import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -30,7 +29,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
     }
 
     @Transactional
-    public boolean updateRole(@Valid OrgRoleDTO orgRoleDTO) {
+    public boolean updateRole(OrgRoleDTO orgRoleDTO) {
         String id = orgRoleDTO.getId();
         if (id == null || id.length() == 0) {
             throw new BusinessException("找不到更新角色");
@@ -52,7 +51,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole> {
     }
 
     @Transactional
-    public boolean saveRole(@Valid OrgRoleDTO orgRoleDTO) {
+    public boolean saveRole(OrgRoleDTO orgRoleDTO) {
         OrgRole model = new OrgRole();
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
         model.setIsDefault(BaseModel.BOOLEAN_NO);

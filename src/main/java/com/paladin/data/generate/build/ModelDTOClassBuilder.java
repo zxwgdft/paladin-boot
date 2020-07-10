@@ -6,9 +6,12 @@ import com.paladin.data.model.build.DbBuildColumn;
 import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +22,9 @@ import java.util.*;
 
 @Component
 public class ModelDTOClassBuilder extends SpringBootClassBuilder {
+
+    @Value("${paladin.generate.swagger:false}")
+    private boolean startApi;
 
     protected boolean need(GenerateColumnOption columnOption) {
         DbBuildColumn buildColumn = columnOption.getBuildColumnOption();
@@ -43,7 +49,10 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
         Set<Class<?>> importClassSet = new HashSet<>();
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
-
+        if(startApi) {
+            importClassSet.add(ApiModel.class);
+            importClassSet.add(ApiModelProperty.class);
+        }
         for (GenerateColumnOption columnOption : columnOptions) {
             Class<?> clazz = columnOption.getFieldType();
 
@@ -100,13 +109,20 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
+        if(startApi) {
+            sb.append("\n@ApiModel");
+        }
         sb.append("\npublic class ").append(getClassName(tableOption));
 
         sb.append(" {\n\n");
 
         for (GenerateColumnOption columnOption : columnOptions) {
             String comment = columnOption.getColumn().getComment();
-            sb.append(tab).append("// ").append(comment).append("\n");
+            if(startApi) {
+                sb.append(tab).append("@ApiModelProperty(\"").append(comment).append("\")\n");
+            } else {
+                sb.append(tab).append("// ").append(comment).append("\n");
+            }
 
             if (!columnOption.isPrimary()) {
                 DbBuildColumn buildCol = columnOption.getBuildColumnOption();

@@ -5,8 +5,11 @@ import com.paladin.data.generate.GenerateEnvironment;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Id;
@@ -16,6 +19,9 @@ import java.util.Map.Entry;
 
 @Component
 public class ModelClassBuilder extends SpringBootClassBuilder {
+
+    @Value("${paladin.generate.swagger:false}")
+    private boolean startApi;
 
     private static Map<Class<?>, Set<String>> modelFieldMap = new HashMap<>();
 
@@ -98,6 +104,10 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
         importClassSet.add(Id.class);
+        if(startApi) {
+            importClassSet.add(ApiModel.class);
+            importClassSet.add(ApiModelProperty.class);
+        }
         if (baseModelType != null) {
             importClassSet.add(baseModelType);
         }
@@ -134,6 +144,9 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
+        if(startApi) {
+            sb.append("\n@ApiModel");
+        }
         sb.append("\npublic class ").append(tableOption.getModelName());
         if (baseModelType != null) {
             sb.append(" extends ").append(baseModelType.getSimpleName());
@@ -143,7 +156,11 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         for (GenerateColumnOption columnOption : columnOptions) {
 
-            sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
+            if(startApi) {
+                sb.append(tab).append("@ApiModelProperty(\"").append(columnOption.getColumn().getComment()).append("\")\n");
+            } else {
+                sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
+            }
 
             if (columnOption.isPrimary()) {
                 sb.append(tab).append("@Id").append("\n");

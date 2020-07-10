@@ -9,14 +9,20 @@ import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.service.IgnoreSelection;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
 public class ModelVOClassBuilder extends SpringBootClassBuilder {
+
+    @Value("${paladin.generate.swagger:false}")
+    private boolean startApi;
 
     protected boolean need(GenerateColumnOption columnOption) {
         DbBuildColumn buildColumn = columnOption.getBuildColumnOption();
@@ -32,7 +38,10 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
         Set<Class<?>> importClassSet = new HashSet<>();
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
-
+        if(startApi) {
+            importClassSet.add(ApiModel.class);
+            importClassSet.add(ApiModelProperty.class);
+        }
         List<GenerateColumnOption> originColumnOptions = tableOption.getColumnOptions();
 
         List<GenerateColumnOption> columnOptions = new ArrayList<>(originColumnOptions.size());
@@ -86,12 +95,19 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
+        if(startApi) {
+            sb.append("\n@ApiModel");
+        }
         sb.append("\npublic class ").append(getClassName(tableOption));
 
         sb.append(" {\n\n");
 
         for (GenerateColumnOption columnOption : columnOptions) {
-            sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
+            if(startApi) {
+                sb.append(tab).append("@ApiModelProperty(\"").append(columnOption.getColumn().getComment()).append("\")\n");
+            } else {
+                sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
+            }
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
             if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
                 sb.append(tab).append("@IgnoreSelection\n");
