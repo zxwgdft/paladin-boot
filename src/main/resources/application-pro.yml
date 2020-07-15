@@ -32,6 +32,12 @@ spring:
     port: 6379
     timeout: 1000
 
+logging:
+  file:
+    path: D:/logs
+    max-history: 30
+
+
 # 自定义配置
 paladin:
   shiro-cas-enabled: false
