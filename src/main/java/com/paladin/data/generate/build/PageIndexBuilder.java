@@ -74,6 +74,7 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
         data.put("exportUrl", controllerBuilder.getBaseRequestMapping(tableOption) + controllerBuilder.getExportRequestMapping(tableOption));
         data.put("addUrl", controllerBuilder.getBaseRequestMapping(tableOption) + controllerBuilder.getAddRequestMapping(tableOption));
         data.put("detailUrl", controllerBuilder.getBaseRequestMapping(tableOption) + controllerBuilder.getDetailRequestMapping(tableOption));
+        data.put("editUrl", controllerBuilder.getBaseRequestMapping(tableOption) + controllerBuilder.getEditRequestMapping(tableOption));
         data.put("removeUrl", controllerBuilder.getBaseRequestMapping(tableOption) + controllerBuilder.getDeleteRequestMapping(tableOption));
         data.put("mainModel", tableOption.getModel());
 

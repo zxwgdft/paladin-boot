@@ -220,6 +220,7 @@ public class DBConnectionController extends ControllerSupport {
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_INDEX, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_ADD, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_DETAIL, projectPath);
+        generateService.buildProjectFile(tableOption, BuilderType.PAGE_EDIT, projectPath);
 
         visitCacheService.putCache(request, CACHE_PROJECT_PATH, projectPath);
 
@@ -278,6 +279,7 @@ public class DBConnectionController extends ControllerSupport {
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_INDEX, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_ADD, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.PAGE_DETAIL, projectPath);
+        generateService.buildProjectFile(tableOption, BuilderType.PAGE_EDIT, projectPath);
 
         generateService.saveBuildOption(tableOption, dbName);
 

@@ -70,6 +70,7 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         params.put("addRM", getAddRequestMapping(tableOption));
         params.put("detailRM", getDetailRequestMapping(tableOption));
         params.put("getDetailRM", getGetDetailRequestMapping(tableOption));
+        params.put("editRM", getEditRequestMapping(tableOption));
         params.put("saveRM", getSaveRequestMapping(tableOption));
         params.put("updateRM", getUpdateRequestMapping(tableOption));
         params.put("deleteRM", getDeleteRequestMapping(tableOption));
@@ -78,6 +79,7 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         params.put("indexPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_INDEX, tableOption));
         params.put("addPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_ADD, tableOption));
         params.put("detailPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_DETAIL, tableOption));
+        params.put("editPage", GenerateBuilderContainer.getViewPath(BuilderType.PAGE_EDIT, tableOption));
 
         try {
             template.process(params, writer);
@@ -115,6 +117,10 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
 
     public String getGetDetailRequestMapping(GenerateTableOption tableOption) {
         return "/get";
+    }
+
+    public String getEditRequestMapping(GenerateTableOption tableOption) {
+        return "/edit";
     }
 
     public String getSaveRequestMapping(GenerateTableOption tableOption) {

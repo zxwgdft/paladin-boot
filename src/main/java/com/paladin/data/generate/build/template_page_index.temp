@@ -9,33 +9,28 @@
         <h1>${mainTitle}</h1>
     </section>
     <section class="content">
-        <div class="box box-solid">
-            <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
-                	<div class="form-group">
-	                    <div class="col-md-12">
-		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-		                    </div>
-		                </div>
-	                </div>
-                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                    <input type="text" style="display:none">
-                </form>
-                <input type="hidden" id="pageLimit" th:value="${r'${query?.limit}'}" />
-                <input type="hidden" id="pageOffset" th:value="${r'${query?.offset}'}" />
-            </div>
-        </div>
         <div class="box box-solid" style="margin-top:20px">
             <div id="result" class="box-body">
-                <table id="dataGrid"></table>
-                <div id="toolbar">
-                    <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
-                    </div>
+            <input type="hidden" id="pageLimit" th:value="${r'${query?.limit}'}" />
+            <input type="hidden" id="pageOffset" th:value="${r'${query?.offset}'}" />
+
+            <div style="margin-top: 5px;height:50px">
+                <div class="pull-right">
+                    <a class="btn btn-default btn-flat"
+                       style="width:85px;float:left;margin-right:10px"
+                       onclick="table.export()">
+                        <i class="glyphicon glyphicon-export"></i>&nbsp;导出
+                    </a>
+
+                    <a shiro:hasPermission="org:personnel:save"
+                       class="btn bg-olive btn-flat"
+                       style="width:85px;float:left;"
+                       onclick="add()">
+                        <i class="fa fa-plus"></i>&nbsp;新增
+                    </a>
                 </div>
             </div>
+            <table id="dataGrid"></table>
         </div>
     </section>
     <div th:include="/${mainModel}/footer" />
@@ -59,12 +54,16 @@ ${tableColumns}
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
+                            'click .edit': function (e, value, row, index) {
+                                edit(row);
+                            },
                             'click .remove': function(e, value, row, index) {
                                 remove(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                            return '<button class="detail btn btn-xs btn-default" style="margin-right:10px"><i class="fa fa-search"></i>查看</button>' +
+                                '<button class="edit btn btn-xs btn-info" style="margin-right:10px"><i class="fa fa-edit"></i>编辑</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
 
                         }
@@ -74,11 +73,7 @@ ${tableColumns}
             url: '${searchUrl}',
             searchbar: '#searchbar',
             exportUrl: '${exportUrl}',
-            showExportor: true,
-            showColumns: true,
-            pagination: true,
-            toolbar: "#toolbar",
-            showRefresh: true
+            pagination: true
         });
     }
 
@@ -88,6 +83,10 @@ ${tableColumns}
 
     function detail(row) {
         window.location = '${detailUrl}' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function edit(row) {
+        window.location = '${editUrl}' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {

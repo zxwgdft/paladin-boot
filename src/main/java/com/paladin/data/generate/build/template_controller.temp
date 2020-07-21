@@ -64,6 +64,12 @@ public class ${upperModelName}Controller extends ControllerSupport {
     	model.addAttribute("id", id);
         return "${detailPage}";
     }
+
+    @GetMapping("${editRM}")
+    public String editInput(@RequestParam String id, Model model) {
+        model.addAttribute("id", id);
+        return "${editPage}";
+    }
     
     @PostMapping("${saveRM}")
 	@ResponseBody
