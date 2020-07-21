@@ -106,7 +106,7 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 		}
 
 		data.put("columns", sb.toString());
-		data.put("title", "详情");
+		data.put("title", "查看详情");
 		data.put("mainTitle", tableOption.getTitle());
 		data.put("mainModel", tableOption.getModel());
 

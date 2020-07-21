@@ -14,9 +14,6 @@
     </section>
     <section class="content">
     </section>
-    <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="${indexUrl}" class="btn btn-primary btn-block">返回</a>
-    </div>
     <div th:include="/${mainModel}/footer" />
     <script type="text/javascript">
     var options = {
@@ -34,6 +31,7 @@
         
         var model = new tonto.Model("model", options.columns, {
             pattern:"edit",
+            back: '${indexUrl}',
             successCallback:function(){
                 $.successAlert("保存成功",function(){
                     window.location = "${indexUrl}";

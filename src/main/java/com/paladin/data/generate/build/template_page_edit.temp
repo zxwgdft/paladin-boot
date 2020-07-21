@@ -33,7 +33,12 @@
            
             var model = new tonto.Model("model", options.columns, {
                 pattern: 'edit',
-                back: '${indexUrl}'
+                back: '${indexUrl}',
+                successCallback:function(){
+                    $.successAlert("修改成功",function(){
+                        window.location = "${indexUrl}";
+                    });
+                }
             });
             model.setData(data);
         });
