@@ -4,6 +4,8 @@
 //
 // -----------------------------------------
 
+var _isBigScreen = window.screen.width >= 1600;
+
 function generateTagAttribute(obj) {
     if (!obj) return '';
     var s = [];
@@ -56,9 +58,9 @@ function generateToolBar(toolBtn) {
 function generateBox(options, content) {
     var id = options.id,
         name = options.name,
-        icon = options.icon,
+        icon = options.icon || 'fa fa-reorder',
         editable = options.editable !== false,
-        borderClass = options.boxHeaderClass || 'box-header no-border',
+        borderClass = options.boxHeaderClass || 'box-header with-border',
         boxStyle = options.boxStyle,
         boxHeaderStyle = options.boxHeaderStyle,
         boxClass = options.boxClass || 'box box-widget',
@@ -191,17 +193,17 @@ function generateEditFormHtml(options, hide) {
             id: id + '_form_submit_btn',
             type: options.server === false ? 'button' : 'submit',
             name: options.submitBtnName || '保存',
-            class: options.submitBtnClass || 'btn btn-primary btn-block',
+            class: options.submitBtnClass || 'btn btn-primary btn-flat btn-block',
             order: -1
         });
     }
 
-    if (options.cancelBtn !== false) {
+    if (options.back !== false) {
         options.formButtonBar.push({
-            id: id + '_form_cancel_btn',
+            id: id + '_form_back_btn',
             type: 'button',
-            name: options.cancelBtnName || '取消',
-            class: options.cancelBtnClass || 'btn btn-default btn-block',
+            name: options.backBtnName || '返回',
+            class: options.backBtnClass || 'btn btn-default btn-flat btn-block',
             order: 9999
         });
     }
@@ -300,6 +302,37 @@ function generateViewFormHtml(options) {
         html += '</div>\n';
         currentColspan = 0;
     }
+    options.viewButtonBar = options.viewButtonBar || [];
+
+    if (options.back !== false) {
+        options.viewButtonBar.push({
+            id: id + '_view_back_btn',
+            type: 'button',
+            name: options.backBtnName || '返回',
+            class: options.backBtnClass || 'btn btn-default btn-flat btn-block',
+            order: 9999
+        });
+    }
+
+    options.viewButtonBar.sort(function (a, b) {
+        return (a.order > b.order) ? 1 : -1;
+    });
+
+    if (options.viewButtonBar.length > 0) {
+        var viewButtonBarClass = options.viewButtonBarClass === false ? null : (options.viewButtonBarClass || 'view-button-bar');
+        html += '<div class="form-group' + (viewButtonBarClass ? ' ' + viewButtonBarClass : '') + '">\n';
+        var firstBtn = true,
+            btnWidth = options.viewButtonBar.length > 2 ? 'col-sm-1' : 'col-sm-2';
+        options.viewButtonBar.forEach(function (a) {
+            html += firstBtn ? '<div class="' + btnWidth + ' col-sm-offset-3">\n' : '<div class="' + btnWidth + ' col-sm-offset-1">\n';
+            html += '<button type="' + a.type + '" id="' + a.id + '" class="' + a.class + '">' + a.name + '</button>\n';
+            html += '</div>\n';
+
+            firstBtn = false;
+        });
+
+        html += '</div>\n';
+    }
 
     html +=
         '   </form>\n' +
@@ -324,8 +357,9 @@ var _Model = function (name, column, options) {
     that.viewBody = $("#" + name + "_view");
     that.editBody = $("#" + name + "_edit");
     that.formSubmitBtn = $("#" + name + "_form_submit_btn");
-    that.formCancelBtn = $("#" + name + "_form_cancel_btn");
+    that.formBackBtn = $("#" + name + "_form_back_btn");
     that.formBody = $("#" + name + "_form");
+    that.viewBackBtn = $("#" + name + "_view_back_btn");
 
     that.editBtn.click(function () {
         that.toEdit();
@@ -377,15 +411,21 @@ var _Model = function (name, column, options) {
     }
 
     // 编辑取消按钮点击事件
-    if (typeof that.config.formCancelEventHandler === 'function') {
-        that.formCancelBtn.click(function () {
-            that.config.formCancelEventHandler(that);
-        });
-    } else {
-        that.formCancelBtn.click(function () {
-            that.toView(false);
-        });
-    }
+    that.formBackBtn.click(function () {
+        if (typeof that.config.back === 'function') {
+            window.location = that.config.back();
+        } else {
+            window.location = that.config.back;
+        }
+    });
+
+    that.viewBackBtn.click(function () {
+        if (typeof that.config.back === 'function') {
+            window.location = that.config.back();
+        } else {
+            window.location = that.config.back;
+        }
+    });
 
     // 创建表单提交
     if (that.formBody) {

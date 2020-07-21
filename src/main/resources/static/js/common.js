@@ -1351,9 +1351,9 @@ function _initTable() {
         if (!options.classes) {
             if (window.screen.height <= 900 || window.screen.width <= 1600) {
                 // 小屏幕适用
-                options.classes = "table table-hover table-border table-striped table-condensed";
+                options.classes = "table table-hover table-striped table-condensed";
             } else {
-                options.classes = "table table-hover table-border table-striped";
+                options.classes = "table table-hover table-striped";
             }
         }
 
@@ -2003,7 +2003,7 @@ function _initEnumConstant(container) {
     }
 
     $.extend({
-        putConstantEnum: function(enumcode, items){
+        putConstantEnum: function (enumcode, items) {
             window._constant_cache = window._constant_cache || {};
             window._constant_cache[enumcode] = items;
         },
@@ -2016,7 +2016,7 @@ function _initEnumConstant(container) {
         getConstantEnumItem: function (enumcode, key) {
             if (key === true) key = 1;
             if (key === false) key = 0;
-            if(key || key === 0) {
+            if (key || key === 0) {
                 var items = window._constant_cache[enumcode];
                 if (items) {
                     for (var i = 0; i < items.length; i++) {
@@ -2031,7 +2031,7 @@ function _initEnumConstant(container) {
         getConstantEnumValue: function (enumcode, key) {
             if (key === true) key = 1;
             if (key === false) key = 0;
-            if(key || key === 0) {
+            if (key || key === 0) {
                 var items = window._constant_cache[enumcode];
                 if (items) {
                     for (var i = 0; i < items.length; i++) {

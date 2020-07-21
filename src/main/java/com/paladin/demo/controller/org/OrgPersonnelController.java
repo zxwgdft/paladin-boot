@@ -73,6 +73,13 @@ public class OrgPersonnelController extends ControllerSupport {
         return "/demo/org/org_personnel_detail";
     }
 
+    // 编辑页面
+    @GetMapping("/edit")
+    public String editInput(@RequestParam String id, Model model) {
+        model.addAttribute("id", id);
+        return "/demo/org/org_personnel_edit";
+    }
+
     // 新增人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
     @PostMapping("/save")
     @ResponseBody

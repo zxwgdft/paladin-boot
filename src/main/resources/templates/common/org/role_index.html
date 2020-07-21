@@ -13,9 +13,11 @@
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
-                    <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增角色</a>
-                    </div>
+                    <a class="btn bg-olive btn-flat"
+                       style="width:110px;float:left;"
+                       onclick="add()">
+                        <i class="fa fa-plus"></i>&nbsp;新增角色
+                    </a>
                 </div>
             </div>
         </div>
@@ -54,8 +56,8 @@
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="grant btn btn-xs btn-success"><i class="glyphicon glyphicon-cog"></i>授权</button>';
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="fa fa-edit"></i>&nbsp;详情</button>' +
+                                '<button class="grant btn btn-xs btn-success"><i class="fa fa-cog"></i>&nbsp;授权</button>';
                         }
                     }
                 ]

@@ -10,7 +10,7 @@
     <h1>人员管理</h1>
     <ol class="breadcrumb">
         <li><a href="/demo/org/personnel/index"><i class="fa fa-list-alt"></i>人员列表</a></li>
-        <li class="active">人员详情</li>
+        <li class="active">人员编辑</li>
     </ol>
 </section>
 <section class="content">
@@ -24,7 +24,7 @@
     $(function () {
         var options = {
             id: "model",
-            name: "人员详情",
+            name: "编辑人员信息",
             url: "/demo/org/personnel/update?id=" + $("#id").val(),
             columns: [
                 {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
@@ -122,8 +122,22 @@
             $.initComponent($(".content"));
 
             var model = new tonto.Model("model", options.columns, {
-                pattern: 'view',
+                pattern: 'edit',
                 back: "/demo/org/personnel/index"
+                // extraParam: null, // 可以为方法或对象，用于扩展表单外提交的字段
+                // 提交表单前调取的方法，如果返回false则不提交
+                // beforeSubmit: function (formData) {
+                // },
+                // 如果想通过自己的方式提交数据，则可以配置submitClick，
+                // 以下代码直接读取了编辑中的表单数据并设置为数据源，然后切换到view状态，达到不提交服务器的作用
+                // 还可以在这里通过json格式提交复杂对象请求，例如上面的地址
+                // submitClick: function(that){
+                //     if (that.formBody.valid()) {
+                //         var d = that.getFormData();
+                //         that.setData(d);
+                //         that.toView();
+                //     }
+                // },
             });
             model.setData(data);
         });
