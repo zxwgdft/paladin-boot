@@ -15,7 +15,7 @@ import java.util.*;
 @Component
 public class PageEditBuilder extends SpringBootPageBuilder {
 
-    private static Template template = FreemarkerUtil.getTemplate("/template_page_detail.temp");
+    private static Template template = FreemarkerUtil.getTemplate("/template_page_edit.temp");
 
     public String buildContent(GenerateTableOption tableOption) {
         HashMap<String, Object> data = new HashMap<>();
