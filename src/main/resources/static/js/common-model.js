@@ -207,8 +207,9 @@ function generateEditFormHtml(options, hide) {
         return (a.order > b.order) ? 1 : -1;
     });
 
-    if (formButtonBar.length > 0) {
-
+    if (typeof options.generateFormButtonBar === 'function') {
+        html += options.generateFormButtonBar();
+    } else if (formButtonBar.length > 0) {
         html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '">\n';
         html += '<div class="btn-group">\n';
 
@@ -216,7 +217,8 @@ function generateEditFormHtml(options, hide) {
             html += '<button type="' + a.type + '" id="' + a.id + '" class="' + a.class + '" style="margin-left: 30px; width: ' + a.width + '">' + a.name + '</button>\n';
         });
 
-        html += '</div>\n</div>\n';
+        html += '</div>\n' +
+            '</div>\n';
     }
 
     html +=
@@ -317,7 +319,9 @@ function generateViewFormHtml(options) {
 
     viewButtonBar = options.viewButtonBar || [];
 
-    if (options.showBackBtn !== false) {
+    if (typeof options.generateViewButtonBar === 'function') {
+        html += options.generateViewButtonBar();
+    } else if (options.showBackBtn !== false) {
         viewButtonBar.push({
             id: id + '_form_back_btn',
             type: 'button',
@@ -392,7 +396,7 @@ var _Model = function (name, column, options) {
         successCallback: function (data) { //成功提交表单后回调
             $.successAlert("保存成功", function () {
                 if (typeof that.config.back === 'function') {
-                    window.location = that.config.back();
+                    that.config.back();
                 } else {
                     window.location = that.config.back;
                 }
@@ -422,7 +426,7 @@ var _Model = function (name, column, options) {
     // 编辑返回按钮点击事件
     that.formBackBtn.click(function () {
         if (typeof that.config.back === 'function') {
-            window.location = that.config.back();
+            that.config.back();
         } else {
             window.location = that.config.back;
         }
@@ -430,7 +434,7 @@ var _Model = function (name, column, options) {
 
     that.viewBackBtn.click(function () {
         if (typeof that.config.back === 'function') {
-            window.location = that.config.back();
+            that.config.back();
         } else {
             window.location = that.config.back;
         }
@@ -2285,7 +2289,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
         if (!column.hasEdited) {
             var contentContainer = $('<ul class="products-list product-list-in-box"></ul>'),
                 addSubModelBtn = column.addSubModelBtn ? column.addSubModelBtn :
-                    $('<div class="dotted-line-btn"><a href="javascript:void(0)" ><i class="glyphicon glyphicon-plus"></i>' + (column.addSubModelBtnTitle ? column.addSubModelBtnTitle : '添加选项') + '</a></div>');
+                    $('<div class="dotted-line-btn"><a href="javascript:void(0)" ><i class="fa fa-plus"></i>' + (column.addSubModelBtnTitle ? column.addSubModelBtnTitle : '添加选项') + '</a></div>');
             div.append(contentContainer);
             div.append(addSubModelBtn);
             column.contentContainer = contentContainer;
@@ -2312,6 +2316,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
         var defaultSubOp = {
             server: false,
+            maxColspan: 1,
             maxColspan: 1,
             inputSize: 8,
             labelSize: 3,
@@ -2518,18 +2523,18 @@ var _areaPickFieldBuilder = new _FieldBuilder("AREA-PICK", {
         var format = v ? getDistrictFullName(v, "/") : "province/city/county";
         var option = {
             "format": format, //格式
-            //"display":"block",
-            //"width": 400,//设置“省市县”文本边框的宽度
-            //"height":"48",//设置“省市县”文本边框的高度
-            //"borderColor":"#435abd",//设置“省市县”文本边框的色值
-            //"arrowColor":"#435abd",//设置下拉箭头颜色
-            //"listBdColor": "#435abd",//设置下拉框父元素ul的border色值
-            //"color":"#435abd",//设置“省市县”字体颜色
-            //"fontSize":"15px",//设置字体大小
-            //"hoverColor": "#435abd",
-            //"paddingLeft": "10px",//设置“省”位置处的span相较于边框的距离
-            //"arrowRight": "10px",//设置下拉箭头距离边框右侧的距离
-            //"maxHeight": "250px",
+            // "display":"block",
+            // "width": 400,//设置“省市县”文本边框的宽度
+            // "height":"48",//设置“省市县”文本边框的高度
+            // "borderColor":"#435abd",//设置“省市县”文本边框的色值
+            // "arrowColor":"#435abd",//设置下拉箭头颜色
+            // "listBdColor": "#435abd",//设置下拉框父元素ul的border色值
+            // "color":"#435abd",//设置“省市县”字体颜色
+            // "fontSize":"15px",//设置字体大小
+            // "hoverColor": "#435abd",
+            // "paddingLeft": "10px",//设置“省”位置处的span相较于边框的距离
+            // "arrowRight": "10px",//设置下拉箭头距离边框右侧的距离
+            // "maxHeight": "250px",
             "getVal": function () {
                 //这个方法是每次选中一个省、市或者县之后，执行的方法
                 var code = that.getEditValue(column, model);
