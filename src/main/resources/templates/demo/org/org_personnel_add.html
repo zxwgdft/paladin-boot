@@ -15,9 +15,6 @@
 </section>
 <section class="content">
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a href="/demo/org/personnel/index" class="btn btn-primary btn-block">返回</a>
-</div>
 <div th:include="/demo/footer"/>
 <script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" src="/static/assets/ueditor/ueditor.all.min.js"></script>
@@ -51,6 +48,7 @@
                 idField: "id",
                 nameField: "name"
             },
+            {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
             {
                 title: "角色",
                 name: "roles",
@@ -59,9 +57,9 @@
                 multiple: true,
                 url: "/common/org/role/find/all",
                 idField: "id",
+                colspan: 2,
                 nameField: "roleName"
             },
-            {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
             {title: "出生日期", name: "birthday", inputType: "DATE"},
             {
                 title: "手机号码",

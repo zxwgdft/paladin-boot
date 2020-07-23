@@ -9,7 +9,7 @@
 <section class="content-header">
     <h1>人员管理</h1>
     <ol class="breadcrumb">
-        <li><a href="/demo/org/personnel/index"><i class="fa fa-list-alt"></i>人员列表</a></li>
+        <li><a href="/demo/org/personnel/index"><i class="fa fa-table"></i>人员列表</a></li>
         <li class="active">人员详情</li>
     </ol>
 </section>
@@ -50,6 +50,7 @@
                     idField: "id",
                     nameField: "name"
                 },
+                {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
                 {
                     title: "角色",
                     name: "roles",
@@ -58,9 +59,9 @@
                     multiple: true,
                     url: "/common/org/role/find/all",
                     idField: "id",
+                    colspan: 2,
                     nameField: "roleName"
                 },
-                {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
                 {title: "出生日期", name: "birthday", inputType: "DATE"},
                 {
                     title: "手机号码",
