@@ -24,9 +24,17 @@
         cancelBtn: false,
         name: "新增",
         url: "/demo/org/personnel/save",
+        boxHeader: false,
         columns: [
-            {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
-            {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
+            {
+                title: "姓名",
+                name: "name",
+                required: "required",
+                maxLength: 20,
+                inputType: "TEXT",
+                fieldset: true,
+                legend: '基本信息'
+            },
 
             {
                 title: "证件类型",
@@ -36,6 +44,18 @@
                 inputType: "SELECT"
             },
             {title: "证件号码", name: "identificationNo", required: "required", maxLength: 32, inputType: "TEXT"},
+            {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
+
+            {
+                // 该属性后台不会接受，只是示例
+                title: "头像",
+                name: "portrait",
+                colspan: 2,
+                inputType: "ATTACHMENT",
+                fileName: "portraitFiles",
+                isPicture: true, // 如果是图片则只能接收后缀["jpeg", "jpg", "png", "gif"]，优先级低于allowedFileExtensions
+                maxFileCount: 1
+            },
             {
                 // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
                 title: "所属机构",
@@ -48,7 +68,9 @@
                 idField: "id",
                 nameField: "name"
             },
-            {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
+
+
+            {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO", fieldset: true, legend: '详细信息'},
             {
                 title: "角色",
                 name: "roles",
@@ -76,7 +98,7 @@
             },
             {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
             {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
-            {title: "简历", name: "resume", inputType: "EDITOR"},
+            {title: "简历", name: "resume", inputType: "EDITOR", fieldset: true, legend: '补充信息'},
             {
                 // 子项添加，未做保存处理
                 title: "地址",

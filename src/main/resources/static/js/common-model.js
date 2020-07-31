@@ -129,12 +129,37 @@ function generateEditFormHtml(options, hide) {
         '<div id="' + id + '_edit" class="' + options.editBodyClass + '" ' + (hide == true ? 'style="display: none"' : '') + '>\n' +
         '   <form id="' + id + '_form" action="' + options.url + '" method="post" class="form-horizontal ' + options.editFormClass + '" style="' + options.editFormStyle + '">\n';
 
+    var filedsetClosed, fieldsetIndex = -1;
+
     for (var i = 0; i < columns.length;) {
         var column = columns[i++],
             fieldBuilder = _FieldBuilderContainer[column.inputType];
 
         if (column.editable === false) {
             // 不显示编辑
+            continue;
+        }
+
+        if (column.fieldset === true && i > fieldsetIndex) {
+            if (currentColspan > 0) {
+                html += '</div>\n';
+                currentColspan = 0;
+                currentSize = 0;
+            }
+
+            if (filedsetClosed === false) {
+                html += '</fieldset>\n';
+            }
+
+
+            html += '<fieldset>\n';
+            if (column.legend) {
+                html += '<legend>' + column.legend + '</legend>\n';
+            }
+
+            filedsetClosed = false;
+            fieldsetIndex = i;
+            i--;
             continue;
         }
 
@@ -178,6 +203,10 @@ function generateEditFormHtml(options, hide) {
 
     if (currentColspan > 0) {
         html += '</div>\n';
+    }
+
+    if (filedsetClosed === false) {
+        html += '</fieldset>\n';
     }
 
     var formButtonBar = options.formButtonBar || [];
@@ -268,10 +297,35 @@ function generateViewFormHtml(options) {
         '<div id="' + id + '_view" class="' + options.viewBodyClass + '">\n' +
         '    <form class="form-horizontal ' + options.viewFormClass + '"  style="' + options.viewFormStyle + '">\n';
 
+    var filedsetClosed, fieldsetIndex = -1;
 
     for (var i = 0; i < columns.length;) {
         var column = columns[i++],
             fieldBuilder = _FieldBuilderContainer[column.inputType];
+
+
+        if (column.fieldset === true && i > fieldsetIndex) {
+            if (currentColspan > 0) {
+                html += '</div>\n';
+                currentColspan = 0;
+                currentSize = 0;
+            }
+
+            if (filedsetClosed === false) {
+                html += '</fieldset>\n';
+            }
+
+
+            html += '<fieldset>\n';
+            if (column.legend) {
+                html += '<legend>' + column.legend + '</legend>\n';
+            }
+
+            filedsetClosed = false;
+            fieldsetIndex = i;
+            i--;
+            continue;
+        }
 
         var result = fieldBuilder.generateViewFormHtml(column, currentColspan == 0 ? true : false, options);
         var colSize = result.size;
@@ -315,6 +369,10 @@ function generateViewFormHtml(options) {
 
     if (currentColspan > 0) {
         html += '</div>\n';
+    }
+
+    if (filedsetClosed === false) {
+        html += '</fieldset>\n';
     }
 
     viewButtonBar = options.viewButtonBar || [];
@@ -526,7 +584,7 @@ var _Model = function (name, column, options) {
         });
 
         if (that.config.pattern == 'view') {
-            that.editBtn.hide();
+
         } else if (that.config.pattern == 'edit') {
             that.toEdit(false);
         }
