@@ -10,7 +10,11 @@
 // -----------------------------------------
 
 var _isBigScreen = window.screen.width >= 1600;
+var _gid = 99999;
 
+function _generateId() {
+    return ++_gid;
+}
 
 function generateTagAttribute(obj) {
     if (!obj) return '';
@@ -2305,7 +2309,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
         var div, com;
         if (!id) {
-            id = column.name + "_content_" + new Date().getTime();
+            id = column.name + "_content_" + _generateId();
             div = $('<li class="item" style="background: none;"></li>');
             com = {
                 id: id,
@@ -2370,7 +2374,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
     openSubEditor: function (column, com, model) {
         var that = this;
         var subOp = column.subModelOptions;
-        subOp.id = subOp.id || column.name + "_" + new Date().getTime();
+        subOp.id = subOp.id || column.name + "_" + _generateId();
 
         var defaultSubOp = {
             server: false,
@@ -2698,7 +2702,7 @@ var _selectTableServerFieldBuilder = new _FieldBuilder("SELECT-TABLE-SERVER", {
         input.click(function () {
             var content = '<div class="tonto-tree-select-div" style="padding:10px">';
 
-            var random = new Date().getTime();
+            var random = _generateId();
 
             var searchFormId = column.name + "_search_form" + random;
             var tableId = column.name + "_table" + random;
