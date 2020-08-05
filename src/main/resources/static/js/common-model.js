@@ -385,7 +385,7 @@ function generateViewFormHtml(options) {
         html += options.generateViewButtonBar();
     } else if (options.showBackBtn !== false) {
         viewButtonBar.push({
-            id: id + '_form_back_btn',
+            id: id + '_view_back_btn',
             type: 'button',
             width: options.backBtnWidth || '150px',
             name: options.backBtnName || '返回',
@@ -1310,6 +1310,18 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
                 input.find("option:first").prop("selected", 'selected');
             }
         }
+    },
+    showEdit: function (column, model, target) {
+        // 显示编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (column.multiple === true) {
+            d = d.parent();
+        }
+        d.show();
+        d.prev().show();
+        d.parent().show();
     },
     hideEdit: function (column, model, target) {
         var p = target || this.getEditTarget(column, model);
