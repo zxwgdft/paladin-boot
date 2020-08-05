@@ -4,6 +4,8 @@ import com.paladin.framework.exception.BusinessException;
 
 /**
  * 多边形工具类
+ * <p>
+ * 用于经纬度定位时，可做7位小数化为整数处理
  *
  * @author TontoZhou
  * @since 2020/7/22

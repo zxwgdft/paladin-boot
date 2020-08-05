@@ -1311,6 +1311,20 @@ var _selectFieldBuilder = new _FieldBuilder("SELECT", {
             }
         }
     },
+    hideEdit: function (column, model, target) {
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (column.multiple === true) {
+            d = d.parent();
+        }
+        var f = d.parent();
+        d.hide();
+        d.prev().hide();
+        if (f.children(":visible").length == 0) {
+            f.hide();
+        }
+    },
     generateEditFormHtml: function (column, isFirst, options) {
         var labelSize = column.labelSize || options.labelSize,
             colspan = column.colspan || 1,
