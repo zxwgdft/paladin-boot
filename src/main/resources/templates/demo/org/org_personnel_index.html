@@ -59,35 +59,6 @@
 
             <table id="dataGrid"></table>
 
-            <!--            <div id="toolbar">-->
-            <!--                <form id="searchbar">-->
-            <!--                    <input type="text" class="form-control"-->
-            <!--                           style="width:230px;float:left;margin-right:10px"-->
-            <!--                           name="name" th:value="${query?.name}"-->
-            <!--                           placeholder="请输入查询的姓名"/>-->
-
-            <!--                    <select name="identificationType"-->
-            <!--                            style="width:230px;float:left;margin-right:10px"-->
-            <!--                            class="form-control tonto-select-constant"-->
-            <!--                            th:attr="selectedvalue=${query?.identificationType}" enumcode="identification-type">-->
-            <!--                        <option value="">请选择查询证件类型</option>-->
-            <!--                    </select>-->
-
-            <!--                    <button type="button"-->
-            <!--                            class="btn btn-primary btn-flat tonto-btn-search"-->
-            <!--                            style="width:85px;float:left;margin-right:10px"-->
-            <!--                            onclick="table.refresh()">-->
-            <!--                            <i class="fa fa-search"></i>&nbsp;查询-->
-            <!--                    </button>-->
-
-            <!--                    <a shiro:hasPermission="org:personnel:save"-->
-            <!--                       class="btn bg-olive btn-flat"-->
-            <!--                       style="width:85px;float:left;"-->
-            <!--                       onclick="add()">-->
-            <!--                        <i class="fa fa-plus"></i>&nbsp;新增-->
-            <!--                    </a>-->
-            <!--                </form>-->
-            <!--            </div>-->
         </div>
     </div>
     <input type="hidden" shiro:hasPermission="org:personnel:delete" id="permission_delete" value="1"/>

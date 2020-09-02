@@ -311,6 +311,17 @@
                 <includes>
                     <include>**/*.*</include>
                 </includes>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>static/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>static/**</include>
+                </includes>
+                <filtering>false</filtering>
             </resource>
         </resources>
     </build>

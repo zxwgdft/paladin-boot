@@ -37,6 +37,8 @@ public class RoleContainer implements DataContainer {
         log.info("------------初始化角色开始------------");
 
         List<OrgRolePermission> orgRolePermissions = orgRolePermissionService.findAll();
+
+
         List<OrgRole> orgRoles = orgRoleService.findAll();
 
         // 读取角色对应权限集合
@@ -83,6 +85,7 @@ public class RoleContainer implements DataContainer {
         }
         systemAdminRole.setPermission(ownedPermission, createMenu(ownedPermission));
 
+
         RoleContainer.systemAdminRole = systemAdminRole;
         RoleContainer.roleMap = Collections.unmodifiableMap(roleMap);
         RoleContainer.roleList = Collections.unmodifiableList(roleList);
@@ -97,6 +100,12 @@ public class RoleContainer implements DataContainer {
      * @param ownedPermission
      */
     private static List<Menu> createMenu(List<Permission> ownedPermission) {
+        if (ownedPermission != null && ownedPermission.size() > 0) {
+            Collections.sort(ownedPermission, (p1, p2) -> {
+                return p1.getSource().getListOrder() - p2.getSource().getListOrder();
+            });
+        }
+
         Map<String, Menu> menuMap = new HashMap<>();
         Map<String, Menu> rootMenu = new HashMap<>();
 
@@ -135,7 +144,15 @@ public class RoleContainer implements DataContainer {
                 }
             }
         }
-        return new ArrayList<>(rootMenu.values());
+
+
+        List<Menu> menusList = new ArrayList<>(rootMenu.values());
+
+        Collections.sort(menusList, (m1, m2) -> {
+            return m1.getOrder() - m2.getOrder();
+        });
+
+        return menusList;
     }
 
 
@@ -175,6 +192,7 @@ public class RoleContainer implements DataContainer {
     public static Role getSystemAdminRole() {
         return systemAdminRole;
     }
+
 
     /**
      * 获取所有角色列表

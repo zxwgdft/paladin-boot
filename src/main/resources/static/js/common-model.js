@@ -198,7 +198,7 @@ function generateEditFormHtml(options, hide) {
             currentColspan = options.maxColspan;
         }
 
-        if (currentColspan >= options.maxColspan) {
+        if (column.endRow === true || currentColspan >= options.maxColspan) {
             html += '</div>\n';
             currentColspan = 0;
             currentSize = 0;
@@ -364,7 +364,7 @@ function generateViewFormHtml(options) {
             currentColspan = options.maxColspan;
         }
 
-        if (currentColspan >= options.maxColspan) {
+        if (column.endRow === true || currentColspan >= options.maxColspan) {
             html += '</div>\n';
             currentColspan = 0;
             currentSize = 0;

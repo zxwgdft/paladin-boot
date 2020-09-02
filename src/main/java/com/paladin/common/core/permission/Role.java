@@ -39,6 +39,7 @@ public class Role {
         this.roleName = roleName;
         this.isDefault = true;
         this.enable = true;
+        this.roleLevel = roleLevel;
     }
 
     public Role(OrgRole orgRole) {

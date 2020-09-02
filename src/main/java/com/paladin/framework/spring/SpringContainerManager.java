@@ -47,6 +47,8 @@ public class SpringContainerManager implements CommandLineRunner {
                 }
             }
 
+            log.info("===>初始化SpringContainer结束");
+
             initialized = true;
         }
     }
