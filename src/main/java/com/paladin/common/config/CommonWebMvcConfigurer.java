@@ -2,9 +2,11 @@ package com.paladin.common.config;
 
 import com.paladin.framework.GlobalProperties;
 import com.paladin.framework.service.QueryHandlerInterceptor;
+import com.paladin.framework.spring.DevelopCondition;
 import com.paladin.framework.web.convert.DateFormatter;
 import com.paladin.framework.web.filter.LimitFrameFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -14,6 +16,7 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.cors.CorsConfiguration;
@@ -33,6 +36,8 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
 
     @Value("${paladin.file.base-path}")
     private String filePath;
+    @Autowired
+    private Environment environment;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -52,8 +57,10 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         log.info("静态资源存放地址：" + staticPath);
         log.info("favicon存放地址：" + faviconPath);
 
-        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        if (DevelopCondition.isDevelop(environment)) {
+            registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+            registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        }
     }
 
     @Override
@@ -115,4 +122,6 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
+
+
 }
