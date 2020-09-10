@@ -1923,7 +1923,11 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
                     });
                     fileCount++;
                 });
+                model.formBody.attr('enctype','multipart/form-data');
+            } else {
+                model.formBody.attr('enctype','application/x-www-form-urlencoded');
             }
+
 
             if (fileCount > maxFileCount) {
                 $.errorAlert("附件数量不能超过" + maxFileCount + "个");
