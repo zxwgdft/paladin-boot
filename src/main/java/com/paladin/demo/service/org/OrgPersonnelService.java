@@ -97,6 +97,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
             }
         }
         removeByPrimaryKey(id);
+        // TODO 删除账号
         return true;
     }
 
