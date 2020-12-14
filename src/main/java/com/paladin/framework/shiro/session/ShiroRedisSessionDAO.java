@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -184,8 +185,8 @@ public class ShiroRedisSessionDAO implements SessionDAO {
 
     @Override
     public Collection<Session> getActiveSessions() {
-        // 暂时不需要该功能，
-        throw new RuntimeException("暂时不提供该功能");
+        // 该方法用于验证session过期线程，而redis自带过期功能，所以不需要。
+        return null;
     }
 
     /**
@@ -193,8 +194,6 @@ public class ShiroRedisSessionDAO implements SessionDAO {
      *
      */
     public static class ControlledSession extends SimpleSession {
-
-        private static final long serialVersionUID = -6898216841518687491L;
 
         // 除lastAccessTime以外其他字段发生改变时为true
         private transient boolean isContentChanged;
