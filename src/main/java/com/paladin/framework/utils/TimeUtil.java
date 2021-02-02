@@ -447,6 +447,43 @@ public class TimeUtil {
 
     }
 
+
+    /**
+     * 获取某年某月中天数
+     *
+     * @param year  年
+     * @param month 月
+     * @return 天数
+     */
+    public static int getDaysOfMonth(int year, int month) {
+        int days = 0;
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                days = 31;
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                days = 30;
+                break;
+            case 2:
+                if (year % 400 == 0 && (year % 4 == 0 || year % 100 != 0)) {
+                    days = 29;
+                } else {
+                    days = 28;
+                }
+                break;
+        }
+        return days;
+    }
+
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) throws Exception {

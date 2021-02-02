@@ -136,7 +136,6 @@ public class ShiroRedisSessionDAO implements SessionDAO {
         if (session instanceof ControlledSession) {
 
             /*
-             * 如果是{@link ControlledSession}，则需要判断是否只是访问时间更新，如果是，再判断是否超过更新间隔，如果是，则进行时间更新
              */
             ControlledSession controlledSession = (ControlledSession) session;
             if (controlledSession.isValid()) {
@@ -145,21 +144,10 @@ public class ShiroRedisSessionDAO implements SessionDAO {
                     cacheSessioin(session.getId(), session);
                     controlledSession.isContentChanged = false;
                 } else {
-                    /**
-                     * accessTimeUpdateInterval 参数为访问时间更新间隔
-                     * 如果间隔小于等于0，则每次都进行更新
-                     * 这次访问时间与上次访问时间间隔小于参数间隔时间，则不进行缓存过期时间的更新，防止短时间内多次无意义的更新时间
-                     */
                     if (shiroProperties.getAccessTimeUpdateInterval() <= 0) {
                         cacheSessioin(session.getId(), session);
                     } else {
-                        if (controlledSession.previousLastAccessTime != null) {
-                            long previous = controlledSession.previousLastAccessTime.getTime();
-                            long now = controlledSession.getLastAccessTime().getTime();
-                            if (now - previous > shiroProperties.getAccessTimeUpdateInterval()) {
-                                updateCacheExpireTime(session.getId());
-                            }
-                        }
+                        updateCacheExpireTime(session.getId());
                     }
                 }
             } else {
@@ -197,7 +185,6 @@ public class ShiroRedisSessionDAO implements SessionDAO {
 
         // 除lastAccessTime以外其他字段发生改变时为true
         private transient boolean isContentChanged;
-        private transient Date previousLastAccessTime;
 
         public ControlledSession() {
             super();
@@ -255,16 +242,6 @@ public class ShiroRedisSessionDAO implements SessionDAO {
         public Object removeAttribute(Object key) {
             isContentChanged = true;
             return super.removeAttribute(key);
-        }
-
-        public void setLastAccessTime(Date lastAccessTime) {
-            previousLastAccessTime = getLastAccessTime();
-            super.setLastAccessTime(lastAccessTime);
-        }
-
-        public void touch() {
-            previousLastAccessTime = getLastAccessTime();
-            super.touch();
         }
 
         public void contentChanged() {
