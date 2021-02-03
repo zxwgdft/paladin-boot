@@ -29,6 +29,7 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
         if (tokenField != null && tokenField.length() == 0) {
             tokenField = null;
         }
+        setSessionValidationSchedulerEnabled(shiroProperties.isSessionValidationSchedulerEnabled());
     }
 
     @Override
@@ -42,15 +43,9 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
                 // 优先考虑TOKEN机制
                 if (token != null && token.length() != 0) {
                     // 复制与父类代码
-                    request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, ShiroHttpServletRequest.URL_SESSION_ID_SOURCE);
                     request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);
-                    // automatically mark it valid here. If it is invalid, the
-                    // onUnknownSession method below will be invoked and we'll remove the attribute
-                    // at that time.
                     request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);
-                    // always set rewrite flag - SHIRO-361
                     request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());
-
                     return token;
                 } else {
                     return getSessionId(request, response);
@@ -90,7 +85,7 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
         }
 
         if (request != null) {
-            Object s = request.getAttribute(sessionId.toString());
+            Object s = request.getAttribute("_sc_" + sessionId.toString());
             if (s != null) {
                 return (Session) s;
             }
@@ -106,10 +101,10 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
 
         // 保存session到request
         if (request != null) {
-            request.setAttribute(sessionId.toString(), s);
+            request.setAttribute("_sc_" + sessionId.toString(), s);
         }
 
         return s;
     }
-    
+
 }

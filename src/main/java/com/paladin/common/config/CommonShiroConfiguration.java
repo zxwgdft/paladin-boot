@@ -71,6 +71,9 @@ public class CommonShiroConfiguration {
         // sessionListeners.add(new CustomSessionListener());
         // sessionManager.setSessionListeners(sessionListeners);
 
+
+        // 如果基于redis过期策略，则全局校验session过期任务、删除过期session应该关闭，不需要
+
         // 单位为毫秒（1秒=1000毫秒） 3600000毫秒为1个小时
         sessionManager.setSessionValidationInterval(3600000);
         // 3600000 milliseconds = 1 hour

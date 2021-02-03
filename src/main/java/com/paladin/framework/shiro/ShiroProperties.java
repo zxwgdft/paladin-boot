@@ -33,9 +33,19 @@ public class ShiroProperties {
     private int sessionTime = 30;
 
     /**
-     * session lastAccessTime 更新间隔
+     * session校验定时任务启用
      */
-    private int accessTimeUpdateInterval = 120 * 1000;
+    private boolean sessionValidationSchedulerEnabled = true;
+
+    /**
+     * session在只是更新时间变化情况下间隔多少分钟更新
+     * 设置该时间可以减少序列化session更新到redis的次数（通过只延长原有session的过期时间），
+     * 但也因此可能会出现提前结束session的情况，例如session过期时间为30分钟，更新间隔5分钟，
+     * 可能出现5分钟没有更新+25分钟没有请求后session过期。
+     *
+     * 结合实际业务设置
+     */
+    private int updateSessionInterval = 5;
 
     /**
      * 静态资源前缀，多个可用逗号分隔，如果没有则为空
