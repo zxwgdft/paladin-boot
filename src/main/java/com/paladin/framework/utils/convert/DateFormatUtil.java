@@ -3,10 +3,11 @@ package com.paladin.framework.utils.convert;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DateFormatUtil {
 
-	private final static Map<String, ThreadLocal<SimpleDateFormat>> threadLocalMap = new HashMap<>();
+	private final static Map<String, ThreadLocal<SimpleDateFormat>> threadLocalMap = new ConcurrentHashMap<>();
 
 	private static ThreadLocal<SimpleDateFormat> getThreadLocal(final String format) {
 

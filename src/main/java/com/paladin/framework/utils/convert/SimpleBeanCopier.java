@@ -6,6 +6,8 @@ import org.springframework.cglib.core.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 简单BEAN拷贝器
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class SimpleBeanCopier {
 
-    private static DoubleHashMap<Class<?>, Class<?>, BeanCopier> copierMap = new DoubleHashMap<>();
+    private final static Map<String, BeanCopier> copierMap = new ConcurrentHashMap<>();
 
     /**
      * 获取copier，如果没有则创建
@@ -25,13 +27,14 @@ public class SimpleBeanCopier {
      * @return
      */
     private BeanCopier getCopier(Class<?> source, Class<?> target) {
-        BeanCopier copier = copierMap.get(source, target);
+        String key = source.getName() + target.getName();
+        BeanCopier copier = copierMap.get(key);
         if (copier == null) {
             synchronized (copierMap) {
-                copier = copierMap.get(source, target);
+                copier = copierMap.get(key);
                 if (copier == null) {
                     copier = BeanCopier.create(source, target, false);
-                    copierMap.put(source, target, copier);
+                    copierMap.put(key, copier);
                 }
             }
         }

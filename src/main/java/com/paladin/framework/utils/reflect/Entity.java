@@ -3,10 +3,11 @@ package com.paladin.framework.utils.reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity {
 
-    private static final Map<Class<?>, Entity> entityMap = new HashMap<>();
+    private static final Map<Class<?>, Entity> entityMap = new ConcurrentHashMap<>();
 
     private Class<?> entityClass;
     private String entityName;

@@ -6,10 +6,8 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public class ExampleHelper {
 
-    private static HashMap<Class<?>, Builder> buildCache = new HashMap<Class<?>, Builder>();
+    private static Map<Class<?>, Builder> buildCache = new ConcurrentHashMap<>();
 
 
     /**

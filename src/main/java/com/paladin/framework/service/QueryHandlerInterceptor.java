@@ -8,11 +8,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class QueryHandlerInterceptor implements HandlerInterceptor {
 
-    private volatile HashMap<HandlerMethod, QueryMethodShell> cacheMap = new HashMap<>();
+    private volatile Map<HandlerMethod, QueryMethodShell> cacheMap = new ConcurrentHashMap<>();
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -47,6 +48,7 @@ public class QueryHandlerInterceptor implements HandlerInterceptor {
 
     private static class QueryMethodShell {
         QueryInputMethod queryMethod;
+
         private QueryMethodShell(QueryInputMethod queryMethod) {
             this.queryMethod = queryMethod;
         }

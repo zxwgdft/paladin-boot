@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class BigFileUploaderContainer {
@@ -42,7 +43,7 @@ public class BigFileUploaderContainer {
         }
     }
 
-    private Map<String, BigFileUploader> bigFileUploaderMap = new HashMap<>();
+    private Map<String, BigFileUploader> bigFileUploaderMap = new ConcurrentHashMap<>();
 
     public BigFileUploader getOrCreateUploader(String id, int chunkCount, String fileName) {
         checkInitialized();

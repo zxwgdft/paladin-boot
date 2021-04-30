@@ -13,6 +13,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * RSA加密工具类
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 public class RSAEncryptUtil {
 
-    private static final Map<String, RSAKey> keyMap = new HashMap<>();
+    private static final Map<String, RSAKey> keyMap = new ConcurrentHashMap<>();
 
     private static final Map<String, RSAPublicKey> publicKeyMap = new HashMap<>();
     private static final Map<String, RSAPrivateKey> privateKeyMap = new HashMap<>();

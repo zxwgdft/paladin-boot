@@ -5,6 +5,7 @@ import org.springframework.core.convert.converter.ConverterFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author TontoZhou
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 public abstract class CachedConverterFactory<S, R> implements ConverterFactory<S, R> {
 
-    private Map<Class, Converter> convertMap = new HashMap<>();
+    private Map<Class, Converter> convertMap = new ConcurrentHashMap<>();
 
     @Override
     public <T extends R> Converter<S, T> getConverter(Class<T> targetType) {

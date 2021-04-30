@@ -13,7 +13,7 @@ public class ObjectContainer<K, T> {
 
 	private Class<T> valueClass;
 
-	private final static Map<Class<?>, Class<?>> cacheMap = new HashMap<>();
+	private final static Map<Class<?>, Class<?>> cacheMap = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	public ObjectContainer() {

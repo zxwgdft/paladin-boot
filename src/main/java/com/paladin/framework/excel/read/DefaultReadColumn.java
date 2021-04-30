@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import com.paladin.framework.excel.ConvertException;
@@ -153,8 +154,8 @@ public class DefaultReadColumn extends ReadColumn {
 		entityField.setValue(object, value);
 	}
 
-	private final static Map<Class<? extends ReadPropertyConvert<?>>, ReadPropertyConvert<?>> convert_cache = new HashMap<>();
-	private final static Map<Class<? extends PropertyValidate>, PropertyValidate> validate_cache = new HashMap<>();
+	private final static Map<Class<? extends ReadPropertyConvert<?>>, ReadPropertyConvert<?>> convert_cache = new ConcurrentHashMap<>();
+	private final static Map<Class<? extends PropertyValidate>, PropertyValidate> validate_cache = new ConcurrentHashMap<>();
 
 	/**
 	 * 创建列，暂时不处理实例中带有子实例情况，即列中列情况
