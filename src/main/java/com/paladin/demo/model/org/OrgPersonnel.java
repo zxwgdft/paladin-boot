@@ -1,6 +1,6 @@
 package com.paladin.demo.model.org;
 
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.service.IgnoreSelection;
 import lombok.Getter;
 import lombok.Setter;

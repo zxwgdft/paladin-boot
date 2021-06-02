@@ -1,7 +1,7 @@
 package com.paladin.common.core;
 
-import com.paladin.framework.common.HttpCode;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.HttpCode;
+import com.paladin.framework.api.R;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

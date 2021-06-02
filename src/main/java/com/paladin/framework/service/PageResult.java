@@ -1,7 +1,6 @@
 package com.paladin.framework.service;
 
 import com.github.pagehelper.Page;
-import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -44,18 +43,11 @@ public class PageResult<T> {
         this.data = data;
     }
 
-    public <E> PageResult<E> convert(Class<E> target) {
-        PageResult<E> result = new PageResult<>();
-        result.page = this.page;
-        result.limit = this.limit;
-        result.total = this.total;
 
-        if (data != null) {
-            result.data = SimpleBeanCopyUtil.simpleCopyList(data, target);
-        }
-
+    public static PageResult getEmptyPageResult(int limit) {
+        PageResult result = new PageResult();
+        result.limit = limit;
         return result;
     }
-
 
 }

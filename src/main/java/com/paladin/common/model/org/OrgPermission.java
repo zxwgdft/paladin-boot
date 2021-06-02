@@ -1,6 +1,6 @@
 package com.paladin.common.model.org;
 
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 

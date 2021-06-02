@@ -1,7 +1,7 @@
 package com.paladin.common.core.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paladin.framework.common.HttpCode;
+import com.paladin.framework.api.HttpCode;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;

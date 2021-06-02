@@ -6,7 +6,7 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.sys.SysLoggerOperate;
 import com.paladin.common.service.sys.SysLoggerOperateService;
 import com.paladin.common.service.sys.dto.SysLoggerOperateQuery;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -3,7 +3,7 @@ package com.paladin.common.service.org;
 import com.paladin.common.core.permission.RoleContainer;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.Condition;
 import com.paladin.framework.service.DataContainerManager;

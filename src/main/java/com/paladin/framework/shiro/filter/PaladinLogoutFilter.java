@@ -1,6 +1,6 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.SessionException;

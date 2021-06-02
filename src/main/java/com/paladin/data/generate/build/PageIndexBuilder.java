@@ -4,7 +4,7 @@ import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.stereotype.Component;

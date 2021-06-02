@@ -7,7 +7,7 @@ import com.paladin.common.core.permission.NeedAdmin;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.DataContainer;
 import com.paladin.framework.service.DataContainerManager;

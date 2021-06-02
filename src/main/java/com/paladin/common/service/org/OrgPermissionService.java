@@ -1,7 +1,7 @@
 package com.paladin.common.service.org;
 
 import com.paladin.common.model.org.OrgPermission;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.service.Condition;
 import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;

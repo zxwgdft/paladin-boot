@@ -3,7 +3,7 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import io.swagger.annotations.ApiModel;

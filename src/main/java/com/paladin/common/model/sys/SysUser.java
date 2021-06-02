@@ -1,6 +1,6 @@
 package com.paladin.common.model.sys;
 
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.mybatis.GenIdImpl;
 import lombok.Getter;
 import lombok.Setter;

@@ -57,7 +57,7 @@ public class ReflectUtil {
     public static Method getSetMethod(String name, Class<?> clazz, Class<?> paramType) {
         String methodName = NameUtil.addSet(name);
         Method method = getMethod(clazz, methodName, paramType);
-        return method != null ? method : null;
+        return method;
     }
 
     /**
@@ -446,8 +446,7 @@ public class ReflectUtil {
 
             if (!targetClass.isInterface()) {
                 Class<?> cla = getChildClass(superClass, targetClass.getSuperclass());
-                if (cla != null)
-                    return cla;
+                return cla;
             }
         } else {
             while (targetClass.getSuperclass() != superClass)

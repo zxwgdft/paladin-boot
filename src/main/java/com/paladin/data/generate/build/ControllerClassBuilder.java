@@ -3,7 +3,7 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.utils.reflect.NameUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

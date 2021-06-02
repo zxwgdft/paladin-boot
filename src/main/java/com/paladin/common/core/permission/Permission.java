@@ -2,7 +2,7 @@ package com.paladin.common.core.permission;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.common.model.org.OrgPermission;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.shiro.authz.permission.WildcardPermission;

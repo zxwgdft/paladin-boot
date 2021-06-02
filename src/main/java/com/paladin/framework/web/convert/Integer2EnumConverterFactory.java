@@ -1,8 +1,7 @@
 package com.paladin.framework.web.convert;
 
-import com.paladin.framework.common.CodeEnum;
+import com.paladin.framework.api.CodeEnum;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.convert.converter.ConverterFactory;
 
 /**
  * @author TontoZhou

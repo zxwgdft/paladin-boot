@@ -10,10 +10,24 @@ package com.paladin.framework.exception;
  */
 public class SystemException extends RuntimeException {
 
-    private static final long serialVersionUID = 7388296648211140775L;
+    /**
+     * 异常代码，请检查代码规则
+     */
+    public static final int CODE_ERROR_CODE = 10000;
 
     /**
-     * 系统异
+     * 配置异常，请检查配置参数
+     */
+    public static final int CODE_ERROR_CONFIG = 20000;
+
+    /**
+     * 数据异常，请检查数据是否被人工修改
+     */
+    public static final int CODE_ERROR_DATA = 30000;
+
+
+    /**
+     * 系统异常码
      */
     private int errorCode;
 

@@ -1,30 +1,43 @@
 package com.paladin.framework.utils.secure;
 
-import java.security.SecureRandom;
 
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
+import com.paladin.framework.utils.StringUtil;
+import org.apache.commons.codec.binary.Hex;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 public class SecureUtil {
 
-	private static SecureRandom secureRandom = new SecureRandom();
-	private static int DEFAULT_NUMBYTES = 16;
+    private final static SecureRandom secureRandom = new SecureRandom();
 
-	public static String createSalte() {
-		return createSalte(DEFAULT_NUMBYTES);
-	}
+    public static String createSalt() {
+        return createSalt(16);
+    }
 
-	public static String createSalte(int numBytes) {
-		byte[] bytes = new byte[numBytes];
-		secureRandom.nextBytes(bytes);
-		return ByteSource.Util.bytes(bytes).toHex();
-	}
+    public static String createSalt(int numBytes) {
+        byte[] bytes = new byte[numBytes];
+        secureRandom.nextBytes(bytes);
+        return Hex.encodeHexString(bytes);
+    }
 
-	public static String createPassword(String password, String salt) {
-		return new SimpleHash("md5", password, ByteSource.Util.bytes(salt), 1).toHex();
-	}
+    public static String hashByMD5(String content) {
+        return hashByMD5(content, null);
+    }
 
-	public static void main(String[] args) {
-		System.out.println(createPassword("admin", "3ad6c1dd71e0ec26c62ae1b7c81b3e82"));
-	}
+    public static String hashByMD5(String content, String salt) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            if (StringUtil.isNotEmpty(salt)) {
+                digest.update(salt.getBytes(StandardCharsets.UTF_8));
+            }
+
+            byte[] hashed = digest.digest(content.getBytes(StandardCharsets.UTF_8));
+            return Hex.encodeHexString(hashed);
+        } catch (Exception e) {
+            throw new RuntimeException("hash by md5 error", e);
+        }
+    }
+
 }

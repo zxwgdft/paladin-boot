@@ -3,7 +3,7 @@ package com.paladin.common.controller.upload;
 
 import com.paladin.common.core.upload.BigFileUploader;
 import com.paladin.common.core.upload.BigFileUploaderContainer;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

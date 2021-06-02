@@ -1,7 +1,7 @@
 package com.paladin.common.core.permission;
 
 import com.paladin.common.model.org.OrgRole;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 import lombok.Getter;
 
 import java.util.Collections;

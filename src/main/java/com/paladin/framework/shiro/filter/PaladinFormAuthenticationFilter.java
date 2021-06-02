@@ -1,7 +1,7 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.common.HttpCode;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.HttpCode;
+import com.paladin.framework.api.R;
 import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.WebUtil;
 import org.apache.shiro.authc.*;

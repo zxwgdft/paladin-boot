@@ -1,6 +1,6 @@
 package com.paladin.data.generate;
 
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
 
 import java.util.HashSet;
 import java.util.Set;

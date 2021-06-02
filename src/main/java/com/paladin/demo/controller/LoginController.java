@@ -4,7 +4,7 @@ import com.paladin.common.core.permission.Menu;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
 import com.paladin.framework.GlobalProperties;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.service.UserSession;
 import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
 import io.swagger.annotations.Api;

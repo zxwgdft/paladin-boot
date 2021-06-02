@@ -1,7 +1,7 @@
 package com.paladin.framework.utils;
 
 import java.lang.reflect.Array;
-import java.util.Iterator;
+import java.util.*;
 
 public class StringUtil {
 
@@ -23,6 +23,28 @@ public class StringUtil {
      */
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);
+    }
+
+
+    /**
+     * 字符串是否相等（相对直接String.equals更有效率）
+     *
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static boolean equals(String s1, String s2) {
+        if (s1 == s2) {
+            return true;
+        } else if (s1 != null && s2 != null) {
+            if (s1.length() != s2.length()) {
+                return false;
+            } else {
+                return s1.equals(s2);
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -59,7 +81,7 @@ public class StringUtil {
      */
     public static String join(char separator, Object... targets) {
         if (targets == null || targets.length == 0) {
-            return null;
+            return "";
         }
 
         final StringBuilder sb = new StringBuilder();
@@ -84,16 +106,11 @@ public class StringUtil {
 
     /**
      * 分隔符拼接字符串
-     *
-     * @param target
-     * @param separator
-     * @return
      */
     public static String join(final Iterable<?> target, final char separator) {
         if (target == null) {
-            return null;
+            return "";
         }
-
         final StringBuilder sb = new StringBuilder();
         final Iterator<?> it = target.iterator();
         if (it.hasNext()) {
@@ -129,5 +146,62 @@ public class StringUtil {
         return obj.toString();
     }
 
+    /**
+     * 拼接字符串转int数组
+     */
+    public static int[] stringToIntArray(String str) {
+        return stringToIntArray(str, ",");
+    }
+
+    /**
+     * 拼接字符串转int数组
+     */
+    public static int[] stringToIntArray(String str, String regex) {
+        if (str == null || str.length() == 0) return new int[]{};
+        String[] sArr = str.split(regex);
+        int[] iArr = new int[sArr.length];
+        for (int i = 0; i < sArr.length; i++) {
+            String s = sArr[i];
+            iArr[i] = Integer.valueOf(s);
+        }
+        return iArr;
+    }
+
+
+    /**
+     * 拼接字符串转int集合
+     */
+    public static List<Integer> stringToIntList(String str) {
+        return stringToIntList(str, ",");
+    }
+
+    /**
+     * 拼接字符串转int的list集合
+     */
+    public static List<Integer> stringToIntList(String str, String regex) {
+        if (str == null || str.length() == 0) return Collections.emptyList();
+        String[] sArr = str.split(regex);
+        List<Integer> list = new ArrayList<>(sArr.length);
+        for (int i = 0; i < sArr.length; i++) {
+            String s = sArr[i];
+            list.add(Integer.valueOf(s));
+        }
+        return list;
+    }
+
+    /**
+     * 拼接字符串转int的set集合
+     */
+    public static Set<Integer> stringToIntegerSet(String ids) {
+        if (ids != null && ids.length() > 0) {
+            String[] idArr = ids.split(",");
+            Set<Integer> set = new HashSet<>(Math.max((int) (idArr.length / .75f) + 1, 16));
+            for (String id : idArr) {
+                set.add(Integer.valueOf(id));
+            }
+            return set;
+        }
+        return Collections.emptySet();
+    }
 
 }

@@ -18,7 +18,7 @@ import com.paladin.data.service.build.DbBuildTableService;
 import com.paladin.data.service.dto.DBConnectionDTO;
 import com.paladin.data.service.dto.DBConnectionQueryDTO;
 import com.paladin.data.service.vo.DBConnectionVO;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.spring.DevelopCondition;
 import org.springframework.beans.factory.annotation.Autowired;

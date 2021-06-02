@@ -7,7 +7,7 @@ import com.paladin.demo.service.org.OrgUnitContainer;
 import com.paladin.demo.service.org.OrgUnitService;
 import com.paladin.demo.service.org.dto.OrgUnitDTO;
 import com.paladin.demo.service.org.vo.OrgUnitVO;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.utils.UUIDUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

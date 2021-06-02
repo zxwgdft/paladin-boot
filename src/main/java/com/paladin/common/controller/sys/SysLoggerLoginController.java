@@ -6,7 +6,7 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;
 import com.paladin.common.service.sys.dto.SysLoggerLoginQuery;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.service.QueryInputMethod;
 import com.paladin.framework.service.QueryOutputMethod;

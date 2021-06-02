@@ -1,6 +1,6 @@
 package com.paladin.common.core.exception;
 
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;

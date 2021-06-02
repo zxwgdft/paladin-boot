@@ -10,7 +10,7 @@ import com.paladin.demo.service.org.OrgPersonnelService;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
 import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
 import com.paladin.demo.service.org.vo.OrgPersonnelVO;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.excel.write.ValueFormator;
 import com.paladin.framework.service.QueryInputMethod;
