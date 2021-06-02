@@ -30,9 +30,9 @@ public abstract class DataBaseSource {
 	 */
 	protected abstract DataSource createRealDataSource();
 
-	private boolean initialized = false;
-	private boolean isError = false;
-	private boolean isClosed = false;
+	private volatile boolean initialized = false;
+	private volatile boolean isError = false;
+	private volatile boolean isClosed = false;
 	private final Object lock = new Object();
 
 	/**

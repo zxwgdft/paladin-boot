@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.paladin.framework.excel.EnumContainer;
 import com.paladin.framework.utils.reflect.Entity;
@@ -126,6 +127,6 @@ public class DefaultWriteRow extends WriteRow {
 		return row;
 	}
 
-	private static Map<Class<? extends ValueFormator>, ValueFormator> formators = new HashMap<>();
+	private static Map<Class<? extends ValueFormator>, ValueFormator> formators = new ConcurrentHashMap<>();
 
 }

@@ -17,11 +17,12 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class DBConnectionService extends ServiceSupport<DBConnection> {
 
-	private Map<String, DataBaseSource> dataBaseSourceMap = new HashMap<>();
+	private Map<String, DataBaseSource> dataBaseSourceMap = new ConcurrentHashMap<>();
 
 	/**
 	 * 连接数据库
