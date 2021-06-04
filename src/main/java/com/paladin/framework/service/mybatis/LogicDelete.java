@@ -2,7 +2,7 @@ package com.paladin.framework.service.mybatis;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.styx.common.api.DeletedBaseModel;
+import com.paladin.framework.api.DeletedBaseModel;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 

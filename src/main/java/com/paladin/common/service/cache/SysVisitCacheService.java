@@ -4,33 +4,33 @@ import com.paladin.common.mapper.cache.SysVisitCacheMapper;
 import com.paladin.common.model.cache.SysVisitCache;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.WebUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {
+public class SysVisitCacheService extends ServiceSupport<SysVisitCache, SysVisitCacheMapper> {
 
-    @Autowired
-    private SysVisitCacheMapper visitCacheMapper;
-
-    public boolean putCache(HttpServletRequest request, String key, String content) {
+    public void putCache(HttpServletRequest request, String key, String content) {
         if (content == null || content.length() == 0 || content.length() > 400) {
-            return false;
+            return;
         }
         String ip = WebUtil.getIpAddress(request);
         if (ip == null || ip.length() == 0) {
-            return false;
+            return;
         }
-        SysVisitCache cache = visitCacheMapper.getCache(key, ip);
+
+        SysVisitCache cache = getSqlMapper().getCache(key, ip);
         if (cache == null) {
             cache = new SysVisitCache();
             cache.setCode(key);
             cache.setIp(ip);
+            save(cache);
+        } else {
+            cache.setValue(content);
+            updateWhole(cache);
         }
-        cache.setValue(content);
-        return saveOrUpdate(cache);
+
     }
 
     public String getCache(HttpServletRequest request, String key) {
@@ -38,7 +38,7 @@ public class SysVisitCacheService extends ServiceSupport<SysVisitCache> {
         if (ip == null || ip.length() == 0) {
             return null;
         }
-        SysVisitCache cache = visitCacheMapper.getCache(key, ip);
+        SysVisitCache cache = getSqlMapper().getCache(key, ip);
         return cache == null ? null : cache.getValue();
     }
 

@@ -1,4 +1,4 @@
-package com.paladin.common.core.permission;
+package com.paladin.common.core.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

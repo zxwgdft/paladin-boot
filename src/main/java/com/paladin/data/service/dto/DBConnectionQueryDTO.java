@@ -1,7 +1,7 @@
 package com.paladin.data.service.dto;
 
-import com.paladin.framework.service.OffsetPage;
+import com.paladin.framework.service.PageParam;
 
-public class DBConnectionQueryDTO extends OffsetPage {
+public class DBConnectionQueryDTO extends PageParam {
 
 }

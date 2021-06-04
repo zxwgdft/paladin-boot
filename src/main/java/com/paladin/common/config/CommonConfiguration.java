@@ -3,13 +3,14 @@ package com.paladin.common.config;
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.log.OperationLogInterceptor;
-import com.paladin.common.core.permission.PermissionMethodInterceptor;
+import com.paladin.common.core.security.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
 import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.common.service.core.FileStoreService;
 import com.paladin.common.service.core.impl.DefaultFileStoreService;
+import com.paladin.framework.cache.DataCacheManager;
+import com.paladin.framework.cache.MemoryDataCacheManager;
 import com.paladin.framework.io.TemporaryFileHelper;
-import com.paladin.framework.service.DataContainerManager;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.ServiceSupportManager;
@@ -36,6 +37,16 @@ public class CommonConfiguration {
         return new ShiroDialect();
     }
 
+
+    /**
+     * 数据缓存管理器
+     */
+    @Bean
+    public DataCacheManager getDataCacheManager() {
+        return new MemoryDataCacheManager();
+    }
+
+
     /**
      * 启用异常统一处理
      *
@@ -46,15 +57,6 @@ public class CommonConfiguration {
         return new CommonHandlerExceptionResolver();
     }
 
-    /**
-     * 数据容器管理器
-     *
-     * @return
-     */
-    @Bean
-    public DataContainerManager getDataContainerManager() {
-        return new DataContainerManager();
-    }
 
     /**
      * service支持管理器

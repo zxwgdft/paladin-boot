@@ -1,7 +1,6 @@
 package com.paladin.framework.web.filter;
 
 import com.paladin.framework.utils.StringUtil;
-import io.jsonwebtoken.lang.Collections;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -32,12 +31,12 @@ public class LimitFrameFilter extends OncePerRequestFilter {
     }
 
     public static LimitFrameFilter createAllowFromInstance(String... addresses) {
-        return new LimitFrameFilter("ALLOW-FROM " + StringUtil.join(Collections.arrayToList(addresses)));
+        return new LimitFrameFilter("ALLOW-FROM " + StringUtil.join(Arrays.asList(addresses)));
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         response.setHeader("X-Frame-Options", option);
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

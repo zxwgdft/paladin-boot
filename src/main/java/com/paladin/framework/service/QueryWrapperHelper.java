@@ -6,11 +6,9 @@ import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,15 +36,31 @@ public class QueryWrapperHelper {
     /**
      * 根据注解构建查询条件（当前criteria，而不是新增，如需要应该在调用前手动调用and()、or()）
      *
-     * @param QueryWrapper
+     * @param queryWrapper
      * @param queryParam   查询条件参数
      * @return
      */
-    public static QueryWrapper buildQuery(QueryWrapper QueryWrapper, Object queryParam) {
+    public static QueryWrapper buildQuery(QueryWrapper queryWrapper, Object queryParam) {
         if (queryParam == null) {
-            return QueryWrapper;
+            return queryWrapper;
         }
-        return getBuilder(queryParam.getClass()).build(QueryWrapper, queryParam);
+        Class<?> clazz = queryParam.getClass();
+        if (clazz.isArray()) {
+            int length = Array.getLength(queryParam);
+            for (int i = 0; i < length; i++) {
+                Object param = Array.get(queryParam, i);
+                getBuilder(param.getClass()).build(queryWrapper, param);
+            }
+        } else if (Collection.class.isAssignableFrom(clazz)) {
+            Collection coll = (Collection) queryParam;
+            for (Object param : coll) {
+                getBuilder(param.getClass()).build(queryWrapper, param);
+            }
+        } else {
+            getBuilder(queryParam.getClass()).build(queryWrapper, queryParam);
+        }
+
+        return queryWrapper;
     }
 
     /**

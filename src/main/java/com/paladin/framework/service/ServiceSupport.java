@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.paladin.framework.api.BaseModel;
 import com.paladin.framework.api.DeletedBaseModel;
+import com.paladin.framework.service.annotation.IgnoreSelection;
 import com.paladin.framework.service.mybatis.CommonMapper;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import com.paladin.framework.utils.reflect.Entity;
@@ -25,7 +26,7 @@ import java.util.*;
  * @since 2021/3/11
  */
 @Slf4j
-public class ServiceSupport<Model, Mapper extends CommonMapper<Model>> {
+public abstract class ServiceSupport<Model, Mapper extends CommonMapper<Model>> {
 
     /**
      * 选择项缓存
@@ -91,26 +92,47 @@ public class ServiceSupport<Model, Mapper extends CommonMapper<Model>> {
     }
 
     public void save(Model model) {
+        if (isBaseModel) {
+            Date now = new Date();
+            BaseModel baseModel = ((BaseModel) model);
+            baseModel.setCreateTime(now);
+            baseModel.setUpdateTime(now);
+            String userId = UserSession.getCurrentUserSession().getUserId();
+            baseModel.setCreateBy(userId);
+            baseModel.setUpdateBy(userId);
+        }
         sqlMapper.insert(model);
     }
 
-    /**
-     * 更新整个对象（包括null值）
-     */
     public boolean updateWhole(Model model) {
+        if (isBaseModel) {
+            BaseModel baseModel = ((BaseModel) model);
+            baseModel.setUpdateTime(new Date());
+            baseModel.setUpdateBy(UserSession.getCurrentUserSession().getUserId());
+        }
         return sqlMapper.updateWholeById(model) > 0;
     }
 
-    /**
-     * 更新对象中非null字段
-     */
     public boolean updateSelection(Model model) {
-        return sqlMapper.updateWholeById(model) > 0;
+        if (isBaseModel) {
+            BaseModel baseModel = ((BaseModel) model);
+            baseModel.setUpdateTime(new Date());
+            baseModel.setUpdateBy(UserSession.getCurrentUserSession().getUserId());
+        }
+        return sqlMapper.updateById(model) > 0;
     }
 
     public boolean deleteById(Serializable id) {
-        // 逻辑删除实现
-        return sqlMapper.deleteById(id) > 0;
+        if (isDeletedModel) {
+            // 逻辑删除实现
+            DeletedBaseModel baseModel = new DeletedBaseModel();
+            baseModel.setDeleted(true);
+            baseModel.setUpdateTime(new Date());
+            baseModel.setUpdateBy(UserSession.getCurrentUserSession().getUserId());
+            return sqlMapper.logicDeleteById(baseModel, id) > 0;
+        } else {
+            return sqlMapper.deleteById(id) > 0;
+        }
     }
 
 

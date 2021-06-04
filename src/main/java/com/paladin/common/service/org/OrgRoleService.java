@@ -1,63 +1,51 @@
 package com.paladin.common.service.org;
 
-import com.paladin.common.core.permission.RoleContainer;
+import com.paladin.common.core.security.RoleContainer;
+import com.paladin.common.mapper.org.OrgRoleMapper;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
-import com.paladin.framework.api.BaseModel;
+import com.paladin.framework.cache.DataCacheManager;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.Condition;
-import com.paladin.framework.service.DataContainerManager;
-import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
-public class OrgRoleService extends ServiceSupport<OrgRole> {
+public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
 
-    public List<OrgRole> getOwnGrantRoles(int roleLevel, boolean defaultabled) {
-        /**
-         * 只能获取数据等级小于等于自己的角色
-         */
-        return searchAll(new Condition[]{
-                new Condition(OrgRole.COLUMN_FIELD_IS_DEFAULT, QueryType.EQUAL, defaultabled ? 1 : 0),
-                new Condition(OrgRole.COLUMN_FIELD_ROLE_LEVEL, QueryType.LESS_EQUAL, roleLevel)}
-        );
-    }
+    @Autowired
+    private DataCacheManager cacheManager;
 
     @Transactional
-    public boolean updateRole(OrgRoleDTO orgRoleDTO) {
+    public void updateRole(OrgRoleDTO orgRoleDTO) {
         String id = orgRoleDTO.getId();
-        if (id == null || id.length() == 0) {
+        if (StringUtil.isEmpty(id)) {
             throw new BusinessException("找不到更新角色");
         }
 
-        OrgRole model = get(id);
+        OrgRole model = getWhole(id);
         if (model == null) {
             throw new BusinessException("找不到更新角色");
         }
 
-        if (model.getIsDefault() == BaseModel.BOOLEAN_YES) {
-            throw new BusinessException("默认角色无法修改");
-        }
-
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
-        update(model);
-        DataContainerManager.reloadContainer(RoleContainer.class);
-        return true;
+        updateWhole(model);
+
+        // 更新缓存
+        cacheManager.reloadCache(RoleContainer.class);
     }
 
     @Transactional
-    public boolean saveRole(OrgRoleDTO orgRoleDTO) {
+    public void saveRole(OrgRoleDTO orgRoleDTO) {
         OrgRole model = new OrgRole();
         SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
-        model.setIsDefault(BaseModel.BOOLEAN_NO);
         save(model);
-        DataContainerManager.reloadContainer(RoleContainer.class);
-        return true;
+
+        // 更新缓存
+        cacheManager.reloadCache(RoleContainer.class);
     }
 
 }

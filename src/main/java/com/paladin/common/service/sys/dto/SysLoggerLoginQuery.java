@@ -1,7 +1,7 @@
 package com.paladin.common.service.sys.dto;
 
-import com.paladin.framework.service.OffsetPage;
+import com.paladin.framework.service.PageParam;
 
-public class SysLoggerLoginQuery extends OffsetPage {
+public class SysLoggerLoginQuery extends PageParam {
 
 }

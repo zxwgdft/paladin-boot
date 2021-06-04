@@ -1,12 +1,10 @@
-package com.paladin.common.core.permission;
+package com.paladin.common.core.security;
 
-import com.paladin.common.core.CommonUserSession;
 import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.UserSession;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-
-import java.util.Set;
 
 /**
  * 简单权限的实现
@@ -26,9 +24,7 @@ public class PermissionMethodInterceptor {
     public void beforeRequest(JoinPoint point, NeedPermission needPermission) {
         String permissionCode = needPermission.value();
         if (permissionCode != null && permissionCode.length() > 0) {
-            CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
-            Set<String> codes = userSession.getPermissionCodes();
-            if (!codes.contains(permissionCode)) {
+            if (!PermissionUtil.hasPermission(permissionCode)) {
                 throw new BusinessException("没有访问或操作权限");
             }
         }
@@ -36,7 +32,7 @@ public class PermissionMethodInterceptor {
 
     @Before("@annotation(needAdmin)")
     public void beforeRequest(JoinPoint point, NeedAdmin needAdmin) {
-        CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+        UserSession userSession = UserSession.getCurrentUserSession();
         if (!userSession.isSystemAdmin()) {
             throw new BusinessException("没有访问或操作权限");
         }

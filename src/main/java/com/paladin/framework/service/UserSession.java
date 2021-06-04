@@ -1,5 +1,6 @@
 package com.paladin.framework.service;
 
+import com.paladin.framework.utils.StringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 
@@ -12,8 +13,6 @@ import java.io.Serializable;
  * @since 2018年1月29日
  */
 public abstract class UserSession implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     private String userId;
     private String userName;
@@ -55,7 +54,6 @@ public abstract class UserSession implements Serializable {
 
     public abstract boolean isSystemAdmin();
 
-
     private final static String ATTRIBUTION_PLACEHOLDER = "paladin_session_placeholder";
 
     /**
@@ -75,9 +73,7 @@ public abstract class UserSession implements Serializable {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-
-        final UserSession that = (UserSession) o;
-        return userId != null ? userId.equals(that.userId) : that.userId == null;
+        return StringUtil.equals(userId, ((UserSession) o).userId);
     }
 
     @Override

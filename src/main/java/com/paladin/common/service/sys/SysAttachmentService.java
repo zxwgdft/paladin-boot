@@ -1,11 +1,11 @@
 package com.paladin.common.service.sys;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.paladin.common.mapper.sys.SysAttachmentMapper;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.core.FileStoreService;
 import com.paladin.common.service.sys.dto.FileCreateParam;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.Condition;
-import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.UUIDUtil;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
@@ -25,21 +24,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
-public class SysAttachmentService extends ServiceSupport<SysAttachment> {
+public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttachmentMapper> {
 
     // 单位M
-    @Value("${paladin.file.max-file-size:10}")
+    @Value("${paladin.attachment.max-file-size:10}")
     private int maxFileSize;
 
     // 附件删除后保留时间，默认10天，
-    @Value("${paladin.file.expire-day:10}")
+    @Value("${paladin.attachment.expire-day:10}")
     private int expireDay;
+
 
     private int maxFileNameSize = 100;
     private int maxFileByteSize;
@@ -55,120 +55,38 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         maxFileByteSize = maxFileSize * 1024 * 1024;
     }
 
-    /**
-     * 创建附件
-     */
-    public List<SysAttachment> createAttachments(MultipartFile[] files) {
-        List<SysAttachment> attachments = new ArrayList<>(files.length);
-        for (MultipartFile file : files) {
-            attachments.add(createAttachment(file, null));
-        }
-        return attachments;
-    }
-
-    /**
-     * 创建附件
-     */
-    public SysAttachment createAttachment(MultipartFile file) {
-        return createAttachment(file, null);
-    }
-
-    /**
-     * 创建附件
-     */
-    public SysAttachment createAttachment(MultipartFile file, String filename) {
-        FileCreateParam param = new FileCreateParam();
-        param.setFileContent(file);
-        param.setType(SysAttachment.TYPE_FILE);
-        if (filename != null && filename.length() > 0) {
-            param.setFilename(filename);
-        }
-        return createFile(param);
-    }
-
-
-    /**
-     * 创建附件
-     */
-    public SysAttachment createAttachment(String base64str, String filename) {
-        FileCreateParam param = new FileCreateParam();
-        param.setFileContent(base64str);
-        param.setType(SysAttachment.TYPE_FILE);
-        if (filename != null && filename.length() > 0) {
-            param.setFilename(filename);
-        }
-        return createFile(param);
-    }
-
 
     /**
      * 图片限制参数,如果不想限制可以设置大点
      */
-    private double max_picture_size = 2 * 1024 * 1024;
+    private double max_picture_size = 5 * 1024 * 1024;
     private int max_thumbnail_width = 600;
     private int max_thumbnail_height = 600;
     private int min_thumbnail_width = 200;
     private int min_thumbnail_height = 200;
 
-    /**
-     * 创建图片与缩略图
-     */
-    public SysAttachment createPictureAndThumbnail(MultipartFile file) {
-        return createPictureAndThumbnail(file, null, min_thumbnail_width, min_thumbnail_height);
-    }
 
     /**
-     * 创建图片与缩略图
-     */
-    public SysAttachment createPictureAndThumbnail(MultipartFile file, String filename) {
-        return createPictureAndThumbnail(file, filename, min_thumbnail_width, min_thumbnail_height);
-    }
-
-    /**
-     * 创建图片与缩略图
-     */
-    public SysAttachment createPictureAndThumbnail(MultipartFile file, String filename, Integer thumbnailWidth,
-                                                   Integer thumbnailHeight) {
-        FileCreateParam param = new FileCreateParam();
-        param.setFileContent(file);
-        if (filename != null && filename.length() > 0) {
-            param.setFilename(filename);
-        }
-        return createPictureAndThumbnail(param, thumbnailWidth, thumbnailHeight);
-    }
-
-    /**
-     * 创建图片与缩略图
-     */
-    public SysAttachment createPictureAndThumbnail(String base64str, String filename) {
-        return createPictureAndThumbnail(base64str, filename, min_thumbnail_width, min_thumbnail_height);
-    }
-
-    /**
-     * 创建图片与缩略图
+     * 创建文件附件
      *
-     * @param base64str
-     * @param filename
-     * @param thumbnailWidth  缩略图宽度，如果不需要则设置为null
-     * @param thumbnailHeight 缩略图高度，如果不需要则设置为null
+     * @param files 文件
      * @return
      */
-    public SysAttachment createPictureAndThumbnail(String base64str, String filename, Integer thumbnailWidth, Integer thumbnailHeight) {
-        FileCreateParam param = new FileCreateParam();
-        param.setFileContent(base64str);
-        return createFile(param);
+    public List<SysAttachment> createFile(MultipartFile... files) {
+        if (files == null || files.length == 0) return Collections.emptyList();
+        List<SysAttachment> result = new ArrayList<>(files.length);
+        for (MultipartFile file : files) {
+            result.add(createFile(new FileCreateParam(file)));
+        }
+        return result;
     }
 
     /**
      * 创建图片与缩略图，如果开启限制图片，过大图片会被压缩，压缩策略为根据图片大小与基准大小比例作为缩放大小进行缩放
      *
-     * @param param
-     * @param thumbnailWidth  缩略图宽度，如果不需要则设置为null
-     * @param thumbnailHeight 缩略图高度，如果不需要则设置为null
-     * @return
+     * @param param 文件创建参数
      */
-    private SysAttachment createPictureAndThumbnail(FileCreateParam param, Integer thumbnailWidth, Integer thumbnailHeight) {
-        param.setType(SysAttachment.TYPE_IMAGE);
+    public SysAttachment createPictureAndThumbnail(FileCreateParam param) {
         long size = param.getSize();
 
         if (size > max_picture_size) {
@@ -176,6 +94,9 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             scale = Math.sqrt(scale) * 0.8;
             param.setScale(scale);
         }
+
+        Integer thumbnailHeight = param.getThumbnailHeight();
+        Integer thumbnailWidth = param.getThumbnailWidth();
 
         if (thumbnailHeight == null) {
             thumbnailHeight = min_thumbnail_height;
@@ -187,27 +108,24 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
         param.setThumbnailHeight(Math.min(thumbnailHeight, max_thumbnail_height));
         param.setThumbnailWidth(Math.min(thumbnailWidth, max_thumbnail_width));
-
+        param.setNeedThumbnail(true);
         return createFile(param);
     }
 
-
     /**
      * 创建文件附件
-     *
-     * @param param
-     * @return
      */
     public SysAttachment createFile(FileCreateParam param) {
         if (param.getSize() > maxFileByteSize) {
             throw new BusinessException("上传文件不能大于" + maxFileSize + "MB");
         }
+        Date now = new Date();
         SysAttachment attachment = new SysAttachment();
         attachment.setId(UUIDUtil.createUUID());
         attachment.setSize(param.getSize());
-        attachment.setType(param.getType());
-        attachment.setCreateTime(new Date());
-        attachment.setDeleted(false);
+        attachment.setCreateTime(now);
+        attachment.setDeleted(true);
+        attachment.setOperateTime(now);
 
         String filename = param.getFilename();
         if (filename != null && filename.length() > 0) {
@@ -234,18 +152,13 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         }
 
         attachment.setStoreType(fileStoreService.getStoreType());
+
         save(attachment);
         return attachment;
     }
 
     /**
      * 保存文件附件
-     *
-     * @param param
-     * @param attachment
-     * @param subPath
-     * @return
-     * @throws IOException
      */
     private SysAttachment saveFile(FileCreateParam param, SysAttachment attachment, String subPath) throws IOException {
         String filename = attachment.getId();
@@ -267,7 +180,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         InputStream input = param.getInput();
 
         // 如果是图片类型，需要查看图片相关处理参数
-        if (param.getType() == SysAttachment.TYPE_IMAGE) {
+        if (param.isNeedThumbnail()) {
             Integer width = param.getWidth();
             Integer height = param.getHeight();
             Double scale = param.getScale();
@@ -279,7 +192,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
             // 如需要修改缩略图质量和规模，可加入参数
             if (thumbnailWidth != null && thumbnailHeight != null) {
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
-                byte[] buffer = new byte[2048];
+                byte[] buffer = new byte[4096];
                 int len;
                 while ((len = input.read(buffer)) > -1) {
                     output.write(buffer, 0, len);
@@ -346,94 +259,55 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
 
     /**
      * 获取文件附件记录
-     *
-     * @param ids
-     * @returns
      */
     public List<SysAttachment> getAttachments(String... ids) {
-        return searchAll(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)));
+        return (ids == null || ids.length == 0) ? Collections.emptyList() :
+                findList(new LambdaQueryWrapper<SysAttachment>().in(SysAttachment::getId, ids));
     }
 
     /**
+     * 持久化附件
+     */
+    public int deleteAttachments(List<SysAttachment> attachments) {
+        return deleteAttachments(getAttachmentIdArray(attachments));
+    }
+
+
+    /**
      * 删除附件
-     *
-     * @param ids
-     * @return
      */
     public int deleteAttachments(String... ids) {
         if (ids != null && ids.length > 0) {
-            Example example = buildOrCreateExample(new Condition(SysAttachment.FIELD_ID, QueryType.IN, Arrays.asList(ids)), modelType, false);
-            SysAttachment attachment = new SysAttachment();
-            attachment.setDeleted(true);
-            attachment.setDeleteTime(new Date());
-            return getSqlMapper().updateByExampleSelective(attachment, example);
+            return getSqlMapper().deleteAttachments(ids);
         }
         return 0;
     }
 
-
     /**
-     * 合并附件
-     *
-     * @param newIds
-     * @param attachmentFiles
-     * @return
+     * 持久化附件
      */
-    public List<SysAttachment> mergeAttachments(String newIds, MultipartFile... attachmentFiles) {
-        return replaceAndMergeAttachments(null, newIds, attachmentFiles);
+    public int persistAttachments(String ownUserId, List<SysAttachment> attachments) {
+        return persistAttachments(ownUserId, getAttachmentIdArray(attachments));
     }
 
     /**
-     * 替换和合并附件
-     * <p>
-     * 会删除附件，所以需要调用该方法时需要考虑是否要添加事务
-     *
-     * @param originIds
-     * @param newIds
-     * @param attachmentFiles
-     * @return
+     * 持久化附件
      */
-    public List<SysAttachment> replaceAndMergeAttachments(String originIds, String newIds, MultipartFile... attachmentFiles) {
-        List<SysAttachment> newAttList = null;
-        if (newIds != null && newIds.length() != 0) {
-            newAttList = getAttachments(newIds.split(","));
+    public int persistAttachments(String ownUserId, String... ids) {
+        if (ids != null && ids.length > 0) {
+            return getSqlMapper().persistAttachments(ids, ownUserId);
         }
+        return 0;
+    }
 
-        if (newAttList == null) {
-            newAttList = new ArrayList<>(attachmentFiles != null ? attachmentFiles.length : 0);
+    private String[] getAttachmentIdArray(List<SysAttachment> attachments) {
+        if (attachments != null && attachments.size() > 0) {
+            String[] arr = new String[attachments.size()];
+            int i = 0;
+            for (SysAttachment attachment : attachments) arr[i++] = attachment.getId();
+            return arr;
         }
-
-        ArrayList<String> deleteIdList = new ArrayList<>();
-        if (originIds != null && originIds.length() > 0) {
-            String[] originIdArray = originIds.split(",");
-            for (String oid : originIdArray) {
-                boolean del = true;
-                for (SysAttachment att : newAttList) {
-                    if (att.getId().equals(oid)) {
-                        del = false;
-                        break;
-                    }
-                }
-                if (del) {
-                    deleteIdList.add(oid);
-                }
-            }
-
-            if (deleteIdList.size() > 0) {
-                deleteAttachments(deleteIdList.toArray(new String[deleteIdList.size()]));
-            }
-        }
-
-        if (attachmentFiles != null) {
-            for (MultipartFile file : attachmentFiles) {
-                if (file != null) {
-                    SysAttachment a = createAttachment(file);
-                    newAttList.add(a);
-                }
-            }
-        }
-
-        return newAttList;
+        return null;
     }
 
     /**
@@ -442,7 +316,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
      * @param attachments
      * @return
      */
-    public String splicingAttachmentId(List<SysAttachment> attachments) {
+    public String joinAttachmentId(List<SysAttachment> attachments) {
         if (attachments != null && attachments.size() > 0) {
             String str = "";
             for (SysAttachment attachment : attachments) {
@@ -453,23 +327,27 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         return null;
     }
 
+
+    public void deleteAttachmentsByUser(String id) {
+        getSqlMapper().deleteAttachmentsByUser(id);
+    }
+
     /**
      * 清理删除的附件文件
      */
     public int cleanAttachmentFile() {
         int count = 0;
-        List<SysAttachment> list = searchAll(
-                new Condition[]{
-                        new Condition(SysAttachment.FIELD_DELETED, QueryType.EQUAL, true),
-                        new Condition(SysAttachment.FIELD_DELETE_TIME, QueryType.LESS_THAN, new Date(System.currentTimeMillis() - (expireDay * 60L * 60 * 24 * 1000))),
-                },
-                SysAttachment.class, true);
+
+        List<SysAttachment> list = findList(new LambdaQueryWrapper<SysAttachment>()
+                .eq(SysAttachment::getDeleted, true)
+                .lt(SysAttachment::getOperateTime, new Date(System.currentTimeMillis() - (expireDay * 60L * 60 * 24 * 1000))));
 
         for (SysAttachment att : list) {
             String id = att.getId();
             if (deleteFile(id, att.getRelativePath()) &&
                     deleteFile(id, att.getThumbnailRelativePath())) {
-                getSqlMapper().deleteByPrimaryKey(id);
+                // 调取mapper删除方法，防止逻辑删除
+                getSqlMapper().deleteById(id);
                 count++;
             }
         }
@@ -493,5 +371,6 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment> {
         }
         return false;
     }
+
 
 }

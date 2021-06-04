@@ -1,11 +1,11 @@
 package com.paladin.common.service.sys;
 
-import org.springframework.stereotype.Service;
-
+import com.paladin.common.mapper.sys.SysLoggerOperateMapper;
 import com.paladin.common.model.sys.SysLoggerOperate;
 import com.paladin.framework.service.ServiceSupport;
+import org.springframework.stereotype.Service;
 
 @Service
-public class SysLoggerOperateService extends ServiceSupport<SysLoggerOperate> {
+public class SysLoggerOperateService extends ServiceSupport<SysLoggerOperate, SysLoggerOperateMapper> {
 
 }

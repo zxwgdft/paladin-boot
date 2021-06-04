@@ -37,9 +37,12 @@ spring:
 
 
 paladin:
+  # 是否开启CAS + shiro
   shiro-cas-enabled: false
+  # 是否开启shiro
   shiro-enabled: true
   shiro:
+    ## cas 相关设置，暂时无用
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS30
     cas-server-login-url: http://58.210.169.168:9091/login
@@ -53,7 +56,17 @@ paladin:
     ftp-password: 123456
     ftp-visit-host: 172.16.16.120
     ftp-visit-port: 9021
+  attachment:
+    # 附件最大大小（M）
+    max-file-size: 10
+    # 附件删除后保留时间（天）
+    expire-day: 10
+  # 用户默认密码
+  default-password: 123456
+  # 是否使用随机缺省密码
+  default-password-random: false
   generate:
+    # 是否生成swagger注解
     swagger: true
 
 # 动态数据库配置

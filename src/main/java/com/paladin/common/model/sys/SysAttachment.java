@@ -1,34 +1,17 @@
 package com.paladin.common.model.sys;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
 import java.util.Date;
 
 @Getter
 @Setter
 public class SysAttachment {
 
-    /**
-     * 文件
-     */
-    public final static int TYPE_FILE = 1;
-
-    /**
-     * 图片
-     */
-    public final static int TYPE_IMAGE = 2;
-
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_DELETED = "deleted";
-    public static final String FIELD_DELETE_TIME = "deleteTime";
-
-
-    @Id
+    @TableId
     private String id;
-
-    private Integer type;
 
     private String storeType;
 
@@ -44,8 +27,9 @@ public class SysAttachment {
 
     private Date createTime;
 
-    private Date deleteTime;
+    private String operateBy;
+
+    private Date operateTime;
 
     private Boolean deleted;
-
 }

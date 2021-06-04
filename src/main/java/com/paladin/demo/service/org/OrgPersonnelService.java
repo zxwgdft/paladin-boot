@@ -1,19 +1,22 @@
 package com.paladin.demo.service.org;
 
+import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
+import com.paladin.demo.mapper.org.OrgPersonnelMapper;
 import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
 import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
 import com.paladin.demo.service.org.dto.PersonnelPermissionQuery;
-import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.utils.ListUtil;
 import com.paladin.framework.utils.StringUtil;
+import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
+public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonnelMapper> {
 
     @Autowired
     private SysUserService sysUserService;
@@ -31,77 +34,86 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
     private SysAttachmentService attachmentService;
 
     @Transactional
-    public boolean savePersonnel(OrgPersonnelDTO orgPersonnelDTO) {
+    public String savePersonnel(OrgPersonnelDTO orgPersonnelDTO) {
         OrgPersonnel orgPersonnel = SimpleBeanCopyUtil.simpleCopy(orgPersonnelDTO, new OrgPersonnel());
-        String account = orgPersonnel.getAccount();
-        String id = orgPersonnel.getId();
 
-        List<SysAttachment> attachments = attachmentService.mergeAttachments(
-                orgPersonnelDTO.getAttachment(), orgPersonnelDTO.getAttachmentFiles());
+        String account = orgPersonnel.getAccount();
+        String id = UUIDUtil.createUUID();
+        orgPersonnel.setId(id);
+
+        List<SysAttachment> attachments = attachmentService.createFile(orgPersonnelDTO.getAttachmentFiles());
+
+        String attIds = orgPersonnelDTO.getAttachment();
+        if (StringUtil.isNotEmpty(attIds)) {
+            attachments = ListUtil.mergeList(attachmentService.getAttachments(attIds.split(",")), attachments);
+        }
 
         if (attachments != null && attachments.size() > 5) {
             throw new BusinessException("附件数量不能超过5个");
         }
 
-        orgPersonnel.setAttachment(attachmentService.splicingAttachmentId(attachments));
+        attachmentService.persistAttachments(id, attachments);
+        orgPersonnel.setAttachment(attachmentService.joinAttachmentId(attachments));
 
-        if (sysUserService.createUserAccount(account, id, SysUser.TYPE_USER)) {
-            return save(orgPersonnel);
-        }
-
-        return false;
+        String password = sysUserService.createUserAccount(account, id, SysUser.USER_TYPE_PERSONNEL);
+        save(orgPersonnel);
+        return password;
     }
 
     @Transactional
-    public boolean updatePersonnel(OrgPersonnelDTO orgPersonnelDTO) {
+    public void updatePersonnel(OrgPersonnelDTO orgPersonnelDTO) {
         String id = orgPersonnelDTO.getId();
         OrgPersonnel orgPersonnel = get(id);
         if (orgPersonnel == null) {
-            throw new BusinessException("找不到需要更新的人员[ID:" + id + "]");
+            throw new BusinessException("找不到需要更新的人员");
         }
 
-        List<SysAttachment> attachments = attachmentService.replaceAndMergeAttachments(
-                orgPersonnel.getAttachment(), orgPersonnelDTO.getAttachment(), orgPersonnelDTO.getAttachmentFiles());
+        List<SysAttachment> attachments = attachmentService.createFile(orgPersonnelDTO.getAttachmentFiles());
+
+        String attIds = orgPersonnelDTO.getAttachment();
+        if (StringUtil.isNotEmpty(attIds)) {
+            attachments = ListUtil.mergeList(attachmentService.getAttachments(attIds.split(",")), attachments);
+        }
 
         if (attachments != null && attachments.size() > 5) {
             throw new BusinessException("附件数量不能超过5个");
         }
 
-        orgPersonnelDTO.setAttachment(attachmentService.splicingAttachmentId(attachments));
+        String originAttIds = orgPersonnel.getAttachment();
+        if (StringUtil.isNotEmpty(originAttIds)) {
+            attachmentService.deleteAttachments(originAttIds.split(","));
+        }
+        attachmentService.persistAttachments(id, attachments);
+        orgPersonnel.setAttachment(attachmentService.joinAttachmentId(attachments));
 
         String originAccount = orgPersonnel.getAccount();
         String account = orgPersonnelDTO.getAccount();
 
         if (!account.equals(originAccount)) {
             // 账号不一样需要更新账号
-            sysUserService.updateUserAccount(id, originAccount, account);
+            sysUserService.updateUserAccount(id, account);
         }
 
         SimpleBeanCopyUtil.simpleCopy(orgPersonnelDTO, orgPersonnel);
-        return update(orgPersonnel);
+
+        updateWhole(orgPersonnel);
     }
 
     /**
      * 删除人员
      *
      * @param id
-     * @return
      */
-    public boolean removePersonnel(String id) {
+    @Transactional
+    public void removePersonnel(String id) {
         OrgPersonnel orgPersonnel = get(id);
         if (orgPersonnel != null) {
-            // 是否要考虑删除附件
-            String atts = orgPersonnel.getAttachment();
-            if (StringUtil.isNotEmpty(atts)) {
-                attachmentService.deleteAttachments(atts.split(","));
-            }
+            attachmentService.deleteAttachmentsByUser(id);
         }
-        removeByPrimaryKey(id);
-        // TODO 删除账号
-        return true;
+        deleteById(id);
     }
 
-    public PageResult<OrgPersonnelVO> findPersonnel(OrgPersonnelQuery query) {
+    public PageResult<OrgPersonnel> findPersonnel(OrgPersonnelQuery query) {
 
         // 增加数据权限过滤
         // 应用管理员级别可以查看所有人员数据
@@ -118,7 +130,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
             if (roleLevel >= DemoUserSession.ROLE_LEVEL_UNIT_ADMIN) {
                 String unitId = userSession.getUnitId();
                 if (unitId != null && unitId.length() > 0) {
-                    OrgUnitContainer.Unit unit = OrgUnitContainer.getUnit(unitId);
+                    OrgUnitContainer.Unit unit = DataCacheHelper.getData(OrgUnitContainer.class).getUnit(unitId);
                     if (unit != null) {
                         List<String> ids = unit.getSelfAndChildrenIds();
                         if (ids.size() == 1) {
@@ -137,9 +149,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel> {
             }
         }
 
-        // 多个查询条件可以数组或列表组合，他们会在同一个标准下（Example.Criteria）
-        return searchPage(query.getOffset(), query.getLimit(), OrgPersonnelVO.class,
-                permissionQuery == null ? query : new Object[]{query, permissionQuery});
+        return findPage(query, permissionQuery == null ? query : new Object[]{query, permissionQuery});
     }
 
 

@@ -1,17 +1,17 @@
 package com.paladin.data.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 @Getter
 @Setter
-@Table(name = "db_connection")
+@TableName("db_connection")
 public class DBConnection {
 
-    @Id
+    @TableId(type = IdType.ASSIGN_UUID)
     private String name;
 
     private String url;

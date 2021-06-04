@@ -1,22 +1,16 @@
 package com.paladin.data.model.build;
 
-import com.paladin.framework.mybatis.GenIdImpl;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
-import tk.mybatis.mapper.annotation.KeySql;
-
-import javax.persistence.Id;
 
 @Getter
 @Setter
 public class DbBuildTable {
 
-    public final static String COLUMN_FIELD_CONNECTION_NAME = "connectionName";
-    public final static String COLUMN_FIELD_TABLE_NAME = "tableName";
-
     //
-    @Id
-    @KeySql(genId = GenIdImpl.class)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     //
