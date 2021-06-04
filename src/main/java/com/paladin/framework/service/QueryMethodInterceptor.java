@@ -1,5 +1,6 @@
 package com.paladin.framework.service;
 
+import com.paladin.framework.service.annotation.QueryOutputMethod;
 import com.paladin.framework.utils.convert.JsonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;

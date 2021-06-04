@@ -1,8 +1,9 @@
 package com.paladin.framework.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.styx.common.utils.reflect.Entity;
-import com.styx.common.utils.reflect.EntityField;
+import com.paladin.framework.service.annotation.QueryCondition;
+import com.paladin.framework.utils.reflect.Entity;
+import com.paladin.framework.utils.reflect.EntityField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
