@@ -8,7 +8,6 @@ import com.paladin.demo.service.org.OrgUnitContainer;
 import com.paladin.demo.service.org.OrgUnitService;
 import com.paladin.demo.service.org.dto.OrgUnitDTO;
 import com.paladin.framework.api.R;
-import com.paladin.framework.utils.UUIDUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class OrgUnitController extends ControllerSupport {
         return "/demo/org/org_unit_index";
     }
 
-    @RequestMapping(value = "/find", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/find")
     @ResponseBody
     public List<OrgUnit> findPage() {
         return orgUnitService.findList();
@@ -65,28 +64,23 @@ public class OrgUnitController extends ControllerSupport {
     @ResponseBody
     @RequiresPermissions("org:unit:save")
     @OperationLog(model = "机构管理", operate = "机构新增")
-    public OrgUnit save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
+    public R save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        OrgUnit model = beanCopy(orgUnitDTO, new OrgUnit());
-        String id = UUIDUtil.createUUID();
-        model.setId(id);
-        orgUnitService.saveUnit(model);
-        return orgUnitService.get(id);
+        orgUnitService.saveUnit(orgUnitDTO);
+        return R.success();
     }
 
     @PostMapping("/update")
     @ResponseBody
     @RequiresPermissions("org:unit:update")
     @OperationLog(model = "机构管理", operate = "机构更新")
-    public OrgUnit update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
+    public R update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        String id = orgUnitDTO.getId();
-        OrgUnit model = beanCopy(orgUnitDTO, orgUnitService.get(id));
-        orgUnitService.updateUnit(model);
-        return orgUnitService.get(id);
+        orgUnitService.updateUnit(orgUnitDTO);
+        return R.success();
     }
 
-    @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/delete")
     @ResponseBody
     @RequiresPermissions("org:unit:delete")
     @OperationLog(model = "机构管理", operate = "机构删除")

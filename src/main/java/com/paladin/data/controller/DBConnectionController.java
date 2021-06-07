@@ -199,7 +199,6 @@ public class DBConnectionController extends ControllerSupport {
         }
 
         generateService.buildProjectFile(tableOption, BuilderType.MODEL, projectPath);
-        generateService.buildProjectFile(tableOption, BuilderType.MODEL_VO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.MODEL_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.QUERY_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.EXPORT_QUERY_DTO, projectPath);
@@ -258,7 +257,6 @@ public class DBConnectionController extends ControllerSupport {
         }
 
         generateService.buildProjectFile(tableOption, BuilderType.MODEL, projectPath);
-        generateService.buildProjectFile(tableOption, BuilderType.MODEL_VO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.MODEL_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.QUERY_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.EXPORT_QUERY_DTO, projectPath);

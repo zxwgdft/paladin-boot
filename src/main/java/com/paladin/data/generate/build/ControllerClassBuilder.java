@@ -33,7 +33,6 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.SERVICE, tableOption)).append(";\n");
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.QUERY_DTO, tableOption)).append(";\n");
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_DTO, tableOption)).append(";\n");
-        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_VO, tableOption)).append(";\n");
 
         for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();

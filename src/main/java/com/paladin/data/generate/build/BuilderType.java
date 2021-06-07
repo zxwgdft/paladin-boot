@@ -5,7 +5,6 @@ public enum BuilderType {
     SERVICE,
     MAPPER,
     MODEL,
-    MODEL_VO,
     MODEL_DTO,
     CONTROLLER,
     QUERY_DTO,

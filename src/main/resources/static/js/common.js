@@ -1315,6 +1315,7 @@ function _initTable() {
                         }
                     }
                 }
+                request.method = "post";
                 $.sendAjax(request);
             }
         }

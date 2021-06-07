@@ -3,8 +3,10 @@ package com.paladin.demo.service.org;
 import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.demo.mapper.org.OrgUnitMapper;
 import com.paladin.demo.model.org.OrgUnit;
+import com.paladin.demo.service.org.dto.OrgUnitDTO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.ServiceSupport;
+import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,21 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrgUnitService extends ServiceSupport<OrgUnit, OrgUnitMapper> {
 
     @Transactional
-    public boolean saveUnit(OrgUnit model) {
-        save(model);
+    public void saveUnit(OrgUnitDTO orgUnitDTO) {
+        save(SimpleBeanCopyUtil.simpleCopy(orgUnitDTO, new OrgUnit()));
         DataCacheHelper.reloadCache(OrgUnitContainer.class);
-        return true;
     }
 
     @Transactional
-    public boolean updateUnit(OrgUnit model) {
-        updateWhole(model);
+    public void updateUnit(OrgUnitDTO orgUnitDTO) {
+        updateWhole(SimpleBeanCopyUtil.simpleCopy(orgUnitDTO, getWhole(orgUnitDTO.getId())));
         DataCacheHelper.reloadCache(OrgUnitContainer.class);
-        return true;
     }
 
     @Transactional
-    public boolean removeUnit(String id) {
+    public void removeUnit(String id) {
         OrgUnitContainer unitContainer = DataCacheHelper.getData(OrgUnitContainer.class);
         OrgUnitContainer.Unit unit = unitContainer.getUnit(id);
         if (unit == null) {
@@ -37,6 +37,5 @@ public class OrgUnitService extends ServiceSupport<OrgUnit, OrgUnitMapper> {
         }
         deleteById(id);
         DataCacheHelper.reloadCache(OrgUnitContainer.class);
-        return true;
     }
 }

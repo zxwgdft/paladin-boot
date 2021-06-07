@@ -1,5 +1,6 @@
 package com.paladin.common.model.org;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.paladin.framework.api.BaseModel;
 import io.swagger.annotations.ApiModel;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @ApiModel(description = "角色")
 public class OrgRole extends BaseModel {
 
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     @ApiModelProperty("角色名称")

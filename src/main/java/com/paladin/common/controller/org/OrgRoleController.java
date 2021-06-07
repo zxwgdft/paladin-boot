@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -39,30 +37,30 @@ public class OrgRoleController extends ControllerSupport {
     @Autowired
     private OrgRolePermissionService orgRolePermissionService;
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public String index() {
         return "/common/org/role_index";
     }
 
-    @RequestMapping("/find/page")
+    @PostMapping("/find/page")
     @ResponseBody
     public PageResult<OrgRole> findPage(OrgRoleQueryDTO query) {
         return orgRoleService.findPage(query);
     }
 
-    @RequestMapping("/find/all")
+    @PostMapping("/find/all")
     @ResponseBody
     public List<OrgRole> findAll(OrgRoleQueryDTO query) {
         return orgRoleService.findList(query);
     }
 
-    @RequestMapping("/get")
+    @GetMapping("/get")
     @ResponseBody
     public OrgRole getDetail(@RequestParam String id) {
         return orgRoleService.get(id);
     }
 
-    @RequestMapping("/add")
+    @GetMapping("/add")
     public String addInput() {
         return "/common/org/role_add";
     }
@@ -73,34 +71,31 @@ public class OrgRoleController extends ControllerSupport {
         return "/common/org/role_detail";
     }
 
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @ResponseBody
     @RequiresPermissions("sys:role:save")
-    public OrgRole save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
+    public R save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        String id = UUIDUtil.createUUID();
-        orgRoleDTO.setId(id);
         orgRoleService.saveRole(orgRoleDTO);
-        return orgRoleService.get(id);
+        return R.success();
     }
 
-    @RequestMapping("/update")
+    @PostMapping("/update")
     @ResponseBody
     @RequiresPermissions("sys:role:update")
-    public OrgRole update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
+    public R update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        String id = orgRoleDTO.getId();
         orgRoleService.updateRole(orgRoleDTO);
-        return orgRoleService.get(id);
+        return R.success();
     }
 
-    @RequestMapping("/grant/index")
+    @GetMapping("/grant/index")
     public String grantAuthorizationInput(@RequestParam String id, Model model) {
         model.addAttribute("roleId", id);
         return "/common/org/role_grant";
     }
 
-    @RequestMapping("/grant/find/permission")
+    @PostMapping("/grant/find/permission")
     @ResponseBody
     public Object getGrantAuthorization(@RequestParam String id, Model model) {
         Map<String, Object> result = new HashMap<>();
@@ -109,7 +104,7 @@ public class OrgRoleController extends ControllerSupport {
         return result;
     }
 
-    @RequestMapping("/grant")
+    @PostMapping("/grant")
     @ResponseBody
     @RequiresPermissions("sys:role:grant")
     public R grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {

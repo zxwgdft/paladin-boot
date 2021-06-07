@@ -80,7 +80,7 @@ public class LoginController {
     }
 
     @ApiOperation("修改密码")
-    @RequestMapping(value = "/update/password", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/update/password")
     @ResponseBody
     public R updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
         sysUserService.updateSelfPassword(newPassword, oldPassword);

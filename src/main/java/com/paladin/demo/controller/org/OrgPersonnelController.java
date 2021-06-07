@@ -16,7 +16,6 @@ import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.annotation.QueryInputMethod;
 import com.paladin.framework.service.annotation.QueryOutputMethod;
-import com.paladin.framework.utils.UUIDUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +44,7 @@ public class OrgPersonnelController extends ControllerSupport {
     }
 
     // @QueryOutputMethod 用于查询回显，查询动作后会尝试把查询参数保存在session中
-    @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/find/page")
     @ResponseBody
     @QueryOutputMethod(queryClass = OrgPersonnelQuery.class, paramIndex = 0)
     public PageResult<OrgPersonnel> findPage(OrgPersonnelQuery query) {
@@ -86,15 +85,12 @@ public class OrgPersonnelController extends ControllerSupport {
     @ResponseBody
     @OperationLog(model = "人员管理", operate = "人员新增")
     @RequiresPermissions("org:personnel:save")
-    public OrgPersonnel save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+    public R save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         // 返回固定格式校验错误数据，用于展示
         validErrorHandler(bindingResult);
-        String id = UUIDUtil.createUUID();
-        orgPersonnelDTO.setId(id);
-
-        orgPersonnelService.savePersonnel(orgPersonnelDTO);
+        String password = orgPersonnelService.savePersonnel(orgPersonnelDTO);
         // 保存成功后直接返回完整对象
-        return orgPersonnelService.get(id);
+        return R.success(password);
     }
 
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
@@ -103,16 +99,15 @@ public class OrgPersonnelController extends ControllerSupport {
     @OperationLog(model = "人员管理", operate = "人员更新")
     //@RequiresPermissions("org:personnel:update") // shiro 方式
     @NeedPermission("org:personnel:update")        // 自定义权限方式，直接判断权限code是否相等
-    public OrgPersonnel update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+    public R update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        String id = orgPersonnelDTO.getId();
         orgPersonnelService.updatePersonnel(orgPersonnelDTO);
         // 更新成功后直接返回完整对象
-        return orgPersonnelService.get(id);
+        return R.success();
     }
 
     // 删除数据
-    @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/delete")
     @ResponseBody
     @OperationLog(model = "人员管理", operate = "人员删除")
     @RequiresPermissions("org:personnel:delete")
@@ -126,7 +121,7 @@ public class OrgPersonnelController extends ControllerSupport {
     @PostMapping(value = "/export")
     @ResponseBody
     @RequiresPermissions("org:personnel:export")
-    public Object export(@RequestBody OrgPersonnelExportCondition condition) {
+    public String export(@RequestBody OrgPersonnelExportCondition condition) {
         if (condition == null) {
             throw new BusinessException("导出失败：请求参数异常");
         }
@@ -138,15 +133,14 @@ public class OrgPersonnelController extends ControllerSupport {
             if (query != null) {
                 if (condition.isExportAll()) {
                     // orgPersonnelService.searchAll(query) 也可以替换为 orgPersonnelService.searchPage(query, OrgPersonnelVO.class)，从而在VO类中做一定处理
-                    ExportUtil.export(condition, orgPersonnelService.findList(query), OrgPersonnel.class);
+                    return ExportUtil.export(condition, orgPersonnelService.findList(query), OrgPersonnel.class);
                 } else if (condition.isExportPage()) {
-                    ExportUtil.export(condition, orgPersonnelService.findPage(query).getData(), OrgPersonnel.class);
+                    return ExportUtil.export(condition, orgPersonnelService.findPage(query).getData(), OrgPersonnel.class);
                 }
-                return R.success();
             }
             throw new BusinessException("导出数据失败：请求参数错误");
         } catch (IOException | ExcelWriteException e) {
-            throw new BusinessException("导出数据失败：" + e.getMessage());
+            throw new BusinessException("导出数据失败", e);
         }
     }
 

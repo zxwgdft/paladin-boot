@@ -15,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,28 +29,23 @@ public class ${upperModelName}Controller extends ControllerSupport {
     @Autowired
     private ${upperModelName}Service ${lowerModelName}Service;
 
-    <#if attachmentField??>
-    @Autowired
-    private SysAttachmentService attachmentService;
-    </#if>
-
     @GetMapping("${indexRM}")
     @QueryInputMethod(queryClass = ${upperModelName}Query.class)
     public String index() {
         return "${indexPage}";
     }
 
-    @RequestMapping(value = "${findPageRM}", method = { RequestMethod.GET, RequestMethod.POST })
+    @PostMapping(value = "${findPageRM}")
     @ResponseBody
     @QueryOutputMethod(queryClass = ${upperModelName}Query.class, paramIndex = 0)
-    public Object findPage(${upperModelName}Query query) {
-        return R.success(${lowerModelName}Service.searchPage(query, ${upperModelName}VO.class));
+    public PageResult<${upperModelName}> findPage(${upperModelName}Query query) {
+        return ${lowerModelName}Service.findPage(query);
     }
     
     @GetMapping("${getDetailRM}")
     @ResponseBody
-    public Object getDetail(@RequestParam String id) {
-        return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
+    public ${upperModelName} getDetail(@RequestParam String id) {
+        return ${lowerModelName}Service.get(id);
     }
     
     @GetMapping("${addRM}")
@@ -73,84 +67,50 @@ public class ${upperModelName}Controller extends ControllerSupport {
     
     @PostMapping("${saveRM}")
 	@ResponseBody
-    public Object save(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-
-		${upperModelName} model = beanCopy(${lowerModelName}DTO, new ${upperModelName}());
-	    String id = UUIDUtil.createUUID();
-    	model.set${primaryName}(id);
-
-        <#if attachmentField??>
-        List<SysAttachment> attachments = attachmentService.mergeAttachments(
-                ${lowerModelName}DTO.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}File());
-
-        if (attachments != null && attachments.size() > ${attachmentSize}) {
-            throw new BusinessException("附件数量不能超过${attachmentSize}个");
-        }
-
-        model.set${attachmentField}(attachmentService.splicingAttachmentId(attachments));
-        </#if>
-
-		if (${lowerModelName}Service.save(model)) {
-			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
-		}
-		return R.fail("保存失败");
+    public R save(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
+	    // 验证数据
+	    validErrorHandler(bindingResult);
+		${lowerModelName}Service.save(beanCopy(${lowerModelName}DTO, new ${upperModelName}()));
+		return R.success();
 	}
 
     @PostMapping("${updateRM}")
 	@ResponseBody
-    public Object update(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
+    public R update(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
+		validErrorHandler(bindingResult);
+
 		String id = ${lowerModelName}DTO.getId();
-		${upperModelName} model = ${lowerModelName}Service.get(id);
-
-		<#if attachmentField??>
-        List<SysAttachment> attachments = attachmentService.replaceAndMergeAttachments(
-                        model.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}(), ${lowerModelName}DTO.get${attachmentField}File());
-
-        if (attachments != null && attachments.size() > ${attachmentSize}) {
-            throw new BusinessException("附件数量不能超过${attachmentSize}个");
-        }
-
-        ${lowerModelName}DTO.set${attachmentField}(attachmentService.splicingAttachmentId(attachments));
-        </#if>
-
-		model = beanCopy(${lowerModelName}DTO, model);
-		if (${lowerModelName}Service.update(model)) {
-			return R.success(${lowerModelName}Service.get(id, ${upperModelName}VO.class));
-		}
-		return R.fail("更新失败");
+		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.getWhole(id));
+		${lowerModelName}Service.updateWhole(model);
+        return R.success();
 	}
 
-    @RequestMapping(value = "${deleteRM}", method = { RequestMethod.GET, RequestMethod.POST })
+    @PostMapping(value = "${deleteRM}")
     @ResponseBody
-    public Object delete(@RequestParam String id) {
-        return ${lowerModelName}Service.removeByPrimaryKey(id) ? R.success() : R.fail("保存失败");
+    public R delete(@RequestParam String id) {
+        ${lowerModelName}Service.deleteById(id);
+        return R.success();
     }
     
     @PostMapping(value = "${exportRM}")
 	@ResponseBody
-	public Object export(@RequestBody ${upperModelName}ExportCondition condition) {
+	public String export(@RequestBody ${upperModelName}ExportCondition condition) {
 		if (condition == null) {
-            return R.fail("导出失败：请求参数异常");
+            throw new BusinessException("导出失败：请求参数异常");
 		}
 		condition.sortCellIndex();
 		${upperModelName}Query query = condition.getQuery();
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
-					return R.success(ExportUtil.export(condition, ${lowerModelName}Service.searchAll(query), ${upperModelName}.class));
+					return ExportUtil.export(condition, ${lowerModelName}Service.findList(query), ${upperModelName}.class);
 				} else if (condition.isExportPage()) {
-					return R.success(ExportUtil.export(condition, ${lowerModelName}Service.searchPage(query).getData(), ${upperModelName}.class));
+					return ExportUtil.export(condition, ${lowerModelName}Service.findPage(query).getData(), ${upperModelName}.class);
 				}
 			}
-            return R.fail("导出数据失败：请求参数错误");
+            throw new BusinessException("导出数据失败：请求参数错误");
 		} catch (IOException | ExcelWriteException e) {
-            return R.fail("导出数据失败：" + e.getMessage());
+            throw new BusinessException("导出数据失败", e);
 		}
 	}
 }

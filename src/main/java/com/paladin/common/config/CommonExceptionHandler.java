@@ -44,14 +44,34 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
         }
 
-        if (status.is5xxServerError()) {
-            log.error("服务异常", ex);
-        } else {
-            log.debug("请求异常", ex);
-        }
+        if (ex instanceof BusinessException) {
+            BusinessException businessException = (BusinessException) ex;
+            if (businessException.isHasChildException()) {
+                log.error("服务异常", businessException);
+            } else {
+                if (status.is5xxServerError()) {
+                    log.error("服务异常", ex);
+                } else {
+                    log.debug("请求异常", ex);
+                }
+            }
 
-        if (body == null) {
-            body = ex.getMessage();
+            if (body == null) {
+                body = ex.getMessage();
+            }
+        } else {
+            // 非BusinessException异常处理
+            if (status.is5xxServerError()) {
+                log.error("服务异常", ex);
+                if (body == null) {
+                    body = "服务异常";
+                }
+            } else {
+                log.debug("请求异常", ex);
+                if (body == null) {
+                    body = "请求异常";
+                }
+            }
         }
 
         return new ResponseEntity<>(body, headers, status);

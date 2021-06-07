@@ -6,8 +6,8 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.sys.SysLoggerOperate;
 import com.paladin.common.service.sys.SysLoggerOperateService;
 import com.paladin.common.service.sys.dto.SysLoggerOperateQuery;
-import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class SysLoggerOperateController extends ControllerSupport {
         return "/common/sys/sys_logger_operate_index";
     }
 
-    @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/find/page")
     @ResponseBody
     public PageResult<SysLoggerOperate> findPage(SysLoggerOperateQuery query) {
         return sysLoggerOperateService.findPage(query);
@@ -49,23 +49,23 @@ public class SysLoggerOperateController extends ControllerSupport {
 
     @PostMapping(value = "/export")
     @ResponseBody
-    public Object export(@RequestBody SysLoggerOperateExportCondition condition) {
+    public String export(@RequestBody SysLoggerOperateExportCondition condition) {
         if (condition == null) {
-            return R.fail("导出失败：请求参数异常");
+            throw new BusinessException("导出失败：请求参数异常");
         }
         condition.sortCellIndex();
         SysLoggerOperateQuery query = condition.getQuery();
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.findList(query), SysLoggerOperate.class));
+                    return ExportUtil.export(condition, sysLoggerOperateService.findList(query), SysLoggerOperate.class);
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.findPage(query).getData(), SysLoggerOperate.class));
+                    return ExportUtil.export(condition, sysLoggerOperateService.findPage(query).getData(), SysLoggerOperate.class);
                 }
             }
-            return R.fail("导出数据失败：请求参数错误");
+            throw new BusinessException("导出数据失败：请求参数错误");
         } catch (IOException | ExcelWriteException e) {
-            return R.fail("导出数据失败：" + e.getMessage());
+            throw new BusinessException("导出数据失败", e);
         }
     }
 }
