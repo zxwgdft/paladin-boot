@@ -8,8 +8,6 @@ import com.paladin.framework.api.R;
 import com.paladin.framework.service.UserSession;
 import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -83,7 +81,6 @@ public class LoginController {
     }
 
     @ApiOperation("修改密码")
-    @ApiImplicitParams({@ApiImplicitParam(name = "newPassword", value = "新密码", required = true), @ApiImplicitParam(name = "oldPassword", value = "旧密码")})
     @RequestMapping(value = "/update/password", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public R updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {

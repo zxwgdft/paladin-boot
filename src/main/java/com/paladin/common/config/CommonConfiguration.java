@@ -1,7 +1,6 @@
 package com.paladin.common.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.paladin.common.core.exception.CommonHandlerExceptionResolver;
 import com.paladin.common.core.log.OperationLogInterceptor;
 import com.paladin.common.core.security.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
@@ -14,10 +13,11 @@ import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.ServiceSupportManager;
+import com.paladin.framework.service.mybatis.CommonSqlInjector;
+import com.paladin.framework.spring.SpringBeanHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 public class CommonConfiguration {
@@ -32,11 +32,15 @@ public class CommonConfiguration {
         return new TontoDialect();
     }
 
+    /**
+     * shiro 模板方言
+     *
+     * @return
+     */
     @Bean
     public ShiroDialect getShiroDialect() {
         return new ShiroDialect();
     }
-
 
     /**
      * 数据缓存管理器
@@ -48,26 +52,28 @@ public class CommonConfiguration {
 
 
     /**
-     * 启用异常统一处理
-     *
-     * @return
+     * spring bean 获取帮助类
      */
     @Bean
-    public HandlerExceptionResolver getHandlerExceptionResolver() {
-        return new CommonHandlerExceptionResolver();
+    public SpringBeanHelper springBeanHolder() {
+        return new SpringBeanHelper();
     }
 
-
     /**
-     * service支持管理器
-     *
-     * @return
+     * 基于mybatis plus和业务封装的支持类管理启用
      */
     @Bean
-    public ServiceSupportManager getServiceSupportConatiner() {
+    public ServiceSupportManager getServiceSupportManager() {
         return new ServiceSupportManager();
     }
 
+    /**
+     * 扩展mybatis plus 通用方法
+     */
+    @Bean
+    public CommonSqlInjector getCommonSqlInjector() {
+        return new CommonSqlInjector();
+    }
 
     /**
      * 查询回显拦截器
@@ -141,4 +147,6 @@ public class CommonConfiguration {
         basePath += "upload/";
         return new BigFileUploaderContainer(basePath);
     }
+
+
 }

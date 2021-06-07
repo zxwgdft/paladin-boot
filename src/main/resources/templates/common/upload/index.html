@@ -106,7 +106,7 @@
     function remove(row) {
         if (row) {
             layer.confirm('确定删除文件吗?', function () {
-                $.getAjax(encodeURI('/common/upload/delete/file?pelativePath=' + row.pelativePath), function () {
+                $.getAjax(encodeURI('/common/upload/delete/file?relativePath=' + row.relativePath), function () {
                     $.successMessage("删除成功");
                     table.refresh();
                 });

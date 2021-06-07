@@ -4,10 +4,8 @@ package com.paladin.common.service.org;
 import com.paladin.common.core.security.Permission;
 import com.paladin.common.core.security.PermissionContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
-import com.paladin.common.model.org.OrgRolePermission;
 import com.paladin.framework.cache.DataCacheManager;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class OrgRolePermissionService extends ServiceSupport<OrgRolePermission, OrgRolePermissionMapper> {
+public class OrgRolePermissionService {
 
     @Autowired
     private DataCacheManager cacheManager;

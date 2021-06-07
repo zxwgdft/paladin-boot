@@ -18,7 +18,7 @@ spring:
       max-request-size: 50MB
   datasource:
     name: common
-    url: jdbc:mysql://172.16.17.120:3306/boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://172.16.17.120:3306/boot2?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: netin
     password: 123456
   redis:
@@ -68,6 +68,8 @@ paladin:
   generate:
     # 是否生成swagger注解
     swagger: true
+
+
 
 # 动态数据库配置
 #  dynamic-datasource-enabled: true

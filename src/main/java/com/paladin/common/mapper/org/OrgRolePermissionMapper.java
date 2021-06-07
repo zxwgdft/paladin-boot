@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface OrgRolePermissionMapper extends CommonMapper<OrgRolePermission> {
+public interface OrgRolePermissionMapper {
 
     List<String> getPermissionByRole(@Param("id") String id);
 

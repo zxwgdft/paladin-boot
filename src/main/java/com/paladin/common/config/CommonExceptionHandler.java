@@ -1,42 +1,39 @@
-package com.paladin.common.core.exception;
+package com.paladin.common.config;
 
-import com.paladin.framework.api.R;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
-// 只能处理返回ResponseEntity，除非前后端分离，否则无法处理返回视图错误情况
+/**
+ * @author TontoZhou
+ * @since 2019/12/11
+ */
 @Slf4j
-public class CommonResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+@ControllerAdvice
+public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Object> businessExceptionHandler(BusinessException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getData(), new HttpHeaders(), ex.getHttpStatus(), request);
     }
 
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<Object> unauthorizedExceptionHandler(BusinessException ex, WebRequest request) {
-        return handleExceptionInternal(ex, R.fail("没有权限访问"), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
-    }
-
     @ExceptionHandler(SystemException.class)
     public ResponseEntity<Object> systemExceptionHandler(SystemException ex, WebRequest request) {
-        log.error("系统异常！", ex);
-        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return handleExceptionInternal(ex, "服务异常，请稍后再尝试", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> systemExceptionHandler(Exception ex, WebRequest request) {
-        return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return handleExceptionInternal(ex, "服务异常，请稍后再尝试", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
 
@@ -54,11 +51,7 @@ public class CommonResponseEntityExceptionHandler extends ResponseEntityExceptio
         }
 
         if (body == null) {
-            body = R.fail(ex.getMessage());
-        }
-
-        if (!(body instanceof R)) {
-            body = R.fail(ex.getMessage(), body);
+            body = ex.getMessage();
         }
 
         return new ResponseEntity<>(body, headers, status);

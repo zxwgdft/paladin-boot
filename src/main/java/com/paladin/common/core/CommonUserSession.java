@@ -6,7 +6,6 @@ import com.paladin.common.core.security.*;
 import com.paladin.framework.service.UserSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 
 import java.util.*;
 
@@ -120,7 +119,7 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
 
     @Override
     @JsonIgnore
-    public Collection<Permission> getObjectPermissions() {
+    public Collection getObjectPermissions() {
         PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
         if (permissionContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
