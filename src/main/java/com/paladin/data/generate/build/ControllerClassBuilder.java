@@ -3,7 +3,7 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.api.BaseModel;
+import com.paladin.framework.constants.CommonConstants;
 import com.paladin.framework.utils.reflect.NameUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -38,7 +38,7 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
             // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
 
                 Integer count = columnOption.getBuildColumnOption().getAttachmentCount();

@@ -5,8 +5,8 @@ import com.paladin.common.service.sys.vo.FileResource;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-import com.paladin.framework.api.BaseModel;
-import com.paladin.framework.service.IgnoreSelection;
+import com.paladin.framework.constants.CommonConstants;
+import com.paladin.framework.service.annotation.IgnoreSelection;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import io.swagger.annotations.ApiModel;
@@ -38,7 +38,7 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
         Set<Class<?>> importClassSet = new HashSet<>();
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
-        if(startApi) {
+        if (startApi) {
             importClassSet.add(ApiModel.class);
             importClassSet.add(ApiModelProperty.class);
         }
@@ -65,7 +65,7 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
                 importClassSet.add(clazz);
 
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 importClassSet.add(FileResource.class);
                 importClassSet.add(FileResourceContainer.class);
                 importClassSet.add(IgnoreSelection.class);
@@ -95,7 +95,7 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
-        if(startApi) {
+        if (startApi) {
             sb.append("\n@ApiModel");
         }
         sb.append("\npublic class ").append(getClassName(tableOption));
@@ -103,13 +103,13 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
         sb.append(" {\n\n");
 
         for (GenerateColumnOption columnOption : columnOptions) {
-            if(startApi) {
+            if (startApi) {
                 sb.append(tab).append("@ApiModelProperty(\"").append(columnOption.getColumn().getComment()).append("\")\n");
             } else {
                 sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
             }
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 sb.append(tab).append("@IgnoreSelection\n");
             }
             sb.append(tab).append("private ")
@@ -122,7 +122,7 @@ public class ModelVOClassBuilder extends SpringBootClassBuilder {
         if (hasAttachment) {
             for (GenerateColumnOption columnOption : columnOptions) {
                 Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-                if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+                if (isAtt != null && isAtt == CommonConstants.YES) {
                     sb.append(tab).append("public List<FileResource> get")
                             .append(NameUtil.firstUpperCase(columnOption.getFieldName())).append("File() {\n");
                     sb.append(tab).append(tab).append("if (").append(columnOption.getFieldName()).append(" != null && ")

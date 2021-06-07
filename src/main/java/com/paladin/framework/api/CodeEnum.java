@@ -1,7 +1,6 @@
 package com.paladin.framework.api;
 
 import com.paladin.framework.exception.SystemException;
-import com.paladin.framework.exception.SystemExceptionCode;
 
 /**
  * @author TontoZhou
@@ -22,7 +21,7 @@ public interface CodeEnum {
             }
             return null;
         } else {
-            throw new SystemException(SystemExceptionCode.CODE_ERROR_CODE, "不支持的枚举类型");
+            throw new SystemException(SystemException.CODE_ERROR_CODE, "不支持的枚举类型");
         }
     }
 }

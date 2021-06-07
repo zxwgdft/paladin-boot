@@ -1,8 +1,9 @@
 package com.paladin.data.dynamic;
 
-import com.paladin.framework.service.DataContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "paladin", value = "dynamic-datasource-enabled", havingValue = "true", matchIfMissing = false)
-public class DataSourceContainer implements DataContainer {
+public class DataSourceContainer implements ApplicationRunner {
 
     private static String staticLocalSourceName;
     private static DataSource staticLocalDataSource;
@@ -28,7 +29,17 @@ public class DataSourceContainer implements DataContainer {
 
     private static Map<String, DataSourceFacade> dsMap = new HashMap<>();
 
-    public void load() {
+    public static DataSource getRealDataSource(String name) {
+        if (staticLocalDataSource != null && staticLocalSourceName.equals(name)) {
+            return staticLocalDataSource;
+        }
+
+        DataSourceFacade facade = dsMap.get(name);
+        return facade == null ? null : facade.getRealDataSource();
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         staticLocalSourceName = properties.getLocalSourceName();
         staticLocalDataSource = localDataSource;
 
@@ -41,14 +52,4 @@ public class DataSourceContainer implements DataContainer {
 
         log.info("多数据源容器初始化完毕，共包含数据源" + dsMap.size() + "个");
     }
-
-    public static DataSource getRealDataSource(String name) {
-        if (staticLocalDataSource != null && staticLocalSourceName.equals(name)) {
-            return staticLocalDataSource;
-        }
-
-        DataSourceFacade facade = dsMap.get(name);
-        return facade == null ? null : facade.getRealDataSource();
-    }
-
 }

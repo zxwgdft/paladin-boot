@@ -1,9 +1,10 @@
 package com.paladin.common.core.security;
 
+import com.paladin.framework.utils.StringUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.shiro.authz.permission.WildcardPermission;
+import org.apache.shiro.authz.permission.AllPermission;
 
 import java.io.Serializable;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class Permission extends WildcardPermission implements Serializable {
+public class Permission extends AllPermission implements Serializable {
 
     @ApiModelProperty("权限ID")
     private String id;
@@ -36,4 +37,11 @@ public class Permission extends WildcardPermission implements Serializable {
         return 17 * 31 + id.hashCode();
     }
 
+    @Override
+    public boolean implies(org.apache.shiro.authz.Permission p) {
+        if (!(p instanceof Permission)) {
+            return false;
+        }
+        return StringUtil.equals(((Permission) p).id, id);
+    }
 }

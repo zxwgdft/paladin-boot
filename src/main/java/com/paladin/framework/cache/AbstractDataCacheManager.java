@@ -131,10 +131,19 @@ public abstract class AbstractDataCacheManager implements ApplicationRunner, Dat
             if (initialized) {
                 throw new BusinessException("找不到[" + clazz + "]对应DataCache");
             } else {
-                throw new BusinessException("系统正在启动中");
+                throw new BusinessException("正在启动中");
             }
         }
     }
 
+    @Override
+    public <T> DataCacheWrapper<T> getDataCacheWrapper(Class<T> clazz) {
+        return dataClass2CacheMap.get(clazz);
+    }
+
+    @Override
+    public DataCacheWrapper getDataCacheWrapper(String cacheId) {
+        return id2CacheMap.get(cacheId);
+    }
 
 }

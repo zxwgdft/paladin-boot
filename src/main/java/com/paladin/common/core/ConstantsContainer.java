@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class ConstantsContainer {
 
-    private Map<String, List<KeyValue>> constantMap = new HashMap<>();
-    private Map<String, Map<String, String>> constantValueMap = new HashMap<>();
-    private Map<String, Map<String, String>> constantKeyMap = new HashMap<>();
+    private Map<String, List<KeyValue>> constantMap;
+    private Map<String, Map<String, String>> constantValueMap;
+    private Map<String, Map<String, String>> constantKeyMap;
 
     public ConstantsContainer(Map<String, List<KeyValue>> constantMap,
                               Map<String, Map<String, String>> constantValueMap,

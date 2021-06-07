@@ -49,4 +49,21 @@ public interface DataCacheManager {
      */
     Object getDataOfCache(Class<? extends DataCache> clazz);
 
+    /**
+     * 通过缓存数据类型获取缓存数据的包装器，用于减少检索包装器的过程
+     *
+     * @param clazz 缓存数据class
+     * @return 类型为T的缓存数据的包装器
+     */
+
+    <T> DataCacheWrapper<T> getDataCacheWrapper(Class<T> clazz);
+
+
+    /**
+     * 通过cacheId获取缓存数据的包装器，用于减少检索包装器的过程
+     *
+     * @param cacheId DataCache对于的Id
+     * @return 缓存数据包装器
+     */
+    DataCacheWrapper getDataCacheWrapper(String cacheId);
 }

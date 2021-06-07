@@ -1,7 +1,7 @@
 package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.service.OffsetPage;
+import com.paladin.framework.service.PageParam;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -11,48 +11,48 @@ import java.util.Set;
 @Component
 public class QueryDTOBuilder extends SpringBootClassBuilder {
 
-	public String buildContent(GenerateTableOption tableOption) {
+    public String buildContent(GenerateTableOption tableOption) {
 
-		Set<Class<?>> importClassSet = new HashSet<>();
+        Set<Class<?>> importClassSet = new HashSet<>();
 
-		importClassSet.add(OffsetPage.class);
+        importClassSet.add(PageParam.class);
 
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-		sb.append("package ").append(getClassPackage(tableOption)).append(";\n\n");
+        sb.append("package ").append(getClassPackage(tableOption)).append(";\n\n");
 
-		String[] classNames = new String[importClassSet.size()];
+        String[] classNames = new String[importClassSet.size()];
 
-		int i = 0;
-		for (Class<?> importClass : importClassSet)
-			classNames[i++] = importClass.getName();
+        int i = 0;
+        for (Class<?> importClass : importClassSet)
+            classNames[i++] = importClass.getName();
 
-		Arrays.sort(classNames);
+        Arrays.sort(classNames);
 
-		for (String className : classNames) {
-			if (!className.matches("^java\\.lang\\.\\w+$"))
-				sb.append("import ").append(className).append(";\n");
-		}
+        for (String className : classNames) {
+            if (!className.matches("^java\\.lang\\.\\w+$"))
+                sb.append("import ").append(className).append(";\n");
+        }
 
-		sb.append("\npublic class ").append(getClassName(tableOption)).append(" extends ").append(OffsetPage.class.getSimpleName()).append(" {\n\n");
-		sb.append("}");
+        sb.append("\npublic class ").append(getClassName(tableOption)).append(" extends ").append(PageParam.class.getSimpleName()).append(" {\n\n");
+        sb.append("}");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	@Override
-	public BuilderType getBuilderType() {
-		return BuilderType.QUERY_DTO;
-	}
+    @Override
+    public BuilderType getBuilderType() {
+        return BuilderType.QUERY_DTO;
+    }
 
-	@Override
-	public String getPackage(GenerateTableOption tableOption) {
-		return "service.*.dto";
-	}
+    @Override
+    public String getPackage(GenerateTableOption tableOption) {
+        return "service.*.dto";
+    }
 
-	@Override
-	public String getClassName(GenerateTableOption tableOption) {
-		return tableOption.getModelName() + "Query";
-	}
+    @Override
+    public String getClassName(GenerateTableOption tableOption) {
+        return tableOption.getModelName() + "Query";
+    }
 
 }

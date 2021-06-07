@@ -8,6 +8,7 @@ import com.paladin.common.service.sys.SysLoggerOperateService;
 import com.paladin.common.service.sys.dto.SysLoggerOperateQuery;
 import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
+import com.paladin.framework.service.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +31,14 @@ public class SysLoggerOperateController extends ControllerSupport {
 
     @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object findPage(SysLoggerOperateQuery query) {
-        return R.success(sysLoggerOperateService.searchPage(query));
+    public PageResult<SysLoggerOperate> findPage(SysLoggerOperateQuery query) {
+        return sysLoggerOperateService.findPage(query);
     }
 
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id) {
-        return R.success(sysLoggerOperateService.get(id));
+    public SysLoggerOperate getDetail(@RequestParam String id) {
+        return sysLoggerOperateService.get(id);
     }
 
     @GetMapping("/detail")
@@ -57,9 +58,9 @@ public class SysLoggerOperateController extends ControllerSupport {
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.searchAll(query), SysLoggerOperate.class));
+                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.findList(query), SysLoggerOperate.class));
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.searchPage(query).getData(), SysLoggerOperate.class));
+                    return R.success(ExportUtil.export(condition, sysLoggerOperateService.findPage(query).getData(), SysLoggerOperate.class));
                 }
             }
             return R.fail("导出数据失败：请求参数错误");

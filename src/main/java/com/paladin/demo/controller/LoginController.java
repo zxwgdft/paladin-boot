@@ -1,6 +1,6 @@
 package com.paladin.demo.controller;
 
-import com.paladin.common.core.permission.Menu;
+import com.paladin.common.core.security.Menu;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
 import com.paladin.framework.GlobalProperties;
@@ -51,7 +51,7 @@ public class LoginController {
     private void createMenuHtml(Collection<Menu> menus, StringBuilder sb) {
         for (Menu menu : menus) {
             Collection<Menu> children = menu.getChildren();
-            String href = menu.isOwned() ? menu.getUrl() : null;
+            String href = menu.isLeaf() ? menu.getUrl() : null;
 
             String icon = menu.getIcon();
             if (icon != null && icon.length() > 0) {
@@ -86,8 +86,9 @@ public class LoginController {
     @ApiImplicitParams({@ApiImplicitParam(name = "newPassword", value = "新密码", required = true), @ApiImplicitParam(name = "oldPassword", value = "旧密码")})
     @RequestMapping(value = "/update/password", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
-        return sysUserService.updateSelfPassword(newPassword, oldPassword) ? R.success() : R.fail("修改失败");
+    public R updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
+        sysUserService.updateSelfPassword(newPassword, oldPassword);
+        return R.success();
     }
 
     @ApiOperation(value = "登录页面")

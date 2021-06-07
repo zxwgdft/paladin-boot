@@ -8,6 +8,7 @@ import com.paladin.common.service.sys.SysLoggerLoginService;
 import com.paladin.common.service.sys.dto.SysLoggerLoginQuery;
 import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
+import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.annotation.QueryInputMethod;
 import com.paladin.framework.service.annotation.QueryOutputMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class SysLoggerLoginController extends ControllerSupport {
     @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     @QueryOutputMethod(queryClass = SysLoggerLoginQuery.class, paramIndex = 0)
-    public Object findPage(SysLoggerLoginQuery query) {
-        return R.success(sysLoggerLoginService.searchPage(query));
+    public PageResult<SysLoggerLogin> findPage(SysLoggerLoginQuery query) {
+        return sysLoggerLoginService.findPage(query);
     }
 
     @PostMapping(value = "/export")
@@ -47,9 +48,9 @@ public class SysLoggerLoginController extends ControllerSupport {
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.searchAll(query), SysLoggerLogin.class));
+                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.findList(query), SysLoggerLogin.class));
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.searchPage(query).getData(), SysLoggerLogin.class));
+                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.findPage(query).getData(), SysLoggerLogin.class));
                 }
             }
             return R.fail("导出数据失败：请求参数错误");

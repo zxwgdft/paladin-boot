@@ -46,6 +46,7 @@ public class PermissionDataCache implements DataCache<PermissionContainer> {
         List<OrgRolePermission> rolePermissions = orgRolePermissionMapper.findList();
 
         Map<String, Set<String>> role2CodesMap = new HashMap<>();
+        Map<String, Set<Permission>> role2PermissionsMap = new HashMap<>();
 
         for (OrgRolePermission rolePermission : rolePermissions) {
 
@@ -62,8 +63,17 @@ public class PermissionDataCache implements DataCache<PermissionContainer> {
             }
 
             codeSet.add(permission.getCode());
+
+
+            Set<Permission> permissionSet = role2PermissionsMap.get(roleId);
+            if (permissionSet == null) {
+                permissionSet = new HashSet<>();
+                role2PermissionsMap.put(roleId, permissionSet);
+            }
+
+            permissionSet.add(permission);
         }
 
-        return new PermissionContainer(permissionMap, role2CodesMap);
+        return new PermissionContainer(permissionMap, role2CodesMap, role2PermissionsMap);
     }
 }

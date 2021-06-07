@@ -1,6 +1,7 @@
 package com.paladin.common.core.cache;
 
 import com.paladin.framework.cache.DataCacheManager;
+import com.paladin.framework.cache.DataCacheWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,14 @@ public class DataCacheHelper {
 
     public static void reloadCache(String cacheId) {
         instance.reloadCache(cacheId);
+    }
+
+    public static <T> DataCacheWrapper<T> getDataCacheWrapper(Class<T> clazz) {
+        return instance.getDataCacheWrapper(clazz);
+    }
+
+    public static DataCacheWrapper getDataCacheWrapper(String cacheId) {
+        return instance.getDataCacheWrapper(cacheId);
     }
 
 }

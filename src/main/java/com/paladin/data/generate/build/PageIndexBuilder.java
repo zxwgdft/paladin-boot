@@ -5,6 +5,7 @@ import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
 import com.paladin.framework.api.BaseModel;
+import com.paladin.framework.constants.CommonConstants;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
 
             // 附件不显示
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 continue;
             }
 

@@ -3,16 +3,17 @@ package com.paladin.demo.controller.org;
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.core.log.OperationLog;
-import com.paladin.common.core.permission.NeedPermission;
+import com.paladin.common.core.security.NeedPermission;
 import com.paladin.demo.controller.org.dto.OrgPersonnelExportCondition;
 import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.OrgPersonnelService;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
 import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
-import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.excel.write.ValueFormator;
+import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.annotation.QueryInputMethod;
 import com.paladin.framework.service.annotation.QueryOutputMethod;
 import com.paladin.framework.utils.UUIDUtil;
@@ -47,17 +48,17 @@ public class OrgPersonnelController extends ControllerSupport {
     @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     @QueryOutputMethod(queryClass = OrgPersonnelQuery.class, paramIndex = 0)
-    public Object findPage(OrgPersonnelQuery query) {
+    public PageResult<OrgPersonnel> findPage(OrgPersonnelQuery query) {
         // OrgPersonnel应尽量与数据表对应，不做扩展，并且可能带有一些系统自带自带，所以应该有专门的VO对象用于返回数据
         // 当然为了效率与简单，也可以直接返回OrgPersonnel对象，一般并不会有太大问题
-        return R.success(orgPersonnelService.findPersonnel(query));
+        return orgPersonnelService.findPersonnel(query);
     }
 
     // 获取详细数据
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id) {
-        return R.success(orgPersonnelService.get(id, OrgPersonnelVO.class));
+    public OrgPersonnel getDetail(@RequestParam String id) {
+        return orgPersonnelService.get(id);
     }
 
     // 新增页面
@@ -85,20 +86,15 @@ public class OrgPersonnelController extends ControllerSupport {
     @ResponseBody
     @OperationLog(model = "人员管理", operate = "人员新增")
     @RequiresPermissions("org:personnel:save")
-    public Object save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            // 返回固定格式校验错误数据，用于展示
-            return validErrorHandler(bindingResult);
-        }
-
+    public OrgPersonnel save(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+        // 返回固定格式校验错误数据，用于展示
+        validErrorHandler(bindingResult);
         String id = UUIDUtil.createUUID();
         orgPersonnelDTO.setId(id);
 
-        if (orgPersonnelService.savePersonnel(orgPersonnelDTO)) {
-            // 保存成功后直接返回完整对象
-            return R.success(orgPersonnelService.get(id, OrgPersonnelVO.class));
-        }
-        return R.fail("保存失败");
+        orgPersonnelService.savePersonnel(orgPersonnelDTO);
+        // 保存成功后直接返回完整对象
+        return orgPersonnelService.get(id);
     }
 
     // 更新人员，OrgPersonnelDTO限制新增的字段，OrgPersonnelDTO中应该只存在可以新增和必要的id等字段，如果冲突可与update方法不共用一个DTO
@@ -107,18 +103,12 @@ public class OrgPersonnelController extends ControllerSupport {
     @OperationLog(model = "人员管理", operate = "人员更新")
     //@RequiresPermissions("org:personnel:update") // shiro 方式
     @NeedPermission("org:personnel:update")        // 自定义权限方式，直接判断权限code是否相等
-    public Object update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            // 返回固定格式校验错误数据，用于展示
-            return validErrorHandler(bindingResult);
-        }
-
+    public OrgPersonnel update(@Valid OrgPersonnelDTO orgPersonnelDTO, BindingResult bindingResult) {
+        validErrorHandler(bindingResult);
         String id = orgPersonnelDTO.getId();
-        if (orgPersonnelService.updatePersonnel(orgPersonnelDTO)) {
-            // 更新成功后直接返回完整对象
-            return R.success(orgPersonnelService.get(id, OrgPersonnelVO.class));
-        }
-        return R.fail("更新失败");
+        orgPersonnelService.updatePersonnel(orgPersonnelDTO);
+        // 更新成功后直接返回完整对象
+        return orgPersonnelService.get(id);
     }
 
     // 删除数据
@@ -126,9 +116,10 @@ public class OrgPersonnelController extends ControllerSupport {
     @ResponseBody
     @OperationLog(model = "人员管理", operate = "人员删除")
     @RequiresPermissions("org:personnel:delete")
-    public Object delete(@RequestParam String id) {
+    public R delete(@RequestParam String id) {
         // 根据主键删除
-        return orgPersonnelService.removePersonnel(id) ? R.success() : R.fail("保存失败");
+        orgPersonnelService.removePersonnel(id);
+        return R.success();
     }
 
     // 导出Excel
@@ -137,7 +128,7 @@ public class OrgPersonnelController extends ControllerSupport {
     @RequiresPermissions("org:personnel:export")
     public Object export(@RequestBody OrgPersonnelExportCondition condition) {
         if (condition == null) {
-            return R.fail("导出失败：请求参数异常");
+            throw new BusinessException("导出失败：请求参数异常");
         }
         // 用于特殊转换，如果不需要则不需要设置
         condition.setExcelValueFormatMap(excelValueFormatMap);
@@ -147,14 +138,15 @@ public class OrgPersonnelController extends ControllerSupport {
             if (query != null) {
                 if (condition.isExportAll()) {
                     // orgPersonnelService.searchAll(query) 也可以替换为 orgPersonnelService.searchPage(query, OrgPersonnelVO.class)，从而在VO类中做一定处理
-                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchAll(OrgPersonnelVO.class, query), OrgPersonnelVO.class));
+                    ExportUtil.export(condition, orgPersonnelService.findList(query), OrgPersonnel.class);
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, orgPersonnelService.searchPage(query, OrgPersonnelVO.class).getData(), OrgPersonnelVO.class));
+                    ExportUtil.export(condition, orgPersonnelService.findPage(query).getData(), OrgPersonnel.class);
                 }
+                return R.success();
             }
-            return R.fail("导出数据失败：请求参数错误");
+            throw new BusinessException("导出数据失败：请求参数错误");
         } catch (IOException | ExcelWriteException e) {
-            return R.fail("导出数据失败：" + e.getMessage());
+            throw new BusinessException("导出数据失败：" + e.getMessage());
         }
     }
 

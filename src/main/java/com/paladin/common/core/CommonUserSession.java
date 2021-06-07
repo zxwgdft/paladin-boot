@@ -2,10 +2,7 @@ package com.paladin.common.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paladin.common.core.cache.DataCacheHelper;
-import com.paladin.common.core.security.Menu;
-import com.paladin.common.core.security.MenuContainer;
-import com.paladin.common.core.security.Role;
-import com.paladin.common.core.security.RoleContainer;
+import com.paladin.common.core.security.*;
 import com.paladin.framework.service.UserSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -101,6 +98,7 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
      */
     public Collection<Menu> getMenuResources() {
         MenuContainer menuContainer = DataCacheHelper.getData(MenuContainer.class);
+        if (menuContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
             return menuContainer.getAdminMenus();
         }
@@ -123,62 +121,26 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
     @Override
     @JsonIgnore
     public Collection<Permission> getObjectPermissions() {
+        PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
+        if (permissionContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
-            return (List) RoleContainer.getSystemAdminRole().getPermissions();
+            return permissionContainer.getAdminPermission();
         }
 
-        if (roleIds.size() == 1) {
-            Role role = RoleContainer.getRole(roleIds.get(0));
-            if (role == null) {
-                return null;
-            } else {
-                return (List) role.getPermissions();
-            }
-        }
-
-        ArrayList<Role> roles = new ArrayList<>(roleIds.size());
-        for (String rid : roleIds) {
-            Role role = RoleContainer.getRole(rid);
-            if (role != null) {
-                roles.add(role);
-            }
-        }
-
-        if (roles.size() == 0) {
-            return null;
-        }
-
-        return (List) RoleContainer.getMultiRolePermission(roles);
+        return permissionContainer.getPermissionByRole(roleIds);
     }
 
     /**
      * 获取所有权限的CODE集合，可用于简单方式判断权限
      */
     @JsonIgnore
-    public Set<String> getPermissionCodes() {
+    public Collection<String> getPermissionCodes() {
+        PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
+        if (permissionContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
-            return RoleContainer.getSystemAdminRole().getPermissionCodes();
+            return permissionContainer.getAdminPermissionCode();
         }
-
-        if (roleIds.size() == 1) {
-            Role role = RoleContainer.getRole(roleIds.get(0));
-            if (role == null) {
-                return null;
-            } else {
-                return role.getPermissionCodes();
-            }
-        }
-
-
-        Set<String> codeSet = new HashSet<>();
-        for (String rid : roleIds) {
-            Role role = RoleContainer.getRole(rid);
-            if (role != null) {
-                codeSet.addAll(role.getPermissionCodes());
-            }
-        }
-
-        return codeSet;
+        return permissionContainer.getPermissionCodeByRole(roleIds);
     }
 
 
