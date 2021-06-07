@@ -10,6 +10,6 @@ import java.util.List;
 public interface OrgPermissionMapper extends CommonMapper<OrgPermission> {
 
 
-    @Select("SELECT id,`name`,`code` FROM org_permission")
+    @Select("SELECT id,`name`,`code`,is_admin isAdmin FROM org_permission")
     List<Permission> findPermission();
 }

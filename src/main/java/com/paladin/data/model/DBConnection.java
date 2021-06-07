@@ -11,7 +11,7 @@ import lombok.Setter;
 @TableName("db_connection")
 public class DBConnection {
 
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId
     private String name;
 
     private String url;

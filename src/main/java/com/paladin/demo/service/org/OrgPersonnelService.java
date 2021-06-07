@@ -63,7 +63,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
     @Transactional
     public void updatePersonnel(OrgPersonnelDTO orgPersonnelDTO) {
         String id = orgPersonnelDTO.getId();
-        OrgPersonnel orgPersonnel = get(id);
+        OrgPersonnel orgPersonnel = getWhole(id);
         if (orgPersonnel == null) {
             throw new BusinessException("找不到需要更新的人员");
         }

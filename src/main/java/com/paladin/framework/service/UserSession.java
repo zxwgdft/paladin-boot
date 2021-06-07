@@ -45,13 +45,7 @@ public abstract class UserSession implements Serializable {
         return account;
     }
 
-    /**
-     * 提供用户部分数据给视图展示
-     *
-     * @return
-     */
-    public abstract Object getUserForView();
-
+    
     public abstract boolean isSystemAdmin();
 
     private final static String ATTRIBUTION_PLACEHOLDER = "paladin_session_placeholder";

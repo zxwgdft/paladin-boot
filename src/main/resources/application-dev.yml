@@ -1,28 +1,29 @@
 logging:
   level:
-    com:
-      paladin:
-        common:
-          mapper: debug
-        demo:
-          mapper: debug
+    com.paladin:
+      common.mapper: debug
+      demo.mapper: debug
 
 server:
   port: 8011
 
-
 spring:
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 50MB
   datasource:
-    name: common
-    url: jdbc:mysql://172.16.17.120:3306/boot2?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    name: styx
+    url: jdbc:mysql://172.16.16.125:3306/boot2?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: netin
     password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 15
   redis:
-    host: 172.16.16.120
+    host: 172.16.16.125
     lettuce:
       pool:
         max-active: 8
@@ -37,11 +38,10 @@ spring:
 
 
 paladin:
-  # 是否开启CAS + shiro
-  shiro-cas-enabled: false
-  # 是否开启shiro
-  shiro-enabled: true
   shiro:
+    # 详见ShiroProperties类
+    # 是否开启CAS
+    cas-enabled: false
     ## cas 相关设置，暂时无用
     cas-error-url: /static/html/error_cas_500.html
     cas-protocol: CAS30
@@ -61,6 +61,8 @@ paladin:
     max-file-size: 10
     # 附件删除后保留时间（天）
     expire-day: 10
+    # 文件清理间隔（）
+    file-clean-interval: 120
   # 用户默认密码
   default-password: 123456
   # 是否使用随机缺省密码

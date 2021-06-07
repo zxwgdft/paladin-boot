@@ -2,7 +2,7 @@ package com.paladin.common.core.security;
 
 
 import com.paladin.common.core.CommonUserSession;
-import com.paladin.framework.cache.DataCacheManager;
+import com.paladin.common.core.cache.DataCacheHelper;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PermissionUtil {
-
-    private static DataCacheManager dataCacheManager;
 
     public static DataPermissionParam getUserDataPermission() {
         CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
@@ -25,6 +23,17 @@ public class PermissionUtil {
     }
 
     public static boolean hasPermission(CommonUserSession userSession, String permissionCode) {
+        PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
+        if (permissionContainer != null) {
+            if (userSession.isSystemAdmin()) {
+                Permission permission = permissionContainer.getPermission(permissionCode);
+                return permission != null && permission.isAdmin();
+            } else {
+                for (String roleId : userSession.getRoles()) {
+                    if (permissionContainer.hasPermission(roleId, permissionCode)) return true;
+                }
+            }
+        }
         return false;
     }
 }

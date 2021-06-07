@@ -1,4 +1,4 @@
-package com.paladin.framework;
+package com.paladin.framework.constants;
 
 public class GlobalProperties {
     public static String project = "demo";

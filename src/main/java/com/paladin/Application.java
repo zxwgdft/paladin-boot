@@ -1,6 +1,6 @@
 package com.paladin;
 
-import com.paladin.framework.GlobalProperties;
+import com.paladin.framework.constants.GlobalProperties;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,5 +1,6 @@
 package com.paladin.common.model.sys;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,7 +33,7 @@ public class SysUser implements Serializable {
     public final static Integer USER_TYPE_PERSONNEL = 3;
 
 
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
     @ApiModelProperty("账号")
     private String account;

@@ -1,23 +1,20 @@
 package com.paladin.common.service.org;
 
+import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.common.core.security.RoleContainer;
 import com.paladin.common.mapper.org.OrgRoleMapper;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
-import com.paladin.framework.cache.DataCacheManager;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
 
-    @Autowired
-    private DataCacheManager cacheManager;
 
     @Transactional
     public void updateRole(OrgRoleDTO orgRoleDTO) {
@@ -35,7 +32,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
         updateWhole(model);
 
         // 更新缓存
-        cacheManager.reloadCache(RoleContainer.class);
+        DataCacheHelper.reloadCache(RoleContainer.class);
     }
 
     @Transactional
@@ -45,7 +42,7 @@ public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
         save(model);
 
         // 更新缓存
-        cacheManager.reloadCache(RoleContainer.class);
+        DataCacheHelper.reloadCache(RoleContainer.class);
     }
 
 }

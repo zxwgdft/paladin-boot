@@ -1,7 +1,7 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.shiro.ShiroCasProperties;
 import com.paladin.framework.shiro.ShiroConfigConstants;
+import com.paladin.framework.shiro.ShiroProperties;
 import io.buji.pac4j.engine.ShiroCallbackLogic;
 import org.apache.shiro.authc.ConcurrentAccessException;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -22,7 +22,7 @@ public class PaladinShiroCallbackLogic<R, C extends J2EContext> extends ShiroCal
     private String casServerLoginUrl;
     private boolean isToCas = false;
 
-    public PaladinShiroCallbackLogic(ShiroCasProperties shiroCasProperties) {
+    public PaladinShiroCallbackLogic(ShiroProperties shiroCasProperties) {
         super();
         this.loginTypeField = shiroCasProperties.getLoginTypeField();
         this.errorUrl = shiroCasProperties.getCasErrorUrl();

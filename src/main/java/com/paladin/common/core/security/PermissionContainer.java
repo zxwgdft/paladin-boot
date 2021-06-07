@@ -14,7 +14,7 @@ public class PermissionContainer {
     // role to permission set
     private Map<String, Set<Permission>> role2PermissionMap;
 
-    // permission id to permission
+    // permission code to permission
     private Map<String, Permission> permissionMap;
 
     private List<Permission> adminPermissionList;
@@ -36,8 +36,8 @@ public class PermissionContainer {
         return codes != null && codes.contains(code);
     }
 
-    public Permission getPermission(String pid) {
-        return permissionMap.get(pid);
+    public Permission getPermission(String code) {
+        return permissionMap.get(code);
     }
 
     public Collection<String> getPermissionCodeByRole(List<String> roleIds) {

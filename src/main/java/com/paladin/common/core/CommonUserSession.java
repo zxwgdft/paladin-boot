@@ -7,7 +7,10 @@ import com.paladin.framework.service.UserSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 通用用户会话信息
@@ -140,18 +143,6 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
             return permissionContainer.getAdminPermissionCode();
         }
         return permissionContainer.getPermissionCodeByRole(roleIds);
-    }
-
-
-    @Override
-    @JsonIgnore
-    public Object getUserForView() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("username", getUserName());
-        map.put("account", getAccount());
-        map.put("roleLevel", getRoleLevel());
-        map.put("isSystemAdmin", isSystemAdmin);
-        return map;
     }
 
     @Override

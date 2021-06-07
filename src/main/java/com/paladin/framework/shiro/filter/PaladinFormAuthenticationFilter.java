@@ -2,7 +2,6 @@ package com.paladin.framework.shiro.filter;
 
 import com.paladin.framework.api.HttpCode;
 import com.paladin.framework.api.R;
-import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.WebUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
@@ -55,8 +54,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, R.success(UserSession.getCurrentUserSession().getUserForView()));
-            return false;
+            return true;
         } else {
             issueSuccessRedirect(request, response);
             return false;
@@ -83,7 +81,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         String errorMsg = exceptionMessageMap.get(e.getClass());
         if (errorMsg == null) {
-            errorMsg = e.getMessage();
+            errorMsg = "登录异常，请联系管理员";
         }
 
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {

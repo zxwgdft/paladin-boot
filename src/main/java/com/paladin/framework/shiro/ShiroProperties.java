@@ -1,11 +1,9 @@
 package com.paladin.framework.shiro;
 
-import com.paladin.framework.GlobalProperties;
+import com.paladin.framework.constants.GlobalProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.Map;
 
 @Getter
 @Setter
@@ -28,21 +26,26 @@ public class ShiroProperties {
     private String sessionPrefix = "session_";
 
     /**
-     * session 在redis中缓存时间
+     * 短session过期时间（分钟）
      */
-    private int sessionTime = 30;
+    private int sessionTime = 60;
 
     /**
-     * session校验定时任务启用
+     * 长session过期时间（分钟）
      */
-    private boolean sessionValidationSchedulerEnabled = true;
+    private int longSessionTime = 60 * 24 * 1;
+
+    /**
+     * session校验定时任务间隔（分钟）
+     */
+    private int sessionValidationInterval = 60;
 
     /**
      * session在只是更新时间变化情况下间隔多少分钟更新
      * 设置该时间可以减少序列化session更新到redis的次数（通过只延长原有session的过期时间），
      * 但也因此可能会出现提前结束session的情况，例如session过期时间为30分钟，更新间隔5分钟，
      * 可能出现5分钟没有更新+25分钟没有请求后session过期。
-     *
+     * <p>
      * 结合实际业务设置
      */
     private int updateSessionInterval = 5;
@@ -87,9 +90,48 @@ public class ShiroProperties {
      */
     private String referers = null;
 
+
+    // ----------------------------
+    //
+    // CAS 部分参数
+    //
+    // ----------------------------
+
+    private boolean casEnabled = false;
+
     /**
-     * shiro 过滤链定义
+     * CAS 服务端URL
      */
-    private Map<String, String> filterChainDefinition;
+    private String casServerUrl;
+
+    /**
+     * CAS 服务端登录URL
+     */
+    private String casServerLoginUrl;
+
+    /**
+     * 客户端URL
+     */
+    private String clientServerUrl;
+
+    /**
+     * CAS 客户端登录URL
+     */
+    private String clientLoginUrl = "/" + GlobalProperties.project + "/login/cas";
+
+    /**
+     * CASFilter
+     */
+    private String casFilterUrlPattern = "/" + GlobalProperties.project + "/cas";
+
+    /**
+     * CAS 协议
+     */
+    private String casProtocol = "CAS30";
+
+    /**
+     *
+     */
+    private String casErrorUrl = "/static/html/error_cas_500.html";
 
 }

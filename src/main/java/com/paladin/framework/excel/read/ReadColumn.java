@@ -38,7 +38,7 @@ public abstract class ReadColumn {
 	
 	/**
 	 * <h2>转化值</h2>
-	 * <p>优先考虑{@link PropertyConvert}实例的转化方法,该方法用于缺省情况下</p> 
+	 * <p>优先考虑{@link com.paladin.framework.excel.PropertyConvert}实例的转化方法,该方法用于缺省情况下</p>
 	 * 
 	 * 
 	 * @param cell
@@ -58,7 +58,7 @@ public abstract class ReadColumn {
 	 * <h2>检验值</h2>
 	 * <p>优先考虑{@link PropertyValidate}实例的验证方法,该方法用于缺省情况下</p>
 	 * 
-	 * @param object
+	 * @param value
 	 * @return 验证成功返回NULL，否则返回错误信息
 	 */
 	public abstract String validateValue(Object value);

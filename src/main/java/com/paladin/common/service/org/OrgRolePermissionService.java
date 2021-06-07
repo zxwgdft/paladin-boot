@@ -1,6 +1,7 @@
 package com.paladin.common.service.org;
 
 
+import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.common.core.security.Permission;
 import com.paladin.common.core.security.PermissionContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
@@ -19,9 +20,6 @@ import java.util.List;
 public class OrgRolePermissionService {
 
     @Autowired
-    private DataCacheManager cacheManager;
-
-    @Autowired
     private OrgRolePermissionMapper orgRolePermissionMapper;
 
     public List<String> getPermissionByRole(String id) {
@@ -38,7 +36,7 @@ public class OrgRolePermissionService {
 
         if (permissionIds != null && permissionIds.length > 0) {
 
-            PermissionContainer permissionContainer = cacheManager.getData(PermissionContainer.class);
+            PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
             if (permissionContainer == null) throw new BusinessException("授权异常");
 
             List<String> pids = new ArrayList<>(permissionIds.length);
@@ -56,7 +54,7 @@ public class OrgRolePermissionService {
         }
 
 
-        cacheManager.reloadCache(PermissionContainer.class);
+        DataCacheHelper.reloadCache(PermissionContainer.class);
         return true;
     }
 

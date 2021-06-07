@@ -1,5 +1,6 @@
 package com.paladin.common.model.sys;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.util.Date;
 @Setter
 public class SysAttachment {
 
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     private String storeType;

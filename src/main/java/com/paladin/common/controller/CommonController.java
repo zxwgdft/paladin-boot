@@ -81,20 +81,18 @@ public class CommonController {
         throw new BusinessException("您没有权限执行该操作");
     }
 
-    @GetMapping("/container/index")
-    public String containerIndex() {
-        return "/common/container/index";
-    }
-
     @ApiOperation(value = "重新加载容器数据缓存")
     @GetMapping("/container/restart")
     @ResponseBody
     @NeedAdmin
     public R restartContainer(@RequestParam String container) {
-        long t1 = System.currentTimeMillis();
-        DataCacheHelper.reloadCache(container);
-        long t2 = System.currentTimeMillis();
-        return R.success(t2 - t1);
+        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+            long t1 = System.currentTimeMillis();
+            DataCacheHelper.reloadCache(container);
+            long t2 = System.currentTimeMillis();
+            return R.success(t2 - t1);
+        }
+        throw new BusinessException("您没有权限执行该操作");
     }
 
 

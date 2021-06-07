@@ -25,6 +25,8 @@ public class Permission extends AllPermission implements Serializable {
     @ApiModelProperty("权限code")
     private String code;
 
+    @ApiModelProperty("系统管理员是否有权限")
+    private boolean isAdmin;
 
     public boolean equals(Object obj) {
         if (obj instanceof Permission) {

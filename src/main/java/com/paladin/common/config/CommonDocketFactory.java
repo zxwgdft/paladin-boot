@@ -1,10 +1,8 @@
 package com.paladin.common.config;
 
-import com.paladin.framework.GlobalProperties;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
