@@ -77,8 +77,8 @@ public class ${upperModelName}Controller extends ControllerSupport {
     @PostMapping("${updateRM}")
 	@ResponseBody
     public R update(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
+        // 验证数据
 		validErrorHandler(bindingResult);
-
 		String id = ${lowerModelName}DTO.getId();
 		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.getWhole(id));
 		${lowerModelName}Service.updateWhole(model);
