@@ -2,6 +2,7 @@ logging:
   level:
     com.paladin:
       common.mapper: debug
+      common.config: debug
       demo.mapper: debug
 
 server:

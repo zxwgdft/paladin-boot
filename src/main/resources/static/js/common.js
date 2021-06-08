@@ -381,6 +381,23 @@ if (!Array.prototype.forEach) {
                 top.location.href = "/";
             })
         },
+        ajaxErrorHandler: function (xhr, e) {
+            var code = xhr.status;
+            if (code == 200) {
+                // js抛出异常
+                $.errorMessage(e);
+            } else if (code == 401) {
+                $.ajaxUnLoginHandler();
+            } else if (code == 403) {
+                $.errorMessage(xhr.responseText || "您没有权限访问该页面或执行该操作");
+            } else if (code == 490) {
+                $.validErrorHandler(xhr);
+            } else {
+                var rj = xhr.responseJSON;
+                rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
+                    $.errorMessage(xhr.responseText || "操作失败");
+            }
+        },
         // 发送ajax请求，并做通用处理
         sendAjax: function (options) {
             if (options.submitBtn) {
@@ -413,21 +430,7 @@ if (!Array.prototype.forEach) {
 
             if (!options.error) {
                 options.error = function (xhr, e) {
-                    var code = xhr.status;
-                    if (code == 200) {
-                        // js抛出异常
-                        $.errorMessage(e);
-                    } else if (code == 401) {
-                        $.ajaxUnLoginHandler();
-                    } else if (code == 403) {
-                        $.errorMessage(xhr.responseText || "您没有权限访问该页面或执行该操作");
-                    } else if (code == 490) {
-                        $.validErrorHandler(xhr);
-                    } else {
-                        var rj = xhr.responseJSON;
-                        rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
-                            $.errorMessage(xhr.responseText || "操作失败");
-                    }
+                    $.ajaxErrorHandler(xhr, e);
                 }
             }
 
@@ -1301,6 +1304,9 @@ function _initTable() {
 
         if (!options.ajax && options.url !== false) {
             options.ajax = function (request) {
+
+                request.contentType = options.contentType || 'application/x-www-form-urlencoded';
+
                 if (typeof url === 'function') {
                     request.url = request.url();
                 }
@@ -1316,6 +1322,15 @@ function _initTable() {
                     }
                 }
                 request.method = "post";
+
+                if (request.error) {
+                    var handler = request.error;
+                    request.error = function (xhr, e) {
+                        $.ajaxErrorHandler(xhr, e);
+                        handler(xhr, e);
+                    }
+                }
+
                 $.sendAjax(request);
             }
         }
@@ -2170,21 +2185,7 @@ function _initForm(container) {
                     }
                 },
                 error: function (xhr, e) {
-                    var code = xhr.status;
-                    if (code == 200) {
-                        // js抛出异常
-                        $.errorMessage(e);
-                    } else if (code == 401) {
-                        $.ajaxUnLoginHandler();
-                    } else if (code == 403) {
-                        $.errorMessage(xhr.responseText || "您没有权限访问该页面或执行该操作");
-                    } else if (code == 490) {
-                        $.validErrorHandler(xhr);
-                    } else {
-                        var rj = xhr.responseJSON;
-                        rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
-                            $.errorMessage(xhr.responseText || "操作失败");
-                    }
+                    $.ajaxErrorHandler(xhr, e);
                 },
                 complete: function () {
                     submitBtn.data("loading", false);
