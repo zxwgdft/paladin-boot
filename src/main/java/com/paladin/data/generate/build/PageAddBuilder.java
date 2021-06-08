@@ -58,11 +58,7 @@ public class PageAddBuilder extends SpringBootPageBuilder {
                 }
             } else if (Boolean.class == columnOption.getFieldType()) {
                 sb.append(", enum: \"boolean\"");
-                if (judge(buildOption.getMultiSelect())) {
-                    inputType = "CHECKBOX";
-                } else {
-                    inputType = "SELECT";
-                }
+                inputType = "RADIO";
             }
 
             if (judge(buildOption.getIsAttachment())) {
