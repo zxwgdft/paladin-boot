@@ -46,10 +46,10 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
             if (judge(buildOption.getEnumCode())) {
                 sb.append(", enumcode: \"").append(buildOption.getEnumCode()).append("\"");
                 enumcodes.add(buildOption.getEnumCode());
-            }
-
-            if (Date.class.isAssignableFrom(columnOption.getFieldType())) {
+            } else if (Date.class.isAssignableFrom(columnOption.getFieldType())) {
                 sb.append(" ,formatter: \"date\"");
+            } else if (Boolean.class == columnOption.getFieldType()) {
+                sb.append(" ,formatter: \"boolean\"");
             }
             sb.append(" },\n");
         }

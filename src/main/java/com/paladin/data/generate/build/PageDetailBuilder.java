@@ -63,6 +63,13 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 				} else {
 					inputType = "SELECT";
 				}
+			}else if (Boolean.class == columnOption.getFieldType()) {
+				sb.append(", enum: \"boolean\"");
+				if (judge(buildOption.getMultiSelect())) {
+					inputType = "CHECKBOX";
+				} else {
+					inputType = "SELECT";
+				}
 			}
 
 			if (judge(buildOption.getIsAttachment())) {

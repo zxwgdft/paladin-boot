@@ -1395,7 +1395,7 @@ function _initTable() {
                         }
                     } else if (col.formatter == 'boolean') {
                         col.formatter = function (value, row, index) {
-                            return (value === true || value === "true") ? "是" : "否";
+                            return (value === true || value === "true" || value === 1) ? "是" : "否";
                         }
                     } else if (col.formatter == 'identification') {
                         col.formatter = function (value, row, index) {
@@ -2032,6 +2032,11 @@ function _initEnumConstant(container) {
             return null;
         }
     });
+
+
+    $.putConstantEnum("boolean", [
+        {key: '1', value: '是'}, {key: '0', value: '否'}
+    ])
 }
 
 /**
