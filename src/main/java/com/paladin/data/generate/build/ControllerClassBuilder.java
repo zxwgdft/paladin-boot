@@ -34,27 +34,27 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.QUERY_DTO, tableOption)).append(";\n");
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_DTO, tableOption)).append(";\n");
 
-        for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
-            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
-            if (isAtt != null && isAtt == CommonConstants.YES) {
-                params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
-
-                Integer count = columnOption.getBuildColumnOption().getAttachmentCount();
-                if (count == null || count < 0) {
-                    count = 5;
-                }
-
-                params.put("attachmentSize", count);
-
-                sb.append("import com.paladin.framework.exception.BusinessException;\n");
-                sb.append("import com.paladin.common.model.sys.SysAttachment;\n");
-                sb.append("import com.paladin.common.service.sys.SysAttachmentService;\n");
-                sb.append("import java.util.List;\n");
-
-                break;
-            }
-        }
+//        for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
+//            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+//            // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
+//            if (isAtt != null && isAtt == CommonConstants.YES) {
+//                params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
+//
+//                Integer count = columnOption.getBuildColumnOption().getAttachmentCount();
+//                if (count == null || count < 0) {
+//                    count = 5;
+//                }
+//
+//                params.put("attachmentSize", count);
+//
+//                sb.append("import com.paladin.framework.exception.BusinessException;\n");
+//                sb.append("import com.paladin.common.model.sys.SysAttachment;\n");
+//                sb.append("import com.paladin.common.service.sys.SysAttachmentService;\n");
+//                sb.append("import java.util.List;\n");
+//
+//                break;
+//            }
+//        }
 
         params.put("imports", sb.toString());
 
