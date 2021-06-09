@@ -6,7 +6,7 @@ logging:
       demo.mapper: debug
 
 server:
-  port: 8011
+  port: 8080
 
 spring:
   datasource:

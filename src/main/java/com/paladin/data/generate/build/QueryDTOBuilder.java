@@ -2,6 +2,8 @@ package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.framework.service.PageParam;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -16,6 +18,8 @@ public class QueryDTOBuilder extends SpringBootClassBuilder {
         Set<Class<?>> importClassSet = new HashSet<>();
 
         importClassSet.add(PageParam.class);
+        importClassSet.add(Getter.class);
+        importClassSet.add(Setter.class);
 
         StringBuilder sb = new StringBuilder();
 
@@ -34,6 +38,8 @@ public class QueryDTOBuilder extends SpringBootClassBuilder {
                 sb.append("import ").append(className).append(";\n");
         }
 
+        sb.append("\n@Getter ");
+        sb.append("\n@Setter ");
         sb.append("\npublic class ").append(getClassName(tableOption)).append(" extends ").append(PageParam.class.getSimpleName()).append(" {\n\n");
         sb.append("}");
 

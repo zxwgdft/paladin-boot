@@ -1384,11 +1384,19 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
     },
     getDataFromServer: function (column, model) {
         var that = this;
-        $.getAjax(column.url, function (data) {
-            column.serverData = data;
-            column.serverDataGot = true;
-            that.fillDataFromServer(column, model);
-        });
+        if (column.ajaxType == 'get') {
+            $.postAjax(column.url, function (data) {
+                column.serverData = data;
+                column.serverDataGot = true;
+                that.fillDataFromServer(column, model);
+            });
+        } else {
+            $.postAjax(column.url, function (data) {
+                column.serverData = data;
+                column.serverDataGot = true;
+                that.fillDataFromServer(column, model);
+            });
+        }
     },
     fillDataFromServer: function (column, model) {
         var input = this.getEditTarget(column, model);
@@ -1923,9 +1931,9 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
                     });
                     fileCount++;
                 });
-                model.formBody.attr('enctype','multipart/form-data');
+                model.formBody.attr('enctype', 'multipart/form-data');
             } else {
-                model.formBody.attr('enctype','application/x-www-form-urlencoded');
+                model.formBody.attr('enctype', 'application/x-www-form-urlencoded');
             }
 
 

@@ -102,7 +102,7 @@ public class PageAddBuilder extends SpringBootPageBuilder {
         }
 
         data.put("columns", sb.toString());
-        data.put("title", "新增");
+        data.put("title", tableOption.getTitle() + "新增");
         data.put("mainTitle", tableOption.getTitle());
         data.put("mainModel", tableOption.getModel());
 

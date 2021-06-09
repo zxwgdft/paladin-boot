@@ -434,9 +434,9 @@ if (!Array.prototype.forEach) {
                 }
             }
 
-            options.headers = options.headers || {};
             options.dataType = options.dataType || 'json';
 
+            options.headers = options.headers || {};
             if (!options.headers.Accept) {
                 options.headers.Accept = 'application/json';
             }
@@ -1401,6 +1401,10 @@ function _initTable() {
                         col.formatter = function (value, row, index) {
                             return hideIdentification(value);
                         }
+                    } else if (col.formatter == 'money') {
+                        col.formatter = function (value, row, index) {
+                            return value ? (value / 100).toFixed(2) : '-';
+                        }
                     }
                 }
 
@@ -1969,13 +1973,22 @@ function _initTable() {
 
                         param.query = params;
 
-                        $.postJsonAjax(that.options.exportUrl, param, function (fileUrl) {
-                            $.successAlert("导出数据成功", function () {
-                                layer.close(layeroIndex);
-                            });
+                        $.sendAjax({
+                            type: "POST",
+                            url: that.options.exportUrl,
+                            dataType: "html",
+                            data: JSON.stringify(param),
+                            contentType: "application/json",
+                            success: function (fileUrl) {
+                                $.successAlert("导出数据成功", function () {
+                                    layer.close(layeroIndex);
+                                });
 
-                            window.open("/file" + fileUrl);
-                        }, $("#_exportSubmitBtn"));
+                                window.open("/file" + fileUrl);
+                            },
+                            submitBtn: $("#_exportSubmitBtn")
+                        });
+
                     });
                 }
             });

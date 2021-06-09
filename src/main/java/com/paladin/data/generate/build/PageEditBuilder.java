@@ -102,7 +102,7 @@ public class PageEditBuilder extends SpringBootPageBuilder {
         }
 
         data.put("columns", sb.toString());
-        data.put("title", "编辑修改");
+        data.put("title", tableOption.getTitle() + "编辑");
         data.put("mainTitle", tableOption.getTitle());
         data.put("mainModel", tableOption.getModel());
 
