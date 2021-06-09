@@ -1,14 +1,13 @@
 package com.paladin.framework.excel.write;
 
+import com.paladin.framework.utils.convert.DateFormatUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-
-import com.paladin.framework.utils.convert.DateFormatUtil;
 
 /**
  * 用于写Excel的列
@@ -112,6 +111,8 @@ public abstract class WriteColumn implements WriteComponent {
                 cell.setCellValue((String) value);
             } else if (value instanceof Integer) {
                 cell.setCellValue((Integer) value);
+            } else if (value instanceof Boolean) {
+                cell.setCellValue(((Boolean) value) ? "是" : "否");
             } else if (value instanceof BigDecimal) {
                 cell.setCellValue(((BigDecimal) value).doubleValue());
             } else if (value instanceof Double) {

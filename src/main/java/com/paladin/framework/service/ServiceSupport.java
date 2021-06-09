@@ -261,7 +261,7 @@ public abstract class ServiceSupport<Model, Mapper extends CommonMapper<Model>> 
      * 查找分页结果集合
      */
     public PageResult<Model> findPage(PageParam pageParam) {
-        return searchPage(modelType, pageParam, null);
+        return searchPage(modelType, pageParam, pageParam != null ? QueryWrapperHelper.buildQuery(pageParam) : null);
     }
 
 

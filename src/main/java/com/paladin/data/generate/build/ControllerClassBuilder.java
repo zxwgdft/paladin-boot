@@ -1,9 +1,7 @@
 package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateBuilderContainer;
-import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.constants.CommonConstants;
 import com.paladin.framework.utils.reflect.NameUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -60,7 +58,9 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
 
         params.put("upperModelName", tableOption.getModelName());
         params.put("lowerModelName", NameUtil.firstLowerCase(tableOption.getModelName()));
-        params.put("primaryName", NameUtil.firstUpperCase(tableOption.getFirstPrimaryName()));
+
+        Class<?> primaryClass = tableOption.getFirstPrimaryClass();
+        params.put("primaryClass", primaryClass == null ? "String" : primaryClass.getSimpleName());
 
         params.put("baseRequestMapping", getBaseRequestMapping(tableOption));
 
