@@ -37,10 +37,14 @@ public class PageResult<T> {
     }
 
     public PageResult(Page page, List<T> data) {
-        this.page = page.getPageNum();
-        this.limit = page.getPageSize();
-        this.total = page.getTotal();
-        this.data = data;
+        if (data == null || data.size() == 0) {
+            this.limit = page.getPageSize();
+        } else {
+            this.page = page.getPageNum();
+            this.limit = page.getPageSize();
+            this.total = page.getTotal();
+            this.data = data;
+        }
     }
 
 

@@ -298,9 +298,6 @@ public abstract class ServiceSupport<Model, Mapper extends CommonMapper<Model>> 
     public <T> PageResult<T> searchPage(Class<T> clazz, PageParam pageParam, Wrapper queryWrapper) {
         Page<T> page = PageHelper.offsetPage(pageParam.getOffset(), pageParam.getLimit());
         List<T> result = searchAll(clazz, queryWrapper);
-        if (result == null || result.size() == 0) {
-            return PageResult.getEmptyPageResult(pageParam.getLimit());
-        }
         return new PageResult<>(page, result);
     }
 
