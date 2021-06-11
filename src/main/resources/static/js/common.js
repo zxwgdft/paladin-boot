@@ -385,7 +385,11 @@ if (!Array.prototype.forEach) {
             var code = xhr.status;
             if (code == 200) {
                 // js抛出异常
-                $.errorMessage(e);
+                if (e === 'parsererror') {
+                    xhr.success(xhr.responseText)
+                } else {
+                    $.errorMessage(e);
+                }
             } else if (code == 401) {
                 $.ajaxUnLoginHandler();
             } else if (code == 403) {
@@ -1568,6 +1572,9 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
+                    if (!res[dataField]) {
+                        res[dataField] = [];
+                    }
                     return res;
                 }
             };
@@ -1590,6 +1597,10 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
+                    var dataField = options.dataField || defaultOptions.dataField;
+                    if (!res[dataField]) {
+                        res[dataField] = [];
+                    }
                     return res;
                 }
             }

@@ -30,6 +30,7 @@
                 </div>
             </div>
             <table id="dataGrid"></table>
+            </div>
         </div>
     </section>
     <div th:include="/${mainModel}/footer" />

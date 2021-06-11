@@ -2501,8 +2501,8 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
             var that = this;
             column.editor = UE.getEditor(model.name + '_' + column.name + '_editor');
             column.editor.ready(function () {
-                that.fillEdit(column, model.data, model);
                 column.editorReady = true;
+                that.fillEdit(column, model.data, model);
             })
         }
 

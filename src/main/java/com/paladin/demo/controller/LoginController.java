@@ -90,6 +90,10 @@ public class LoginController {
     @ApiOperation(value = "登录页面")
     @GetMapping("/login")
     public Object loginInput(HttpServletRequest request) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            return main(request);
+        }
         return "/" + GlobalProperties.project + "/login";
     }
 
