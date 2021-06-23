@@ -22,29 +22,40 @@ public class StringUtil {
      * @return
      */
     public static boolean isNotEmpty(String str) {
-        return !isEmpty(str);
+        return str != null && str.length() > 0;
     }
 
 
     /**
      * 字符串是否相等（相对直接String.equals更有效率）
-     *
-     * @param s1
-     * @param s2
-     * @return
      */
     public static boolean equals(String s1, String s2) {
         if (s1 == s2) {
             return true;
-        } else if (s1 != null && s2 != null) {
-            if (s1.length() != s2.length()) {
-                return false;
-            } else {
-                return s1.equals(s2);
-            }
-        } else {
+        }
+        if (s1 == null || s2 == null) {
             return false;
         }
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        return s1.equals(s2);
+    }
+
+    /**
+     * 字符串是否相等（相对直接String.equalsIgnoreCase更有效率）
+     */
+    public static boolean equalsIgnoreCase(String s1, String s2) {
+        if (s1 == s2) {
+            return true;
+        }
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        return s1.equalsIgnoreCase(s2);
     }
 
     /**

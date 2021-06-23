@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paladin.framework.service.annotation.QueryCondition;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
+import com.paladin.framework.utils.reflect.NameUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
@@ -154,7 +155,7 @@ public class QueryWrapperHelper {
 
                     // 默认使用方法对应的field名作为column
                     if ("".equals(name)) {
-                        name = entityField.getName();
+                        name = NameUtil.hump2underline(entityField.getName());
                     }
 
                     BuildUnit unit = new BuildUnit(name, condition.type(), entityField.getGetMethod(), condition.nullable());
@@ -168,6 +169,7 @@ public class QueryWrapperHelper {
                 SortParam sortParam = (SortParam) queryParam;
                 String sort = sortParam.getSort();
                 if (sort != null && sort.length() > 0) {
+                    sort = NameUtil.hump2underline(sort);
                     String order = sortParam.getOrder();
                     if ("asc".equalsIgnoreCase(order)) {
                         queryWrapper.orderByAsc(sort);

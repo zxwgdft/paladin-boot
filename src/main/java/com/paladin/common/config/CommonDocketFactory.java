@@ -15,7 +15,6 @@ import java.util.List;
  * @author TontoZhou
  * @since 2019/12/31
  */
-@Component
 public class CommonDocketFactory {
 
     public static Docket newInstance() {

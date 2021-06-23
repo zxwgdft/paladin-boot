@@ -120,13 +120,9 @@ public class WebUtil {
      * <p>X-Forwarded-For中第一个非unknown的有效IP才是用户真实IP地址。</p>
      */
     public static String getIpAddress(HttpServletRequest request) {
-        String ip = null;
-        // 获取用户真是的地址
-        String Xip = request.getHeader("X-Real-IP");
         // 获取多次代理后的IP字符串值
         String XFor = request.getHeader("X-Forwarded-For");
-
-        if (StringUtil.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)) {
+        if (!isEmptyIp(XFor)) {
             // 多次反向代理后会有多个IP值，第一个用户真实的IP地址
             int index = XFor.indexOf(",");
             if (index >= 0) {
@@ -136,23 +132,26 @@ public class WebUtil {
             }
         }
 
-        ip = Xip;
-        if (StringUtil.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        String ip = request.getHeader("X-Real-IP");
+        if (isEmptyIp(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (StringUtil.isEmpty(ip) || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (isEmptyIp(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (StringUtil.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (isEmptyIp(ip)) {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (StringUtil.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (isEmptyIp(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-        if (StringUtil.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (isEmptyIp(ip)) {
             ip = request.getRemoteAddr();
         }
-
         return ip;
+    }
+
+    private static boolean isEmptyIp(String ip) {
+        return ip == null || ip.length() == 0 || (ip.length() == 7 && ip.equalsIgnoreCase("unknown"));
     }
 }
