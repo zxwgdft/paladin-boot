@@ -1,6 +1,7 @@
 package com.paladin.framework.utils;
 
 import com.paladin.framework.utils.convert.JsonUtil;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,15 +57,20 @@ public class WebUtil {
      * @param obj
      * @param allowOrigin
      */
-    public static void sendJsonByCors(HttpServletResponse response, Object obj, String allowOrigin) {
-
+    public static void sendJsonByCors(HttpServletResponse response, HttpStatus httpStatus, Object obj, String allowOrigin) {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Access-Control-Allow-Origin", allowOrigin);
-
+        response.setStatus(httpStatus.value());
         try {
-            JsonUtil.writeJson(response.getWriter(), obj);
+            if (obj != null) {
+                if (obj instanceof String) {
+                    response.getWriter().write((String) obj);
+                } else {
+                    JsonUtil.writeJson(response.getWriter(), obj);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,8 +83,8 @@ public class WebUtil {
      * @param response
      * @param obj
      */
-    public static void sendJsonByCors(HttpServletResponse response, Object obj) {
-        sendJsonByCors(response, obj, "*");
+    public static void sendJsonByCors(HttpServletResponse response, HttpStatus httpStatus, Object obj) {
+        sendJsonByCors(response, httpStatus, obj, "*");
     }
 
     /**

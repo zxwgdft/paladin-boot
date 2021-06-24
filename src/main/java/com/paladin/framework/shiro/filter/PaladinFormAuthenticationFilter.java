@@ -1,7 +1,5 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.api.HttpCode;
-import com.paladin.framework.api.R;
 import com.paladin.framework.utils.WebUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
@@ -9,6 +7,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -43,7 +42,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
             }
 
             if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-                WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, "未登录或会话超时"));
+                WebUtil.sendJsonByCors((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, "未登录或会话超时");
             } else {
                 saveRequestAndRedirectToLogin(request, response);
             }
@@ -85,7 +84,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
         }
 
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, errorMsg));
+            WebUtil.sendJsonByCors((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, errorMsg);
             return false;
         } else {
             setFailureAttribute(request, e);
