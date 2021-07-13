@@ -61,7 +61,7 @@ ${tableColumns}
                                 remove(row);
                             }
                         },
-                        formatter: function operateFormatter(value, row, index) {
+                        formatter: function(value, row, index) {
                             return '<button class="detail btn btn-xs btn-default" style="margin-right:10px"><i class="fa fa-search"></i>查看</button>' +
                                 '<button class="edit btn btn-xs btn-info" style="margin-right:10px"><i class="fa fa-edit"></i>编辑</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';

@@ -22,7 +22,6 @@
     	var options = {
 	        id: "model",
 	        name: "${title}",
-	        url:${updateUrl},
 	        columns: ${columns}
 	    }
     

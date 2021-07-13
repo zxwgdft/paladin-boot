@@ -2,6 +2,7 @@ package com.paladin.framework.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paladin.framework.service.annotation.QueryCondition;
+import com.paladin.framework.utils.TimeUtil;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
 import com.paladin.framework.utils.reflect.NameUtil;
@@ -154,11 +155,14 @@ public class QueryWrapperHelper {
                     String name = condition.name();
 
                     // 默认使用方法对应的field名作为column
-                    if ("".equals(name)) {
-                        name = NameUtil.hump2underline(entityField.getName());
+                    if (name.length() == 0) {
+                        name = entityField.getName();
                     }
 
-                    BuildUnit unit = new BuildUnit(name, condition.type(), entityField.getGetMethod(), condition.nullable());
+                    // 驼峰转下划线
+                    name = NameUtil.hump2underline(name);
+
+                    BuildUnit unit = new BuildUnit(name, entityField.getGetMethod(), condition);
                     buildUnits.add(unit);
                 }
             }
@@ -184,6 +188,10 @@ public class QueryWrapperHelper {
                 String property = bu.name;
                 try {
                     Object value = bu.getMethod.invoke(queryParam);
+                    if (bu.nextDay && value instanceof Date) {
+                        Date date = (Date) value;
+                        value = TimeUtil.getDateBefore(date.getTime(), -1);
+                    }
                     buildCriteria(queryWrapper, property, type, value, bu.nullable);
                 } catch (Exception e) {
                     log.error("build QueryWrapper error!", e);
@@ -208,12 +216,14 @@ public class QueryWrapperHelper {
         private String name;
         private Method getMethod;
         private boolean nullable;
+        private boolean nextDay;
 
-        private BuildUnit(String name, QueryType type, Method getMethod, boolean nullable) {
-            this.nullable = nullable;
+        private BuildUnit(String name, Method getMethod, QueryCondition condition) {
             this.name = name;
-            this.type = type;
+            this.type = condition.type();
             this.getMethod = getMethod;
+            this.nullable = condition.nullable();
+            this.nextDay = condition.nextDay();
         }
     }
 

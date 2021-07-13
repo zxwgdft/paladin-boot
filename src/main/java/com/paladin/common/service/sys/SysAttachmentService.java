@@ -180,7 +180,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttac
         InputStream input = param.getInput();
 
         // 如果是图片类型，需要查看图片相关处理参数
-        if (param.isNeedThumbnail()) {
+        if (param.isNeedCompress()) {
             Integer width = param.getWidth();
             Integer height = param.getHeight();
             Double scale = param.getScale();
@@ -190,7 +190,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttac
 
             // 根据以下两个字段创建缩略图，并且缩略图是建立在原图基础上的，而不是改变过质量的原图
             // 如需要修改缩略图质量和规模，可加入参数
-            if (thumbnailWidth != null && thumbnailHeight != null) {
+            if (param.isNeedThumbnail() && thumbnailWidth != null && thumbnailHeight != null) {
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 int len;
