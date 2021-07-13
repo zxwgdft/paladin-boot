@@ -11,8 +11,6 @@
     <section class="content">
         <div class="box box-solid">
             <div id="result" class="box-body">
-            <input type="hidden" id="pageLimit" th:value="${r'${query?.limit}'}" />
-            <input type="hidden" id="pageOffset" th:value="${r'${query?.offset}'}" />
 
             <div style="margin-top: 5px;height:50px">
                 <div class="pull-right">
@@ -63,7 +61,7 @@ ${tableColumns}
                         },
                         formatter: function(value, row, index) {
                             return '<button class="detail btn btn-xs btn-default" style="margin-right:10px"><i class="fa fa-search"></i>查看</button>' +
-                                '<button class="edit btn btn-xs btn-info" style="margin-right:10px"><i class="fa fa-edit"></i>编辑</button>' +
+                                '<button class="edit btn btn-xs btn-success" style="margin-right:10px"><i class="fa fa-edit"></i>编辑</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
 
                         }

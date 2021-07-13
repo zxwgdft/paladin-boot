@@ -9,7 +9,7 @@
     <h1>登录日志查看</h1>
 </section>
 <section class="content">
-    <div class="box box-solid" style="margin-top:20px">
+    <div class="box box-solid">
         <div id="result" class="box-body">
             <div style="margin-top: 5px;height:50px">
                 <form id="searchbar">
@@ -52,9 +52,9 @@
             idField: "id",
             columns: [
                 [
-                    {title: "登录账号", field: "account"},
+                    {title: "登录账号", field: "account", sortable: true},
                     {title: "IP", field: "ip"},
-                    {title: "登录时间", field: "createTime", formatter: "datetime"}
+                    {title: "登录时间", field: "createTime", formatter: "datetime", sortable: true}
                 ]
             ],
             url: '/common/sys/logger/login/find/page',
