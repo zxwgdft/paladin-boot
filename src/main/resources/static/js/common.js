@@ -205,6 +205,12 @@ if (!Array.prototype.forEach) {
                 return false;
             }
         },
+        // 关闭当前frame弹出层
+        closeFrameLayer: function () {
+            if (parent && parent.layer) {
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
+            }
+        },
         // 打开一个HTML内容页面层
         openPageLayer: function (content, options) {
             options = options || {};
@@ -375,62 +381,29 @@ if (!Array.prototype.forEach) {
                 top.location.href = "/";
             })
         },
-        // ajax返回状态处理
-        ajaxResponseCheck: function (response) {
-            if (typeof response === 'string') {
-                response = JSON.parse(response)
-            }
-            var code = response.code,
-                success = response.success;
-
-            if (success === true || code == 200) {
-                return true;
+        ajaxErrorHandler: function (xhr, e) {
+            var code = xhr.status;
+            if (code == 200) {
+                // js抛出异常
+                if (e === 'parsererror') {
+                    xhr.success(xhr.responseText)
+                } else {
+                    $.errorMessage(e);
+                }
+            } else if (code == 401) {
+                $.ajaxUnLoginHandler();
+            } else if (code == 403) {
+                $.errorMessage(xhr.responseText || "您没有权限访问该页面或执行该操作");
+            } else if (code == 490) {
+                $.validErrorHandler(xhr);
             } else {
-                if (code == 401) {
-                    $.ajaxUnLoginHandler();
-                } else if (code == 403) {
-                    $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
-                } else if (code == 490) {
-                    $.validErrorHandler(response);
-                } else {
-                    $.errorMessage(response.message || "操作失败");
-                }
-                return false;
-            }
-        },
-        // 包裹ajax成功回调方法
-        wrapAjaxSuccessCallback: function (callback) {
-            // 包装Ajax成功回调方法，过滤返回内容
-            return function (response) {
-                if (typeof response === 'string') {
-                    response = JSON.parse(response)
-                }
-
-                var code = response.code,
-                    success = response.success;
-
-                if (success === true || code == 200) {
-                    if (callback && typeof callback === 'function') {
-                        callback(response.data);
-                    }
-                } else {
-                    if (code == 401) {
-                        $.ajaxUnLoginHandler(callback);
-                    } else if (code == 403) {
-                        $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
-                    } else if (code == 490) {
-                        $.validErrorHandler(response);
-                    } else {
-                        $.errorMessage(response.message || "操作失败");
-                    }
-                }
+                var rj = xhr.responseJSON;
+                rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
+                    $.errorMessage(xhr.responseText || "操作失败");
             }
         },
         // 发送ajax请求，并做通用处理
         sendAjax: function (options) {
-            // 发送ajax请求 对应$.ajax()
-            options.success = $.wrapAjaxSuccessCallback(options.success);
-
             if (options.submitBtn) {
                 var originComplete = options.complete;
                 options.complete = function (XMLHttpRequest, textStatus) {
@@ -461,11 +434,17 @@ if (!Array.prototype.forEach) {
 
             if (!options.error) {
                 options.error = function (xhr, e) {
-                    $.errorMessage("系统异常:" + xhr.status);
+                    $.ajaxErrorHandler(xhr, e);
                 }
             }
 
             options.dataType = options.dataType || 'json';
+
+            options.headers = options.headers || {};
+            if (!options.headers.Accept) {
+                options.headers.Accept = 'application/json';
+            }
+
             $.ajax(options);
         },
         // POST json数据形式的Ajax请求
@@ -479,7 +458,7 @@ if (!Array.prototype.forEach) {
                 type: "POST",
                 url: url,
                 dataType: "json",
-                data: JSON.stringify(data),
+                data: data ? JSON.stringify(data) : null,
                 contentType: "application/json",
                 success: function (result) {
                     if (typeof callback === 'function') {
@@ -1329,6 +1308,9 @@ function _initTable() {
 
         if (!options.ajax && options.url !== false) {
             options.ajax = function (request) {
+
+                request.contentType = options.contentType || 'application/x-www-form-urlencoded';
+
                 if (typeof url === 'function') {
                     request.url = request.url();
                 }
@@ -1343,6 +1325,16 @@ function _initTable() {
                         }
                     }
                 }
+                request.method = "post";
+
+                if (request.error) {
+                    var handler = request.error;
+                    request.error = function (xhr, e) {
+                        $.ajaxErrorHandler(xhr, e);
+                        handler(xhr, e);
+                    }
+                }
+
                 $.sendAjax(request);
             }
         }
@@ -1407,11 +1399,15 @@ function _initTable() {
                         }
                     } else if (col.formatter == 'boolean') {
                         col.formatter = function (value, row, index) {
-                            return (value === true || value === "true") ? "是" : "否";
+                            return (value === true || value === "true" || value === 1) ? "是" : "否";
                         }
                     } else if (col.formatter == 'identification') {
                         col.formatter = function (value, row, index) {
                             return hideIdentification(value);
+                        }
+                    } else if (col.formatter == 'money') {
+                        col.formatter = function (value, row, index) {
+                            return value ? (value / 100).toFixed(2) : '-';
                         }
                     }
                 }
@@ -1576,6 +1572,9 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
+                    if (!res[dataField]) {
+                        res[dataField] = [];
+                    }
                     return res;
                 }
             };
@@ -1598,6 +1597,10 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
+                    var dataField = options.dataField || defaultOptions.dataField;
+                    if (!res[dataField]) {
+                        res[dataField] = [];
+                    }
                     return res;
                 }
             }
@@ -1981,13 +1984,22 @@ function _initTable() {
 
                         param.query = params;
 
-                        $.postJsonAjax(that.options.exportUrl, param, function (fileUrl) {
-                            $.successAlert("导出数据成功", function () {
-                                layer.close(layeroIndex);
-                            });
+                        $.sendAjax({
+                            type: "POST",
+                            url: that.options.exportUrl,
+                            dataType: "html",
+                            data: JSON.stringify(param),
+                            contentType: "application/json",
+                            success: function (fileUrl) {
+                                $.successAlert("导出数据成功", function () {
+                                    layer.close(layeroIndex);
+                                });
 
-                            window.open("/file" + fileUrl);
-                        }, $("#_exportSubmitBtn"));
+                                window.open("/file" + fileUrl);
+                            },
+                            submitBtn: $("#_exportSubmitBtn")
+                        });
+
                     });
                 }
             });
@@ -2044,6 +2056,11 @@ function _initEnumConstant(container) {
             return null;
         }
     });
+
+
+    $.putConstantEnum("boolean", [
+        {key: '1', value: '是'}, {key: '0', value: '否'}
+    ])
 }
 
 /**
@@ -2183,35 +2200,21 @@ function _initForm(container) {
                     if (typeof response === 'string') {
                         response = JSON.parse(response)
                     }
-                    var code = response.code,
-                        success = response.success;
 
-                    if (success === true || code == 200) {
-                        var handler = formConfig.successCallback || form[0].submitSuccessHandler || form.data("submitSuccessHandler");
-                        if (handler) {
-                            handler(response.data ? response.data : response);
-                        } else {
-                            if (config.backurl) {
-                                layer.alert("操作成功", function (index) {
-                                    layer.close(index);
-                                    window.location = config.backurl;
-                                });
-                            }
-                        }
+                    var handler = formConfig.successCallback || form[0].submitSuccessHandler || form.data("submitSuccessHandler");
+                    if (handler) {
+                        handler(response);
                     } else {
-                        if (code == 401) {
-                            $.ajaxUnLoginHandler();
-                        } else if (code == 403) {
-                            $.errorMessage(response.message || "您没有权限访问该页面或执行该操作");
-                        } else if (code == 490) {
-                            $.validErrorHandler(response);
-                        } else {
-                            $.errorMessage(response.message || "操作失败");
+                        if (config.backurl) {
+                            layer.alert("操作成功", function (index) {
+                                layer.close(index);
+                                window.location = config.backurl;
+                            });
                         }
                     }
                 },
-                error: function (xhr, e, statusText) {
-                    $.errorMessage("系统异常");
+                error: function (xhr, e) {
+                    $.ajaxErrorHandler(xhr, e);
                 },
                 complete: function () {
                     submitBtn.data("loading", false);

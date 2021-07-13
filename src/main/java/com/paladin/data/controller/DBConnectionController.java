@@ -17,9 +17,10 @@ import com.paladin.data.service.GenerateService;
 import com.paladin.data.service.build.DbBuildTableService;
 import com.paladin.data.service.dto.DBConnectionDTO;
 import com.paladin.data.service.dto.DBConnectionQueryDTO;
-import com.paladin.data.service.vo.DBConnectionVO;
-import com.paladin.framework.common.R;
+import com.paladin.data.service.vo.BuildColumnVO;
+import com.paladin.framework.api.R;
 import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.PageResult;
 import com.paladin.framework.spring.DevelopCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
@@ -56,14 +57,14 @@ public class DBConnectionController extends ControllerSupport {
 
     @RequestMapping("/find/page")
     @ResponseBody
-    public Object findPage(DBConnectionQueryDTO query) {
-        return R.success(connectionService.searchPage(query));
+    public PageResult<DBConnection> findPage(DBConnectionQueryDTO query) {
+        return connectionService.findPage(query);
     }
 
     @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id, Model model) {
-        return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
+    public DBConnection getDetail(@RequestParam String id) {
+        return connectionService.get(id);
     }
 
     @GetMapping("/add")
@@ -79,36 +80,29 @@ public class DBConnectionController extends ControllerSupport {
 
     @PostMapping("/save")
     @ResponseBody
-    public Object save(@Valid DBConnectionDTO dbConnectionDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return validErrorHandler(bindingResult);
-        }
+    public DBConnection save(@Valid DBConnectionDTO dbConnectionDTO, BindingResult bindingResult) {
+        validErrorHandler(bindingResult);
         DBConnection model = beanCopy(dbConnectionDTO, new DBConnection());
         String id = model.getName();
-        if (connectionService.save(model)) {
-            return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
-        }
-        return R.fail("保存失败");
+        connectionService.save(model);
+        return connectionService.get(id);
     }
 
     @PostMapping("/update")
     @ResponseBody
     public Object update(@Valid DBConnectionDTO dbConnectionDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return validErrorHandler(bindingResult);
-        }
+        validErrorHandler(bindingResult);
         String id = dbConnectionDTO.getName();
-        DBConnection model = beanCopy(dbConnectionDTO, connectionService.get(id));
-        if (connectionService.update(model)) {
-            return R.success(beanCopy(connectionService.get(id), new DBConnectionVO()));
-        }
-        return R.fail("修改失败");
+        DBConnection model = beanCopy(dbConnectionDTO, connectionService.getWhole(id));
+        connectionService.updateWhole(model);
+        return connectionService.get(id);
     }
 
     @PostMapping("/delete")
     @ResponseBody
     public Object delete(@RequestParam String id) {
-        return connectionService.removeByPrimaryKey(id) ? R.success() : R.fail("删除失败");
+        connectionService.deleteById(id);
+        return R.success();
     }
 
     @RequestMapping("/connect")
@@ -129,25 +123,23 @@ public class DBConnectionController extends ControllerSupport {
 
     @RequestMapping("/db/table")
     @ResponseBody
-    public Object tableList(@RequestParam String dbName) {
-
+    public String[] tableList(@RequestParam String dbName) {
         Table[] tables = connectionService.getDBTables(dbName);
         String[] tableNames = new String[tables.length];
         for (int i = 0; i < tables.length; i++) {
             tableNames[i] = tables[i].getName();
         }
-
-        return R.success(tableNames);
+        return tableNames;
     }
 
     @RequestMapping("/db/column")
     @ResponseBody
-    public Object tableList(@RequestParam String dbName, @RequestParam String tableName) {
-        return R.success(generateService.getBuildColumn(dbName, tableName));
+    public List<BuildColumnVO> tableList(@RequestParam String dbName, @RequestParam String tableName) {
+        return generateService.getBuildColumn(dbName, tableName);
     }
 
     @RequestMapping("/db/build/input")
-    public Object toBuild(@RequestParam String dbName, @RequestParam String tableName, HttpServletRequest request, Model model) {
+    public String toBuild(@RequestParam String dbName, @RequestParam String tableName, HttpServletRequest request, Model model) {
 
         model.addAttribute("dbName", dbName);
         model.addAttribute("tableName", tableName);
@@ -172,7 +164,7 @@ public class DBConnectionController extends ControllerSupport {
 
     @RequestMapping("/db/build/boot")
     @ResponseBody
-    public Object buildBoot(HttpServletRequest request, @RequestBody GenerateTableOptionDTO option) {
+    public R buildBoot(HttpServletRequest request, @RequestBody GenerateTableOptionDTO option) {
 
         String dbName = option.getDbName();
         String tableName = option.getTableName();
@@ -207,7 +199,6 @@ public class DBConnectionController extends ControllerSupport {
         }
 
         generateService.buildProjectFile(tableOption, BuilderType.MODEL, projectPath);
-        generateService.buildProjectFile(tableOption, BuilderType.MODEL_VO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.MODEL_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.QUERY_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.EXPORT_QUERY_DTO, projectPath);
@@ -231,7 +222,7 @@ public class DBConnectionController extends ControllerSupport {
 
     @RequestMapping("/db/build/file")
     @ResponseBody
-    public Object buildFile(HttpServletRequest request, HttpServletResponse response, @RequestBody GenerateTableOptionDTO option) {
+    public R buildFile(HttpServletRequest request, HttpServletResponse response, @RequestBody GenerateTableOptionDTO option) {
 
         String dbName = option.getDbName();
         String tableName = option.getTableName();
@@ -266,7 +257,6 @@ public class DBConnectionController extends ControllerSupport {
         }
 
         generateService.buildProjectFile(tableOption, BuilderType.MODEL, projectPath);
-        generateService.buildProjectFile(tableOption, BuilderType.MODEL_VO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.MODEL_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.QUERY_DTO, projectPath);
         generateService.buildProjectFile(tableOption, BuilderType.EXPORT_QUERY_DTO, projectPath);

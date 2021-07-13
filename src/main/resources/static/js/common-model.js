@@ -109,7 +109,8 @@ function generateEditFormHtml(options, hide) {
         editBodyClass: 'box-body', //body样式
         editFormClass: '', //form样式
         url: '', //form action
-        editFormStyle: 'padding: 15px 50px 15px 10px'
+        editFormStyle: 'padding: 15px 50px 15px 10px',
+        formButtonBarStyle: ''
     } : {
         maxColspan: 2,
         inputSize: 3,
@@ -119,7 +120,8 @@ function generateEditFormHtml(options, hide) {
         editBodyClass: 'box-body', //body样式
         editFormClass: '', //form样式
         url: '', //form action
-        editFormStyle: 'padding: 15px 0px 15px 100px'
+        editFormStyle: 'padding: 15px 0px 15px 100px',
+        formButtonBarStyle: 'margin-left: -175px'   // 根据editFormStyle向右偏移100，为了button居中这里向左偏移100
     };
 
     options = $.extend(defaultConfig, options);
@@ -243,7 +245,7 @@ function generateEditFormHtml(options, hide) {
     if (typeof options.generateFormButtonBar === 'function') {
         html += options.generateFormButtonBar();
     } else if (formButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '">\n';
+        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
         html += '<div class="btn-group">\n';
 
         formButtonBar.forEach(function (a) {
@@ -278,7 +280,8 @@ function generateViewFormHtml(options) {
         columns: [],
         viewBodyClass: 'box-body', //body样式
         viewFormClass: '', //form样式
-        viewFormStyle: 'padding: 15px 50px 15px 10px'
+        viewFormStyle: 'padding: 15px 50px 15px 10px',
+        formButtonBarStyle: ''
     } : {
         maxColspan: 2,
         inputSize: 3,
@@ -286,7 +289,8 @@ function generateViewFormHtml(options) {
         columns: [],
         viewBodyClass: 'box-body', //body样式
         viewFormClass: '', //form样式
-        viewFormStyle: 'padding: 15px 0px 15px 100px'
+        viewFormStyle: 'padding: 15px 0px 15px 100px',
+        formButtonBarStyle: 'margin-left: -175px'
     };
 
     options = $.extend(defaultConfig, options);
@@ -399,7 +403,7 @@ function generateViewFormHtml(options) {
     });
 
     if (viewButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '">\n';
+        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
         html += '<div class="btn-group">\n';
 
         viewButtonBar.forEach(function (a) {
@@ -1384,11 +1388,19 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
     },
     getDataFromServer: function (column, model) {
         var that = this;
-        $.getAjax(column.url, function (data) {
-            column.serverData = data;
-            column.serverDataGot = true;
-            that.fillDataFromServer(column, model);
-        });
+        if (column.ajaxType == 'get') {
+            $.postAjax(column.url, function (data) {
+                column.serverData = data;
+                column.serverDataGot = true;
+                that.fillDataFromServer(column, model);
+            });
+        } else {
+            $.postAjax(column.url, function (data) {
+                column.serverData = data;
+                column.serverDataGot = true;
+                that.fillDataFromServer(column, model);
+            });
+        }
     },
     fillDataFromServer: function (column, model) {
         var input = this.getEditTarget(column, model);
@@ -2489,8 +2501,8 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
             var that = this;
             column.editor = UE.getEditor(model.name + '_' + column.name + '_editor');
             column.editor.ready(function () {
-                that.fillEdit(column, model.data, model);
                 column.editorReady = true;
+                that.fillEdit(column, model.data, model);
             })
         }
 

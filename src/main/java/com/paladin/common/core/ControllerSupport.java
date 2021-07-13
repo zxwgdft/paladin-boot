@@ -1,7 +1,6 @@
 package com.paladin.common.core;
 
-import com.paladin.framework.common.HttpCode;
-import com.paladin.framework.common.R;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,21 +14,21 @@ public class ControllerSupport {
      * 验证异常处理
      *
      * @param bindingResult
-     * @return
      */
-    public Object validErrorHandler(BindingResult bindingResult) {
+    public void validErrorHandler(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<FieldError> errors = bindingResult.getFieldErrors();
 
-        List<FieldError> errors = bindingResult.getFieldErrors();
+            String[] result = new String[errors.size()];
 
-        String[][] result = new String[errors.size()][3];
+            int i = 0;
 
-        int i = 0;
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                result[i++] = error.getDefaultMessage();
+            }
 
-        for (FieldError error : bindingResult.getFieldErrors()) {
-            result[i++] = new String[]{error.getCode(), error.getField(), error.getDefaultMessage()};
+            throw new BusinessException("参数验证失败", result);
         }
-
-        return R.fail(HttpCode.PARAMETER_VALID_FAIL, "参数验证失败", result);
     }
 
     protected <T> T beanCopy(Object source, T target) {

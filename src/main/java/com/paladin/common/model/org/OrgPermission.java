@@ -1,52 +1,44 @@
 package com.paladin.common.model.org;
 
-import com.paladin.framework.common.BaseModel;
+import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-
 @Getter
 @Setter
-public class OrgPermission extends BaseModel {
+@ApiModel(description = "资源权限")
+public class OrgPermission {
 
-    public static final String FIELD_GRANTABLE = "grantable";
 
-    @Id
+    @TableId
     private String id;
 
-    // 权限名称
+    @ApiModelProperty("权限名称")
     private String name;
 
-    // 权限对应URL
-    private String url;
-
-    // 权限对应code
+    @ApiModelProperty("权限code")
     private String code;
 
-    // 是否菜单
-    private Integer isMenu;
+    @ApiModelProperty("权限类型")
+    private Integer type;
 
-    // 是否页面
-    private Integer isPage;
-
-    // 图标
-    private String menuIcon;
-
-    // 权限描述
+    @ApiModelProperty("权限描述")
     private String description;
 
-    // 父ID
+    @ApiModelProperty("父权限ID")
     private String parentId;
 
-    // 列表顺序
-    private Integer listOrder;
+    @ApiModelProperty("列表顺序")
+    private Integer orderNo;
 
-    // 是否系统管理员权限，正常情况系统管理员应该不拥有业务相关功能权限，该部分权限应该由应用管理员通过授权赋权
-    private Integer isAdmin;
+    // 正常情况系统管理员应该不拥有业务相关功能权限，该部分权限应该由应用管理员通过授权赋权
+    @ApiModelProperty("是否系统管理员权限")
+    private Boolean isAdmin;
 
-    // 是否可授权
-    private Integer grantable;
+    @ApiModelProperty("是否可授权")
+    private Boolean grantable;
 
 
 }

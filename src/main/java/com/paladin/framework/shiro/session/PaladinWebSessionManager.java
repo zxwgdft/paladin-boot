@@ -29,7 +29,6 @@ public class PaladinWebSessionManager extends DefaultWebSessionManager {
         if (tokenField != null && tokenField.length() == 0) {
             tokenField = null;
         }
-        setSessionValidationSchedulerEnabled(shiroProperties.isSessionValidationSchedulerEnabled());
     }
 
     @Override

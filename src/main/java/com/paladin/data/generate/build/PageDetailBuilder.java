@@ -1,23 +1,16 @@
 package com.paladin.data.generate.build;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.*;
 
 @Component
 public class PageDetailBuilder extends SpringBootPageBuilder {
@@ -63,13 +56,16 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 				} else {
 					inputType = "SELECT";
 				}
+			}else if (Boolean.class == columnOption.getFieldType()) {
+				sb.append(", enum: \"boolean\"");
+				inputType = "RADIO";
 			}
 
 			if (judge(buildOption.getIsAttachment())) {
 				sb.append(", fileName: \"").append(columnOption.getFieldName()).append("File").append("\"");
 				Integer count = buildOption.getAttachmentCount();
-				if (count != 0 && count > 0) {
-					sb.append(", maxFileCount: ").append(count).append("");
+				if (count != null && count > 0) {
+					sb.append(", maxFileCount: ").append(count);
 				}
 				inputType = "ATTACHMENT";
 			}
@@ -106,7 +102,7 @@ public class PageDetailBuilder extends SpringBootPageBuilder {
 		}
 
 		data.put("columns", sb.toString());
-		data.put("title", "查看详情");
+		data.put("title", tableOption.getTitle() + "详情");
 		data.put("mainTitle", tableOption.getTitle());
 		data.put("mainModel", tableOption.getModel());
 

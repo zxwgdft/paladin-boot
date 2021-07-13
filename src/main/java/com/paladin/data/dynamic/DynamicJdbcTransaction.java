@@ -1,7 +1,6 @@
 package com.paladin.data.dynamic;
 
 import com.paladin.framework.exception.SystemException;
-import com.paladin.framework.exception.SystemExceptionCode;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
@@ -31,7 +30,7 @@ public class DynamicJdbcTransaction implements Transaction {
         String name = dataSource.getCurrentDataSourceName();
 
         if (dataSource == null) {
-            throw new SystemException(SystemExceptionCode.CODE_ERROR_CONFIG, "找不到当前数据库");
+            throw new SystemException(SystemException.CODE_ERROR_CONFIG, "找不到当前数据库");
         }
 
         JdbcTransaction transaction = jdbcTransactionMap.get(name);

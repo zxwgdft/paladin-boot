@@ -1,5 +1,7 @@
 package com.paladin.data.generate.build;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateEnvironment;
 import com.paladin.data.generate.GenerateTableOption;
@@ -12,7 +14,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Id;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
@@ -103,8 +104,9 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
-        importClassSet.add(Id.class);
-        if(startApi) {
+        importClassSet.add(TableId.class);
+        importClassSet.add(IdType.class);
+        if (startApi) {
             importClassSet.add(ApiModel.class);
             importClassSet.add(ApiModelProperty.class);
         }
@@ -144,7 +146,7 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
-        if(startApi) {
+        if (startApi) {
             sb.append("\n@ApiModel");
         }
         sb.append("\npublic class ").append(tableOption.getModelName());
@@ -156,14 +158,19 @@ public class ModelClassBuilder extends SpringBootClassBuilder {
 
         for (GenerateColumnOption columnOption : columnOptions) {
 
-            if(startApi) {
+            if (startApi) {
                 sb.append(tab).append("@ApiModelProperty(\"").append(columnOption.getColumn().getComment()).append("\")\n");
             } else {
                 sb.append(tab).append("// ").append(columnOption.getColumn().getComment()).append("\n");
             }
 
             if (columnOption.isPrimary()) {
-                sb.append(tab).append("@Id").append("\n");
+                Class<?> primaryClass = columnOption.getFieldType();
+                if (primaryClass == Integer.class) {
+                    sb.append(tab).append("@TableId(type = IdType.AUTO)").append("\n");
+                } else if (primaryClass == String.class) {
+                    sb.append(tab).append("@TableId(type = IdType.ASSIGN_UUID)").append("\n");
+                }
             }
 
             sb.append(tab).append("private ").append(columnOption.getFieldType().getSimpleName()).append(" ").append(columnOption.getFieldName())

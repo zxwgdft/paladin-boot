@@ -10,5 +10,5 @@ public enum QueryType {
     LIKE,
     IN,
     IS_NULL,
-    IS_NOT_NULL;
+    IS_NOT_NULL
 }

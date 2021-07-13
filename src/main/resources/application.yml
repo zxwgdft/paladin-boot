@@ -1,11 +1,14 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   mvc:
-    date-format: yyyy-MM-dd HH:mm:ss
+    format:
+      date: yyyy-MM-dd HH:mm:ss
     view:
       prefix: classpath:/templates
       suffix: .html
@@ -18,11 +21,6 @@ spring:
     servlet:
       content-type: text/html
 
-mapper:
-  mappers:
-    - com.paladin.framework.mybatis.CustomMapper
-    - com.paladin.framework.mybatis.CustomSelectMapper
-  enumAsSimpleType: true
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
 

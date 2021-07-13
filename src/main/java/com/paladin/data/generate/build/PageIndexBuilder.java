@@ -4,7 +4,8 @@ import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.api.BaseModel;
+import com.paladin.framework.constants.CommonConstants;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
 
             // 附件不显示
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 continue;
             }
 
@@ -45,10 +46,10 @@ public class PageIndexBuilder extends SpringBootPageBuilder {
             if (judge(buildOption.getEnumCode())) {
                 sb.append(", enumcode: \"").append(buildOption.getEnumCode()).append("\"");
                 enumcodes.add(buildOption.getEnumCode());
-            }
-
-            if (Date.class.isAssignableFrom(columnOption.getFieldType())) {
+            } else if (Date.class.isAssignableFrom(columnOption.getFieldType())) {
                 sb.append(" ,formatter: \"date\"");
+            } else if (Boolean.class == columnOption.getFieldType()) {
+                sb.append(" ,formatter: \"boolean\"");
             }
             sb.append(" },\n");
         }

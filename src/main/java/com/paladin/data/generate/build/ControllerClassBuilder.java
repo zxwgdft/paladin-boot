@@ -1,9 +1,7 @@
 package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateBuilderContainer;
-import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
-import com.paladin.framework.common.BaseModel;
 import com.paladin.framework.utils.reflect.NameUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -33,35 +31,36 @@ public class ControllerClassBuilder extends SpringBootClassBuilder {
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.SERVICE, tableOption)).append(";\n");
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.QUERY_DTO, tableOption)).append(";\n");
         sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_DTO, tableOption)).append(";\n");
-        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL_VO, tableOption)).append(";\n");
 
-        for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
-            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
-                params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
-
-                Integer count = columnOption.getBuildColumnOption().getAttachmentCount();
-                if (count == null || count < 0) {
-                    count = 5;
-                }
-
-                params.put("attachmentSize", count);
-
-                sb.append("import com.paladin.framework.exception.BusinessException;\n");
-                sb.append("import com.paladin.common.model.sys.SysAttachment;\n");
-                sb.append("import com.paladin.common.service.sys.SysAttachmentService;\n");
-                sb.append("import java.util.List;\n");
-
-                break;
-            }
-        }
+//        for (GenerateColumnOption columnOption : tableOption.getColumnOptions()) {
+//            Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
+//            // 这里只处理一个附件字段，如果有多个，需要改为列表或者手动修改生成的代码
+//            if (isAtt != null && isAtt == CommonConstants.YES) {
+//                params.put("attachmentField", NameUtil.firstUpperCase(columnOption.getFieldName()));
+//
+//                Integer count = columnOption.getBuildColumnOption().getAttachmentCount();
+//                if (count == null || count < 0) {
+//                    count = 5;
+//                }
+//
+//                params.put("attachmentSize", count);
+//
+//                sb.append("import com.paladin.framework.exception.BusinessException;\n");
+//                sb.append("import com.paladin.common.model.sys.SysAttachment;\n");
+//                sb.append("import com.paladin.common.service.sys.SysAttachmentService;\n");
+//                sb.append("import java.util.List;\n");
+//
+//                break;
+//            }
+//        }
 
         params.put("imports", sb.toString());
 
         params.put("upperModelName", tableOption.getModelName());
         params.put("lowerModelName", NameUtil.firstLowerCase(tableOption.getModelName()));
-        params.put("primaryName", NameUtil.firstUpperCase(tableOption.getFirstPrimaryName()));
+
+        Class<?> primaryClass = tableOption.getFirstPrimaryClass();
+        params.put("primaryClass", primaryClass == null ? "String" : primaryClass.getSimpleName());
 
         params.put("baseRequestMapping", getBaseRequestMapping(tableOption));
 

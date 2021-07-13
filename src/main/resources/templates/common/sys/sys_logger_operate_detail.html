@@ -8,15 +8,12 @@
 <section class="content-header">
     <h1>操作日志管理</h1>
     <ol class="breadcrumb">
-        <li><a href="/common/sys/logger/operate/index"><i class="fa fa-list-alt"></i>列表</a></li>
-        <li class="active">详情</li>
+        <li><a href="/common/sys/logger/operate/index"><i class="fa fa-list-alt"></i>操作日志列表</a></li>
+        <li class="active">操作日志详情</li>
     </ol>
 </section>
 <section class="content">
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a href="/common/sys/logger/operate/index" class="btn btn-primary btn-block">返回</a>
-</div>
 <input type="hidden" id="id" th:value="${id}"/>
 <div th:include="/common/footer"/>
 <script type="text/javascript">
@@ -24,15 +21,16 @@
     $(function () {
         var options = {
             id: "model",
-            name: "详情",
+            bigScreen: false,
+            name: "操作日志详情",
             columns: [
                 {title: "模块名称", name: "modelName", maxLength: 30, inputType: "TEXT"},
                 {title: "操作名称", name: "operateName", maxLength: 50, inputType: "TEXT"},
                 {title: "类名称", name: "className", maxLength: 100, inputType: "TEXT"},
                 {title: "方法名称", name: "methodName", maxLength: 40, inputType: "TEXT"},
-                {title: "是否成功", name: "isSuccess", inputType: "TEXT"},
+                {title: "是否成功", name: "isSuccess", inputType: "RADIO", enum: "boolean"},
                 {title: "错误信息", name: "errorMessage", maxLength: 255, inputType: "TEXT"},
-                {title: "操作人", name: "operateBy", maxLength: 32, inputType: "TEXT"},
+                // {title: "操作人", name: "operateBy", maxLength: 32, inputType: "TEXT"},
                 {title: "操作人名称", name: "operateByName", maxLength: 50, inputType: "TEXT"},
                 {title: "操作时间", name: "operateTime", inputType: "TIME"},
                 {title: "操作时长", name: "operateDuration", inputType: "TEXT"}
@@ -40,15 +38,14 @@
         }
 
         $.getAjax("/common/sys/logger/operate/get?id=" + $("#id").val(), function (data) {
-            var html = generateHtml(options);
+            var html = generateViewHtml(options);
             $(".content").html(html);
             $.initComponent($(".content"));
 
             var model = new tonto.Model("model", options.columns, {
-                pattern: "view"
+                pattern: 'view',
+                back: '/common/sys/logger/operate/index'
             });
-
-            data.isSuccess = data.isSuccess ? '是' : '否';
 
             model.setData(data);
         });

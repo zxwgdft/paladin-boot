@@ -1,9 +1,8 @@
 package com.paladin.common.service.org;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.paladin.common.mapper.org.OrgPermissionMapper;
 import com.paladin.common.model.org.OrgPermission;
-import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.service.Condition;
-import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +10,10 @@ import java.util.List;
 
 
 @Service
-public class OrgPermissionService extends ServiceSupport<OrgPermission> {
+public class OrgPermissionService extends ServiceSupport<OrgPermission, OrgPermissionMapper> {
 
     public List<OrgPermission> findGrantablePermission() {
-        return searchAll(new Condition(OrgPermission.FIELD_GRANTABLE, QueryType.EQUAL, BaseModel.BOOLEAN_YES));
+        return findList(new LambdaQueryWrapper<OrgPermission>().eq(OrgPermission::getGrantable, true));
     }
 
 }

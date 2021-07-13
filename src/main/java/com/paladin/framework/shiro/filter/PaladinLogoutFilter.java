@@ -1,12 +1,12 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.common.R;
 import com.paladin.framework.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -37,7 +37,7 @@ public class PaladinLogoutFilter extends LogoutFilter {
         }
 
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, R.success("登出成功"));
+            WebUtil.sendJsonByCors((HttpServletResponse) response, HttpStatus.OK, "登出成功");
         } else {
             issueRedirect(request, response, redirectUrl);
         }

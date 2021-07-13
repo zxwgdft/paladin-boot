@@ -154,7 +154,7 @@
             success: function(data, status) //服务器成功响应处理函数
             {
                 if (data.status == 1) {
-                    $("#url").val("/file/" + data.result.pelativePath);
+                    $("#url").val("/file/" + data.result.relativePath);
                 } else {
                     $.errorMessage("上传文件失败");
                 }

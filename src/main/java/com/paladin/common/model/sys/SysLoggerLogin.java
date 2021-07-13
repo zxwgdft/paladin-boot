@@ -1,37 +1,39 @@
 package com.paladin.common.model.sys;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
 import java.util.Date;
 
 @Getter
 @Setter
+@ApiModel(description = "登录日志")
 public class SysLoggerLogin {
 
-    public final static String FIELD_CREATE_TIME = "createTime";
 
-    //
-    @Id
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-    //
+    @ApiModelProperty("IP")
     private String ip;
 
-    // 登录方式
+    @ApiModelProperty("登录方式")
     private Integer loginType;
 
-    // 登录账号
+    @ApiModelProperty("登录账号")
     private String account;
 
-    // 用户ID
+    @ApiModelProperty("用户ID")
     private String userId;
 
-    // 用户类型
+    @ApiModelProperty("用户类型")
     private Integer userType;
 
-    //
+    @ApiModelProperty("登录时间")
     private Date createTime;
 
 

@@ -3,7 +3,7 @@ package com.paladin.data.generate.build;
 import com.paladin.data.generate.GenerateColumnOption;
 import com.paladin.data.generate.GenerateTableOption;
 import com.paladin.data.model.build.DbBuildColumn;
-import com.paladin.framework.common.BaseModel;
+import com.paladin.framework.constants.CommonConstants;
 import com.paladin.framework.utils.reflect.NameUtil;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import io.swagger.annotations.ApiModel;
@@ -49,7 +49,7 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
         Set<Class<?>> importClassSet = new HashSet<>();
         importClassSet.add(Getter.class);
         importClassSet.add(Setter.class);
-        if(startApi) {
+        if (startApi) {
             importClassSet.add(ApiModel.class);
             importClassSet.add(ApiModelProperty.class);
         }
@@ -82,7 +82,7 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
             }
 
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 importClassSet.add(MultipartFile.class);
             }
         }
@@ -109,7 +109,7 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
 
         sb.append("\n@Getter ");
         sb.append("\n@Setter ");
-        if(startApi) {
+        if (startApi) {
             sb.append("\n@ApiModel");
         }
         sb.append("\npublic class ").append(getClassName(tableOption));
@@ -118,7 +118,7 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
 
         for (GenerateColumnOption columnOption : columnOptions) {
             String comment = columnOption.getColumn().getComment();
-            if(startApi) {
+            if (startApi) {
                 sb.append(tab).append("@ApiModelProperty(\"").append(comment).append("\")\n");
             } else {
                 sb.append(tab).append("// ").append(comment).append("\n");
@@ -152,7 +152,7 @@ public class ModelDTOClassBuilder extends SpringBootClassBuilder {
 
             Integer isAtt = columnOption.getBuildColumnOption().getIsAttachment();
             // 是否附件
-            if (isAtt != null && isAtt == BaseModel.BOOLEAN_YES) {
+            if (isAtt != null && isAtt == CommonConstants.YES) {
                 sb.append(tab).append("private MultipartFile[] ")
                         .append(NameUtil.firstUpperCase(columnOption.getFieldName()))
                         .append("File")

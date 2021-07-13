@@ -1,5 +1,6 @@
 package com.paladin.framework.service;
 
+import com.paladin.framework.service.annotation.QueryInputMethod;
 import com.paladin.framework.utils.convert.JsonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.method.HandlerMethod;

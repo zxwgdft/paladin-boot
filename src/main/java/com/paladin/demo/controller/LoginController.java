@@ -1,15 +1,14 @@
 package com.paladin.demo.controller;
 
-import com.paladin.common.core.permission.Menu;
+import com.paladin.common.core.CommonUserSession;
+import com.paladin.common.core.security.Menu;
 import com.paladin.common.service.sys.SysUserService;
 import com.paladin.demo.core.DemoUserSession;
-import com.paladin.framework.GlobalProperties;
-import com.paladin.framework.common.R;
-import com.paladin.framework.service.UserSession;
+import com.paladin.framework.api.R;
+import com.paladin.framework.constants.GlobalProperties;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.shiro.filter.PaladinFormAuthenticationFilter;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -22,9 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 
 @Api("用户认证模块")
 @Controller
@@ -51,7 +48,7 @@ public class LoginController {
     private void createMenuHtml(Collection<Menu> menus, StringBuilder sb) {
         for (Menu menu : menus) {
             Collection<Menu> children = menu.getChildren();
-            String href = menu.isOwned() ? menu.getUrl() : null;
+            String href = menu.isLeaf() ? menu.getUrl() : null;
 
             String icon = menu.getIcon();
             if (icon != null && icon.length() > 0) {
@@ -83,16 +80,16 @@ public class LoginController {
     }
 
     @ApiOperation("修改密码")
-    @ApiImplicitParams({@ApiImplicitParam(name = "newPassword", value = "新密码", required = true), @ApiImplicitParam(name = "oldPassword", value = "旧密码")})
-    @RequestMapping(value = "/update/password", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/update/password")
     @ResponseBody
-    public Object updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
-        return sysUserService.updateSelfPassword(newPassword, oldPassword) ? R.success() : R.fail("修改失败");
+    public R updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
+        sysUserService.updateSelfPassword(newPassword, oldPassword);
+        return R.success();
     }
 
     @ApiOperation(value = "登录页面")
     @GetMapping("/login")
-    public Object loginInput(HttpServletRequest request, Model model) {
+    public Object loginInput(HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             return main(request);
@@ -115,22 +112,22 @@ public class LoginController {
     }
 
     @ApiOperation(value = "用户认证")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     @ResponseBody
-    public Object ajaxLogin(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public LoginResult ajaxLogin(HttpServletRequest request, HttpServletResponse response, Model model) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
-            return R.success(UserSession.getCurrentUserSession().getUserForView());
+            LoginResult loginResult = new LoginResult(true);
+
+            CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+            loginResult.setSystemAdmin(userSession.isSystemAdmin());
+            loginResult.setUsername(userSession.getAccount());
+            return loginResult;
         } else {
             String errorMsg = (String) request.getAttribute(PaladinFormAuthenticationFilter.ERROR_KEY_LOGIN_FAIL_MESSAGE);
-            return R.fail(errorMsg == null ? "登录失败" : errorMsg);
+            throw new BusinessException(errorMsg == null ? "登录失败" : errorMsg);
         }
     }
 
-    @GetMapping(value = "/time")
-    @ResponseBody
-    public String time() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    }
 
 }

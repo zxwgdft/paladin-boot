@@ -13,15 +13,13 @@ public class UUIDUtil {
      *
      * @return
      */
-    public static String createUUID() {
-        byte[] randomBytes = new byte[16];
-        numberGenerator.nextBytes(randomBytes);
-        randomBytes[6] &= 0x0f; /* clear version */
-        randomBytes[6] |= 0x40; /* set to version 4 */
-        randomBytes[8] &= 0x3f; /* clear variant */
-        randomBytes[8] |= 0x80; /* set to IETF variant */
-
-        byte[] data = randomBytes;
+    public static String create32UUID() {
+        byte[] data = new byte[16];
+        numberGenerator.nextBytes(data);
+        data[6] &= 0x0f; /* clear version */
+        data[6] |= 0x40; /* set to version 4 */
+        data[8] &= 0x3f; /* clear variant */
+        data[8] |= 0x80; /* set to IETF variant */
 
         long msb = 0;
         long lsb = 0;
@@ -41,11 +39,10 @@ public class UUIDUtil {
 
     /**
      * 创建压缩的UUID（对32位UUID进行Base64编码）
-     * 需要mysql能区分大小，否则会提高出现重复的可能性
      *
      * @return
      */
-    public static String createBase64UUID() {
+    public static String createUUID() {
         byte[] randomBytes = new byte[16];
         numberGenerator.nextBytes(randomBytes);
         return Base64.encodeBase64URLSafeString(randomBytes);

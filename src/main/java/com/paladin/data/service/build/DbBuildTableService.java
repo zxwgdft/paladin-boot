@@ -1,19 +1,22 @@
 package com.paladin.data.service.build;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.paladin.data.mapper.build.DbBuildTableMapper;
 import com.paladin.data.model.build.DbBuildTable;
-import com.paladin.framework.service.Condition;
-import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DbBuildTableService extends ServiceSupport<DbBuildTable> {
+public class DbBuildTableService extends ServiceSupport<DbBuildTable, DbBuildTableMapper> {
 
     public DbBuildTable getDbBuildColumn(String connectionName, String tableName) {
-        List<DbBuildTable> result = searchAll(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, connectionName),
-                new Condition(DbBuildTable.COLUMN_FIELD_TABLE_NAME, QueryType.EQUAL, tableName));
+        List<DbBuildTable> result = findList(new LambdaQueryWrapper<DbBuildTable>()
+                .eq(DbBuildTable::getConnectionName, connectionName)
+                .eq(DbBuildTable::getTableName, tableName)
+        );
+
         if (result != null && result.size() > 0) {
             return result.get(0);
         }
@@ -21,9 +24,8 @@ public class DbBuildTableService extends ServiceSupport<DbBuildTable> {
         return null;
     }
 
-    public int removeByTable(String dbName, String tableName) {
-        return remove(new Condition(DbBuildTable.COLUMN_FIELD_CONNECTION_NAME, QueryType.EQUAL, dbName),
-                new Condition(DbBuildTable.COLUMN_FIELD_TABLE_NAME, QueryType.EQUAL, tableName));
+    public void removeByTable(String dbName, String tableName) {
+        getSqlMapper().removeTable(dbName, tableName);
     }
 
 }

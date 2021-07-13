@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.common.mapper.sys.SysAttachmentMapper">
 
+    <update id="deleteAttachments">
+        UPDATE sys_attachment SET deleted = 1, operate_time = NOW() WHERE id IN
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+    </update>
+
+    <update id="persistAttachments">
+        UPDATE sys_attachment SET deleted = 0, operate_time = NOW(), operate_by = #{ownUserId} WHERE id IN
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+    </update>
+
+
 </mapper>

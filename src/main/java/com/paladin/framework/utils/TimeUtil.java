@@ -1,6 +1,5 @@
 package com.paladin.framework.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TimeUtil {
@@ -123,9 +122,6 @@ public class TimeUtil {
 
     /**
      * 获取流水号
-     *
-     * @param c
-     * @return
      */
     public static int getSerialNumberByDay(Calendar c) {
         int year = c.get(Calendar.YEAR);
@@ -137,9 +133,6 @@ public class TimeUtil {
 
     /**
      * 获取月流水号
-     *
-     * @param date
-     * @return
      */
     public static int getSerialNumberByMonth(Date date) {
         Calendar c = Calendar.getInstance();
@@ -153,9 +146,6 @@ public class TimeUtil {
 
     /**
      * 是否今天
-     *
-     * @param time
-     * @return
      */
     public static boolean isToday(Date time) {
         if (time == null) {
@@ -173,9 +163,6 @@ public class TimeUtil {
 
     /**
      * 是否今天或以后的时间
-     *
-     * @param time
-     * @return
      */
     public static boolean isAfterOrEqualToday(Date time) {
         if (time == null) {
@@ -194,8 +181,7 @@ public class TimeUtil {
     /**
      * 获取今天过去某天
      *
-     * @param pastDays
-     * @return
+     * @param pastDays 过去多少天，负数则为未来多少天
      */
     public static Date getTodayBefore(int pastDays) {
         long millis = System.currentTimeMillis();
@@ -206,9 +192,8 @@ public class TimeUtil {
     /**
      * 获取某天的过去几天
      *
-     * @param millis
-     * @param pastDays
-     * @return
+     * @param millis   时间戳
+     * @param pastDays 过去多少天，负数则为未来多少天
      */
     public static Date getDateBefore(long millis, int pastDays) {
         millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
@@ -216,56 +201,7 @@ public class TimeUtil {
     }
 
     /**
-     * 获取今天过去某个月
-     *
-     * @param dateTime
-     * @param pastMonths 前多少个月
-     * @param isLastDay  是否是最后一天，不是则是第一天
-     * @return
-     */
-    public static Date getDateBeforeMonth(Date dateTime, int pastMonths, boolean isLastDay) {
-        Calendar ca = Calendar.getInstance();
-        ca.setTime(dateTime);
-        ca.add(Calendar.MONTH, -pastMonths);
-        if (isLastDay) {
-            ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
-        } else {
-            ca.set(Calendar.DAY_OF_MONTH, 1);
-        }
-        long millis = ca.getTimeInMillis();
-        millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
-        return new Date(millis);
-    }
-
-    /**
-     * 获取今天过去某年的
-     *
-     * @param pastYears
-     * @param dateTime
-     * @param isLastDay
-     * @return
-     */
-    public static Date getDateBeforeYear(Date dateTime, int pastYears, boolean isLastDay) {
-        Calendar ca = Calendar.getInstance();
-        ca.setTime(dateTime);
-        ca.add(Calendar.YEAR, -pastYears);
-        if (isLastDay) {
-            ca.set(Calendar.MONTH, 11);
-            ca.set(Calendar.DAY_OF_MONTH, 31);
-        } else {
-            ca.set(Calendar.MONTH, 0);
-            ca.set(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        long millis = ca.getTimeInMillis();
-        millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
-        return new Date(millis);
-    }
-
-    /**
      * 获取昨天
-     *
-     * @return
      */
     public static Date getYesterday() {
         return getDateBefore(System.currentTimeMillis(), 1);
@@ -273,9 +209,6 @@ public class TimeUtil {
 
     /**
      * 获取年份
-     *
-     * @param date
-     * @return
      */
     public static int getYear(Date date) {
         Calendar c = Calendar.getInstance();
@@ -285,9 +218,6 @@ public class TimeUtil {
 
     /**
      * 获取月份（12）
-     *
-     * @param date
-     * @return
      */
     public static int getMonth(Date date) {
         Calendar c = Calendar.getInstance();
@@ -297,9 +227,6 @@ public class TimeUtil {
 
     /**
      * 获取月中日期
-     *
-     * @param date
-     * @return
      */
     public static int getDay(Date date) {
         Calendar c = Calendar.getInstance();
@@ -309,9 +236,6 @@ public class TimeUtil {
 
     /**
      * 获取星期几(周一到周7)
-     *
-     * @param date
-     * @return
      */
     public static int getWeekDay(Date date) {
         Calendar c = Calendar.getInstance();
@@ -322,8 +246,6 @@ public class TimeUtil {
 
     /**
      * 获取小时（24）
-     *
-     * @return
      */
     public static int getHour(Date date) {
         Calendar ca = Calendar.getInstance();
@@ -333,9 +255,6 @@ public class TimeUtil {
 
     /**
      * 获取当前时间最近一个星期几
-     *
-     * @param weekDay
-     * @return
      */
     public static Date getLastWeekDay(int weekDay) {
         return getLastWeekDay(null, weekDay);
@@ -343,10 +262,6 @@ public class TimeUtil {
 
     /**
      * 获取时间最近一个星期几
-     *
-     * @param date
-     * @param weekDay
-     * @return
      */
     public static Date getLastWeekDay(Date date, int weekDay) {
         Calendar ca = Calendar.getInstance();
@@ -363,27 +278,19 @@ public class TimeUtil {
 
     /**
      * 是否日期为星期几
-     *
-     * @param date
-     * @param weekday
-     * @return
      */
-    public static boolean isWeekDay(Date date, int weekday) {
+    public static boolean isWeekDay(Date date, int weekDay) {
         Calendar ca = Calendar.getInstance();
         ca.setTime(date);
         int dayWeek = ca.get(Calendar.DAY_OF_WEEK) - 1;
         if (dayWeek == 0) {
             dayWeek = 7;
         }
-        return dayWeek == weekday;
+        return dayWeek == weekDay;
     }
 
     /**
      * 两个日期是否在同一个星期
-     *
-     * @param d1
-     * @param d2
-     * @return
      */
     public static boolean inSameWeek(Date d1, Date d2) {
 
@@ -412,9 +319,6 @@ public class TimeUtil {
 
     /**
      * 根据出生日期计算年龄
-     *
-     * @param birthDay
-     * @return
      */
     public static int getAge(Date birthDay) {
 
@@ -447,13 +351,8 @@ public class TimeUtil {
 
     }
 
-
     /**
      * 获取某年某月中天数
-     *
-     * @param year  年
-     * @param month 月
-     * @return 天数
      */
     public static int getDaysOfMonth(int year, int month) {
         int days = 0;
@@ -482,12 +381,6 @@ public class TimeUtil {
                 break;
         }
         return days;
-    }
-
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(format.format(getLastWeekDay(5)));
     }
 
 

@@ -56,13 +56,16 @@ public class PageEditBuilder extends SpringBootPageBuilder {
                 } else {
                     inputType = "SELECT";
                 }
+            } else if (Boolean.class == columnOption.getFieldType()) {
+                sb.append(", enum: \"boolean\"");
+                inputType = "RADIO";
             }
 
             if (judge(buildOption.getIsAttachment())) {
                 sb.append(", fileName: \"").append(columnOption.getFieldName()).append("File").append("\"");
                 Integer count = buildOption.getAttachmentCount();
-                if (count != 0 && count > 0) {
-                    sb.append(", maxFileCount: ").append(count).append("");
+                if (count != null && count > 0) {
+                    sb.append(", maxFileCount: ").append(count);
                 }
                 inputType = "ATTACHMENT";
             }
@@ -99,7 +102,7 @@ public class PageEditBuilder extends SpringBootPageBuilder {
         }
 
         data.put("columns", sb.toString());
-        data.put("title", "编辑修改");
+        data.put("title", tableOption.getTitle() + "编辑");
         data.put("mainTitle", tableOption.getTitle());
         data.put("mainModel", tableOption.getModel());
 

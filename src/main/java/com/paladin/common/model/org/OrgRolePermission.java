@@ -1,19 +1,18 @@
 package com.paladin.common.model.org;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Id;
 
 @Getter
 @Setter
+@ApiModel(description = "角色权限关联")
 public class OrgRolePermission {
 
-    // 角色ID
     @Id
     private String roleId;
-
-    // 权限ID
     @Id
     private String permissionId;
 

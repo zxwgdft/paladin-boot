@@ -1,6 +1,5 @@
 package com.paladin.common.service.core;
 
-import com.paladin.common.core.upload.BigFileUploaderContainer;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.framework.io.TemporaryFileHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
 public class FileCleanService {
 
     @Autowired(required = false)
-    private BigFileUploaderContainer bigFileUploaderContainer;
-
-    @Autowired(required = false)
     private TemporaryFileHelper temporaryFileHelper;
 
     @Autowired
@@ -30,11 +26,6 @@ public class FileCleanService {
 
         log.info("开始清理无效文件");
 
-        // 大文件上传清理任务
-        if (bigFileUploaderContainer != null) {
-            bigFileUploaderContainer.cleanUploader(60);
-        }
-
         // 临时文件定时清理
         if (temporaryFileHelper != null) {
             temporaryFileHelper.clearTemporaryFile(30);
@@ -43,6 +34,5 @@ public class FileCleanService {
         // 清理附件
         sysAttachmentService.cleanAttachmentFile();
     }
-
 
 }

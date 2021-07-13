@@ -6,10 +6,11 @@ import com.paladin.common.core.export.ExportUtil;
 import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;
 import com.paladin.common.service.sys.dto.SysLoggerLoginQuery;
-import com.paladin.framework.common.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.service.QueryInputMethod;
-import com.paladin.framework.service.QueryOutputMethod;
+import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.service.PageResult;
+import com.paladin.framework.service.annotation.QueryInputMethod;
+import com.paladin.framework.service.annotation.QueryOutputMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,32 +30,32 @@ public class SysLoggerLoginController extends ControllerSupport {
         return "/common/sys/sys_logger_login_index";
     }
 
-    @RequestMapping(value = "/find/page", method = {RequestMethod.GET, RequestMethod.POST})
+    @PostMapping(value = "/find/page")
     @ResponseBody
     @QueryOutputMethod(queryClass = SysLoggerLoginQuery.class, paramIndex = 0)
-    public Object findPage(SysLoggerLoginQuery query) {
-        return R.success(sysLoggerLoginService.searchPage(query));
+    public PageResult<SysLoggerLogin> findPage(SysLoggerLoginQuery query) {
+        return sysLoggerLoginService.findPage(query);
     }
 
     @PostMapping(value = "/export")
     @ResponseBody
-    public Object export(@RequestBody SysLoggerLoginExportCondition condition) {
+    public String export(@RequestBody SysLoggerLoginExportCondition condition) {
         if (condition == null) {
-            return R.fail("导出失败：请求参数异常");
+            throw new BusinessException("导出失败：请求参数异常");
         }
         condition.sortCellIndex();
         SysLoggerLoginQuery query = condition.getQuery();
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.searchAll(query), SysLoggerLogin.class));
+                    return ExportUtil.export(condition, sysLoggerLoginService.findList(query), SysLoggerLogin.class);
                 } else if (condition.isExportPage()) {
-                    return R.success(ExportUtil.export(condition, sysLoggerLoginService.searchPage(query).getData(), SysLoggerLogin.class));
+                    return ExportUtil.export(condition, sysLoggerLoginService.findPage(query).getData(), SysLoggerLogin.class);
                 }
             }
-            return R.fail("导出数据失败：请求参数错误");
+            throw new BusinessException("导出数据失败：请求参数错误");
         } catch (IOException | ExcelWriteException e) {
-            return R.fail("导出数据失败：" + e.getMessage());
+            throw new BusinessException("导出数据失败", e);
         }
     }
 }

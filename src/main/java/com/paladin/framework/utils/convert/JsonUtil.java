@@ -1,6 +1,5 @@
 package com.paladin.framework.utils.convert;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -34,8 +33,7 @@ public class JsonUtil {
     }
 
     public static <T> List<T> parseJsonList(String json, Class<T> valueType) throws IOException {
-        return objectMapper.readValue(json, new TypeReference<List<T>>() {
-        });
+        return objectMapper.readerForListOf(valueType).readValue(json);
     }
 
 

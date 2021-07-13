@@ -1,55 +1,53 @@
 package com.paladin.common.service.sys;
 
-import com.paladin.common.PaladinProperties;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.paladin.common.mapper.sys.SysUserMapper;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.service.Condition;
-import com.paladin.framework.service.QueryType;
 import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.service.UserSession;
-import com.paladin.framework.utils.ValidateUtil;
+import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.framework.utils.secure.SecureUtil;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
-public class SysUserService extends ServiceSupport<SysUser> {
+public class SysUserService extends ServiceSupport<SysUser, SysUserMapper> {
 
-    @Resource
-    private PaladinProperties paladinProperties;
+    @Value("${paladin.default-password:1}")
+    private String defaultPassword;
 
-    @Autowired
-    private SysUserMapper sysUserMapper;
-
+    @Value("${paladin.default-password-random:false}")
+    private boolean randomPassword;
 
     private Pattern accountPattern = Pattern.compile("^\\w{6,30}$");
     private Pattern passwordPattern = Pattern.compile("^\\w{6,20}$");
 
+    // 获取默认密码（随机或固定）
+    private String getDefaultPassword() {
+        if (randomPassword) {
+            return UUIDUtil.createUUID().substring(0, 10);
+        }
+        return defaultPassword;
+    }
 
     /**
-     * 创建一个账号
-     *
-     * @param account
-     * @param userId
-     * @param type
-     * @return
+     * 创建一个账号，并返回密码
      */
-    public boolean createUserAccount(String account, String userId, Integer type) {
-
+    public String createUserAccount(String account, String userId, Integer type) {
         if (account == null || !validateAccount(account)) {
             throw new BusinessException("账号不符合规则或者已经存在该账号");
         }
 
-        String salt = SecureUtil.createSalte();
-        String password = paladinProperties.getDefaultPassword();
-        password = SecureUtil.createPassword(password, salt);
+        String salt = SecureUtil.createSalt();
+
+        String originPassword = getDefaultPassword();
+        String password = SecureUtil.hashByMD5(originPassword, salt);
 
         SysUser user = new SysUser();
         user.setAccount(account);
@@ -57,27 +55,24 @@ public class SysUserService extends ServiceSupport<SysUser> {
         user.setSalt(salt);
         user.setUserId(userId);
         user.setState(SysUser.STATE_ENABLED);
-        user.setType(type);
+        user.setUserType(type);
+        user.setCreateTime(new Date());
+        save(user);
 
-        return save(user);
+        return originPassword;
     }
 
 
     /**
      * 验证账号
-     *
-     * @param account
-     * @return true 可用/false 不可用
      */
     public boolean validateAccount(String account) {
-        if (!accountPattern.matcher(account).matches())
-            return false;
-
-        if (ValidateUtil.isValidatedAllIdcard(account)) {
+        if (!accountPattern.matcher(account).matches()) {
             return false;
         }
-
-        return searchCount(new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account)) == 0;
+        return searchCount(
+                new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account)
+        ) == 0;
     }
 
     /**
@@ -87,7 +82,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
      * @return
      */
     public SysUser getUserByAccount(String account) {
-        List<SysUser> users = searchAll(new Condition(SysUser.FIELD_ACCOUNT, QueryType.EQUAL, account));
+        List<SysUser> users = findList(new LambdaQueryWrapper<SysUser>().eq(SysUser::getAccount, account));
         return (users != null && users.size() > 0) ? users.get(0) : null;
     }
 
@@ -98,7 +93,7 @@ public class SysUserService extends ServiceSupport<SysUser> {
      * @param oldPassword
      * @return
      */
-    public boolean updateSelfPassword(String newPassword, String oldPassword) {
+    public void updateSelfPassword(String newPassword, String oldPassword) {
 
         if (newPassword == null || !passwordPattern.matcher(newPassword).matches()) {
             throw new BusinessException("密码不符合规则");
@@ -111,41 +106,38 @@ public class SysUserService extends ServiceSupport<SysUser> {
             throw new BusinessException("账号异常");
         }
 
-        oldPassword = SecureUtil.createPassword(oldPassword, user.getSalt());
+        oldPassword = SecureUtil.hashByMD5(oldPassword, user.getSalt());
         if (!oldPassword.equals(user.getPassword())) {
             throw new BusinessException("原密码不正确");
         }
 
-        String salt = SecureUtil.createSalte();
-        newPassword = SecureUtil.createPassword(newPassword, salt);
+        String salt = SecureUtil.createSalt();
+        newPassword = SecureUtil.hashByMD5(newPassword, salt);
 
         SysUser updateUser = new SysUser();
         updateUser.setId(user.getId());
         updateUser.setSalt(salt);
         updateUser.setPassword(newPassword);
-        updateUser.setIsFirstLogin(0);// 密码强制修改后该状态值设为0
         updateUser.setUpdateTime(new Date());
 
-        boolean success = updateSelective(updateUser);
-
-        if (success) {
+        if (updateSelection(updateUser)) {
             SecurityUtils.getSubject().logout();
         }
 
-        return success;
+        throw new BusinessException("密码修改失败");
     }
 
-    public boolean updateUserAccount(String userId, String originAccount, String newAccount) {
-        return sysUserMapper.updateAccount(userId, originAccount, newAccount) > 0;
+
+    /**
+     * 更新个人用户账号
+     */
+    public void updateUserAccount(String userId, String newAccount) {
+        getSqlMapper().updateAccount(userId, newAccount);
     }
 
-    public void updateLastTime(String account) {
-        // 不更新update_time
-        SysUser sysUser = getUserByAccount(account);
-        SysUser user = new SysUser();
-        user.setId(sysUser.getId());
-        user.setLastLoginTime(new Date());
-        updateSelective(user);
+
+    public void updateLastLoginTime(String userId) {
+        getSqlMapper().updateLastLoginTime(userId);
     }
 
 }

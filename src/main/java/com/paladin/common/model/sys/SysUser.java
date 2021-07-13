@@ -1,53 +1,57 @@
 package com.paladin.common.model.sys;
 
-import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.mybatis.GenIdImpl;
-import lombok.Getter;
-import lombok.Setter;
-import tk.mybatis.mapper.annotation.KeySql;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-@Getter
-@Setter
-public class SysUser extends BaseModel implements Serializable {
-
-    private static final long serialVersionUID = -1534400185542562200L;
+@Data
+@ApiModel(description = "账号")
+public class SysUser implements Serializable {
 
     /**
      * 启用状态
      */
-    public final static Integer STATE_ENABLED = 1;
+    public final static int STATE_ENABLED = 1;
     /**
      * 停用状态
      */
-    public final static Integer STATE_DISABLED = 0;
+    public final static int STATE_DISABLED = 0;
 
     /**
      * 管理员账号
      */
-    public final static Integer TYPE_ADMIN = 1;
+    public final static Integer USER_TYPE_ADMIN = 1;
+
     /**
-     * 用户账号
+     * 人员账号
      */
-    public final static Integer TYPE_USER = 3;
+    public final static Integer USER_TYPE_PERSONNEL = 3;
 
 
-    public final static String FIELD_ACCOUNT = "account";
-
-    @Id
-    @KeySql(genId = GenIdImpl.class)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
+    @ApiModelProperty("账号")
     private String account;
+    @ApiModelProperty("密码")
     private String password;
+    @ApiModelProperty("盐")
     private String salt;
+    @ApiModelProperty("关联人员ID")
     private String userId;
+    @ApiModelProperty("账号类型")
+    private Integer userType;
+    @ApiModelProperty("状态")
     private Integer state;
-    private Integer type;
+    @ApiModelProperty("最近一次登录时间")
     private Date lastLoginTime;
-    private Integer isFirstLogin = 1;
-
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+    @ApiModelProperty("更新时间")
+    private Date updateTime;
 
 }

@@ -2,9 +2,8 @@ package com.paladin.common.core.log;
 
 import com.paladin.common.model.sys.SysLoggerOperate;
 import com.paladin.common.service.sys.SysLoggerOperateService;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
 import com.paladin.framework.service.UserSession;
-import com.paladin.framework.utils.UUIDUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -43,7 +42,6 @@ public class OperationLogInterceptor {
         UserSession session = UserSession.getCurrentUserSession();
 
         SysLoggerOperate operate = new SysLoggerOperate();
-        operate.setId(UUIDUtil.createUUID());
         operate.setClassName(cut(className, 100));
         operate.setMethodName(methodName);
         operate.setModelName(modelName);

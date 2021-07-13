@@ -32,15 +32,15 @@ public class DemoUserSessionFactory implements UserSessionFactory {
             throw new UnknownAccountException("账号不存在");
         }
 
-        int type = sysUser.getType();
+        int type = sysUser.getUserType();
         int state = sysUser.getState();
 
         if (state == SysUser.STATE_ENABLED) {
-            if (type == SysUser.TYPE_ADMIN) {
+            if (type == SysUser.USER_TYPE_ADMIN) {
                 return new DemoUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount());
             }
 
-            if (type == SysUser.TYPE_USER) {
+            if (type == SysUser.USER_TYPE_PERSONNEL) {
                 String userId = sysUser.getUserId();
                 OrgPersonnel personnel = personnelService.get(userId);
                 if (personnel != null) {

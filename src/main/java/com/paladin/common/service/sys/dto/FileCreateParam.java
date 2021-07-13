@@ -2,7 +2,6 @@ package com.paladin.common.service.sys.dto;
 
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.utils.convert.Base64Util;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,37 +14,42 @@ import java.io.InputStream;
 @Setter
 public class FileCreateParam {
 
-    @ApiModelProperty("文件名称")
+    // 文件名称
     private String filename;
-    @ApiModelProperty("文件大小")
+    // 文件大小
     private long size;
-    @ApiModelProperty("文件类型")
-    private Integer type;
-    @ApiModelProperty("文件输入流")
+    // 文件输入流
     private InputStream input;
 
+    // 图片压缩参数
 
-    @ApiModelProperty("是否压缩")
+    // 是否压缩
     private boolean needCompress;
 
-    // 修改原图参数
-    @ApiModelProperty("图片压缩后宽度")
+    // 图片压缩后宽度
     private Integer width;
-    @ApiModelProperty("图片压缩后高度")
+    // 图片压缩后高度
     private Integer height;
-    @ApiModelProperty("图片压缩规模")
+    // 图片压缩规模
     private Double scale;
-    @ApiModelProperty("图片压缩质量")
+    // 图片压缩质量
     private Double quality;
 
-    // 修改缩略图参数
-    @ApiModelProperty("缩略图宽度")
+    // 缩略图参数
+
+    // 是否创建图片缩略图
+    private boolean needThumbnail;
+
+    // 缩略图宽度
     private Integer thumbnailWidth;
-    @ApiModelProperty("缩略图高度")
+    // 缩略图高度
     private Integer thumbnailHeight;
 
+    public FileCreateParam(MultipartFile file) {
+        this(file, null);
+    }
 
-    public void setFileContent(MultipartFile file) {
+    public FileCreateParam(MultipartFile file, String filename) {
         if (filename == null || filename.length() == 0) {
             filename = file.getOriginalFilename();
             // IE文件名会包含路径，这里需要处理掉
@@ -59,6 +63,8 @@ public class FileCreateParam {
                 filename = filename.substring(i + 1);
             }
         }
+
+        this.filename = filename;
         this.size = file.getSize();
         try {
             this.input = file.getInputStream();
@@ -67,9 +73,10 @@ public class FileCreateParam {
         }
     }
 
-    public void setFileContent(String base64Str) {
+    public FileCreateParam(String base64Str, String filename) {
         byte[] data = Base64Util.decode(base64Str);
         this.size = data.length;
+        this.filename = (filename == null || filename.length() == 0) ? "未命名" : filename;
         this.input = new ByteArrayInputStream(data);
     }
 

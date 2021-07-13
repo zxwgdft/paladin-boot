@@ -4,15 +4,15 @@ import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.service.core.FileStoreService;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
-import com.paladin.framework.spring.SpringContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FileResourceContainer implements SpringContainer {
+public class FileResourceContainer {
 
     //TODO 在这里可以做缓存处理，从内存或redis获取
     //TODO 可以修改为文件服务器获取，在这里返回的URL修改为文件服务器地址（需要在SysAttachmentService保存文件中做相应修改）
@@ -25,9 +25,9 @@ public class FileResourceContainer implements SpringContainer {
 
     private static FileResourceContainer container;
 
-    public boolean initialize() {
+    @PostConstruct
+    public void initialize() {
         container = this;
-        return true;
     }
 
     public static List<FileResource> getFileResources(String... ids) {
@@ -76,6 +76,5 @@ public class FileResourceContainer implements SpringContainer {
 
         return fr;
     }
-
 
 }

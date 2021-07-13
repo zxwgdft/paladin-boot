@@ -1,7 +1,7 @@
 package com.paladin.data.mapper;
 
 import com.paladin.data.model.DBConnection;
-import com.paladin.framework.mybatis.CustomMapper;
+import com.paladin.framework.service.mybatis.CommonMapper;
 
-public interface DBConnectionMapper extends CustomMapper<DBConnection> {
+public interface DBConnectionMapper extends CommonMapper<DBConnection> {
 }

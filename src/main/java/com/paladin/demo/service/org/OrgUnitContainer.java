@@ -1,88 +1,37 @@
 package com.paladin.demo.service.org;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paladin.demo.model.org.OrgUnit;
-import com.paladin.framework.service.DataContainer;
-import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 单位容器，缓存了所有单位信息，并进行了一些封装
+ * 单位容器
  *
  * @author TontoZhou
  * @since 2020/3/9
  */
 @Slf4j
-@Component
-public class OrgUnitContainer implements DataContainer {
+public class OrgUnitContainer {
 
-    @Autowired
-    private OrgUnitService orgUnitService;
+    private Map<String, Unit> unitMap;
+    private List<Unit> rootList;
 
-    private static Map<String, Unit> unitMap;
-    private static List<Unit> rootList;
-
-    public void load() {
-
-        List<OrgUnit> orgUnits = orgUnitService.findAll();
-
-        Map<String, Unit> unitMap = new HashMap<>();
-        List<Unit> rootList = new ArrayList<>();
-
-        if (orgUnits != null && orgUnits.size() > 0) {
-
-            for (OrgUnit orgUnit : orgUnits) {
-                Unit unit = SimpleBeanCopyUtil.simpleCopy(orgUnit, Unit.class);
-                unit.setChildren(new ArrayList<>());
-                unitMap.put(unit.getId(), unit);
-            }
-
-            for (OrgUnit orgUnit : orgUnits) {
-                String id = orgUnit.getId();
-                String parentId = orgUnit.getParentId();
-
-                Unit unit = unitMap.get(id);
-                Unit parent = unitMap.get(parentId);
-                if (parent == null) {
-                    rootList.add(unit);
-                } else {
-                    unit.setParent(parent);
-                    parent.getChildren().add(unit);
-                }
-            }
-        }
-
-        for (Unit unit : rootList) {
-            initSelfAndChildrenIds(unit);
-        }
-
-        OrgUnitContainer.unitMap = Collections.unmodifiableMap(unitMap);
-        OrgUnitContainer.rootList = Collections.unmodifiableList(rootList);
+    public OrgUnitContainer(Map<String, Unit> unitMap, List<Unit> rootList) {
+        this.unitMap = unitMap;
+        this.rootList = rootList;
     }
 
-    private List<String> initSelfAndChildrenIds(Unit unit) {
-        List<String> ids = new ArrayList<>(1 + unit.getChildren().size());
-        ids.add(unit.getId());
-        for (Unit child : unit.getChildren()) {
-            ids.addAll(initSelfAndChildrenIds(child));
-        }
-        unit.setSelfAndChildrenIds(ids);
-        return ids;
-    }
-    
     /**
      * 获取单位
      *
      * @param id
      * @return
      */
-    public static Unit getUnit(String id) {
+    public Unit getUnit(String id) {
         return unitMap.get(id);
     }
 
@@ -92,7 +41,7 @@ public class OrgUnitContainer implements DataContainer {
      * @param id
      * @return
      */
-    public static String getUnitName(String id) {
+    public String getUnitName(String id) {
         Unit unit = unitMap.get(id);
         return unit == null ? "" : unit.getName();
     }
@@ -102,7 +51,7 @@ public class OrgUnitContainer implements DataContainer {
      *
      * @return
      */
-    public static List<Unit> getUnitTree() {
+    public List<Unit> getUnitTree() {
         return rootList;
     }
 

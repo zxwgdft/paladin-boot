@@ -1,35 +1,32 @@
 package com.paladin.common.model.org;
 
-import com.paladin.framework.common.BaseModel;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.paladin.framework.api.BaseModel;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-
 @Getter
 @Setter
+@ApiModel(description = "角色")
 public class OrgRole extends BaseModel {
 
-    public static final String COLUMN_FIELD_IS_DEFAULT = "isDefault";
-    public static final String COLUMN_FIELD_ROLE_LEVEL = "roleLevel";
-
-    @Id
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
-    // 角色名称
+    @ApiModelProperty("角色名称")
     private String roleName;
 
-    // 角色等级
+    @ApiModelProperty("角色等级")
     private Integer roleLevel;
 
-    // 角色说明
+    @ApiModelProperty("角色说明")
     private String roleDesc;
 
-    // 是否默认角色（1是0否）
-    private Integer isDefault;
-
-    // 是否启用 1是0否
-    private Integer enable;
+    @ApiModelProperty("是否启用")
+    private Boolean enable;
 
 
 }

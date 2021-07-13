@@ -2,15 +2,11 @@ package com.paladin.common.model.sys;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
 public class SysConstant {
-
-    public final static String COLUMN_FIELD_ORDER_NO = "orderNo";
-    public final static String COLUMN_FIELD_TYPE = "type";
 
     @Id
     private String type;

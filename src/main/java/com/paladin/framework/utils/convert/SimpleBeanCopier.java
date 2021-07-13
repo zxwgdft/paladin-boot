@@ -1,6 +1,5 @@
 package com.paladin.framework.utils.convert;
 
-import com.paladin.framework.utils.structure.DoubleHashMap;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
 

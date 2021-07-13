@@ -1,18 +1,17 @@
 package com.paladin.demo.model.org;
 
-import com.paladin.framework.common.BaseModel;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.paladin.framework.api.DeletedBaseModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-
 @Getter
 @Setter
-public class OrgUnit extends BaseModel {
+public class OrgUnit extends DeletedBaseModel {
 
-    public static final String FIELD_ORDER_NO = "orderNo";
     // 主键
-    @Id
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     // 单位名称

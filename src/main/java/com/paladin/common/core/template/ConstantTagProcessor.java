@@ -3,6 +3,7 @@ package com.paladin.common.core.template;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paladin.common.core.ConstantsContainer;
+import com.paladin.common.core.cache.DataCacheHelper;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractElementTagProcessor;
@@ -31,8 +32,9 @@ public class ConstantTagProcessor extends AbstractElementTagProcessor {
         String html = "";
         final String enumcode = tag.getAttributeValue("enumcode");
         if (enumcode != null && enumcode.length() > 0) {
+            ConstantsContainer constantsContainer = DataCacheHelper.getData(ConstantsContainer.class);
             String[] codes = enumcode.split(",");
-            Object map = ConstantsContainer.getTypeConstants(codes);
+            Object map = constantsContainer.getTypeConstants(codes);
             if (map != null) {
                 try {
                     html = objectMapper.writeValueAsString(map);

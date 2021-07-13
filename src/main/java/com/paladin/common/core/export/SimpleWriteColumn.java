@@ -1,6 +1,8 @@
 package com.paladin.common.core.export;
 
 import com.paladin.common.core.ConstantsContainer;
+import com.paladin.common.core.cache.DataCacheHelper;
+import com.paladin.framework.cache.DataCacheWrapper;
 import com.paladin.framework.excel.write.WriteColumn;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
@@ -16,8 +18,11 @@ public class SimpleWriteColumn extends WriteColumn {
     private boolean isMap = false;
     private EntityField entityField;
 
-    private SimpleWriteColumn() {
+    private DataCacheWrapper<ConstantsContainer> dataCacheWrapper;
 
+    private SimpleWriteColumn() {
+        // 在重复使用常量过程中减少检索（减少检索数据缓存包装类次数）
+        dataCacheWrapper = DataCacheHelper.getDataCacheWrapper(ConstantsContainer.class);
     }
 
     /**
@@ -86,6 +91,9 @@ public class SimpleWriteColumn extends WriteColumn {
             return getDefaultEmptyValue();
         }
         String result = "";
+        ConstantsContainer constantsContainer = dataCacheWrapper.getData();
+        if (constantsContainer == null) return value.toString();
+
         if (isMultiple()) {
             if (value instanceof String) {
                 String strValue = (String) value;
@@ -93,7 +101,7 @@ public class SimpleWriteColumn extends WriteColumn {
                 if (strValue.length() > 0) {
                     String[] vals = strValue.split(",");
                     for (String val : vals) {
-                        String name = ConstantsContainer.getTypeValue(getEnumType(), val);
+                        String name = constantsContainer.getTypeValue(getEnumType(), val);
                         if (name != null && name.length() > 0) {
                             result += name + ",";
                         }
@@ -109,7 +117,7 @@ public class SimpleWriteColumn extends WriteColumn {
 
                     Collection vals = (Collection) value;
                     for (Object val : vals) {
-                        String name = ConstantsContainer.getTypeValue(getEnumType(), (String) val);
+                        String name = constantsContainer.getTypeValue(getEnumType(), (String) val);
                         if (name != null && name.length() > 0) {
                             result += name + ",";
                         }
@@ -121,7 +129,7 @@ public class SimpleWriteColumn extends WriteColumn {
                     int len = Array.getLength(value);
                     for (int i = 0; i < len; i++) {
                         Object val = Array.get(value, i);
-                        String name = ConstantsContainer.getTypeValue(getEnumType(), (String) val);
+                        String name = constantsContainer.getTypeValue(getEnumType(), (String) val);
                         if (name != null && name.length() > 0) {
                             result += name + ",";
                         }
@@ -129,7 +137,7 @@ public class SimpleWriteColumn extends WriteColumn {
                 }
             }
         } else {
-            return ConstantsContainer.getTypeValue(getEnumType(), value.toString());
+            return constantsContainer.getTypeValue(getEnumType(), value.toString());
         }
 
         return result;

@@ -1,16 +1,16 @@
 package com.paladin.common.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paladin.common.core.permission.Menu;
-import com.paladin.common.core.permission.Role;
-import com.paladin.common.core.permission.RoleContainer;
-import com.paladin.framework.exception.BusinessException;
+import com.paladin.common.core.cache.DataCacheHelper;
+import com.paladin.common.core.security.*;
 import com.paladin.framework.service.UserSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 通用用户会话信息
@@ -43,7 +43,7 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
      */
     public CommonUserSession(String userId, String userName, String account) {
         super(userId, userName, account);
-        this.roleLevel = RoleContainer.ROLE_LEVEL_SYS_ADMIN;
+        this.roleLevel = 9999;
         this.isSystemAdmin = true;
     }
 
@@ -68,13 +68,14 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
     protected void setRoleId(String... roleIds) {
         List<String> roleIdList = new ArrayList<>(roleIds.length);
         int roleLevel = 0;
+        RoleContainer roleContainer = DataCacheHelper.getData(RoleContainer.class);
         for (int i = 0; i < roleIds.length; i++) {
             String roleId = roleIds[i];
             if (roleId != null) {
-                Role role = RoleContainer.getRole(roleId);
+                Role role = roleContainer.getRole(roleId);
                 if (role != null) {
                     roleIdList.add(roleId);
-                    roleLevel = Math.max(roleLevel, role.getRoleLevel());
+                    roleLevel = Math.max(roleLevel, role.getLevel());
                 }
             }
         }
@@ -97,32 +98,13 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
      *
      * @return
      */
-    public List<Menu> getMenuResources() {
+    public Collection<Menu> getMenuResources() {
+        MenuContainer menuContainer = DataCacheHelper.getData(MenuContainer.class);
+        if (menuContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
-            return RoleContainer.getSystemAdminRole().getRootMenus();
+            return menuContainer.getAdminMenus();
         }
-
-        if (roleIds.size() == 1) {
-            Role role = RoleContainer.getRole(roleIds.get(0));
-            if (role == null) {
-                throw new BusinessException("登录用户角色异常");
-            }
-            return role.getRootMenus();
-        }
-
-        ArrayList<Role> roles = new ArrayList<>(roleIds.size());
-        for (String rid : roleIds) {
-            Role role = RoleContainer.getRole(rid);
-            if (role != null) {
-                roles.add(role);
-            }
-        }
-
-        if (roles.size() == 0) {
-            throw new BusinessException("登录用户角色异常");
-        }
-
-        return RoleContainer.getMultiRoleMenu(roles);
+        return menuContainer.getRoleMenus(roleIds);
     }
 
     @Override
@@ -140,75 +122,27 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
 
     @Override
     @JsonIgnore
-    public Collection<Permission> getObjectPermissions() {
+    public Collection getObjectPermissions() {
+        PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
+        if (permissionContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
-            return (List) RoleContainer.getSystemAdminRole().getPermissions();
+            return permissionContainer.getAdminPermission();
         }
 
-        if (roleIds.size() == 1) {
-            Role role = RoleContainer.getRole(roleIds.get(0));
-            if (role == null) {
-                return null;
-            } else {
-                return (List) role.getPermissions();
-            }
-        }
-
-        ArrayList<Role> roles = new ArrayList<>(roleIds.size());
-        for (String rid : roleIds) {
-            Role role = RoleContainer.getRole(rid);
-            if (role != null) {
-                roles.add(role);
-            }
-        }
-
-        if (roles.size() == 0) {
-            return null;
-        }
-
-        return (List) RoleContainer.getMultiRolePermission(roles);
+        return permissionContainer.getPermissionByRole(roleIds);
     }
 
     /**
      * 获取所有权限的CODE集合，可用于简单方式判断权限
      */
     @JsonIgnore
-    public Set<String> getPermissionCodes() {
+    public Collection<String> getPermissionCodes() {
+        PermissionContainer permissionContainer = DataCacheHelper.getData(PermissionContainer.class);
+        if (permissionContainer == null) return Collections.EMPTY_LIST;
         if (isSystemAdmin) {
-            return RoleContainer.getSystemAdminRole().getPermissionCodes();
+            return permissionContainer.getAdminPermissionCode();
         }
-
-        if (roleIds.size() == 1) {
-            Role role = RoleContainer.getRole(roleIds.get(0));
-            if (role == null) {
-                return null;
-            } else {
-                return role.getPermissionCodes();
-            }
-        }
-
-
-        Set<String> codeSet = new HashSet<>();
-        for (String rid : roleIds) {
-            Role role = RoleContainer.getRole(rid);
-            if (role != null) {
-                codeSet.addAll(role.getPermissionCodes());
-            }
-        }
-
-        return codeSet;
-    }
-
-
-    @Override
-    @JsonIgnore
-    public Object getUserForView() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("username", getUserName());
-        map.put("account", getAccount());
-        map.put("roleLevel", getRoleLevel());
-        map.put("isSystemAdmin", isSystemAdmin);
-        return map;
+        return permissionContainer.getPermissionCodeByRole(roleIds);
     }
 
     @Override

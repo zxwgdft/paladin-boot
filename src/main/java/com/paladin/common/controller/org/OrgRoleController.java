@@ -1,26 +1,26 @@
 package com.paladin.common.controller.org;
 
 import com.paladin.common.core.ControllerSupport;
+import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.OrgPermissionService;
 import com.paladin.common.service.org.OrgRolePermissionService;
 import com.paladin.common.service.org.OrgRoleService;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
-import com.paladin.common.service.org.vo.OrgRoleVO;
-import com.paladin.framework.common.R;
+import com.paladin.framework.api.R;
+import com.paladin.framework.service.PageResult;
 import com.paladin.framework.utils.UUIDUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ApiIgnore
@@ -37,30 +37,30 @@ public class OrgRoleController extends ControllerSupport {
     @Autowired
     private OrgRolePermissionService orgRolePermissionService;
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public String index() {
         return "/common/org/role_index";
     }
 
-    @RequestMapping("/find/page")
+    @PostMapping("/find/page")
     @ResponseBody
-    public Object findPage(OrgRoleQueryDTO query) {
-        return R.success(orgRoleService.searchPage(query));
+    public PageResult<OrgRole> findPage(OrgRoleQueryDTO query) {
+        return orgRoleService.findPage(query);
     }
 
-    @RequestMapping("/find/all")
+    @PostMapping("/find/all")
     @ResponseBody
-    public Object findAll(OrgRoleQueryDTO query) {
-        return R.success(orgRoleService.searchAll(query));
+    public List<OrgRole> findAll(OrgRoleQueryDTO query) {
+        return orgRoleService.findList(query);
     }
 
-    @RequestMapping("/get")
+    @GetMapping("/get")
     @ResponseBody
-    public Object getDetail(@RequestParam String id) {
-        return R.success(beanCopy(orgRoleService.get(id), new OrgRoleVO()));
+    public OrgRole getDetail(@RequestParam String id) {
+        return orgRoleService.get(id);
     }
 
-    @RequestMapping("/add")
+    @GetMapping("/add")
     public String addInput() {
         return "/common/org/role_add";
     }
@@ -71,54 +71,44 @@ public class OrgRoleController extends ControllerSupport {
         return "/common/org/role_detail";
     }
 
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @ResponseBody
     @RequiresPermissions("sys:role:save")
-    public Object save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return validErrorHandler(bindingResult);
-        }
-        String id = UUIDUtil.createUUID();
-        orgRoleDTO.setId(id);
-        if (orgRoleService.saveRole(orgRoleDTO)) {
-            return R.success(beanCopy(orgRoleService.get(id), new OrgRoleVO()));
-        }
-        return R.fail("保存失败");
+    public R save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
+        validErrorHandler(bindingResult);
+        orgRoleService.saveRole(orgRoleDTO);
+        return R.success();
     }
 
-    @RequestMapping("/update")
+    @PostMapping("/update")
     @ResponseBody
     @RequiresPermissions("sys:role:update")
-    public Object update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return validErrorHandler(bindingResult);
-        }
-        String id = orgRoleDTO.getId();
-        if (orgRoleService.updateRole(orgRoleDTO)) {
-            return R.success(beanCopy(orgRoleService.get(id), new OrgRoleVO()));
-        }
-        return R.fail("更新失败");
+    public R update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
+        validErrorHandler(bindingResult);
+        orgRoleService.updateRole(orgRoleDTO);
+        return R.success();
     }
 
-    @RequestMapping("/grant/index")
+    @GetMapping("/grant/index")
     public String grantAuthorizationInput(@RequestParam String id, Model model) {
         model.addAttribute("roleId", id);
         return "/common/org/role_grant";
     }
 
-    @RequestMapping("/grant/find/permission")
+    @PostMapping("/grant/find/permission")
     @ResponseBody
     public Object getGrantAuthorization(@RequestParam String id, Model model) {
         Map<String, Object> result = new HashMap<>();
         result.put("permissions", orgPermissionService.findGrantablePermission());
         result.put("hasPermissions", orgRolePermissionService.getPermissionByRole(id));
-        return R.success(result);
+        return result;
     }
 
-    @RequestMapping("/grant")
+    @PostMapping("/grant")
     @ResponseBody
     @RequiresPermissions("sys:role:grant")
-    public Object grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
-        return orgRolePermissionService.grantAuthorization(roleId, permissionIds) ? R.success() : R.fail("授权失败");
+    public R grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
+        orgRolePermissionService.grantAuthorization(roleId, permissionIds);
+        return R.success();
     }
 }

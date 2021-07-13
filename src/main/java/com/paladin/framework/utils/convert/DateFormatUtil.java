@@ -1,7 +1,6 @@
 package com.paladin.framework.utils.convert;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

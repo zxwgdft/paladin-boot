@@ -2,7 +2,6 @@ package com.paladin.data.generate.build;
 
 import com.paladin.data.generate.GenerateBuilderContainer;
 import com.paladin.data.generate.GenerateTableOption;
-
 import com.paladin.framework.service.ServiceSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -10,38 +9,39 @@ import org.springframework.stereotype.Service;
 @Component
 public class ServiceClassBuilder extends SpringBootClassBuilder {
 
-	public String buildContent(GenerateTableOption tableOption) {
+    public String buildContent(GenerateTableOption tableOption) {
 
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-		sb.append("package ").append(getClassPackage(tableOption)).append(";\n\n");
+        sb.append("package ").append(getClassPackage(tableOption)).append(";\n\n");
 
-		sb.append("import ").append(Service.class.getName()).append(";\n\n");
+        sb.append("import ").append(Service.class.getName()).append(";\n\n");
 
-		sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL, tableOption)).append(";\n");
-		sb.append("import ").append(ServiceSupport.class.getName()).append(";\n\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MODEL, tableOption)).append(";\n");
+        sb.append("import ").append(GenerateBuilderContainer.getClassImportPackage(BuilderType.MAPPER, tableOption)).append(";\n");
+        sb.append("import ").append(ServiceSupport.class.getName()).append(";\n\n");
 
-		sb.append("@Service\n");
-		sb.append("public class ").append(tableOption.getModelName()).append("Service extends ").append(ServiceSupport.class.getSimpleName()).append("<")
-				.append(tableOption.getModelName()).append("> {\n");
-		sb.append("\n");
-		sb.append("}");
+        sb.append("@Service\n");
+        sb.append("public class ").append(tableOption.getModelName()).append("Service extends ").append(ServiceSupport.class.getSimpleName()).append("<")
+                .append(tableOption.getModelName()).append(", ").append(GenerateBuilderContainer.getClassName(BuilderType.MAPPER, tableOption)).append("> {\n");
+        sb.append("\n");
+        sb.append("}");
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	@Override
-	public BuilderType getBuilderType() {
-		return BuilderType.SERVICE;
-	}
+    @Override
+    public BuilderType getBuilderType() {
+        return BuilderType.SERVICE;
+    }
 
-	@Override
-	public String getPackage(GenerateTableOption tableOption) {
-		return "service";
-	}
+    @Override
+    public String getPackage(GenerateTableOption tableOption) {
+        return "service";
+    }
 
-	@Override
-	public String getClassName(GenerateTableOption tableOption) {
-		return tableOption.getModelName() + "Service";
-	}
+    @Override
+    public String getClassName(GenerateTableOption tableOption) {
+        return tableOption.getModelName() + "Service";
+    }
 }

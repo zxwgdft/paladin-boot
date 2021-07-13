@@ -1,6 +1,6 @@
 package com.paladin.common.config;
 
-import com.paladin.framework.GlobalProperties;
+import com.paladin.framework.constants.GlobalProperties;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.spring.DevelopCondition;
 import com.paladin.framework.web.convert.DateFormatter;

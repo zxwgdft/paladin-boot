@@ -1,8 +1,5 @@
 package com.paladin.framework.shiro.filter;
 
-import com.paladin.framework.common.HttpCode;
-import com.paladin.framework.common.R;
-import com.paladin.framework.service.UserSession;
 import com.paladin.framework.utils.WebUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
@@ -10,6 +7,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -44,7 +42,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
             }
 
             if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-                WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, "未登录或会话超时"));
+                WebUtil.sendJsonByCors((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, "未登录或会话超时");
             } else {
                 saveRequestAndRedirectToLogin(request, response);
             }
@@ -55,8 +53,7 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
 
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, R.success(UserSession.getCurrentUserSession().getUserForView()));
-            return false;
+            return true;
         } else {
             issueSuccessRedirect(request, response);
             return false;
@@ -83,11 +80,11 @@ public class PaladinFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         String errorMsg = exceptionMessageMap.get(e.getClass());
         if (errorMsg == null) {
-            errorMsg = e.getMessage();
+            errorMsg = "登录异常，请联系管理员";
         }
 
         if (WebUtil.isAjaxRequest((HttpServletRequest) request)) {
-            WebUtil.sendJsonByCors((HttpServletResponse) response, R.fail(HttpCode.UNAUTHORIZED, errorMsg));
+            WebUtil.sendJsonByCors((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, errorMsg);
             return false;
         } else {
             setFailureAttribute(request, e);

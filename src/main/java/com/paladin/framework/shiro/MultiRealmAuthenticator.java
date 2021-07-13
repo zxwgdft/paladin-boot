@@ -19,6 +19,7 @@ import java.util.Collection;
 @Slf4j
 public class MultiRealmAuthenticator extends ModularRealmAuthenticator {
 
+
     /**
      * 重写该方法保证异常正确抛出,需要多个Realm支持不同Token，否则会出现异常覆盖
      */

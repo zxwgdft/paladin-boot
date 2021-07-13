@@ -1,24 +1,23 @@
 package com.paladin.demo.model.org;
 
-import com.paladin.framework.common.BaseModel;
-import com.paladin.framework.service.IgnoreSelection;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.paladin.framework.api.BaseModel;
+import com.paladin.framework.api.DeletedBaseModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
 import java.util.Date;
 
 @Getter
 @Setter
-public class OrgPersonnel extends BaseModel {
+public class OrgPersonnel extends DeletedBaseModel {
 
+    public static final String FIELD_UNIT_ID = "unitId";
     public static final String FIELD_IDENTIFICATION_NO = "identificationNo";
-
-    public final static String FIELD_UNIT_ID = "unitId";
-    public static final String FIELD_ID = "id";
-
     //
-    @Id
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     // 所属机构
@@ -55,11 +54,11 @@ public class OrgPersonnel extends BaseModel {
     private String roles;
 
     // 简历
-    @IgnoreSelection
+    @TableField(select = false)
     private String resume;
 
     // 附件
-    @IgnoreSelection
+    @TableField(select = false)
     private String attachment;
 
 }
