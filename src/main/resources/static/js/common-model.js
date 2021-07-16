@@ -245,7 +245,7 @@ function generateEditFormHtml(options, hide) {
     if (typeof options.generateFormButtonBar === 'function') {
         html += options.generateFormButtonBar();
     } else if (formButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
+        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle + '">\n';
         html += '<div class="btn-group">\n';
 
         formButtonBar.forEach(function (a) {
@@ -403,7 +403,7 @@ function generateViewFormHtml(options) {
     });
 
     if (viewButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
+        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle + '">\n';
         html += '<div class="btn-group">\n';
 
         viewButtonBar.forEach(function (a) {
@@ -1426,7 +1426,6 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 noneSelectedText: column.noneSelectedText || '没有选中任何项', //多选未选中任意选项提示
             });
         }
-        ;
 
         if (model.status == 'view') {
             this.fillView(column, model.data, model);
@@ -1509,6 +1508,33 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 }
             }
         }
+    },
+    hideEdit: function (column, model, target) {
+        // 隐藏编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (d.hasClass("dropdown")) {
+            d = d.parent();
+        }
+        var f = d.parent();
+        d.hide();
+        d.prev().hide();
+        if (f.children(":visible").length == 0) {
+            f.hide();
+        }
+    },
+    showEdit: function (column, model, target) {
+        // 显示编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (d.hasClass("dropdown")) {
+            d = d.parent();
+        }
+        d.show();
+        d.prev().show();
+        d.parent().show();
     },
     generateEditFormHtml: function (column, isFirst, options) {
         var labelSize = column.labelSize || options.labelSize,
@@ -1935,9 +1961,9 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
                     });
                     fileCount++;
                 });
-                model.formBody.attr('enctype','multipart/form-data');
+                model.formBody.attr('enctype', 'multipart/form-data');
             } else {
-                model.formBody.attr('enctype','application/x-www-form-urlencoded');
+                model.formBody.attr('enctype', 'application/x-www-form-urlencoded');
             }
 
 
