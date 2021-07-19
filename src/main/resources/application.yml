@@ -4,8 +4,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
+    date-format: com.paladin.framework.web.convert.AutoDateFormat
   mvc:
     format:
       date: yyyy-MM-dd HH:mm:ss
