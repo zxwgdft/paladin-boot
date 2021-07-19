@@ -29,4 +29,14 @@ public class AutoDateFormat extends SimpleDateFormat {
             return shortDateFormat.parse(source, pos);
         }
     }
+
+    @Override
+    public Object clone() {
+        // 因为线程不安全，所以在每次处理时会克隆一个对象进行解析
+        AutoDateFormat other = (AutoDateFormat) super.clone();
+        other.shortDateFormat = (SimpleDateFormat) shortDateFormat.clone();
+        return other;
+    }
+
+
 }
