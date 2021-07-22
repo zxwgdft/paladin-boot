@@ -1,7 +1,6 @@
 package com.paladin.common.core.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.paladin.framework.utils.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @Setter
 public class Menu implements Serializable {
 
-    private String id;
+    private int id;
 
     private String url;
 
@@ -21,9 +20,11 @@ public class Menu implements Serializable {
 
     private String icon;
 
-    private String parentId;
+    private Integer parentId;
 
     private boolean isLeaf;
+
+    private int orderNo;
 
     @JsonIgnore
     private Menu parent;
@@ -33,13 +34,13 @@ public class Menu implements Serializable {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj instanceof Menu) {
-            return StringUtil.equals(id, ((Menu) obj).id);
+            return id == ((Menu) obj).id;
         }
         return false;
     }
 
     public int hashCode() {
-        return 17 * 31 + id.hashCode();
+        return 17 * 31 + id;
     }
 
 }

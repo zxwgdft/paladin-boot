@@ -13,8 +13,8 @@ import lombok.Setter;
 @ApiModel(description = "角色")
 public class OrgRole extends BaseModel {
 
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty("角色名称")
     private String roleName;

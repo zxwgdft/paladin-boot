@@ -6,7 +6,6 @@ import com.paladin.framework.spring.DevelopCondition;
 import com.paladin.framework.web.convert.DateFormatter;
 import com.paladin.framework.web.filter.LimitFrameFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -27,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 @Slf4j
@@ -36,7 +36,8 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
 
     @Value("${paladin.file.base-path}")
     private String filePath;
-    @Autowired
+
+    @Resource
     private Environment environment;
 
     @Override

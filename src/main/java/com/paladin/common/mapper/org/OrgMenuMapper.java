@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface OrgMenuMapper extends CommonMapper<OrgMenu> {
 
-    @Select("SELECT id, `name`, url, icon, parent_id AS parentId FROM org_menu ORDER BY order_no ASC")
+    @Select("SELECT id, `name`, url, icon, parent_id AS parentId, order_no orderNo FROM org_menu ORDER BY order_no ASC")
     List<Menu> findMenu();
 }

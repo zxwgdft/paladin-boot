@@ -9,27 +9,40 @@ import java.util.*;
 public class MenuContainer {
 
     private List<Menu> rootMenus;
-    private List<Menu> adminMenus;
-    private Map<String, List<Menu>> roleMenuMap;
+    private MenuToRole adminMenus;
+    private Map<Integer, MenuToRole> roleMenuMap;
+    private Map<MultiRoleKey, MenuToRole> multiRoleMenuMap;
 
-    public MenuContainer(List<Menu> rootMenus, Map<String, List<Menu>> roleMenuMap, List<Menu> adminMenus) {
+    public MenuContainer(List<Menu> rootMenus, Map<Integer, MenuToRole> roleMenuMap, MenuToRole adminMenus) {
         this.roleMenuMap = roleMenuMap;
         this.rootMenus = rootMenus;
         this.adminMenus = adminMenus;
+        this.multiRoleMenuMap = new HashMap<>();
     }
 
-    public Collection<Menu> getRoleMenus(List<String> roleIds) {
+    public Collection<Menu> getRoleMenus(List<Integer> roleIds) {
         if (roleIds == null || roleIds.size() == 0) return Collections.EMPTY_LIST;
-        if (roleIds.size() == 1) return roleMenuMap.get(roleIds.get(0));
-
-        Set<Menu> menus = new HashSet<>();
-        for (String roleId : roleIds) {
-            List<Menu> ms = roleMenuMap.get(roleId);
-            if (ms != null) {
-                menus.addAll(ms);
-            }
+        if (roleIds.size() == 1) {
+            MenuToRole menuRole = roleMenuMap.get(roleIds.get(0));
+            return menuRole == null ? Collections.EMPTY_LIST : menuRole.getRootMenus();
         }
-        return menus;
+
+        MultiRoleKey key = new MultiRoleKey(roleIds);
+        MenuToRole menuToRole = multiRoleMenuMap.get(key);
+        if (menuToRole == null) {
+            Set<Menu> menus = new HashSet<>();
+            for (Integer roleId : key.roleIds) {
+                MenuToRole menuRole = roleMenuMap.get(roleId);
+                if (menuRole != null) {
+                    menus.addAll(menuRole.getLeafMenus());
+                }
+            }
+
+            List<Menu> leafMenuList = new ArrayList<>(menus);
+            menuToRole = new MenuToRole(leafMenuList);
+            multiRoleMenuMap.put(key, menuToRole);
+        }
+        return menuToRole.getRootMenus();
     }
 
     public Collection<Menu> getRootMenus() {
@@ -37,6 +50,52 @@ public class MenuContainer {
     }
 
     public Collection<Menu> getAdminMenus() {
-        return adminMenus;
+        return adminMenus.getRootMenus();
+    }
+
+    private static class MultiRoleKey {
+
+        private Set<Integer> roleIds;
+
+        private MultiRoleKey(List<Integer> roleIdList) {
+            if (roleIdList == null || roleIdList.size() == 0) {
+                throw new RuntimeException("can't be empty list");
+            }
+            roleIds = new HashSet<>();
+            for (Integer roleId : roleIdList) {
+                if (roleId != null) {
+                    roleIds.add(roleId);
+                }
+            }
+            if (roleIds.size() == 0) {
+                throw new RuntimeException("can't be empty list");
+            }
+        }
+
+
+        public int hashCode() {
+            int hash = 1;
+            int i = 0;
+            for (Integer roleId : roleIds) {
+                hash *= roleId << i++;
+            }
+            return hash;
+        }
+
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj instanceof MultiRoleKey) {
+                MultiRoleKey mr = (MultiRoleKey) obj;
+                if (roleIds.size() == mr.roleIds.size()) {
+                    for (Integer s : roleIds) {
+                        if (!mr.roleIds.contains(s)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

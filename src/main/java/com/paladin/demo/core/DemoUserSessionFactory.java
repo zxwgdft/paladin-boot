@@ -32,7 +32,7 @@ public class DemoUserSessionFactory implements UserSessionFactory {
             throw new UnknownAccountException("账号不存在");
         }
 
-        int type = sysUser.getUserType();
+        int type = sysUser.getType();
         int state = sysUser.getState();
 
         if (state == SysUser.STATE_ENABLED) {

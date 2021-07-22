@@ -2,10 +2,9 @@ package com.paladin.common.service.org;
 
 
 import com.paladin.common.core.cache.DataCacheHelper;
-import com.paladin.common.core.security.Permission;
+import com.paladin.common.core.security.CodePermission;
 import com.paladin.common.core.security.PermissionContainer;
 import com.paladin.common.mapper.org.OrgRolePermissionMapper;
-import com.paladin.framework.cache.DataCacheManager;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class OrgRolePermissionService {
 
             List<String> pids = new ArrayList<>(permissionIds.length);
 
-            HashMap<String, Permission> permissionMap = new HashMap<>();
+            HashMap<String, CodePermission> permissionMap = new HashMap<>();
             for (String pid : permissionIds) {
                 if (permissionContainer.getPermission(pid) != null) {
                     pids.add(pid);

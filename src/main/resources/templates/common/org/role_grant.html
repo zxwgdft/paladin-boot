@@ -44,7 +44,7 @@
     var roleId;
     $(function () {
         roleId = $("#roleId").val();
-        $.getAjax("/common/org/role/grant/find/permission?id=" + roleId, function (data) {
+        $.getAjax("/common/org/role/grant/find/codePermission?id=" + roleId, function (data) {
             initTree(roleId, data, $("#permissionTree"));
         });
     });
@@ -56,11 +56,11 @@
 
         tree = treeDiv;
 
-        if (data.permissions) {
+        if (data.codePermissions) {
 
-            var permissions = data.permissions,
+            var codePermissions = data.codePermissions,
                 hasPermissions = data.hasPermissions,
-                root = $.grep(permissions, function (n, i) {
+                root = $.grep(codePermissions, function (n, i) {
                     return n.parentId ? false : true;
                 });
 
@@ -79,7 +79,7 @@
                         node.tags = ["菜单"];
                     }
 
-                    var children = $.grep(permissions, function (n, i) {
+                    var children = $.grep(codePermissions, function (n, i) {
                         return n.parentId == p.id;
                     });
 

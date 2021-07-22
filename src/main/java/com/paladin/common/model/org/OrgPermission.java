@@ -1,5 +1,6 @@
 package com.paladin.common.model.org;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,9 +12,8 @@ import lombok.Setter;
 @ApiModel(description = "资源权限")
 public class OrgPermission {
 
-
-    @TableId
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     @ApiModelProperty("权限名称")
     private String name;
@@ -28,7 +28,7 @@ public class OrgPermission {
     private String description;
 
     @ApiModelProperty("父权限ID")
-    private String parentId;
+    private Integer parentId;
 
     @ApiModelProperty("列表顺序")
     private Integer orderNo;

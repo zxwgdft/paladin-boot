@@ -13,8 +13,8 @@ import org.springframework.data.annotation.Id;
 public class OrgRoleMenu {
 
     @Id
-    private String roleId;
+    private Integer roleId;
     @Id
-    private String menuId;
+    private Integer menuId;
 
 }

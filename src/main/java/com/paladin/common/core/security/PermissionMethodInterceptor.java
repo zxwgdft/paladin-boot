@@ -37,4 +37,5 @@ public class PermissionMethodInterceptor {
             throw new BusinessException("没有访问或操作权限");
         }
     }
+
 }

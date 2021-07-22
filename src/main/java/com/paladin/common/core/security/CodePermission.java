@@ -1,10 +1,9 @@
 package com.paladin.common.core.security;
 
-import com.paladin.framework.utils.StringUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.shiro.authz.permission.AllPermission;
+import org.apache.shiro.authz.Permission;
 
 import java.io.Serializable;
 
@@ -14,10 +13,10 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class Permission extends AllPermission implements Serializable {
+public class CodePermission implements Permission, Serializable {
 
     @ApiModelProperty("权限ID")
-    private String id;
+    private int id;
 
     @ApiModelProperty("权限名称")
     private String name;
@@ -29,21 +28,22 @@ public class Permission extends AllPermission implements Serializable {
     private boolean isAdmin;
 
     public boolean equals(Object obj) {
-        if (obj instanceof Permission) {
-            return id.equals(((Permission) obj).id);
+        if (obj == this) return true;
+        if (obj instanceof CodePermission) {
+            return id == ((CodePermission) obj).id;
         }
         return false;
     }
 
     public int hashCode() {
-        return 17 * 31 + id.hashCode();
+        return 17 * 31 + id;
     }
 
     @Override
-    public boolean implies(org.apache.shiro.authz.Permission p) {
-        if (!(p instanceof Permission)) {
+    public boolean implies(Permission p) {
+        if (!(p instanceof CodePermission)) {
             return false;
         }
-        return StringUtil.equals(((Permission) p).id, id);
+        return ((CodePermission) p).id == id;
     }
 }

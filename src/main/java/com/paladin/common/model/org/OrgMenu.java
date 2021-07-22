@@ -1,5 +1,6 @@
 package com.paladin.common.model.org;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,8 +16,8 @@ import lombok.Setter;
 @ApiModel(description = "菜单权限")
 public class OrgMenu {
 
-    @TableId
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
     @ApiModelProperty("名称")
     private String name;
     @ApiModelProperty("路径")
@@ -24,7 +25,7 @@ public class OrgMenu {
     @ApiModelProperty("图标")
     private String icon;
     @ApiModelProperty("父菜单ID")
-    private String parentId;
+    private Integer parentId;
     @ApiModelProperty("排序")
     private Integer orderNo;
     @ApiModelProperty("是否系统管理员拥有")

@@ -26,7 +26,6 @@ public class SysUser implements Serializable {
      * 管理员账号
      */
     public final static Integer USER_TYPE_ADMIN = 1;
-
     /**
      * 人员账号
      */
@@ -44,7 +43,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty("关联人员ID")
     private String userId;
     @ApiModelProperty("账号类型")
-    private Integer userType;
+    private Integer type;
     @ApiModelProperty("状态")
     private Integer state;
     @ApiModelProperty("最近一次登录时间")

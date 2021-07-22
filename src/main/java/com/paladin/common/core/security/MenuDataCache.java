@@ -4,7 +4,6 @@ import com.paladin.common.mapper.org.OrgMenuMapper;
 import com.paladin.common.mapper.org.OrgRoleMenuMapper;
 import com.paladin.common.model.org.OrgRoleMenu;
 import com.paladin.framework.cache.DataCache;
-import com.paladin.framework.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,13 +17,11 @@ import java.util.Map;
 @Component
 public class MenuDataCache implements DataCache<MenuContainer> {
 
-
     @Autowired
     private OrgMenuMapper orgMenuMapper;
 
     @Autowired
     private OrgRoleMenuMapper orgRoleMenuMapper;
-
 
     public String getId() {
         return "MENU_CACHE";
@@ -37,7 +34,7 @@ public class MenuDataCache implements DataCache<MenuContainer> {
 
         int size = (int) (menus.size() / 0.75 + 1);
 
-        Map<String, Menu> menuMap = new HashMap<>(size);
+        Map<Integer, Menu> menuMap = new HashMap<>(size);
         for (Menu menu : menus) {
             menuMap.put(menu.getId(), menu);
         }
@@ -47,8 +44,8 @@ public class MenuDataCache implements DataCache<MenuContainer> {
         List<Menu> adminMenus = new ArrayList<>(size);
 
         for (Menu menu : menus) {
-            String pid = menu.getParentId();
-            if (StringUtil.isNotEmpty(pid)) {
+            Integer pid = menu.getParentId();
+            if (pid != null) {
                 Menu parentMenu = menuMap.get(pid);
                 if (parentMenu != null) {
                     parentMenu.getChildren().add(menu);
@@ -67,15 +64,13 @@ public class MenuDataCache implements DataCache<MenuContainer> {
             if (isLeaf) adminMenus.add(menu);
         }
 
-
         List<OrgRoleMenu> roleMenus = orgRoleMenuMapper.findList();
 
-        Map<String, List<Menu>> roleMenuMap = new HashMap<>();
-
+        Map<Integer, List<Menu>> roleMenuMap = new HashMap<>();
         for (OrgRoleMenu roleMenu : roleMenus) {
 
-            String roleId = roleMenu.getRoleId();
-            String menuId = roleMenu.getMenuId();
+            Integer roleId = roleMenu.getRoleId();
+            Integer menuId = roleMenu.getMenuId();
 
             Menu menu = menuMap.get(menuId);
             if (menu == null || !menu.isLeaf()) continue;
@@ -89,7 +84,12 @@ public class MenuDataCache implements DataCache<MenuContainer> {
             menuSet.add(menu);
         }
 
-        return new MenuContainer(rootMenus, roleMenuMap, adminMenus);
+        Map<Integer, MenuToRole> roleMenuMap2 = new HashMap<>();
+        for (Map.Entry<Integer, List<Menu>> entry : roleMenuMap.entrySet()) {
+            roleMenuMap2.put(entry.getKey(), new MenuToRole(entry.getValue()));
+        }
+
+        return new MenuContainer(rootMenus, roleMenuMap2, new MenuToRole(adminMenus));
     }
 
 
