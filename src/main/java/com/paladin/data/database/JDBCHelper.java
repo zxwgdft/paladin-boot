@@ -42,9 +42,9 @@ public class JDBCHelper {
 	}
 	
 	
-	public static interface QueryHandler<T>{
+	public interface QueryHandler<T>{
 		
-		public T handle(ResultSet resultSet) throws SQLException;
+		T handle(ResultSet resultSet) throws SQLException;
 		
 	}
 	

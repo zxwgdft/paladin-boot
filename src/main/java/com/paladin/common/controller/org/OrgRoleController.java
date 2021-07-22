@@ -1,6 +1,7 @@
 package com.paladin.common.controller.org;
 
 import com.paladin.common.core.ControllerSupport;
+import com.paladin.common.core.security.NeedPermission;
 import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.OrgPermissionService;
 import com.paladin.common.service.org.OrgRolePermissionService;
@@ -73,7 +74,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @PostMapping("/save")
     @ResponseBody
-    @RequiresPermissions("sys:role:save")
+    @NeedPermission("sys:role:save")
     public R save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgRoleService.saveRole(orgRoleDTO);
@@ -82,7 +83,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @PostMapping("/update")
     @ResponseBody
-    @RequiresPermissions("sys:role:update")
+    @NeedPermission("sys:role:update")
     public R update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgRoleService.updateRole(orgRoleDTO);
@@ -106,7 +107,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @PostMapping("/grant")
     @ResponseBody
-    @RequiresPermissions("sys:role:grant")
+    @NeedPermission("sys:role:grant")
     public R grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
         orgRolePermissionService.grantAuthorization(roleId, permissionIds);
         return R.success();

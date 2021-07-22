@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WriteBean {
-	public Class<?> type() default Object.class;
+	Class<?> type() default Object.class;
 }

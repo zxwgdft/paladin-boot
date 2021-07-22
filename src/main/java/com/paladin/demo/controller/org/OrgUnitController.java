@@ -3,12 +3,12 @@ package com.paladin.demo.controller.org;
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.common.core.log.OperationLog;
+import com.paladin.common.core.security.NeedPermission;
 import com.paladin.demo.model.org.OrgUnit;
 import com.paladin.demo.service.org.OrgUnitContainer;
 import com.paladin.demo.service.org.OrgUnitService;
 import com.paladin.demo.service.org.dto.OrgUnitDTO;
 import com.paladin.framework.api.R;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +62,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @PostMapping("/save")
     @ResponseBody
-    @RequiresPermissions("org:unit:save")
+    @NeedPermission("org:unit:save")
     @OperationLog(model = "机构管理", operate = "机构新增")
     public R save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
@@ -72,7 +72,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @PostMapping("/update")
     @ResponseBody
-    @RequiresPermissions("org:unit:update")
+    @NeedPermission("org:unit:update")
     @OperationLog(model = "机构管理", operate = "机构更新")
     public R update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
@@ -82,7 +82,7 @@ public class OrgUnitController extends ControllerSupport {
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    @RequiresPermissions("org:unit:delete")
+    @NeedPermission("org:unit:delete")
     @OperationLog(model = "机构管理", operate = "机构删除")
     public R delete(@RequestParam String id) {
         orgUnitService.removeUnit(id);

@@ -43,7 +43,6 @@ public class SysLoggerLoginController extends ControllerSupport {
         if (condition == null) {
             throw new BusinessException("导出失败：请求参数异常");
         }
-        condition.sortCellIndex();
         SysLoggerLoginQuery query = condition.getQuery();
         try {
             if (query != null) {

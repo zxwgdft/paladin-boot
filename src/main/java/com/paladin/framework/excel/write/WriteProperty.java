@@ -7,17 +7,21 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * 注解方式描述写excel的基本信息
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @interface WriteProperty {
 
     /**
      * EXCEL列序号
-     *
-     * @return
      */
     int cellIndex();
 
+    /**
+     * 枚举类型描述
+     */
     String enumType() default "";
 
     /**
@@ -59,5 +63,16 @@ import java.lang.annotation.RetentionPolicy;
      * 对齐方式
      */
     HorizontalAlignment alignment() default HorizontalAlignment.CENTER;
+
+    /**
+     * 布尔值true对应值
+     */
+    String booleanTrue() default "是";
+
+    /**
+     * 布尔值false对应值
+     */
+    String booleanFalse() default "否";
+
 
 }

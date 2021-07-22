@@ -9,47 +9,62 @@ import java.util.List;
 public class ExcelWriter<T> {
 
     /* 通用的样式 */
-    protected CellStyle commonCellStyle;
+    private CellStyle commonCellStyle;
     /* 标题列样式 */
-    protected CellStyle titleCellStyle;
+    private CellStyle titleCellStyle;
 
-    protected Workbook workbook;
+    private Workbook workbook;
 
     /* 工作簿最大行数，-1则没有限制 */
-    protected int sheetMaxSize = -1;
+    private int sheetMaxSize = -1;
     /* 当前输入行 */
-    protected int currentRowIndex = -1;
+    private int currentRowIndex = -1;
     /* 当前sheet序号 */
     private int currentSheetIndex = 1;
 
     /* 当前工作簿 */
-    protected Sheet currentSheet;
+    private Sheet currentSheet;
     /* 写行描述 */
-    protected WriteRow writeRow;
+    private WriteRow writeRow;
 
+    /**
+     * 创建对象
+     *
+     * @param workbook poi工作空间对象
+     * @param writeRow 写入数据行描述
+     * @throws ExcelWriteException
+     */
     public ExcelWriter(Workbook workbook, WriteRow writeRow) throws ExcelWriteException {
-        this(workbook, writeRow, 0, null, null);
+        this(workbook, writeRow, null, null);
     }
 
     /**
-     * @param workbook    工作空间
-     * @param startIndex  起始写入行号
+     * 创建对象
+     *
+     * @param workbook    poi工作空间对象
+     * @param writeRow    写入数据行描述
      * @param commonStyle 通用cell的样式
      * @param titleStyle  标题cell的样式
      * @throws ExcelWriteException
      */
-    public ExcelWriter(Workbook workbook, WriteRow writeRow, int startIndex, CellStyle commonStyle, CellStyle titleStyle) throws ExcelWriteException {
+    public ExcelWriter(Workbook workbook, WriteRow writeRow, CellStyle commonStyle, CellStyle titleStyle) throws ExcelWriteException {
 
         this.workbook = workbook;
 
-        commonCellStyle = commonStyle == null ? workbook.createCellStyle() : commonStyle;
+        if (commonStyle == null) {
+            commonCellStyle = workbook.createCellStyle();
+            commonCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        } else {
+            commonCellStyle = commonStyle;
+        }
 
         if (titleStyle == null) {
             titleCellStyle = workbook.createCellStyle();
 
-            if (commonStyle != null)
-                titleCellStyle.cloneStyleFrom(commonStyle);
+            Font font = workbook.createFont();
+            font.setBold(true);
 
+            titleCellStyle.setFont(font);
             titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
             titleCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             titleCellStyle.setWrapText(true);
@@ -57,8 +72,35 @@ public class ExcelWriter<T> {
             titleCellStyle = titleStyle;
         }
 
-        setCurrentRowIndex(startIndex);
         setWriteRow(writeRow);
+    }
+
+    /**
+     * 增加一个工作簿，并写入标题（第一行）
+     */
+    public void openNewSheet() {
+        openNewSheet("sheet&" + currentSheetIndex, 0);
+    }
+
+    /**
+     * 增加一个工作簿，并写入标题（第一行）
+     */
+    public void openNewSheet(String sheetName) {
+        openNewSheet(sheetName, 0);
+    }
+
+    /**
+     * 增加一个工作簿，并在指定行写入标题
+     */
+    public void openNewSheet(String sheetName, int startIndex) {
+        if (sheetName == null || sheetName.length() == 0) {
+            sheetName = "sheet&" + currentSheetIndex;
+        }
+
+        currentSheet = workbook.createSheet(sheetName);
+        currentSheetIndex++;
+        currentRowIndex = startIndex;
+        writeTitle();
     }
 
     /**
@@ -99,18 +141,33 @@ public class ExcelWriter<T> {
         }
     }
 
-    public void write(List<T> datas) {
-        for (T data : datas) {
-            writeOne(data);
+    /**
+     * 从当前行往下写多行
+     *
+     * @param data
+     */
+    public void write(List<T> data) {
+        for (T item : data) {
+            writeOne(item);
         }
     }
 
-    public void write(T[] datas) {
-        for (T data : datas) {
-            writeOne(data);
+    /**
+     * 从当前行往下写多行
+     *
+     * @param data
+     */
+    public void write(T[] data) {
+        for (T item : data) {
+            writeOne(item);
         }
     }
 
+    /**
+     * 从当前行往下写多行
+     *
+     * @param data
+     */
     public void writeOne(T data) {
         currentRowIndex += writeRow.write(data, currentSheet, workbook, currentRowIndex, 1, commonCellStyle);
         if (sheetMaxSize > 0 && currentRowIndex > sheetMaxSize) {
@@ -118,19 +175,6 @@ public class ExcelWriter<T> {
         }
     }
 
-    public void openNewSheet() {
-        openNewSheet("sheet&" + currentSheetIndex);
-    }
-
-    /**
-     * 增加一个工作簿，并且跳转到该工作簿下开始写操作
-     */
-    public void openNewSheet(String sheetName) {
-        currentSheet = workbook.createSheet(sheetName);
-        currentSheetIndex++;
-        currentRowIndex = 0;
-        writeTitle();
-    }
 
     /**
      * 输出
@@ -153,10 +197,10 @@ public class ExcelWriter<T> {
      * 当前行号，0开始
      */
     public void setCurrentRowIndex(int currentRowIndex) {
-        if (currentRowIndex >= 0)
+        if (currentRowIndex >= 0) {
             this.currentRowIndex = currentRowIndex;
-        else
-            throw new RuntimeException("row index:" + currentRowIndex + " is invalid");
+        }
+        throw new RuntimeException("row index:" + currentRowIndex + " is invalid");
     }
 
     public WriteRow getWriteRow() {
@@ -178,10 +222,10 @@ public class ExcelWriter<T> {
      * 通用样式
      */
     public void setCommonCellStyle(CellStyle commonCellStyle) {
-        if (commonCellStyle != null)
+        if (commonCellStyle != null) {
             this.commonCellStyle = commonCellStyle;
-        else
-            throw new RuntimeException("common cell style can't be null");
+        }
+        throw new RuntimeException("common cell style can't be null");
     }
 
     /**
@@ -195,10 +239,10 @@ public class ExcelWriter<T> {
      * 标题样式
      */
     public void setTitleCellStyle(CellStyle titleCellStyle) {
-        if (titleCellStyle != null)
+        if (titleCellStyle != null) {
             this.titleCellStyle = titleCellStyle;
-        else
-            throw new RuntimeException("title cell style can't be null");
+        }
+        throw new RuntimeException("title cell style can't be null");
     }
 
     /**
@@ -212,9 +256,9 @@ public class ExcelWriter<T> {
      * 每个工作簿最大行数
      */
     public void setSheetMaxSize(int sheetMaxSize) {
-        if (sheetMaxSize > 1)
+        if (sheetMaxSize > 1) {
             this.sheetMaxSize = sheetMaxSize;
-        else
-            throw new RuntimeException("sheet max size:" + currentSheetIndex + " is invalid");
+        }
+        throw new RuntimeException("sheet max size:" + currentSheetIndex + " is invalid");
     }
 }

@@ -17,5 +17,5 @@ public @interface NeedPermission {
 
     // 一般为权限code
     String value();
-
+    
 }

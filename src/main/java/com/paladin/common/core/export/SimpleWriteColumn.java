@@ -38,7 +38,6 @@ public class SimpleWriteColumn extends WriteColumn {
      */
     public static SimpleWriteColumn newInstance(String field, Class<?> clazz, int cellIndex, String name, String enumType, Integer width, String dateFormat,
                                                 Boolean multiple) {
-
         if (field == null || field.length() == 0 || clazz == null) {
             return null;
         }
@@ -90,14 +89,13 @@ public class SimpleWriteColumn extends WriteColumn {
         if (value == null) {
             return getDefaultEmptyValue();
         }
-        String result = "";
         ConstantsContainer constantsContainer = dataCacheWrapper.getData();
         if (constantsContainer == null) return value.toString();
 
         if (isMultiple()) {
+            String result = "";
             if (value instanceof String) {
                 String strValue = (String) value;
-
                 if (strValue.length() > 0) {
                     String[] vals = strValue.split(",");
                     for (String val : vals) {
@@ -114,7 +112,6 @@ public class SimpleWriteColumn extends WriteColumn {
             } else {
                 Class<?> clazz = value.getClass();
                 if (Collection.class.isAssignableFrom(clazz)) {
-
                     Collection vals = (Collection) value;
                     for (Object val : vals) {
                         String name = constantsContainer.getTypeValue(getEnumType(), (String) val);
@@ -134,12 +131,13 @@ public class SimpleWriteColumn extends WriteColumn {
                             result += name + ",";
                         }
                     }
+                } else {
+                    throw new RuntimeException("不支持的常量值类型：" + clazz);
                 }
             }
+            return result;
         } else {
             return constantsContainer.getTypeValue(getEnumType(), value.toString());
         }
-
-        return result;
     }
 }

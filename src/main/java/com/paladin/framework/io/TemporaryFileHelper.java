@@ -10,7 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
+/**
+ * 由于临时文件存放于本机，在分布式下，当使用生成文件并返回url的方式时，
+ * 前端再次通过url获取临时文件可能会访问到其他服务器上，所以在该情况下
+ * 需要改变策略或者使用同一IP固定访问同一应用服务的方式。
+ */
 @Slf4j
 public class TemporaryFileHelper {
 
@@ -53,25 +57,18 @@ public class TemporaryFileHelper {
      * @return
      */
     public TemporaryFileOutputStream createFileOutputStream(String name, String suffix) {
-
         String id = UUIDUtil.createUUID();
+        String fileName = name == null ? id : (name + id);
 
-        if (name == null) {
-            name = "";
+        if (suffix != null) {
+            fileName += "." + suffix;
         }
-
-        if (suffix == null) {
-            suffix = "";
-        }
-
-        String fileName = name + id + "." + suffix;
 
         try {
             return new TemporaryFileOutputStream(new FileOutputStream(tempPath + fileName), "/temp/" + fileName);
         } catch (Exception e) {
             return null;
         }
-
     }
 
     /**

@@ -228,7 +228,7 @@ if (!Array.prototype.forEach) {
             options = $.extend(options, {
                 type: 1,
                 title: options.title || '',
-                maxmin: true, //开启最大化最小化按钮
+                maxmin: options.maxmin === false ? false : true, //开启最大化最小化按钮
                 area: $.getOpenLayerSize(options.width, options.height),
                 content: content,
                 success: options.success
@@ -261,7 +261,7 @@ if (!Array.prototype.forEach) {
             options = $.extend(options, {
                 type: 2,
                 title: options.title || '',
-                maxmin: true, //开启最大化最小化按钮
+                maxmin: options.maxmin === false ? false : true, //开启最大化最小化按钮
                 area: $.getOpenLayerSize(options.width, options.height),
                 content: url,
                 success: options.success
@@ -1379,7 +1379,7 @@ function _initTable() {
                                     return value;
                                 }
                             }
-                            return "";
+                            return "-";
                         }
                     } else if (col.formatter == 'datetime') {
                         col.formatter = function (value, row, index) {
@@ -1395,10 +1395,11 @@ function _initTable() {
                                     return value;
                                 }
                             }
-                            return "";
+                            return "-";
                         }
                     } else if (col.formatter == 'boolean') {
                         col.formatter = function (value, row, index) {
+                            if (value === '' || value === undefined || value === null) return '-';
                             return (value === true || value === "true" || value === 1) ? "是" : "否";
                         }
                     } else if (col.formatter == 'identification') {
@@ -1407,7 +1408,7 @@ function _initTable() {
                         }
                     } else if (col.formatter == 'money') {
                         col.formatter = function (value, row, index) {
-                            return value ? (value / 100).toFixed(2) : '-';
+                            return value || value === 0 ? (value / 100).toFixed(2) : '-';
                         }
                     }
                 }
@@ -1486,7 +1487,7 @@ function _initTable() {
             dataField: 'data',
             totalField: 'total',
             treeParentField: 'parentId',
-            pageList: [default_page_size, 50, 100],
+            pageList: [default_page_size, 30, 50, 100],
             pageSize: default_page_size
         }
 
@@ -1572,9 +1573,6 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
-                    if (!res[dataField]) {
-                        res[dataField] = [];
-                    }
                     return res;
                 }
             };
@@ -1628,7 +1626,7 @@ function _initTable() {
             if (enumTypeMap && type) {
                 return function (value, row, index) {
                     if (!value && value !== 0) {
-                        return "";
+                        return "-";
                     }
 
                     var arr = [],
@@ -1654,7 +1652,7 @@ function _initTable() {
                         }
                     });
 
-                    return arr.length > 0 ? arr.join("，") : "";
+                    return arr.length > 0 ? arr.join("，") : "-";
                 };
             }
         }
@@ -1785,6 +1783,7 @@ function _initTable() {
             }
 
             $.each(exportColumns, function (i, column) {
+                column.name = column.name.replace(/<br>/g, '');
                 columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
             });
 
@@ -1839,7 +1838,7 @@ function _initTable() {
                             },
                             firstTd = that.$body.find("tr:eq(0)"),
                             totalWidth = 0,
-                            totalCount = 0;
+                            exportTotalWidth = that.options.exportTotalWidth || 200;
 
                         $("#export_form").find("input[name='dataColumn']:checked").each(function () {
                             var v = $(this).val(),
@@ -1861,19 +1860,28 @@ function _initTable() {
                                         };
 
                                     if (f) {
-                                        q.dateFormat = f == 'date' ? 'yyyy/MM/dd' : (f == 'datetime' ? 'yyyy/MM/dd HH:mm:ss' : null);
+                                        if (f == 'date') {
+                                            q.dateFormat = 'yyyy/MM/dd';
+                                            if (!c.column.exportColumnWidth) {
+                                                c.column.exportColumnWidth = 15;
+                                            }
+                                        } else if (f == 'datetime') {
+                                            q.dateFormat = 'yyyy/MM/dd HH:mm:ss';
+                                            if (!c.column.exportColumnWidth) {
+                                                c.column.exportColumnWidth = 25;
+                                            }
+                                        }
                                     }
 
                                     q.enumType = c.column.enumcode ? c.column.enumcode : null;
 
                                     if (!c.column.exportColumnWidth) {
-                                        // 粗略计算width
                                         q.width = firstTd.find("td:eq('" + c.column.fieldIndex + "')").width();
-                                        q.realWidth = false;
                                         totalWidth += q.width;
-                                        totalCount++;
+                                        q.realWidth = false;
                                     } else {
                                         q.width = c.column.exportColumnWidth;
+                                        exportTotalWidth -= q.width;
                                     }
 
                                     if (c.column.exportOption) {
@@ -1892,11 +1900,10 @@ function _initTable() {
                             return;
                         }
 
+
                         param.columns.forEach(function (c) {
                             if (c.realWidth === false) {
-                                // c.width = Math.ceil(c.width / totalWidth * 1200 * totalCount / 120);
-                                c.width = Math.ceil(c.width * totalCount * 24 / totalWidth);
-                                c.width = Math.max(c.width, c.name.length * 2 + 2);
+                                c.width = Math.ceil(c.width * exportTotalWidth / totalWidth);
                                 c.realWidth = true;
                             }
 
@@ -1904,6 +1911,9 @@ function _initTable() {
                                 c.width = 255 * 256;
                             }
                         });
+
+                        param.fileName = that.options.exportFileName || null;
+                        param.sheetName = that.options.exportSheetName || null;
 
                         // copy from bootstrap-table begin
                         var data = {},
@@ -2268,4 +2278,5 @@ function hideIdentification(value) {
     }
     return "";
 }
+
 

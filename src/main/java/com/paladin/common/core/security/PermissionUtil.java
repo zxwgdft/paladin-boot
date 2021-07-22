@@ -3,12 +3,10 @@ package com.paladin.common.core.security;
 
 import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.cache.DataCacheHelper;
-import org.springframework.stereotype.Component;
 
 /**
  * 权限工具类（包括数据权限处理、功能权限判断、权限获取）
  */
-@Component
 public class PermissionUtil {
 
     public static DataPermissionParam getUserDataPermission() {
