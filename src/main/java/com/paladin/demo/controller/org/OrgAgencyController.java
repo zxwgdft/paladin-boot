@@ -37,7 +37,7 @@ public class OrgAgencyController extends ControllerSupport {
     }
 
     // 获取树形结构所有单位信息
-    @GetMapping("/find/tree")
+    @PostMapping("/find/tree")
     @ResponseBody
     public List<OrgAgencyContainer.Agency> findTree() {
         return DataCacheHelper.getData(OrgAgencyContainer.class).getAgencyTree();

@@ -4,7 +4,7 @@
 <head th:include="/demo/header"/>
 
 <body>
-<tt:constant enumcode="unit-type,"/>
+<tt:constant enumcode="agency-type,"/>
 <section class="content-header">
     <h1>单位管理</h1>
 </section>
@@ -36,7 +36,7 @@
             columns: [
                 [
                     {title: "单位名称", field: "name", align: "left"},
-                    {title: "单位类型", field: "type", enumcode: "unit-type"},
+                    {title: "单位类型", field: "type", enumcode: "agency-type"},
                     {title: "联系人", field: "contact"},
                     {title: "联系电话", field: "contactPhone"},
                     {
@@ -59,7 +59,7 @@
                     }
                 ]
             ],
-            url: '/demo/org/unit/find',
+            url: '/demo/org/agency/find',
             toolbar: "#toolbar",
             showRefresh: true,
             pagination: false, //分页请设置为false
@@ -73,17 +73,17 @@
     }
 
     function add() {
-        window.location = '/demo/org/unit/add';
+        window.location = '/demo/org/agency/add';
     }
 
     function detail(row) {
-        window.location = '/demo/org/unit/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/demo/org/agency/detail' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function () {
-                $.getAjax('/demo/org/unit/delete?id=' + row.id, function () {
+                $.getAjax('/demo/org/agency/delete?id=' + row.id, function () {
                     $.successMessage("删除成功");
                     table.refresh();
                 });
