@@ -55,7 +55,7 @@ public class SysUserService extends ServiceSupport<SysUser, SysUserMapper> {
         user.setSalt(salt);
         user.setUserId(userId);
         user.setState(SysUser.STATE_ENABLED);
-        user.setUserType(type);
+        user.setType(type);
         user.setCreateTime(new Date());
         save(user);
 

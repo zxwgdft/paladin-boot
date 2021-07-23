@@ -5,6 +5,7 @@ import com.paladin.common.model.sys.SysUser;
 import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.OrgPersonnelService;
 import com.paladin.framework.service.UserSession;
+import com.paladin.framework.utils.StringUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -37,7 +38,7 @@ public class DemoUserSessionFactory implements UserSessionFactory {
 
         if (state == SysUser.STATE_ENABLED) {
             if (type == SysUser.USER_TYPE_ADMIN) {
-                return new DemoUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount());
+                return new DemoUserSession(sysUser.getId(), "系统管理员", sysUser.getAccount(), true, null);
             }
 
             if (type == SysUser.USER_TYPE_PERSONNEL) {
@@ -46,7 +47,8 @@ public class DemoUserSessionFactory implements UserSessionFactory {
                 if (personnel != null) {
                     String roleIds = personnel.getRoles();
                     if (roleIds != null && roleIds.length() > 0) {
-                        return new DemoUserSession(userId, personnel.getName(), sysUser.getAccount(), personnel.getUnitId(), roleIds.split(","));
+                        return new DemoUserSession(userId, personnel.getName(), personnel.getAccount(),
+                                false, personnel.getAgencyId(), StringUtil.stringToIntArray(roleIds));
                     }
                 }
             }

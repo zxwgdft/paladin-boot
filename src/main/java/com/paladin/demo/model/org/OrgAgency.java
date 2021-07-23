@@ -8,11 +8,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrgUnit extends DeletedBaseModel {
+public class OrgAgency extends DeletedBaseModel {
 
     // 主键
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     // 单位名称
     private String name;
@@ -21,7 +21,7 @@ public class OrgUnit extends DeletedBaseModel {
     private Integer type;
 
     // 上级单位
-    private String parentId;
+    private Integer parentId;
 
     // 联系人
     private String contact;

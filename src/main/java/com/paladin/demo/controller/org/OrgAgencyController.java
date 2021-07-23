@@ -4,10 +4,10 @@ import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.common.core.log.OperationLog;
 import com.paladin.common.core.security.NeedPermission;
-import com.paladin.demo.model.org.OrgUnit;
-import com.paladin.demo.service.org.OrgUnitContainer;
-import com.paladin.demo.service.org.OrgUnitService;
-import com.paladin.demo.service.org.dto.OrgUnitDTO;
+import com.paladin.demo.model.org.OrgAgency;
+import com.paladin.demo.service.org.OrgAgencyContainer;
+import com.paladin.demo.service.org.OrgAgencyService;
+import com.paladin.demo.service.org.dto.OrgAgencyDTO;
 import com.paladin.framework.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,73 +19,73 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/demo/org/unit")
-public class OrgUnitController extends ControllerSupport {
+@RequestMapping("/demo/org/agency")
+public class OrgAgencyController extends ControllerSupport {
 
     @Autowired
-    private OrgUnitService orgUnitService;
+    private OrgAgencyService orgAgencyService;
 
     @GetMapping("/index")
     public String index() {
-        return "/demo/org/org_unit_index";
+        return "/demo/org/org_agency_index";
     }
 
     @PostMapping(value = "/find")
     @ResponseBody
-    public List<OrgUnit> findPage() {
-        return orgUnitService.findList();
+    public List<OrgAgency> findPage() {
+        return orgAgencyService.findList();
     }
 
     // 获取树形结构所有单位信息
     @GetMapping("/find/tree")
     @ResponseBody
-    public List<OrgUnitContainer.Unit> findTree() {
-        return DataCacheHelper.getData(OrgUnitContainer.class).getUnitTree();
+    public List<OrgAgencyContainer.Agency> findTree() {
+        return DataCacheHelper.getData(OrgAgencyContainer.class).getAgencyTree();
     }
 
     @GetMapping("/get")
     @ResponseBody
-    public OrgUnit getDetail(@RequestParam String id, Model model) {
-        return orgUnitService.get(id);
+    public OrgAgency getDetail(@RequestParam int id) {
+        return orgAgencyService.get(id);
     }
 
     @GetMapping("/add")
     public String addInput() {
-        return "/demo/org/org_unit_add";
+        return "/demo/org/org_agency_add";
     }
 
     @GetMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
+    public String detailInput(@RequestParam int id, Model model) {
         model.addAttribute("id", id);
-        return "/demo/org/org_unit_detail";
+        return "/demo/org/org_agency_detail";
     }
 
     @PostMapping("/save")
     @ResponseBody
-    @NeedPermission("org:unit:save")
+    @NeedPermission("org:agency:save")
     @OperationLog(model = "机构管理", operate = "机构新增")
-    public R save(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
+    public R save(@Valid OrgAgencyDTO orgagencyDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        orgUnitService.saveUnit(orgUnitDTO);
+        orgAgencyService.saveAgency(orgagencyDTO);
         return R.success();
     }
 
     @PostMapping("/update")
     @ResponseBody
-    @NeedPermission("org:unit:update")
+    @NeedPermission("org:agency:update")
     @OperationLog(model = "机构管理", operate = "机构更新")
-    public R update(@Valid OrgUnitDTO orgUnitDTO, BindingResult bindingResult) {
+    public R update(@Valid OrgAgencyDTO orgagencyDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
-        orgUnitService.updateUnit(orgUnitDTO);
+        orgAgencyService.updateAgency(orgagencyDTO);
         return R.success();
     }
 
     @PostMapping(value = "/delete")
     @ResponseBody
-    @NeedPermission("org:unit:delete")
+    @NeedPermission("org:agency:delete")
     @OperationLog(model = "机构管理", operate = "机构删除")
-    public R delete(@RequestParam String id) {
-        orgUnitService.removeUnit(id);
+    public R delete(@RequestParam int id) {
+        orgAgencyService.removeAgency(id);
         return R.success();
     }
 

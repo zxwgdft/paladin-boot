@@ -72,14 +72,13 @@ public class MenuContainer {
             }
         }
 
-
         public int hashCode() {
-            int hash = 1;
-            int i = 0;
+            int hash = 0;
             for (Integer roleId : roleIds) {
-                hash *= roleId << i++;
+                hash += roleId;
             }
-            return hash;
+            // 减少相加带来的hash碰撞
+            return hash << (roleIds.size() - 1);
         }
 
         public boolean equals(Object obj) {

@@ -25,7 +25,7 @@ public class CommonUserSessionFactory implements UserSessionFactory {
             throw new DisabledAccountException();
         }
 
-        return new CommonUserSession(sysUser.getId(), sysUser.getAccount(), sysUser.getAccount());
+        return new CommonUserSession(sysUser.getId(), sysUser.getAccount(), sysUser.getAccount(), true);
     }
 
 }

@@ -17,9 +17,10 @@ import java.util.*;
  */
 public class CommonUserSession extends UserSession implements AuthorizationInfo {
 
-
-    public CommonUserSession(String userId, String userName, String account) {
+    public CommonUserSession(String userId, String userName, String account, boolean isSystemAdmin, int... roleIds) {
         super(userId, userName, account);
+        this.isSystemAdmin = isSystemAdmin;
+        this.setRoleIdList(roleIds);
     }
 
     /**
@@ -31,39 +32,40 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
         return (CommonUserSession) SecurityUtils.getSubject().getPrincipal();
     }
 
-    protected List<Integer> roleIds;
-    protected int roleLevel;
-    protected boolean isSystemAdmin;
+    private List<Integer> roleIds;
+    private List<String> roleIdStr;
+    private int roleLevel;
+    private boolean isSystemAdmin;
 
     /**
      * 设置角色ID
      *
      * @param roleIds
      */
-    protected void setRoleId(Integer... roleIds) {
-        Set<Integer> roleIdSet = new HashSet<>();
-        int roleLevel = 0;
-        RoleContainer roleContainer = DataCacheHelper.getData(RoleContainer.class);
-        for (int i = 0; i < roleIds.length; i++) {
-            Integer roleId = roleIds[i];
-            if (roleId != null) {
+    private void setRoleIdList(int... roleIds) {
+        if (roleIds != null && roleIds.length > 0) {
+            Set<Integer> roleIdSet = new HashSet<>();
+            int roleLevel = 0;
+            RoleContainer roleContainer = DataCacheHelper.getData(RoleContainer.class);
+            for (int i = 0; i < roleIds.length; i++) {
+                int roleId = roleIds[i];
                 Role role = roleContainer.getRole(roleId);
                 if (role != null) {
                     roleIdSet.add(roleId);
                     roleLevel = Math.max(roleLevel, role.getLevel());
                 }
             }
+
+            this.roleLevel = roleLevel;
+            this.roleIds = new ArrayList<>(roleIdSet);
+            this.roleIdStr = new ArrayList<>(roleIds.length);
+            for (Integer id : this.roleIds) {
+                roleIdStr.add(String.valueOf(id));
+            }
+        } else {
+            this.roleLevel = -1;
+            this.roleIds = Collections.EMPTY_LIST;
         }
-
-        this.roleLevel = roleLevel;
-        this.roleIds = new ArrayList<>(roleIdSet);
-    }
-
-    /**
-     * 获取角色拥有的数据等级
-     */
-    public int getRoleLevel() {
-        return roleLevel;
     }
 
     /**
@@ -73,6 +75,14 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
         return roleIds;
     }
 
+    /**
+     * 获取角色拥有的数据等级
+     */
+    public int getRoleLevel() {
+        return roleLevel;
+    }
+
+
     @Override
     public boolean isSystemAdmin() {
         return isSystemAdmin;
@@ -80,9 +90,8 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
 
     /**
      * 菜单资源
-     *
-     * @return
      */
+    @JsonIgnore
     public Collection<Menu> getMenuResources() {
         MenuContainer menuContainer = DataCacheHelper.getData(MenuContainer.class);
         if (menuContainer == null) return Collections.EMPTY_LIST;
@@ -95,13 +104,13 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
     @Override
     @JsonIgnore
     public Collection<String> getRoles() {
-        throw new RuntimeException("不支持该方法，需要请重写");
+        return roleIdStr;
     }
 
     @Override
     @JsonIgnore
     public Collection<String> getStringPermissions() {
-        throw new RuntimeException("不支持该方法，需要请重写");
+        return getPermissionCodes();
     }
 
     @Override

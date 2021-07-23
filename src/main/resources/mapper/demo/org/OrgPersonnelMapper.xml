@@ -2,4 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.demo.mapper.org.OrgPersonnelMapper">
 
+    <select id="findPersonnel" resultType="com.paladin.demo.service.org.vo.OrgPersonnelVO">
+        SELECT
+        a.id,
+        b.id agencyId,
+        b.name agencyName,
+        a.identification_type identificationType,
+        a.identification_no identificationNo,
+        a.name,
+        a.sex,
+        a.birthday,
+        a.cellphone,
+        a.office_phone officePhone,
+        a.nation
+        FROM org_personnel a
+        INNER JOIN org_agency b ON a.agency_id = b.id
+        WHERE a.deleted = 0 AND b.deleted = 0
+        <if test="query.name!=null and query.name!=''">
+            AND (a.name like CONCAT('%',#{query.name},'%') OR a.pinyin_name like LOWER(CONCAT('%',#{query.name},'%')))
+        </if>
+        <if test="query.identificationNo!=null and query.identificationNo!=''">
+            AND a.identification_no = #{identificationNo}
+        </if>
+        <if test="query.agencyId!=null">
+            AND b.id = #{agencyId}
+        </if>
+        <if test="permission.hasAll!=true">
+            <if test="permission.agencyId!=null">
+                AND b.id = #{permission.agencyId}
+            </if>
+            <if test="permission.agencyIds!=null">
+                AND b.id IN
+                <foreach collection="permission.agencyIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="permission.userId!=null and permission.userId!=''">
+                AND a.id = #{permission.userId}
+            </if>
+        </if>
+        ORDER BY a.create_time DESC, a.id
+    </select>
+
 </mapper>

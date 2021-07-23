@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class OrgUnitDTO {
+public class OrgAgencyDTO {
 
     // 主键
     private String id;
@@ -24,8 +24,7 @@ public class OrgUnitDTO {
     private Integer type;
 
     // 上级单位
-    @Length(max = 32, message = "上级单位长度不能大于32")
-    private String parentId;
+    private Integer parentId;
 
     // 联系人
     @Length(max = 50, message = "联系人长度不能大于50")
@@ -38,7 +37,6 @@ public class OrgUnitDTO {
     // 排序号
     @NotNull(message = "排序号不能为空")
     private Integer orderNo;
-
 
 
 }

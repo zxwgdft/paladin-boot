@@ -15,13 +15,13 @@ import java.util.Map;
  * @since 2020/3/9
  */
 @Slf4j
-public class OrgUnitContainer {
+public class OrgAgencyContainer {
 
-    private Map<String, Unit> unitMap;
-    private List<Unit> rootList;
+    private Map<Integer, Agency> agencyMap;
+    private List<Agency> rootList;
 
-    public OrgUnitContainer(Map<String, Unit> unitMap, List<Unit> rootList) {
-        this.unitMap = unitMap;
+    public OrgAgencyContainer(Map<Integer, Agency> agencyMap, List<Agency> rootList) {
+        this.agencyMap = agencyMap;
         this.rootList = rootList;
     }
 
@@ -31,8 +31,8 @@ public class OrgUnitContainer {
      * @param id
      * @return
      */
-    public Unit getUnit(String id) {
-        return unitMap.get(id);
+    public Agency getAgency(Integer id) {
+        return agencyMap.get(id);
     }
 
     /**
@@ -41,9 +41,9 @@ public class OrgUnitContainer {
      * @param id
      * @return
      */
-    public String getUnitName(String id) {
-        Unit unit = unitMap.get(id);
-        return unit == null ? "" : unit.getName();
+    public String getAgencyName(Integer id) {
+        Agency agency = agencyMap.get(id);
+        return agency == null ? "" : agency.getName();
     }
 
     /**
@@ -51,16 +51,16 @@ public class OrgUnitContainer {
      *
      * @return
      */
-    public List<Unit> getUnitTree() {
+    public List<Agency> getAgencyTree() {
         return rootList;
     }
 
 
     @Getter
     @Setter
-    public static class Unit {
+    public static class Agency {
 
-        private String id;
+        private Integer id;
 
         // 单位名称
         private String name;
@@ -79,13 +79,13 @@ public class OrgUnitContainer {
 
         // 上级单位
         @JsonIgnore
-        private Unit parent;
+        private Agency parent;
 
         // 下级
-        private List<Unit> children;
+        private List<Agency> children;
 
         @JsonIgnore
-        public List<String> selfAndChildrenIds;
+        public List<Integer> selfAndChildrenIds;
 
     }
 

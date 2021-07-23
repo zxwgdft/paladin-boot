@@ -20,6 +20,9 @@ public abstract class UserSession implements Serializable {
 
     public UserSession(String userId, String userName, String account) {
         this.userId = userId;
+        if (userId == null) {
+            throw new RuntimeException("userId can't be null");
+        }
         this.userName = userName;
         this.account = account;
     }
@@ -45,7 +48,7 @@ public abstract class UserSession implements Serializable {
         return account;
     }
 
-    
+
     public abstract boolean isSystemAdmin();
 
     private final static String ATTRIBUTION_PLACEHOLDER = "paladin_session_placeholder";
@@ -72,7 +75,7 @@ public abstract class UserSession implements Serializable {
 
     @Override
     public int hashCode() {
-        return userId != null ? userId.hashCode() : 0;
+        return userId.hashCode();
     }
 
 }

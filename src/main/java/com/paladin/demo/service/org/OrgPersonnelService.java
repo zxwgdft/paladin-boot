@@ -1,16 +1,18 @@
 package com.paladin.demo.service.org;
 
-import com.paladin.common.core.cache.DataCacheHelper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.paladin.common.model.sys.SysAttachment;
 import com.paladin.common.model.sys.SysUser;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.SysUserService;
-import com.paladin.demo.core.DemoUserSession;
+import com.paladin.demo.core.DataPermissionParam;
+import com.paladin.demo.core.DataPermissionUtil;
 import com.paladin.demo.mapper.org.OrgPersonnelMapper;
 import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
 import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
-import com.paladin.demo.service.org.dto.PersonnelPermissionQuery;
+import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.ServiceSupport;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -113,44 +116,21 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
         deleteById(id);
     }
 
-    public PageResult<OrgPersonnel> findPersonnel(OrgPersonnelQuery query) {
-
-        // 增加数据权限过滤
-        // 应用管理员级别可以查看所有人员数据
-        // 机构管理员可以查看所管辖机构及以下单位人员数据
-        // 个人只能查看自己的数据
-        DemoUserSession userSession = DemoUserSession.getCurrentUserSession();
-        int roleLevel = userSession.getRoleLevel();
-
-        PersonnelPermissionQuery permissionQuery = null;
-        if (roleLevel >= DemoUserSession.ROLE_LEVEL_APP_ADMIN) {
-            // 可以查询所有，不设置过滤条件
-        } else {
-            permissionQuery = new PersonnelPermissionQuery();
-            if (roleLevel >= DemoUserSession.ROLE_LEVEL_UNIT_ADMIN) {
-                String unitId = userSession.getUnitId();
-                if (unitId != null && unitId.length() > 0) {
-                    OrgUnitContainer.Unit unit = DataCacheHelper.getData(OrgUnitContainer.class).getUnit(unitId);
-                    if (unit != null) {
-                        List<String> ids = unit.getSelfAndChildrenIds();
-                        if (ids.size() == 1) {
-                            permissionQuery.setUnitId(ids.get(0));
-                        } else {
-                            permissionQuery.setUnitIds(ids);
-                        }
-                    } else {
-                        permissionQuery.setId(userSession.getUserId());
-                    }
-                } else {
-                    permissionQuery.setId(userSession.getUserId());
-                }
-            } else {
-                permissionQuery.setId(userSession.getUserId());
-            }
+    public PageResult<OrgPersonnelVO> findPersonnelPage(OrgPersonnelQuery query) {
+        DataPermissionParam dataPermissionParam = DataPermissionUtil.getDataPermissionParam();
+        if (dataPermissionParam.isHasPermission()) {
+            Page<OrgPersonnelVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+            List<OrgPersonnelVO> result = getSqlMapper().findPersonnel(query, dataPermissionParam);
+            return new PageResult<>(page, result);
         }
-
-        return findPage(query, permissionQuery == null ? query : new Object[]{query, permissionQuery});
+        return PageResult.getEmptyPageResult(query.getLimit());
     }
 
-
+    public List<OrgPersonnelVO> findPersonnelList(OrgPersonnelQuery query) {
+        DataPermissionParam dataPermissionParam = DataPermissionUtil.getDataPermissionParam();
+        if (dataPermissionParam.isHasPermission()) {
+            return getSqlMapper().findPersonnel(query, dataPermissionParam);
+        }
+        return Collections.EMPTY_LIST;
+    }
 }

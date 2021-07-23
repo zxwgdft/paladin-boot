@@ -9,6 +9,7 @@ import com.paladin.demo.model.org.OrgPersonnel;
 import com.paladin.demo.service.org.OrgPersonnelService;
 import com.paladin.demo.service.org.dto.OrgPersonnelDTO;
 import com.paladin.demo.service.org.dto.OrgPersonnelQuery;
+import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.excel.write.ValueFormatter;
@@ -46,10 +47,8 @@ public class OrgPersonnelController extends ControllerSupport {
     @PostMapping(value = "/find/page")
     @ResponseBody
     @QueryOutputMethod(queryClass = OrgPersonnelQuery.class, paramIndex = 0)
-    public PageResult<OrgPersonnel> findPage(OrgPersonnelQuery query) {
-        // OrgPersonnel应尽量与数据表对应，不做扩展，并且可能带有一些系统自带自带，所以应该有专门的VO对象用于返回数据
-        // 当然为了效率与简单，也可以直接返回OrgPersonnel对象，一般并不会有太大问题
-        return orgPersonnelService.findPersonnel(query);
+    public PageResult<OrgPersonnelVO> findPage(OrgPersonnelQuery query) {
+        return orgPersonnelService.findPersonnelPage(query);
     }
 
     // 获取详细数据
@@ -129,10 +128,9 @@ public class OrgPersonnelController extends ControllerSupport {
         try {
             if (query != null) {
                 if (condition.isExportAll()) {
-                    // orgPersonnelService.searchAll(query) 也可以替换为 orgPersonnelService.searchPage(query, OrgPersonnelVO.class)，从而在VO类中做一定处理
-                    return ExportUtil.export(condition, orgPersonnelService.findList(query), OrgPersonnel.class);
+                    return ExportUtil.export(condition, orgPersonnelService.findPersonnelList(query), OrgPersonnelVO.class);
                 } else if (condition.isExportPage()) {
-                    return ExportUtil.export(condition, orgPersonnelService.findPage(query).getData(), OrgPersonnel.class);
+                    return ExportUtil.export(condition, orgPersonnelService.findPersonnelPage(query).getData(), OrgPersonnelVO.class);
                 }
             }
             throw new BusinessException("导出数据失败：请求参数错误");
