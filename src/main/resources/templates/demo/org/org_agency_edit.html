@@ -4,19 +4,16 @@
 <head th:include="/header"/>
 
 <body>
-<tt:constant enumcode="unit-type,"/>
+<tt:constant enumcode="agency-type,"/>
 <section class="content-header">
-    <h1>单位管理</h1>
+    <h1>机构管理</h1>
     <ol class="breadcrumb">
-        <li><a href="/demo/org/unit/index"><i class="fa fa-list-alt"></i>列表</a></li>
-        <li class="active">详情</li>
+        <li><a href="/demo/org/agency/index"><i class="fa fa-list-alt"></i>机构列表</a></li>
+        <li class="active">机构编辑</li>
     </ol>
 </section>
 <section class="content">
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a href="/demo/org/unit/index" class="btn btn-primary btn-block">返回</a>
-</div>
 <input type="hidden" id="id" th:value="${id}"/>
 <div th:include="/footer"/>
 <script type="text/javascript">
@@ -24,16 +21,17 @@
     $(function () {
         var options = {
             id: "model",
-            name: "详情",
-            url: "/demo/org/unit/update?id=" + $("#id").val(),
+            bigScreen: false,
+            name: "机构编辑",
+            url: "/demo/org/agency/update?id=" + $("#id").val(),
             columns: [
                 {title: "单位名称", name: "name", required: "required", maxLength: 120, inputType: "TEXT"},
-                {title: "单位类型", name: "type", enum: "unit-type", required: "required", inputType: "SELECT"},
+                {title: "单位类型", name: "type", enum: "agency-type", required: "required", inputType: "SELECT"},
                 {
                     title: "上级单位",
                     name: "parentId",
                     inputType: "SELECT-TREE-SERVER",
-                    url: "/demo/org/unit/find/tree",
+                    url: "/demo/org/agency/find/tree",
                     layerWidth: "500px",
                     isListData: false
                 },
@@ -43,12 +41,20 @@
             ]
         }
 
-        $.getAjax("/demo/org/unit/get?id=" + $("#id").val(), function (data) {
-            var html = generateHtml(options);
+        $.getAjax("/demo/org/agency/get?id=" + $("#id").val(), function (data) {
+            var html = generateEditHtml(options);
             $(".content").html(html);
             $.initComponent($(".content"));
 
-            var model = new tonto.Model("model", options.columns);
+            var model = new tonto.Model("model", options.columns, {
+                pattern: 'edit',
+                back: '/demo/org/agency/index',
+                successCallback: function () {
+                    $.successAlert("修改成功", function () {
+                        window.location = "/demo/org/agency/index";
+                    });
+                }
+            });
             model.setData(data);
         });
     });

@@ -87,6 +87,15 @@ public class OrgAgencyContainer {
         @JsonIgnore
         public List<Integer> selfAndChildrenIds;
 
+        @JsonIgnore
+        public String getFullName() {
+            return _getFullName(null);
+        }
+
+        private String _getFullName(String prefix) {
+            String fullName = prefix == null ? name : (name + "-" + prefix);
+            return parent == null ? fullName : parent._getFullName(fullName);
+        }
     }
 
 }

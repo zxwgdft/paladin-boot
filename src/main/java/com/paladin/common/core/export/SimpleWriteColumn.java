@@ -4,6 +4,7 @@ import com.paladin.common.core.ConstantsContainer;
 import com.paladin.common.core.cache.DataCacheHelper;
 import com.paladin.framework.cache.DataCacheWrapper;
 import com.paladin.framework.excel.write.WriteColumn;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.reflect.Entity;
 import com.paladin.framework.utils.reflect.EntityField;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -37,7 +38,7 @@ public class SimpleWriteColumn extends WriteColumn {
      * @return
      */
     public static SimpleWriteColumn newInstance(String field, Class<?> clazz, int cellIndex, String name, String enumType, Integer width, String dateFormat,
-                                                Boolean multiple) {
+                                                Boolean multiple, String alignment) {
         if (field == null || field.length() == 0 || clazz == null) {
             return null;
         }
@@ -60,10 +61,19 @@ public class SimpleWriteColumn extends WriteColumn {
             column.setWidth(width);
         }
 
+        HorizontalAlignment horizontalAlignment;
+        if (StringUtil.equals("left", alignment)) {
+            horizontalAlignment = HorizontalAlignment.LEFT;
+        } else if (StringUtil.equals("right", alignment)) {
+            horizontalAlignment = HorizontalAlignment.RIGHT;
+        } else {
+            horizontalAlignment = HorizontalAlignment.CENTER;
+        }
+
         column.setCellIndex(cellIndex);
         column.setEnumType(enumType);
         column.setName(name);
-        column.setAlignment(HorizontalAlignment.CENTER);
+        column.setAlignment(horizontalAlignment);
         column.setDateFormat(dateFormat);
         column.setMultiple(multiple == null ? false : multiple);
 

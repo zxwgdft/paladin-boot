@@ -123,7 +123,7 @@ public class OrgPersonnelController extends ControllerSupport {
             throw new BusinessException("导出失败：请求参数异常");
         }
         // 用于特殊转换，如果不需要则不需要设置
-        condition.setExcelValueFormatMap(excelValueFormatMap);
+        condition.setValueFormatMap(excelValueFormatMap);
         OrgPersonnelQuery query = condition.getQuery();
         try {
             if (query != null) {

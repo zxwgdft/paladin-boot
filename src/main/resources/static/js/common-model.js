@@ -221,8 +221,8 @@ function generateEditFormHtml(options, hide) {
             id: id + '_form_submit_btn',
             type: options.server === false ? 'button' : 'submit',
             name: options.submitBtnName || '保存',
-            width: options.submitBtnWidth || '150px',
-            class: options.submitBtnClass || 'btn btn-primary btn-flat',
+            width: options.submitBtnWidth || '120px',
+            class: options.submitBtnClass || 'btn btn-success btn-flat',
             order: -1
         });
     }
@@ -231,7 +231,7 @@ function generateEditFormHtml(options, hide) {
         formButtonBar.push({
             id: id + '_form_back_btn',
             type: 'button',
-            width: options.backBtnWidth || '150px',
+            width: options.backBtnWidth || '120px',
             name: options.backBtnName || '返回',
             class: options.backBtnClass || 'btn btn-default btn-flat',
             order: 9999

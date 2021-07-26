@@ -49,7 +49,7 @@ public class ExportUtil {
         }
 
         List<WriteColumn> writeColumns = new ArrayList<>();
-        Map<String, ValueFormatter> valueFormatMap = condition.getExcelValueFormatMap();
+        Map<String, ValueFormatter> valueFormatMap = condition.getValueFormatMap();
         Map<String, CellStyleCreator> cellStyleCreatorMap = condition.getCellStyleCreatorMap();
 
 
@@ -57,7 +57,7 @@ public class ExportUtil {
         for (ExportColumn column : columns) {
             String field = column.getField();
             SimpleWriteColumn writeColumn = SimpleWriteColumn.newInstance(field, exportClass, cellIndex++, column.getName(), column.getEnumType(),
-                    column.getWidth(), column.getDateFormat(), column.getMultiple());
+                    column.getWidth(), column.getDateFormat(), column.getMultiple(), column.getAlignment());
 
             if (writeColumn != null) {
                 if (valueFormatMap != null) {

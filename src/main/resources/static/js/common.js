@@ -1774,6 +1774,7 @@ function _initTable() {
                     field: column.field,
                     name: column.title || column.field,
                     checked: column.visible,
+                    alignment: column.align || 'center',
                     column: column
                 });
             });
@@ -1787,13 +1788,23 @@ function _initTable() {
                 columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
             });
 
-            var exportHtml = '<div style="padding:30px;padding-top:20px">' +
+            var selectOptionCreate = function (obj) {
+                var h = "";
+                for (var o in obj) {
+                    h += '<option value="' + o + '">' + obj[o] + '</option>';
+                }
+                return h;
+            }
+            var fileTypes = that.options.exportFileType || {excel: 'Excel'};
+            var dataScope = that.options.exportDataScope || {all: '当前全部记录', page: '当前页记录'};
+
+            var exportHtml = '<div style="padding:20px 30px 30px 30px">' +
                 '<form id="export_form" action="" method="post" class="form-horizontal" novalidate="novalidate">' +
                 '    <div class="form-group">' +
                 '        <label for="fileType" class="col-sm-3 control-label">文件类型：</label>' +
                 '        <div class="col-sm-8">' +
                 '            <select name="fileType" class="form-control">' +
-                '                <option value="excel">Excel</option>' +
+                selectOptionCreate(fileTypes) +
                 '            </select>' +
                 '        </div>' +
                 '    </div>' +
@@ -1801,8 +1812,7 @@ function _initTable() {
                 '        <label for="dataScope" class="col-sm-3 control-label">导出范围：</label>' +
                 '        <div class="col-sm-8">' +
                 '            <select name="dataScope" class="form-control">' +
-                '                <option value="all">当前全部记录</option>' +
-                '                <option value="page">当前页记录</option>' +
+                selectOptionCreate(dataScope) +
                 '            </select>' +
                 '        </div>' +
                 '    </div>' +
@@ -1812,9 +1822,9 @@ function _initTable() {
                 columnHtml +
                 '        </div>' +
                 '    </div>' +
-                '    <div class="form-group">' +
-                '        <div class="col-sm-4 col-sm-offset-3">' +
-                '            <button type="button" id="_exportSubmitBtn" class="btn btn-primary btn-block">导出</button>' +
+                '    <div class="form-group form-button-bar">' +
+                '        <div class="btn-group">' +
+                '            <button type="button" id="_exportSubmitBtn" style="width: 120px" class="btn btn-primary btn-flat">导出</button>' +
                 '        </div>' +
                 '    </div>' +
                 '</form></div>';
@@ -1822,7 +1832,7 @@ function _initTable() {
             $.openPageLayer(exportHtml, {
                 title: "导出",
                 width: 600,
-                height: 420,
+                height: that.options.exportLayerHeight || 400,
                 success: function (layero, layeroIndex) {
                     $('#_dataColumnDiv').find("input").iCheck({
                         checkboxClass: 'icheckbox_square-blue', // 注意square和blue的对应关系
@@ -1856,6 +1866,7 @@ function _initTable() {
                                         q = {
                                             field: c.field,
                                             name: c.name,
+                                            alignment: c.alignment,
                                             multiple: c.column.multiple === true ? true : false
                                         };
 
@@ -1993,6 +2004,9 @@ function _initTable() {
                         // copy from bootstrap-table end
 
                         param.query = params;
+                        if (typeof that.options.exportQueryParams === 'function') {
+                            param = that.options.exportQueryParams(param);
+                        }
 
                         $.sendAjax({
                             type: "POST",
