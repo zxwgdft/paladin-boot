@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/header">
+<head th:include="/header">
 </head>
 <style type="text/css">
     .list-group-item {
@@ -38,7 +38,7 @@
     <a href="/common/org/role/index" class="btn btn-primary btn-block">返回</a>
 </div>
 <input type="hidden" id="roleId" th:value="${roleId}"/>
-<div th:include="/common/footer"></div>
+<div th:include="/footer"></div>
 <script type="text/javascript">
     /*<![CDATA[*/
     var roleId;

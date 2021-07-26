@@ -82,7 +82,7 @@ public class CommonController {
     }
 
     @ApiOperation(value = "重新加载容器数据缓存")
-    @GetMapping("/container/restart")
+    @GetMapping("/cache/data/restart")
     @ResponseBody
     @NeedAdmin
     public R restartContainer(@RequestParam String container) {
