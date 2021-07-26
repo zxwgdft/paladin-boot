@@ -43,6 +43,7 @@ public class OrgPersonnelController extends ControllerSupport {
         return "/demo/org/org_personnel_index";
     }
 
+
     // @QueryOutputMethod 用于查询回显，查询动作后会尝试把查询参数保存在session中
     @PostMapping(value = "/find/page")
     @ResponseBody

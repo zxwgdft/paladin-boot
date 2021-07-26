@@ -16,7 +16,6 @@ import com.paladin.demo.service.org.vo.OrgPersonnelVO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import com.paladin.framework.service.ServiceSupport;
-import com.paladin.framework.utils.ListUtil;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
@@ -44,18 +43,13 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
         String id = UUIDUtil.createUUID();
         orgPersonnel.setId(id);
 
-        List<SysAttachment> attachments = attachmentService.createFile(orgPersonnelDTO.getAttachmentFiles());
-
-        String attIds = orgPersonnelDTO.getAttachment();
-        if (StringUtil.isNotEmpty(attIds)) {
-            attachments = ListUtil.mergeList(attachmentService.getAttachments(attIds.split(",")), attachments);
-        }
-
+        List<SysAttachment> attachments = attachmentService.createAndGetAttachment1(
+                orgPersonnelDTO.getAttachment(), orgPersonnelDTO.getAttachmentFiles());
         if (attachments != null && attachments.size() > 5) {
             throw new BusinessException("附件数量不能超过5个");
         }
-
         attachmentService.persistAttachments(id, attachments);
+
         orgPersonnel.setAttachment(attachmentService.joinAttachmentId(attachments));
 
         String password = sysUserService.createUserAccount(account, id, SysUser.USER_TYPE_PERSONNEL);
@@ -71,12 +65,8 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
             throw new BusinessException("找不到需要更新的人员");
         }
 
-        List<SysAttachment> attachments = attachmentService.createFile(orgPersonnelDTO.getAttachmentFiles());
-
-        String attIds = orgPersonnelDTO.getAttachment();
-        if (StringUtil.isNotEmpty(attIds)) {
-            attachments = ListUtil.mergeList(attachmentService.getAttachments(attIds.split(",")), attachments);
-        }
+        List<SysAttachment> attachments = attachmentService.createAndGetAttachment1(
+                orgPersonnelDTO.getAttachment(), orgPersonnelDTO.getAttachmentFiles());
 
         if (attachments != null && attachments.size() > 5) {
             throw new BusinessException("附件数量不能超过5个");
@@ -86,6 +76,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
         if (StringUtil.isNotEmpty(originAttIds)) {
             attachmentService.deleteAttachments(originAttIds.split(","));
         }
+
         attachmentService.persistAttachments(id, attachments);
         orgPersonnel.setAttachment(attachmentService.joinAttachmentId(attachments));
 
@@ -111,6 +102,7 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
     public void removePersonnel(String id) {
         OrgPersonnel orgPersonnel = get(id);
         if (orgPersonnel != null) {
+            // 删除用户所有附件
             attachmentService.deleteAttachmentsByUser(id);
         }
         deleteById(id);

@@ -256,6 +256,59 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttac
         return attachment;
     }
 
+    /**
+     * 获取和创建附件
+     *
+     * @param attIds   附件ID
+     * @param attFiles 附件文件
+     * @return 所有附件
+     */
+    public List<SysAttachment> createAndGetAttachment1(String attIds, MultipartFile... attFiles) {
+        List<SysAttachment> attachments = null;
+        if (StringUtil.isNotEmpty(attIds)) {
+            attachments = getAttachments(attIds.split(","));
+        }
+
+        if (attFiles != null && attFiles.length > 0) {
+            if (attachments == null) {
+                attachments = new ArrayList<>(attFiles.length);
+            }
+            for (MultipartFile file : attFiles) {
+                if (file != null) {
+                    attachments.add(createFile(new FileCreateParam(file)));
+                }
+            }
+        }
+
+        return attachments;
+    }
+
+    /**
+     * 获取和创建附件
+     *
+     * @param attIds     附件ID
+     * @param fileParams 附件文件
+     * @return
+     */
+    public List<SysAttachment> createAndGetAttachment2(String attIds, FileCreateParam... fileParams) {
+        List<SysAttachment> attachments = null;
+        if (StringUtil.isNotEmpty(attIds)) {
+            attachments = getAttachments(attIds.split(","));
+        }
+
+        if (fileParams != null && fileParams.length > 0) {
+            if (attachments == null) {
+                attachments = new ArrayList<>(fileParams.length);
+            }
+            for (FileCreateParam fileParam : fileParams) {
+                if (fileParam != null) {
+                    attachments.add(createFile(fileParam));
+                }
+            }
+        }
+
+        return attachments;
+    }
 
     /**
      * 获取文件附件记录
@@ -266,7 +319,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttac
     }
 
     /**
-     * 持久化附件
+     * 删除附件
      */
     public int deleteAttachments(List<SysAttachment> attachments) {
         return deleteAttachments(getAttachmentIdArray(attachments));
@@ -326,8 +379,7 @@ public class SysAttachmentService extends ServiceSupport<SysAttachment, SysAttac
         }
         return null;
     }
-
-
+    
     public void deleteAttachmentsByUser(String id) {
         getSqlMapper().deleteAttachmentsByUser(id);
     }
