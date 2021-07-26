@@ -102,7 +102,7 @@ public class DBConnectionController extends ControllerSupport {
     @ResponseBody
     public Object delete(@RequestParam String id) {
         connectionService.deleteById(id);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @RequestMapping("/connect")
@@ -217,7 +217,7 @@ public class DBConnectionController extends ControllerSupport {
 
         generateService.saveBuildOption(tableOption, dbName);
 
-        return R.success();
+        return R.SUCCESS;
     }
 
     @RequestMapping("/db/build/file")
@@ -273,7 +273,7 @@ public class DBConnectionController extends ControllerSupport {
 
         generateService.saveBuildOption(tableOption, dbName);
 
-        return R.success();
+        return R.SUCCESS;
     }
 
 }

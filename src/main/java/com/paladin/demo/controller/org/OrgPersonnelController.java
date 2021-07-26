@@ -100,7 +100,7 @@ public class OrgPersonnelController extends ControllerSupport {
         validErrorHandler(bindingResult);
         orgPersonnelService.updatePersonnel(orgPersonnelDTO);
         // 更新成功后直接返回完整对象
-        return R.success();
+        return R.SUCCESS;
     }
 
     // 删除数据
@@ -111,7 +111,7 @@ public class OrgPersonnelController extends ControllerSupport {
     public R delete(@RequestParam String id) {
         // 根据主键删除
         orgPersonnelService.removePersonnel(id);
-        return R.success();
+        return R.SUCCESS;
     }
 
     // 导出Excel

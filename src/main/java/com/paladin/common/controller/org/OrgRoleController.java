@@ -10,8 +10,6 @@ import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.framework.api.R;
 import com.paladin.framework.service.PageResult;
-import com.paladin.framework.utils.UUIDUtil;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,7 +76,7 @@ public class OrgRoleController extends ControllerSupport {
     public R save(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgRoleService.saveRole(orgRoleDTO);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @PostMapping("/update")
@@ -87,7 +85,7 @@ public class OrgRoleController extends ControllerSupport {
     public R update(@Valid OrgRoleDTO orgRoleDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgRoleService.updateRole(orgRoleDTO);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @GetMapping("/grant/index")
@@ -110,6 +108,6 @@ public class OrgRoleController extends ControllerSupport {
     @NeedPermission("sys:role:grant")
     public R grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
         orgRolePermissionService.grantAuthorization(roleId, permissionIds);
-        return R.success();
+        return R.SUCCESS;
     }
 }

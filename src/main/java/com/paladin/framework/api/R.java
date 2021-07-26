@@ -73,6 +73,19 @@ public class R<T> implements Serializable {
         return new R<>(HttpCode.SUCCESS, data);
     }
 
+
+    /**
+     * 成功-携带数据
+     *
+     * @param msg  成功信息
+     * @param data 数据
+     * @param <T>  泛型标记
+     * @return Result
+     */
+    public static <T> R<T> success(String msg, T data) {
+        return new R<>(HttpCode.SUCCESS, msg, data);
+    }
+
     /**
      * 根据状态返回成功或者失败
      *

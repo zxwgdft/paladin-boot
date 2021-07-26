@@ -67,7 +67,7 @@ public class OrgAgencyController extends ControllerSupport {
     public R save(@Valid OrgAgencyDTO orgagencyDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgAgencyService.saveAgency(orgagencyDTO);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @PostMapping("/update")
@@ -77,7 +77,7 @@ public class OrgAgencyController extends ControllerSupport {
     public R update(@Valid OrgAgencyDTO orgagencyDTO, BindingResult bindingResult) {
         validErrorHandler(bindingResult);
         orgAgencyService.updateAgency(orgagencyDTO);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @PostMapping(value = "/delete")
@@ -86,7 +86,7 @@ public class OrgAgencyController extends ControllerSupport {
     @OperationLog(model = "机构管理", operate = "机构删除")
     public R delete(@RequestParam int id) {
         orgAgencyService.removeAgency(id);
-        return R.success();
+        return R.SUCCESS;
     }
 
 
