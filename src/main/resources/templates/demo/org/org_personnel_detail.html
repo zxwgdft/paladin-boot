@@ -28,104 +28,98 @@
             boxHeader: false,
             url: "/demo/org/personnel/update?id=" + $("#id").val(),
             columns: [
-            {
-                title: "姓名",
-                name: "name",
-                required: "required",
-                maxLength: 20,
-                inputType: "TEXT",
-                fieldset: true,
-                legend: '基本信息'
-            },
-
-            {
-                title: "证件类型",
-                name: "identificationType",
-                enum: "identification-type",
-                required: "required",
-                inputType: "SELECT"
-            },
-            {title: "证件号码", name: "identificationNo", required: "required", maxLength: 32, inputType: "TEXT"},
-            {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
-
-            {
-                // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
-                title: "所属机构",
-                name: "unitId",
-                inputType: "SELECT-TREE-SERVER",
-                url: "/demo/org/unit/find/tree",
-                layerWidth: "500px", // 弹出框宽度
-                required: "required",
-                isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
-                idField: "id",
-                nameField: "name"
-            },
-
-
-            {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO", fieldset: true, legend: '详细信息'},
-            {
-                title: "角色",
-                name: "roles",
-                required: "required",
-                inputType: "SELECT-SERVER",
-                multiple: true,
-                url: "/common/org/role/find/all",
-                idField: "id",
-                colspan: 2,
-                nameField: "roleName"
-            },
-            {title: "出生日期", name: "birthday", inputType: "DATE"},
-            {
-                title: "手机号码",
-                name: "cellphone",
-                maxLength: 20,
-                inputType: "TEXT",
-                attr: {
-                    "data-type": "cellphone",
-                    "placeholder": "请输入本人的手机号码"
-                    // 可以增加dom的属性，例如添加数据类型和最大长度用于验证
+                {
+                    title: "姓名",
+                    name: "name",
+                    required: "required",
+                    maxLength: 20,
+                    inputType: "TEXT",
+                    fieldset: true,
+                    legend: '基本信息'
                 },
-                // 性别男时候才能选择手机号码，如果值为多个可以在数组后面继续添加
-                dependency: ["sex", "1"]
-            },
-            {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
-            {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
-            {title: "简历", name: "resume", inputType: "EDITOR", fieldset: true, legend: '补充信息'},
-            {
-                // 子项添加，未做保存处理
-                title: "地址",
-                name: "address",
-                required: "required",
-                inputType: "SUB-MODEL",
-                subViewField: "personnelName",
-                addSubModelBtnTitle: '添加地址',
-                // colCount: 5,
-                subTitleViewHtmml: function (data) {
-                    var html = '<span class="product-description" style="line-height:34px">' + data.city + "-" + data.address + '</span>';
-                    return html;
+
+                {
+                    title: "证件类型",
+                    name: "identificationType",
+                    enum: "identification-type",
+                    required: "required",
+                    inputType: "SELECT"
                 },
-                subModelOptions: {
-                    boxHeader: false,
-                    server: false,
-                    layerOption: {
-                        height: 300,
-                        width: 600
+                {title: "证件号码", name: "identificationNo", required: "required", maxLength: 32, inputType: "TEXT"},
+                {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
+                {
+                    title: "角色",
+                    name: "roles",
+                    required: "required",
+                    inputType: "SELECT-SERVER",
+                    multiple: true,
+                    url: "/common/org/role/find/all",
+                    idField: "id",
+                    colspan: 2,
+                    nameField: "roleName"
+                },
+                {
+                    // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
+                    title: "所属机构",
+                    name: "agencyId",
+                    inputType: "SELECT-TREE-SERVER",
+                    url: "/demo/org/agency/find/tree",
+                    layerWidth: "500px", // 弹出框宽度
+                    required: "required",
+                    isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
+                    idField: "id",
+                    nameField: "name"
+                },
+                {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO", fieldset: true, legend: '详细信息'},
+                {title: "出生日期", name: "birthday", inputType: "DATE"},
+                {
+                    title: "手机号码",
+                    name: "cellphone",
+                    maxLength: 20,
+                    inputType: "TEXT",
+                    attr: {
+                        "data-type": "cellphone",
+                        "placeholder": "请输入本人的手机号码"
+                        // 可以增加dom的属性，例如添加数据类型和最大长度用于验证
+                    }
+                },
+                {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
+                {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
+                {
+                    // 子项添加，未做保存处理
+                    title: "地址",
+                    name: "address",
+                    inputType: "SUB-MODEL",
+                    subViewField: "personnelName",
+                    addSubModelBtnTitle: '添加地址',
+                    // colCount: 5,
+                    subTitleViewHtmml: function (data) {
+                        var html = '<span class="product-description" style="line-height:34px">' + data.city + "-" + data.address + '</span>';
+                        return html;
                     },
-                    columns: [
-                        {title: "所在地区", name: "city", inputType: "TEXT", required: "required"},
-                        {title: "详细地址", name: "address", inputType: "TEXT", required: "required"}
-                    ]
+                    subModelOptions: {
+                        boxHeader: false,
+                        server: false,
+                        layerOption: {
+                            height: 300,
+                            width: 600
+                        },
+                        columns: [
+                            {title: "所在地区", name: "city", inputType: "TEXT", required: "required"},
+                            {title: "详细地址", name: "address", inputType: "TEXT", required: "required"}
+                        ]
+                    }
+                },
+                {title: "简历", name: "resume", inputType: "EDITOR", fieldset: true, legend: '补充信息'},
+                {
+                    title: "附件",
+                    name: "attachment",
+                    inputType: "ATTACHMENT",
+                    fileName: "attachmentFiles",
+                    isPicture: false, // 如果是图片则只能接收后缀["jpeg", "jpg", "png", "gif"]，优先级低于allowedFileExtensions
+                    allowedFileExtensions: ["jpeg", "jpg", "png", "gif", "txt", "pdf", "xlsx", "xls", "doc", "docx", "rar", "zip", "mp4"]
                 }
-            },
-            {
-                title: "附件",
-                name: "attachment",
-                inputType: "ATTACHMENT",
-                fileName: "attachmentFiles",
-                isPicture: false, // 如果是图片则只能接收后缀["jpeg", "jpg", "png", "gif"]，优先级低于allowedFileExtensions
-                allowedFileExtensions: ["jpeg", "jpg", "png", "gif", "txt", "pdf", "xlsx", "xls", "doc", "docx", "rar", "zip", "mp4"]
-            }
-        ]
+            ]
         }
 
         $.getAjax("/demo/org/personnel/get?id=" + $("#id").val(), function (data) {

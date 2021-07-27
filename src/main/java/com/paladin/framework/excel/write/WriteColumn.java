@@ -58,6 +58,9 @@ public abstract class WriteColumn implements WriteComponent {
     // cell样式创建器
     private CellStyleCreator cellStyleCreator;
 
+    // cell样式是否通用
+    private boolean isStyleUniversal = true;
+
     // cell样式
     private CellStyle style;
 
@@ -74,7 +77,6 @@ public abstract class WriteColumn implements WriteComponent {
         }
 
         Cell cell = row.createCell(cellIndex);
-
         setCellValue(cell, data);
 
         // 固定宽度
@@ -86,7 +88,7 @@ public abstract class WriteColumn implements WriteComponent {
             sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum + rowSpan - 1, cellIndex, cellIndex));
         }
 
-        cell.setCellStyle(getCellStyle(workbook, commonCellStyle));
+        cell.setCellStyle(getCellStyle(workbook, commonCellStyle, data));
 
         return rowSpan;
     }
@@ -144,11 +146,12 @@ public abstract class WriteColumn implements WriteComponent {
      *
      * @param workbook        工作簿
      * @param commonCellStyle 基础样式，可以为NULL
+     * @param data            cell值
      * @return
      */
-    public CellStyle getCellStyle(Workbook workbook, CellStyle commonCellStyle) {
-        if (style == null) {
-            style = createCellStyle(workbook, commonCellStyle);
+    public CellStyle getCellStyle(Workbook workbook, CellStyle commonCellStyle, Object data) {
+        if (!isStyleUniversal || style == null) {
+            style = createCellStyle(workbook, commonCellStyle, data);
         }
         return style;
     }
@@ -163,9 +166,9 @@ public abstract class WriteColumn implements WriteComponent {
     /**
      * 创建当前列的样式
      */
-    protected CellStyle createCellStyle(Workbook workbook, CellStyle commonCellStyle) {
+    protected CellStyle createCellStyle(Workbook workbook, CellStyle commonCellStyle, Object data) {
         if (cellStyleCreator != null) {
-            return cellStyleCreator.createCellStyle(workbook, commonCellStyle, this);
+            return cellStyleCreator.createCellStyle(workbook, commonCellStyle, this, data);
         } else {
             // 缺省情况下默认创建样式
             CellStyle style = workbook.createCellStyle();
@@ -194,6 +197,11 @@ public abstract class WriteColumn implements WriteComponent {
         if (dateFormat != null && dateFormat.length() > 0) {
             dateFormatter = new SimpleDateFormat(dateFormat);
         }
+    }
+
+    public void setCellStyleCreator(CellStyleCreator cellStyleCreator) {
+        this.cellStyleCreator = cellStyleCreator;
+        this.isStyleUniversal = cellStyleCreator.isStyleUniversal();
     }
 
 }

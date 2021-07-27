@@ -13,7 +13,6 @@ import java.util.Date;
 @Setter
 public class OrgPersonnel extends DeletedBaseModel {
 
-    public static final String FIELD_IDENTIFICATION_NO = "identificationNo";
     //
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;

@@ -19,6 +19,7 @@ import com.paladin.framework.service.ServiceSupport;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.UUIDUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
+import com.paladin.framework.utils.others.PinyinUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,9 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
         orgPersonnel.setAttachment(attachmentService.joinAttachmentId(attachments));
 
         String password = sysUserService.createUserAccount(account, id, SysUser.USER_TYPE_PERSONNEL);
+
+        // 设置拼音首字母
+        orgPersonnel.setPinyinName(PinyinUtil.toPinyinInitial(orgPersonnel.getName()));
         save(orgPersonnel);
         return password;
     }
@@ -89,7 +93,8 @@ public class OrgPersonnelService extends ServiceSupport<OrgPersonnel, OrgPersonn
         }
 
         SimpleBeanCopyUtil.simpleCopy(orgPersonnelDTO, orgPersonnel);
-
+        // 设置拼音首字母
+        orgPersonnel.setPinyinName(PinyinUtil.toPinyinInitial(orgPersonnel.getName()));
         updateWhole(orgPersonnel);
     }
 

@@ -18,6 +18,10 @@ public class DemoUserSession extends CommonUserSession {
     public DemoUserSession(String userId, String userName, String account, boolean isSystemAdmin, Integer agencyId, int... roleIds) {
         super(userId, userName, account, isSystemAdmin, roleIds);
         this.agencyId = agencyId;
+        if(isSystemAdmin) {
+            this.roleLevel = ROLE_LEVEL_APP_ADMIN;
+        }
+
     }
 
     public static DemoUserSession getCurrentUserSession() {

@@ -32,10 +32,10 @@ public class CommonUserSession extends UserSession implements AuthorizationInfo 
         return (CommonUserSession) SecurityUtils.getSubject().getPrincipal();
     }
 
-    private List<Integer> roleIds;
-    private List<String> roleIdStr;
-    private int roleLevel;
-    private boolean isSystemAdmin;
+    protected List<Integer> roleIds;
+    protected List<String> roleIdStr;
+    protected int roleLevel;
+    protected boolean isSystemAdmin;
 
     /**
      * 设置角色ID

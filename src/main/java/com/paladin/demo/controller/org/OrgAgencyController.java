@@ -125,7 +125,7 @@ public class OrgAgencyController extends ControllerSupport {
 
         condition.putCellStyleCreator(
                 OrgAgency::getId,
-                (Workbook workbook, CellStyle commonCellStyle, WriteColumn writeColumn) -> {
+                (Workbook workbook, CellStyle commonCellStyle, WriteColumn writeColumn, Object data) -> {
                     CellStyle style = workbook.createCellStyle();
                     if (commonCellStyle != null) {
                         style.cloneStyleFrom(commonCellStyle);

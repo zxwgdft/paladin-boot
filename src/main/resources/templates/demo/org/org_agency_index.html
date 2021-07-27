@@ -13,19 +13,19 @@
         <div class="box-body">
             <div class="table-toolbar-tonto">
                 <button type="button"
-                        class="btn btn-primary btn-tonto tonto-btn-search"
+                        class="btn btn-primary tonto-btn-search"
                         onclick="table.refresh()">
                     <i class="fa fa-search"></i>&nbsp;查询
                 </button>
                 <div class="pull-right">
-                    <a class="btn btn-default btn-tonto"
+                    <a class="btn btn-default"
                        style="float:left;margin-right:10px"
                        onclick="table.export()">
                         <i class="glyphicon glyphicon-export"></i>&nbsp;导出
                     </a>
 
-                    <a class="btn bg-olive btn-tonto"
-                       style="width:75px;float:left;"
+                    <a class="btn bg-olive"
+                       style="float:left;"
                        onclick="add()">
                         <i class="fa fa-plus"></i>&nbsp;新增
                     </a>
@@ -57,16 +57,16 @@
                         align: "center",
                         width: "180px",
                         events: {
-                            'click .detail': function (e, value, row, index) {
-                                detail(row);
+                            'click .edit': function (e, value, row, index) {
+                                edit(row);
                             },
                             'click .remove': function (e, value, row, index) {
                                 remove(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-flat btn-info" style="margin-right:10px"><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                                '<button class="remove btn btn-xs btn-flat btn-danger"><i class="fa fa-remove"></i>&nbsp;删除</button>';
+                            return '<button class="edit btn btn-primary" style="margin-right:10px"><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
+                                '<button class="remove btn btn-danger"><i class="fa fa-trash-o"></i>&nbsp;删除</button>';
 
                         }
                     }
@@ -108,19 +108,17 @@
         window.location = '/demo/org/agency/add';
     }
 
-    function detail(row) {
-        window.location = '/demo/org/agency/edit' + (row ? ('?id=' + row.id) : '');
+    function edit(row) {
+        window.location = '/demo/org/agency/edit?id=' + row.id;
     }
 
     function remove(row) {
-        if (row) {
-            layer.confirm('确定删除吗?', function () {
-                $.postAjax('/demo/org/agency/delete?id=' + row.id, function () {
-                    $.successMessage("删除成功");
-                    table.refresh();
-                });
+        layer.confirm('确定删除吗?', function () {
+            $.postAjax('/demo/org/agency/delete?id=' + row.id, function () {
+                $.successMessage("删除成功");
+                table.refresh();
             });
-        }
+        });
     }
 </script>
 </body>

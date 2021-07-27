@@ -20,19 +20,16 @@ if (typeof String.prototype.rtrim !== 'function') {
         return this.replace(/(\s*$)/g, "");
     }
 }
-
 if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function (prefix) {
         return this.slice(0, prefix.length) === prefix;
     };
 }
-
 if (typeof String.prototype.endsWith !== 'function') {
     String.prototype.endsWith = function (suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
-
 if (!Array.prototype.forEach) {
     Array.prototype.forEach = function forEach(callback, thisArg) {
         var T, k;
@@ -58,6 +55,9 @@ if (!Array.prototype.forEach) {
         }
     };
 }
+
+// 风格-大小：影响一些控件的大小，normal/small
+var _style_size = 'small';
 
 (function ($) {
 
@@ -1459,7 +1459,7 @@ function _initTable() {
                             var switchOption = {
                                 onText: "是",
                                 offText: "否",
-                                size: "small"
+                                size: 'small'
                             }
 
                             if (col.switchOption) {

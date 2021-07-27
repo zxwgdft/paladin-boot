@@ -155,7 +155,7 @@ legend {
     height: 40px;
 }
 
-.btn-tonto {
+.table-toolbar-tonto .btn {
     border-radius: 0;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -167,9 +167,18 @@ legend {
     min-width: 75px;
 }
 
-.input-tonto {
+.table-toolbar-tonto input {
     height: 30px;
     padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.table .btn {
+    border-radius: 0;
+    box-shadow: none;
+    border-width: 1px;
+    padding: 1px 5px;
     font-size: 12px;
     line-height: 1.5;
 }
@@ -179,14 +188,17 @@ legend {
     padding: 5px;
 }
 
-
+/* 缩小表格，不需要则删除 */
+.bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td {
+    padding: 5px;
+}
 
 .content-header {
     position: relative;
     padding: 10px 10px 0 10px;
 }
 
-.content-header>.breadcrumb {
+.content-header > .breadcrumb {
     padding: 0px 5px;
 }
 
