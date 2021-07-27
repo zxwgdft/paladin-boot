@@ -39,7 +39,6 @@ public class OrgPersonnelController extends ControllerSupport {
     @Autowired
     private OrgPersonnelService orgPersonnelService;
 
-
     // @QueryInputMethod 用于查询回显，加载页面时会尝试去读取query参数
     @GetMapping("/index")
     @QueryInputMethod(queryClass = OrgPersonnelQuery.class)

@@ -19,4 +19,7 @@ public class OrgPersonnelQuery extends PageParam {
     @QueryCondition(type = QueryType.EQUAL)
     private Integer agencyId;
 
+    @QueryCondition(type = QueryType.EQUAL)
+    private Integer identificationType;
+
 }

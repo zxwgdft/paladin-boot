@@ -21,6 +21,17 @@
                            name="name" th:value="${query?.name}"
                            placeholder="请输入查询的姓名"/>
 
+                    <input type="text" class="form-control"
+                           style="width:200px;float:left;margin-right:10px"
+                           name="name" th:value="${query?.identificationNo}"
+                           placeholder="请输入查询的身份证号"/>
+
+                    <select name="identificationType" class="form-control tonto-select-constant"
+                            style="width:200px;float:left;margin-right:10px"
+                            th:attr="selectedvalue=${query?.identificationType}" enumcode="identification-type">
+                        <option value="">请选择查询证件类型</option>
+                    </select>
+
                     <button type="button"
                             class="btn btn-primary tonto-btn-search"
                             style="float:left;margin-right:10px"

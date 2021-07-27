@@ -22,10 +22,13 @@
             AND (a.name like CONCAT('%',#{query.name},'%') OR a.pinyin_name like LOWER(CONCAT('%',#{query.name},'%')))
         </if>
         <if test="query.identificationNo!=null and query.identificationNo!=''">
-            AND a.identification_no = #{identificationNo}
+            AND a.identification_no = #{query.identificationNo}
+        </if>
+        <if test="query.identificationType!=null">
+            AND a.identification_type = #{query.identificationType}
         </if>
         <if test="query.agencyId!=null">
-            AND b.id = #{agencyId}
+            AND b.id = #{query.agencyId}
         </if>
         <if test="permission.hasAll!=true">
             <if test="permission.agencyId!=null">

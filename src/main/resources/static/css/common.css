@@ -167,7 +167,7 @@ legend {
     min-width: 75px;
 }
 
-.table-toolbar-tonto input {
+.table-toolbar-tonto input, .table-toolbar-tonto select{
     height: 30px;
     padding: 5px 10px;
     font-size: 12px;
