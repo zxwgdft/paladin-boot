@@ -1,3 +1,4 @@
+
 // --------------------------------------
 // IE 兼容
 // --------------------------------------
@@ -56,8 +57,13 @@ if (!Array.prototype.forEach) {
     };
 }
 
-// 风格-大小：影响一些控件的大小，normal/small
-var _style_size = 'small';
+
+var _isBigScreen = window.screen.width >= 1600;
+var _gid = 99999;
+
+function _generateId() {
+    return ++_gid;
+}
 
 (function ($) {
 
@@ -224,7 +230,6 @@ var _style_size = 'small';
                     success: options
                 };
             }
-
             options = $.extend(options, {
                 type: 1,
                 title: options.title || '',
@@ -292,7 +297,7 @@ var _style_size = 'small';
             return [w + "px", h + "px"];
         },
         openLayerEditor: function (subOp) {
-            subOp.id = subOp.id || "model_" + new Date().getTime();
+            subOp.id = subOp.id || "layer_" + _generateId();
             var defaultSubOp = {
                 cancelBtn: false,
                 editFormClass: false,
@@ -311,11 +316,10 @@ var _style_size = 'small';
                 pattern: "edit"
             }
 
-            var subOp = $.extend(defaultSubOp, subOp);
-
+            subOp = $.extend(defaultSubOp, subOp);
 
             var html = generateEditFormHtml(subOp, false);
-            html = "<div style='padding-top:50px;padding-bottom:50px;padding-right:10px;padding-left:10px'>" + html + "</div>";
+            html = "<div style='padding:50px 10px 50px 10px;'>" + html + "</div>";
             var layerOption = subOp.layerOption || {};
             layerOption = $.extend({
                     success: function (layero, index) {
@@ -328,7 +332,6 @@ var _style_size = 'small';
                             subOp.successCallback = function () {
                                 //成功提交表单后回调
                                 $.successMessage("保存成功");
-
                                 layer.close(index);
                             }
                         } else {
@@ -343,7 +346,7 @@ var _style_size = 'small';
                 },
                 layerOption);
 
-            var index = $.openPageLayer(html, layerOption);
+            $.openPageLayer(html, layerOption);
         }
     });
 
@@ -398,8 +401,23 @@ var _style_size = 'small';
                 $.validErrorHandler(xhr);
             } else {
                 var rj = xhr.responseJSON;
-                rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
+                if(rj) {
+                    if($.isArray(rj)) {
+                        if(rj.length == 1) {
+                            $.errorMessage(rj[0]);
+                        } else {
+                            var h = "<ul>";
+                            rj.forEach(function(item){
+                                h+='<li>' + item + '</li>';
+                            })
+                            $.errorMessage(h);
+                        }
+                    } else {
+                        $.errorMessage(rj.message || rj.error || "操作失败")
+                    }
+                } else {
                     $.errorMessage(xhr.responseText || "操作失败");
+                }
             }
         },
         // 发送ajax请求，并做通用处理

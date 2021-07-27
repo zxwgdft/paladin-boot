@@ -85,16 +85,17 @@
                 },
                 {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
                 {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
+                {title: "所在城市", name: "address", inputType: "AREA-PICK", colspan: 2},
                 {
                     // 子项添加，未做保存处理
-                    title: "地址",
-                    name: "address",
+                    title: "紧急联系人",
+                    name: "emergencyContact",
                     inputType: "SUB-MODEL",
                     subViewField: "personnelName",
-                    addSubModelBtnTitle: '添加地址',
+                    addSubModelBtnTitle: '添加联系人',
                     // colCount: 5,
-                    subTitleViewHtmml: function (data) {
-                        var html = '<span class="product-description" style="line-height:34px">' + data.city + "-" + data.address + '</span>';
+                    subTitleViewHtml: function (data) {
+                        var html = '<p class="product-description" style="line-height: 34px">姓名：' + data.name + "/电话：" + data.phone + '</p>';
                         return html;
                     },
                     subModelOptions: {
@@ -105,8 +106,8 @@
                             width: 600
                         },
                         columns: [
-                            {title: "所在地区", name: "city", inputType: "TEXT", required: "required"},
-                            {title: "详细地址", name: "address", inputType: "TEXT", required: "required"}
+                            {title: "姓名", name: "name", inputType: "TEXT", required: "required"},
+                            {title: "电话", name: "phone", inputType: "TEXT", required: "required"}
                         ]
                     }
                 },
