@@ -17,6 +17,8 @@ import java.util.*;
  */
 public class CommonUserSession extends UserSession implements AuthorizationInfo {
 
+    public static final int ROLE_LEVEL_APP_ADMIN = 999;
+
     public CommonUserSession(String userId, String userName, String account, boolean isSystemAdmin, int... roleIds) {
         super(userId, userName, account);
         this.isSystemAdmin = isSystemAdmin;

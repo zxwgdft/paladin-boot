@@ -11,6 +11,7 @@
 <section class="content">
     <div class="box box-solid">
         <div id="result" class="box-body">
+            <!-- 需要查询数据回显，如下方式操作 -->
             <input type="hidden" id="pageLimit" th:value="${query?.limit}"/>
             <input type="hidden" id="pageOffset" th:value="${query?.offset}"/>
 
@@ -91,7 +92,6 @@
                     },
                     {
                         title: "操作",
-                        align: "center",
                         width: "200px",
                         events: {
                             'click .detail': function (e, value, row, index) {

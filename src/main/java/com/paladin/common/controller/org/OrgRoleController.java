@@ -55,7 +55,7 @@ public class OrgRoleController extends ControllerSupport {
 
     @GetMapping("/get")
     @ResponseBody
-    public OrgRole getDetail(@RequestParam String id) {
+    public OrgRole getDetail(@RequestParam int id) {
         return orgRoleService.get(id);
     }
 
@@ -64,10 +64,10 @@ public class OrgRoleController extends ControllerSupport {
         return "/common/org/role_add";
     }
 
-    @RequestMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
+    @GetMapping("/edit")
+    public String detailInput(@RequestParam int id, Model model) {
         model.addAttribute("id", id);
-        return "/common/org/role_detail";
+        return "/common/org/role_edit";
     }
 
     @PostMapping("/save")
@@ -88,6 +88,22 @@ public class OrgRoleController extends ControllerSupport {
         return R.SUCCESS;
     }
 
+    @PostMapping("/disabled")
+    @ResponseBody
+    @NeedPermission("sys:role:update")
+    public R disabled(@RequestParam int id) {
+        orgRoleService.updateRoleDisabled(id);
+        return R.SUCCESS;
+    }
+
+    @PostMapping("/enabled")
+    @ResponseBody
+    @NeedPermission("sys:role:update")
+    public R enabled(@RequestParam int id) {
+        orgRoleService.updateRoleEnabled(id);
+        return R.SUCCESS;
+    }
+
     @GetMapping("/grant/index")
     public String grantAuthorizationInput(@RequestParam String id, Model model) {
         model.addAttribute("roleId", id);
@@ -96,9 +112,9 @@ public class OrgRoleController extends ControllerSupport {
 
     @PostMapping("/grant/find/permission")
     @ResponseBody
-    public Object getGrantAuthorization(@RequestParam String id, Model model) {
+    public Object getGrantAuthorization(@RequestParam int id) {
         Map<String, Object> result = new HashMap<>();
-        result.put("permissions", orgPermissionService.findGrantablePermission());
+        result.put("permissions", orgPermissionService.findPermission4Grant());
         result.put("hasPermissions", orgRolePermissionService.getPermissionByRole(id));
         return result;
     }
@@ -106,7 +122,7 @@ public class OrgRoleController extends ControllerSupport {
     @PostMapping("/grant")
     @ResponseBody
     @NeedPermission("sys:role:grant")
-    public R grantAuthorization(@RequestParam("roleId") String roleId, @RequestParam(required = false, name = "permissionId[]") String[] permissionIds) {
+    public R grantAuthorization(@RequestParam("roleId") int roleId, @RequestParam(required = false, name = "permissionId[]") int[] permissionIds) {
         orgRolePermissionService.grantAuthorization(roleId, permissionIds);
         return R.SUCCESS;
     }

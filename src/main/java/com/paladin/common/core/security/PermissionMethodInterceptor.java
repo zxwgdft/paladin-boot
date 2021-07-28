@@ -2,9 +2,12 @@ package com.paladin.common.core.security;
 
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.UserSession;
+import com.paladin.framework.utils.StringUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+
+import java.util.Collection;
 
 /**
  * 简单权限的实现
@@ -38,4 +41,26 @@ public class PermissionMethodInterceptor {
         }
     }
 
+    @Before("@annotation(needRole)")
+    public void beforeRequest(JoinPoint point, NeedRole needRole) {
+        UserSession userSession = UserSession.getCurrentUserSession();
+        Collection<String> roles = userSession.getRoles();
+        if (roles != null && roles.size() > 0) {
+            String need = needRole.value();
+            for (String role : roles) {
+                if (StringUtil.equals(role, need)) {
+                    return;
+                }
+            }
+        }
+        throw new BusinessException("没有访问或操作权限");
+    }
+
+    @Before("@annotation(needRoleLevel)")
+    public void beforeRequest(JoinPoint point, NeedRoleLevel needRoleLevel) {
+        UserSession userSession = UserSession.getCurrentUserSession();
+        if (userSession.getRoleLevel() < needRoleLevel.value()) {
+            throw new BusinessException("没有访问或操作权限");
+        }
+    }
 }

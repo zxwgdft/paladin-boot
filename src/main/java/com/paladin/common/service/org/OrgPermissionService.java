@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class OrgPermissionService extends ServiceSupport<OrgPermission, OrgPermissionMapper> {
 
-    public List<OrgPermission> findGrantablePermission() {
+    public List<OrgPermission> findPermission4Grant() {
         return findList(new LambdaQueryWrapper<OrgPermission>().eq(OrgPermission::getGrantable, true));
     }
 

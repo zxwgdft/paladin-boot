@@ -13,29 +13,40 @@ public class PermissionContainer {
     // role to permission set
     private Map<Integer, Set<CodePermission>> role2PermissionMap;
     // permission code to permission
-    private Map<String, CodePermission> permissionMap;
+    private Map<String, CodePermission> code2permissionMap;
+    // permission id to permission
+    private Map<Integer, CodePermission> id2permissionMap;
 
     private List<CodePermission> adminCodePermissionList;
     private List<String> adminPermissionCodeList;
 
-    public PermissionContainer(Map<String, CodePermission> permissionMap, Map<Integer, Set<String>> role2PermissionCodeMap, Map<Integer, Set<CodePermission>> role2PermissionMap) {
+    public PermissionContainer(Map<Integer, CodePermission> id2permissionMap, Map<String, CodePermission> code2permissionMap, Map<Integer, Set<String>> role2PermissionCodeMap, Map<Integer, Set<CodePermission>> role2PermissionMap) {
         this.role2PermissionCodeMap = role2PermissionCodeMap;
         this.role2PermissionMap = role2PermissionMap;
-        this.permissionMap = permissionMap;
+        this.code2permissionMap = code2permissionMap;
+        this.id2permissionMap = id2permissionMap;
 
-        this.adminCodePermissionList = new ArrayList<>(permissionMap.values());
+        this.adminCodePermissionList = new ArrayList<>(code2permissionMap.values());
         this.adminPermissionCodeList = new ArrayList<>(adminCodePermissionList.size());
 
-        for (CodePermission codePermission : adminCodePermissionList) adminPermissionCodeList.add(codePermission.getCode());
+        for (CodePermission codePermission : adminCodePermissionList) {
+            if(codePermission.isAdmin()) {
+                adminPermissionCodeList.add(codePermission.getCode());
+            }
+        }
     }
 
-    public boolean hasPermission(String roleId, String code) {
+    public boolean hasPermission(int roleId, String code) {
         Set<String> codes = role2PermissionCodeMap.get(roleId);
         return codes != null && codes.contains(code);
     }
 
     public CodePermission getPermission(String code) {
-        return permissionMap.get(code);
+        return code2permissionMap.get(code);
+    }
+
+    public CodePermission getPermission(int id) {
+        return id2permissionMap.get(id);
     }
 
     public Collection<String> getPermissionCodeByRole(List<Integer> roleIds) {

@@ -50,7 +50,6 @@
 ${tableColumns}
                     {
                         title: "操作",
-                        align: "center",
                         width: "200px",
                         events: {
                             'click .detail': function(e, value, row, index) {

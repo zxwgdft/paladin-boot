@@ -12,9 +12,13 @@
         background-color: #fff;
         border: 0px;
     }
+
+    body{
+        font-size: 16px;
+    }
 </style>
 
-<body>
+<body class="container">
 <section class="content-header">
     <h1>角色管理</h1>
     <ol class="breadcrumb">
@@ -25,18 +29,21 @@
 <section class="content">
     <div class="box box-solid">
         <div class="box-body">
-            <div class="box-body">
-                <div id="permissionTree"></div>
-                <div style="text-align: center;">
-                    <button id="saveBtn" class="btn btn-primary" style="width: 120px">保存</button>
+            <div id="permissionTree"></div>
+
+            <div class="form-button-bar" style="margin-bottom:30px">
+                <div class="btn-group">
+                    <button id="saveBtn" class="btn btn-success btn-flat" style="width: 120px;">保存
+                    </button>
+                    <button onclick="location='/common/org/role/index'" class="btn btn-default btn-flat"
+                            style="width: 120px;margin-left: 30px">返回
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a href="/common/org/role/index" class="btn btn-primary btn-block">返回</a>
-</div>
+
 <input type="hidden" id="roleId" th:value="${roleId}"/>
 <div th:include="/footer"></div>
 <script type="text/javascript">
@@ -44,7 +51,7 @@
     var roleId;
     $(function () {
         roleId = $("#roleId").val();
-        $.getAjax("/common/org/role/grant/find/codePermission?id=" + roleId, function (data) {
+        $.postAjax("/common/org/role/grant/find/permission?id=" + roleId, function (data) {
             initTree(roleId, data, $("#permissionTree"));
         });
     });
@@ -56,11 +63,10 @@
 
         tree = treeDiv;
 
-        if (data.codePermissions) {
-
-            var codePermissions = data.codePermissions,
+        if (data.permissions) {
+            var permissions = data.permissions,
                 hasPermissions = data.hasPermissions,
-                root = $.grep(codePermissions, function (n, i) {
+                root = $.grep(permissions, function (n, i) {
                     return n.parentId ? false : true;
                 });
 
@@ -75,11 +81,7 @@
                         checked: hasPermissions ? ($.inArray(p.id, hasPermissions) != -1) : false
                     }
 
-                    if (p.isMenu == 1) {
-                        node.tags = ["菜单"];
-                    }
-
-                    var children = $.grep(codePermissions, function (n, i) {
+                    var children = $.grep(permissions, function (n, i) {
                         return n.parentId == p.id;
                     });
 

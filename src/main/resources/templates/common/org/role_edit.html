@@ -9,19 +9,19 @@
         <h1>角色管理</h1>
         <ol class="breadcrumb">
             <li><a href="/common/org/role/index"><i class="fa fa-list-alt"></i>角色列表</a></li>
-            <li class="active">角色新增</li>
+            <li class="active">角色编辑</li>
         </ol>
     </section>
     <section class="content">
     </section>
+    <input type="hidden" id="id" th:value="${id}"/>
     <div th:include="/footer" />
     <script type="text/javascript">
     var options = {
         id: "model",
-        name: "角色新增",
+        name: "角色编辑",
         bigScreen: false,
-        cancelBtn: false,
-        url: "/common/org/role/save",
+        url: "/common/org/role/update?id=" + $("#id").val(),
         columns: [
             { title: "角色名称", name: "roleName", inputType: "TEXT", required:"required" },
             { title: "角色权限等级", name: "roleLevel", inputType: "SELECT", enum: "role-level-type", required:"required"},
@@ -34,17 +34,19 @@
     	var html = generateEditHtml(options);
         $(".content").html(html);
        	$.initComponent($(".content"));
-        
-        var model = new tonto.Model("model", options.columns, {
-            pattern:"edit",
-            back: "/common/org/role/index",
-            successCallback:function(){
-            	$.successAlert("保存成功", function() {
-                    window.location = "/common/org/role/index";
-                });
-            }
+
+        $.getAjax("/common/org/role/get?id=" + $("#id").val(), function (data) {
+            var model = new tonto.Model("model", options.columns, {
+                pattern: "edit",
+                back: "/common/org/role/index",
+                successCallback: function () {
+                    $.successAlert("修改成功", function () {
+                        window.location = "/common/org/role/index";
+                    });
+                }
+            });
+            model.setData(data);
         });
-        model.setData(null);
     });
     </script>
 </body>

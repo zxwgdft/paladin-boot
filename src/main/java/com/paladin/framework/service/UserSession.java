@@ -5,6 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * 用户会话信息
@@ -48,8 +49,20 @@ public abstract class UserSession implements Serializable {
         return account;
     }
 
-
+    /**
+     * @return 是否是系统管理员
+     */
     public abstract boolean isSystemAdmin();
+
+    /**
+     * @return 用户角色等级
+     */
+    public abstract int getRoleLevel();
+
+    /**
+     * @return 用户角色集合
+     */
+    public abstract Collection<String> getRoles();
 
     private final static String ATTRIBUTION_PLACEHOLDER = "paladin_session_placeholder";
 

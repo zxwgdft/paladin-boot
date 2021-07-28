@@ -17,7 +17,7 @@ public class PermissionUtil {
                 CodePermission codePermission = permissionContainer.getPermission(permissionCode);
                 return codePermission != null && codePermission.isAdmin();
             } else {
-                for (String roleId : userSession.getRoles()) {
+                for (int roleId : userSession.getRoleIdList()) {
                     if (permissionContainer.hasPermission(roleId, permissionCode)) return true;
                 }
             }

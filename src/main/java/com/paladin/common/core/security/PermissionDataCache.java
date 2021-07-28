@@ -78,6 +78,6 @@ public class PermissionDataCache implements DataCache<PermissionContainer> {
             codePermissionSet.add(codePermission);
         }
 
-        return new PermissionContainer(code2permissionMap, role2CodesMap, role2PermissionsMap);
+        return new PermissionContainer(permissionMap, code2permissionMap, role2CodesMap, role2PermissionsMap);
     }
 }
