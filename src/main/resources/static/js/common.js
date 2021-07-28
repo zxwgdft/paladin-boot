@@ -1,4 +1,3 @@
-
 // --------------------------------------
 // IE 兼容
 // --------------------------------------
@@ -401,14 +400,14 @@ function _generateId() {
                 $.validErrorHandler(xhr);
             } else {
                 var rj = xhr.responseJSON;
-                if(rj) {
-                    if($.isArray(rj)) {
-                        if(rj.length == 1) {
+                if (rj) {
+                    if ($.isArray(rj)) {
+                        if (rj.length == 1) {
                             $.errorMessage(rj[0]);
                         } else {
                             var h = "<ul>";
-                            rj.forEach(function(item){
-                                h+='<li>' + item + '</li>';
+                            rj.forEach(function (item) {
+                                h += '<li>' + item + '</li>';
                             })
                             $.errorMessage(h);
                         }
@@ -1986,37 +1985,15 @@ function _initTable() {
                             params.filter = JSON.stringify(that.filterColumnsPartial, null);
                         }
 
-                        var calculateObjectValue = function (self, name, args, defaultValue) {
-                            var func = name;
-
-                            if (typeof name === 'string') {
-                                // support obj.func1.func2
-                                var names = name.split('.');
-
-                                if (names.length > 1) {
-                                    func = window;
-                                    $.each(names, function (i, f) {
-                                        func = func[f];
-                                    });
-                                } else {
-                                    func = window[name];
-                                }
+                        if (that.options.queryParams) {
+                            if (typeof that.options.queryParams === 'function') {
+                                params = that.options.queryParams(params);
+                            } else {
+                                params = $.extend(params, that.options.queryParams);
                             }
-                            if (typeof func === 'object') {
-                                return func;
-                            }
-                            if (typeof func === 'function') {
-                                return func.apply(self, args || []);
-                            }
-                            if (!func && typeof name === 'string' && sprintf.apply(this, [name].concat(args))) {
-                                return sprintf.apply(this, [name].concat(args));
-                            }
-                            return defaultValue;
-                        };
+                        }
 
-                        data = calculateObjectValue(that.options, that.options.queryParams, [params], data);
-
-                        if (data === false) {
+                        if (params === false) {
                             return;
                         }
                         // copy from bootstrap-table end
