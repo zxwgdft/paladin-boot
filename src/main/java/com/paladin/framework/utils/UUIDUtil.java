@@ -2,34 +2,24 @@ package com.paladin.framework.utils;
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class UUIDUtil {
 
-    private final static SecureRandom numberGenerator = new SecureRandom();
-
     /**
-     * 创建32位UUID
-     *
-     * @return
+     * @return 32位UUID
      */
     public static String create32UUID() {
-        byte[] data = new byte[16];
-        numberGenerator.nextBytes(data);
-        data[6] &= 0x0f; /* clear version */
-        data[6] |= 0x40; /* set to version 4 */
-        data[8] &= 0x3f; /* clear variant */
-        data[8] |= 0x80; /* set to IETF variant */
+        // 使用ThreadLocalRandom获取UUID获取更优的效果
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        long mostSigBits = random.nextLong();
+        long leastSigBits = random.nextLong();
 
-        long msb = 0;
-        long lsb = 0;
-        assert data.length == 16;
-        for (int i = 0; i < 8; i++)
-            msb = (msb << 8) | (data[i] & 0xff);
-        for (int i = 8; i < 16; i++)
-            lsb = (lsb << 8) | (data[i] & 0xff);
-
-        return (digits(msb >> 32, 8) + digits(msb >> 16, 4) + digits(msb, 4) + digits(lsb >> 48, 4) + digits(lsb, 12));
+        return (digits(mostSigBits >> 32, 8) +
+                digits(mostSigBits >> 16, 4) +
+                digits(mostSigBits, 4) +
+                digits(leastSigBits >> 48, 4) +
+                digits(leastSigBits, 12));
     }
 
     private static String digits(long val, int digits) {
@@ -38,20 +28,39 @@ public class UUIDUtil {
     }
 
     /**
-     * 创建压缩的UUID（对32位UUID进行Base64编码）
-     *
-     * @return
+     * @return 压缩的UUID（对32位UUID进行Base64编码）
      */
     public static String createUUID() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        long mostSigBits = random.nextLong();
+        long leastSigBits = random.nextLong();
+
         byte[] randomBytes = new byte[16];
-        numberGenerator.nextBytes(randomBytes);
+
+        randomBytes[0] = (byte) (mostSigBits >> 56);
+        randomBytes[1] = (byte) (mostSigBits >> 48);
+        randomBytes[2] = (byte) (mostSigBits >> 40);
+        randomBytes[3] = (byte) (mostSigBits >> 32);
+        randomBytes[4] = (byte) (mostSigBits >> 24);
+        randomBytes[5] = (byte) (mostSigBits >> 16);
+        randomBytes[6] = (byte) (mostSigBits >> 8);
+        randomBytes[7] = (byte) (mostSigBits);
+
+        randomBytes[8] = (byte) (leastSigBits >> 56);
+        randomBytes[9] = (byte) (leastSigBits >> 48);
+        randomBytes[10] = (byte) (leastSigBits >> 40);
+        randomBytes[11] = (byte) (leastSigBits >> 32);
+        randomBytes[12] = (byte) (leastSigBits >> 24);
+        randomBytes[13] = (byte) (leastSigBits >> 16);
+        randomBytes[14] = (byte) (leastSigBits >> 8);
+        randomBytes[15] = (byte) (leastSigBits);
+
         return Base64.encodeBase64URLSafeString(randomBytes);
     }
 
+
     public static void main(String[] args) {
-        for (int i = 0; i < 20; i++) {
-            System.out.println(createUUID());
-        }
+        System.out.println(createUUID());
     }
 
 }
