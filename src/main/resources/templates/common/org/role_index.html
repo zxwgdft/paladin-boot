@@ -43,15 +43,25 @@
                 [
                     {title: "角色名称", field: "roleName"},
                     {title: "角色权限等级", field: "roleLevel", enumcode: "role-level-type"},
+                    // {
+                    //     title: "是否启用",
+                    //     field: "enable",
+                    //     formatter: function (value, row, index) {
+                    //         return value ? '<span class="label label-success">已启用</span>' :
+                    //             '<span class="label label-danger">未启用</span>';
+                    //     }
+                    // },
+                    {title: "角色说明", field: "roleDesc"},
                     {
                         title: "是否启用",
                         field: "enable",
-                        formatter: function (value, row, index) {
-                            return value ? '<span class="label label-success">已启用</span>' :
-                                '<span class="label label-danger">未启用</span>';
+                        switch: true,
+                        onSwitchChange: function (row, state, event) {
+                            // 开-关动作事件处理，在这里进行后台服务调用
+                            state ? $.postAjax("/common/org/role/enabled?id=" + row.id) :
+                                $.postAjax("/common/org/role/disabled?id=" + row.id);
                         }
                     },
-                    {title: "角色说明", field: "roleDesc"},
                     {
                         title: "操作",
                         width: "200px",
@@ -65,7 +75,7 @@
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="edit btn btn-primary" style="margin-right:10px"><i class="fa fa-edit"></i>&nbsp;编辑</button>' +
-                                '<button class="grant btn btn-success"><i class="fa fa-cog"></i>&nbsp;授权</button>';
+                                '<button class="grant btn btn-success" style="margin-right:10px"><i class="fa fa-cog"></i>&nbsp;授权</button>';
                         }
                     }
                 ]
@@ -83,7 +93,6 @@
     function edit(row) {
         window.location = '/common/org/role/edit?id=' + row.id;
     }
-
 
     function grant(row) {
         window.location = '/common/org/role/grant/index?id=' + row.id;

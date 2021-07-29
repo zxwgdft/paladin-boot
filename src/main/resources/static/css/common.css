@@ -153,6 +153,8 @@ legend {
 
 .table-toolbar-tonto {
     height: 40px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
 }
 
 .table-toolbar-tonto .btn {

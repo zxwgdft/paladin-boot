@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.common.mapper.org.OrgRolePermissionMapper">
 
-    <select id="getPermissionByRole" resultType="string">
+    <select id="getPermissionByRole" resultType="int">
 		SELECT permission_id FROM org_role_permission WHERE role_id = #{id}
 	</select>
 

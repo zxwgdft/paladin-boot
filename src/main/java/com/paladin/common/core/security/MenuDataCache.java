@@ -89,7 +89,7 @@ public class MenuDataCache implements DataCache<MenuContainer> {
             roleMenuMap2.put(entry.getKey(), new MenuToRole(entry.getValue()));
         }
 
-        return new MenuContainer(rootMenus, roleMenuMap2, new MenuToRole(adminMenus));
+        return new MenuContainer(menuMap, rootMenus, roleMenuMap2, new MenuToRole(adminMenus));
     }
 
 

@@ -40,9 +40,7 @@ public class OrgRolePermissionService {
                 orgRolePermissionMapper.insertByBatch(roleId, pids);
             }
         }
-
         DataCacheHelper.reloadCache(PermissionContainer.class);
     }
-
 
 }

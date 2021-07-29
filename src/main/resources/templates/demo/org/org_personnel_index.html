@@ -10,7 +10,7 @@
 </section>
 <section class="content">
     <div class="box box-solid">
-        <div id="result" class="box-body">
+        <div class="box-body">
             <!-- 需要查询数据回显，如下方式操作 -->
             <input type="hidden" id="pageLimit" th:value="${query?.limit}"/>
             <input type="hidden" id="pageOffset" th:value="${query?.offset}"/>
@@ -81,15 +81,6 @@
                     {title: "证件号码", field: "identificationNo"},
                     {title: "出生日期", field: "birthday", formatter: "date"},
                     {title: "手机号码", field: "cellphone"},
-                    {
-                        title: "是否启用",
-                        field: "enabled",
-                        switch: true,
-                        onSwitchChange: function (row, state, event) {
-                            // 开-关动作事件处理，在这里进行后台服务调用，这里仅做事例
-                            console.log(row);
-                        }
-                    },
                     {
                         title: "操作",
                         width: "200px",

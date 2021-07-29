@@ -3,9 +3,7 @@ package com.paladin.common.controller.org;
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.security.NeedPermission;
 import com.paladin.common.model.org.OrgRole;
-import com.paladin.common.service.org.OrgPermissionService;
-import com.paladin.common.service.org.OrgRolePermissionService;
-import com.paladin.common.service.org.OrgRoleService;
+import com.paladin.common.service.org.*;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.common.service.org.dto.OrgRoleQueryDTO;
 import com.paladin.framework.api.R;
@@ -34,7 +32,13 @@ public class OrgRoleController extends ControllerSupport {
     private OrgPermissionService orgPermissionService;
 
     @Autowired
+    private OrgMenuService orgMenuService;
+
+    @Autowired
     private OrgRolePermissionService orgRolePermissionService;
+
+    @Autowired
+    private OrgRoleMenuService orgRoleMenuService;
 
     @GetMapping("/index")
     public String index() {
@@ -105,25 +109,37 @@ public class OrgRoleController extends ControllerSupport {
     }
 
     @GetMapping("/grant/index")
-    public String grantAuthorizationInput(@RequestParam String id, Model model) {
+    public String grantPermissionInput(@RequestParam String id, Model model) {
         model.addAttribute("roleId", id);
         return "/common/org/role_grant";
     }
 
-    @PostMapping("/grant/find/permission")
+    @PostMapping("/grant/data")
     @ResponseBody
-    public Object getGrantAuthorization(@RequestParam int id) {
+    public Object getGrantPermission(@RequestParam int id) {
         Map<String, Object> result = new HashMap<>();
         result.put("permissions", orgPermissionService.findPermission4Grant());
         result.put("hasPermissions", orgRolePermissionService.getPermissionByRole(id));
+
+        result.put("menus", orgMenuService.findMenu4Grant());
+        result.put("hasMenus", orgRoleMenuService.getMenuByRole(id));
+
         return result;
     }
 
-    @PostMapping("/grant")
+    @PostMapping("/grant/do/permission")
     @ResponseBody
     @NeedPermission("sys:role:grant")
-    public R grantAuthorization(@RequestParam("roleId") int roleId, @RequestParam(required = false, name = "permissionId[]") int[] permissionIds) {
+    public R grantPermission(@RequestParam("roleId") int roleId, @RequestParam(required = false, name = "permissionId[]") int[] permissionIds) {
         orgRolePermissionService.grantAuthorization(roleId, permissionIds);
+        return R.SUCCESS;
+    }
+
+    @PostMapping("/grant/do/menu")
+    @ResponseBody
+    @NeedPermission("sys:role:grant")
+    public R grantMenu(@RequestParam("roleId") int roleId, @RequestParam(required = false, name = "menuId[]") int[] menuIds) {
+        orgRoleMenuService.grantAuthorization(roleId, menuIds);
         return R.SUCCESS;
     }
 }

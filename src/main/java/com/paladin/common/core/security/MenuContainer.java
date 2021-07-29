@@ -8,12 +8,14 @@ import java.util.*;
  */
 public class MenuContainer {
 
+    private Map<Integer, Menu> menuMap;
     private List<Menu> rootMenus;
     private MenuToRole adminMenus;
     private Map<Integer, MenuToRole> roleMenuMap;
     private Map<MultiRoleKey, MenuToRole> multiRoleMenuMap;
 
-    public MenuContainer(List<Menu> rootMenus, Map<Integer, MenuToRole> roleMenuMap, MenuToRole adminMenus) {
+    public MenuContainer(Map<Integer, Menu> menuMap, List<Menu> rootMenus, Map<Integer, MenuToRole> roleMenuMap, MenuToRole adminMenus) {
+        this.menuMap = menuMap;
         this.roleMenuMap = roleMenuMap;
         this.rootMenus = rootMenus;
         this.adminMenus = adminMenus;
@@ -51,6 +53,10 @@ public class MenuContainer {
 
     public Collection<Menu> getAdminMenus() {
         return adminMenus.getRootMenus();
+    }
+
+    public Menu getMenu(int id){
+        return menuMap.get(id);
     }
 
     private static class MultiRoleKey {

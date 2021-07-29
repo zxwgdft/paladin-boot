@@ -8,13 +8,13 @@
         position: relative;
         display: block;
         padding: 5px 10px;
-        margin-bottom: -1px;
+        margin-bottom: 2px;
         background-color: #fff;
         border: 0px;
     }
 
-    body{
-        font-size: 16px;
+    body {
+        font-size: 15px;
     }
 </style>
 
@@ -28,16 +28,36 @@
 </section>
 <section class="content">
     <div class="box box-solid">
-        <div class="box-body">
-            <div id="permissionTree"></div>
-
-            <div class="form-button-bar" style="margin-bottom:30px">
-                <div class="btn-group">
-                    <button id="saveBtn" class="btn btn-success btn-flat" style="width: 120px;">保存
-                    </button>
-                    <button onclick="location='/common/org/role/index'" class="btn btn-default btn-flat"
-                            style="width: 120px;margin-left: 30px">返回
-                    </button>
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">功能授权</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">菜单授权</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                    <div id="functionTree"></div>
+                    <div class="form-button-bar" style="margin-bottom:30px">
+                        <div class="btn-group">
+                            <button id="saveFunctionBtn" class="btn btn-success btn-flat" style="width: 120px;">保存
+                            </button>
+                            <button onclick="location='/common/org/role/index'" class="btn btn-default btn-flat"
+                                    style="width: 120px;margin-left: 30px">返回
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.tab-pane -->
+                <div class="tab-pane" id="tab_2">
+                    <div id="menuTree"></div>
+                    <div class="form-button-bar" style="margin-bottom:30px">
+                        <div class="btn-group">
+                            <button id="saveMenuBtn" class="btn btn-success btn-flat" style="width: 120px;">保存
+                            </button>
+                            <button onclick="location='/common/org/role/index'" class="btn btn-default btn-flat"
+                                    style="width: 120px;margin-left: 30px">返回
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,27 +68,74 @@
 <div th:include="/footer"></div>
 <script type="text/javascript">
     /*<![CDATA[*/
-    var roleId;
+    var roleId, functionTree, menuTree, currentTree;
     $(function () {
         roleId = $("#roleId").val();
-        $.postAjax("/common/org/role/grant/find/permission?id=" + roleId, function (data) {
-            initTree(roleId, data, $("#permissionTree"));
+        functionTree = $("#functionTree");
+        menuTree = $("#menuTree");
+
+        functionTree.nodeCheckedSilent = false;
+        functionTree.nodeUncheckedSilent = false;
+
+        menuTree.nodeCheckedSilent = false;
+        menuTree.nodeUncheckedSilent = false;
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if ($(e.target).attr("href") == '#tab_1') {
+                currentTree = functionTree;
+            } else {
+                currentTree = menuTree;
+            }
+        });
+
+        $.postAjax("/common/org/role/grant/data?id=" + roleId, function (data) {
+            initTree(roleId, data.permissions, data.hasPermissions, functionTree);
+            initTree(roleId, data.menus, data.hasMenus, menuTree);
+
+            currentTree = functionTree;
+
+            $("#saveFunctionBtn").click(function () {
+                var checkedNodes = currentTree.treeview("getChecked");
+                var ids = [];
+                if (checkedNodes && $.isArray(checkedNodes)) {
+                    checkedNodes.forEach(function (a) {
+                        ids.push(a.data.id);
+                    });
+                }
+                var data = {
+                    roleId: roleId,
+                    permissionId: ids
+                }
+                $.postAjax("/common/org/role/grant/do/permission", data, function () {
+                    $.successMessage("保存成功");
+                })
+            });
+
+
+            $("#saveMenuBtn").click(function () {
+                var checkedNodes = currentTree.treeview("getChecked");
+                var ids = [];
+                if (checkedNodes && $.isArray(checkedNodes)) {
+                    checkedNodes.forEach(function (a) {
+                        ids.push(a.data.id);
+                    });
+                }
+                var data = {
+                    roleId: roleId,
+                    menuId: ids
+                }
+                $.postAjax("/common/org/role/grant/do/menu", data, function () {
+                    $.successMessage("保存成功");
+                })
+            });
         });
     });
 
-    var tree;
-    var treedata;
-
-    function initTree(roleId, data, treeDiv) {
-
-        tree = treeDiv;
-
-        if (data.permissions) {
-            var permissions = data.permissions,
-                hasPermissions = data.hasPermissions,
-                root = $.grep(permissions, function (n, i) {
-                    return n.parentId ? false : true;
-                });
+    function initTree(roleId, permissions, hasPermissions, tree) {
+        if (permissions) {
+            var root = $.grep(permissions, function (n, i) {
+                return n.parentId ? false : true;
+            });
 
             var g = function (ps) {
                 var nodes = [];
@@ -94,7 +161,7 @@
                 return nodes;
             }
 
-            treedata = g(root);
+            var treedata = g(root);
 
             tree.treeview({
                 data: treedata,
@@ -103,64 +170,39 @@
                 onNodeUnchecked: nodeUnchecked,
                 levels: 5
             });
-
-
-            $("#saveBtn").click(function () {
-                var checkedNodes = tree.treeview("getChecked");
-                var ids = [];
-
-                if (checkedNodes && $.isArray(checkedNodes)) {
-                    checkedNodes.forEach(function (a) {
-                        ids.push(a.data.id);
-                    });
-                }
-
-                var data = {
-                    roleId: roleId,
-                    permissionId: ids
-                }
-
-                $.postAjax("/common/org/role/grant", data, function () {
-                    $.successAlert("保存成功", function () {
-                        window.location = "/common/org/role/index";
-                    });
-                })
-
-            });
         }
     }
 
     function nodeCheckedChanged(node, checked) {
+
     }
 
-    var nodeCheckedSilent = false;
 
     function nodeChecked(event, node) {
-        if (nodeCheckedSilent) {
+        if (currentTree.nodeCheckedSilent) {
             return;
         }
-        nodeCheckedSilent = true;
+        currentTree.nodeCheckedSilent = true;
         //checkAllParent(node);
         checkAllSon(node);
-        nodeCheckedSilent = false;
+        currentTree.nodeCheckedSilent = false;
     }
 
-    var nodeUncheckedSilent = false;
 
     function nodeUnchecked(event, node) {
-        if (nodeUncheckedSilent)
+        if (currentTree.nodeUncheckedSilent)
             return;
-        nodeUncheckedSilent = true;
+        currentTree.nodeUncheckedSilent = true;
         uncheckAllParent(node);
         uncheckAllSon(node);
-        nodeUncheckedSilent = false;
+        currentTree.nodeUncheckedSilent = false;
     }
 
     //选中全部父节点
     function checkAllParent(node) {
         nodeCheckedChanged(node, true);
-        tree.treeview('checkNode', node.nodeId, {silent: true});
-        var parentNode = tree.treeview('getParent', node.nodeId);
+        currentTree.treeview('checkNode', node.nodeId, {silent: true});
+        var parentNode = currentTree.treeview('getParent', node.nodeId);
         if (!("nodeId" in parentNode)) {
             return;
         } else {
@@ -171,12 +213,12 @@
     //取消全部父节点
     function uncheckAllParent(node) {
         nodeCheckedChanged(node, false);
-        tree.treeview('uncheckNode', node.nodeId, {silent: true});
-        var siblings = tree.treeview('getSiblings', node.nodeId);
-        var parentNode = tree.treeview('getParent', node.nodeId);
+        currentTree.treeview('uncheckNode', node.nodeId, {silent: true});
+        var parentNode = currentTree.treeview('getParent', node.nodeId);
         if (!("nodeId" in parentNode)) {
             return;
         }
+        // var siblings = currentTree.treeview('getSiblings', node.nodeId);
         // var isAllUnchecked = true; //是否全部没选中
         // for (var i in siblings) {
         //     if (siblings[i].state.checked) {
@@ -195,7 +237,7 @@
     //级联选中所有子节点
     function checkAllSon(node) {
         nodeCheckedChanged(node, true);
-        tree.treeview('checkNode', node.nodeId, {silent: true});
+        currentTree.treeview('checkNode', node.nodeId, {silent: true});
         if (node.nodes != null && node.nodes.length > 0) {
             for (var i in node.nodes) {
                 checkAllSon(node.nodes[i]);
@@ -206,7 +248,7 @@
     //级联取消所有子节点
     function uncheckAllSon(node) {
         nodeCheckedChanged(node, false);
-        tree.treeview('uncheckNode', node.nodeId, {silent: true});
+        currentTree.treeview('uncheckNode', node.nodeId, {silent: true});
         if (node.nodes != null && node.nodes.length > 0) {
             for (var i in node.nodes) {
                 uncheckAllSon(node.nodes[i]);
