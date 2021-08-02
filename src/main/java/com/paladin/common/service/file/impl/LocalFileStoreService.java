@@ -1,6 +1,6 @@
-package com.paladin.common.service.core.impl;
+package com.paladin.common.service.file.impl;
 
-import com.paladin.common.service.core.FileStoreService;
+import com.paladin.common.service.file.FileStoreService;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +18,10 @@ import java.nio.file.Paths;
  * @author TontoZhou
  * @since 2020/6/28
  */
-public class DefaultFileStoreService implements FileStoreService {
+public class LocalFileStoreService implements FileStoreService {
 
     @Value("${paladin.file.base-path}")
     private String filePath;
-
 
     @PostConstruct
     protected void initialize() {
@@ -86,7 +85,7 @@ public class DefaultFileStoreService implements FileStoreService {
 
     @Override
     public String getStoreType() {
-        return "default";
+        return "local";
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.paladin.common.service.sys;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.paladin.common.mapper.sys.SysAttachmentMapper;
 import com.paladin.common.model.sys.SysAttachment;
-import com.paladin.common.service.core.FileStoreService;
+import com.paladin.common.service.file.FileStoreService;
 import com.paladin.common.service.sys.dto.FileCreateParam;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.ServiceSupport;

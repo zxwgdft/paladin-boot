@@ -1,7 +1,7 @@
-package com.paladin.common.service.core.impl;
+package com.paladin.common.service.file.impl;
 
-import com.paladin.common.service.core.FileStoreService;
-import com.paladin.framework.io.FtpHelper;
+import com.paladin.common.service.file.FileStoreService;
+import com.paladin.common.service.util.FtpHelper;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Value;
 

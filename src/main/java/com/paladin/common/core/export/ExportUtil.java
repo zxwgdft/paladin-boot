@@ -1,10 +1,10 @@
 package com.paladin.common.core.export;
 
 import com.paladin.common.core.export.ExportCondition.ExportColumn;
+import com.paladin.common.service.file.TemporaryFileHelper;
+import com.paladin.common.service.file.TemporaryFileOutputStream;
 import com.paladin.framework.excel.write.*;
 import com.paladin.framework.exception.BusinessException;
-import com.paladin.framework.io.TemporaryFileHelper;
-import com.paladin.framework.io.TemporaryFileHelper.TemporaryFileOutputStream;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.IOException;
@@ -18,9 +18,9 @@ public class ExportUtil {
     public static <T> String export(ExportCondition condition, List<T> data, Class<T> exportClass) throws IOException, ExcelWriteException {
         String fileType = condition.getFileType();
         if (ExportCondition.FILE_TYPE_EXCEL.equals(fileType)) {
-            try (TemporaryFileOutputStream output = TemporaryFileHelper.getFileOutputStream(condition.getFileName(), "xlsx")) {
+            try (TemporaryFileOutputStream output = TemporaryFileHelper.getTemporaryFileOutputStream(condition.getFileName(), "xlsx")) {
                 exportExcel(condition, data, exportClass, output);
-                return output.getFileRelativeUrl();
+                return output.getFileUrl();
             }
         } else {
             throw new BusinessException("导出文件类型[" + fileType + "]不存在！");

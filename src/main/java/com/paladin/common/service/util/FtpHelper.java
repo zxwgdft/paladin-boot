@@ -1,4 +1,4 @@
-package com.paladin.framework.io;
+package com.paladin.common.service.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;

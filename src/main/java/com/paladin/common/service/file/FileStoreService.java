@@ -1,4 +1,4 @@
-package com.paladin.common.service.core;
+package com.paladin.common.service.file;
 
 import java.io.InputStream;
 

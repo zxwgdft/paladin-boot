@@ -2014,7 +2014,7 @@ function _initTable() {
                                     layer.close(layeroIndex);
                                 });
 
-                                window.open("/file" + fileUrl);
+                                window.open(fileUrl);
                             },
                             submitBtn: $("#_exportSubmitBtn")
                         });

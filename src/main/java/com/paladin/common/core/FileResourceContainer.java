@@ -1,7 +1,7 @@
 package com.paladin.common.core;
 
 import com.paladin.common.model.sys.SysAttachment;
-import com.paladin.common.service.core.FileStoreService;
+import com.paladin.common.service.file.FileStoreService;
 import com.paladin.common.service.sys.SysAttachmentService;
 import com.paladin.common.service.sys.vo.FileResource;
 import org.springframework.beans.factory.annotation.Autowired;
