@@ -1,9 +1,13 @@
 package com.paladin.framework.utils;
 
+import com.paladin.framework.utils.secure.SecureUtil;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * ThreadLocalRandom 拥有更高的性能，jmh（10线程）测试下快了近10倍
+ */
 public class UUIDUtil {
 
     /**
@@ -31,31 +35,7 @@ public class UUIDUtil {
      * @return 压缩的UUID（对32位UUID进行Base64编码）
      */
     public static String createUUID() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        long mostSigBits = random.nextLong();
-        long leastSigBits = random.nextLong();
-
-        byte[] randomBytes = new byte[16];
-
-        randomBytes[0] = (byte) (mostSigBits >> 56);
-        randomBytes[1] = (byte) (mostSigBits >> 48);
-        randomBytes[2] = (byte) (mostSigBits >> 40);
-        randomBytes[3] = (byte) (mostSigBits >> 32);
-        randomBytes[4] = (byte) (mostSigBits >> 24);
-        randomBytes[5] = (byte) (mostSigBits >> 16);
-        randomBytes[6] = (byte) (mostSigBits >> 8);
-        randomBytes[7] = (byte) (mostSigBits);
-
-        randomBytes[8] = (byte) (leastSigBits >> 56);
-        randomBytes[9] = (byte) (leastSigBits >> 48);
-        randomBytes[10] = (byte) (leastSigBits >> 40);
-        randomBytes[11] = (byte) (leastSigBits >> 32);
-        randomBytes[12] = (byte) (leastSigBits >> 24);
-        randomBytes[13] = (byte) (leastSigBits >> 16);
-        randomBytes[14] = (byte) (leastSigBits >> 8);
-        randomBytes[15] = (byte) (leastSigBits);
-
-        return Base64.encodeBase64URLSafeString(randomBytes);
+        return Base64.encodeBase64URLSafeString(SecureUtil.random16bytes());
     }
 
 

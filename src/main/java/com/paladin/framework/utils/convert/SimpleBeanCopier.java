@@ -9,7 +9,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 简单BEAN拷贝器
+ * 简单BEAN拷贝器，要求靠谱字段类型一致，但性能更佳，jmh测试10线程下比commons-beanutils的copy property方法快了40倍
+ *
+ * Benchmark             Mode  Cnt         Score         Error  Units
+ * BeanCopier           thrpt    5  23920663.624 ± 2428870.681  ops/s
+ * commons-beanutils    thrpt    5    679927.877 ±   95276.205  ops/s
  *
  * @author TontoZhou
  * @since 2018年7月5日
