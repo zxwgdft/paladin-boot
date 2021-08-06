@@ -2,7 +2,6 @@ package com.paladin.common.config;
 
 import com.paladin.framework.constants.GlobalProperties;
 import com.paladin.framework.service.QueryHandlerInterceptor;
-import com.paladin.framework.spring.DevelopCondition;
 import com.paladin.framework.web.convert.DateFormatter;
 import com.paladin.framework.web.filter.LimitFrameFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -58,10 +57,6 @@ public class CommonWebMvcConfigurer implements WebMvcConfigurer {
         log.info("静态资源存放地址：" + staticPath);
         log.info("favicon存放地址：" + faviconPath);
 
-        if (DevelopCondition.isDevelop(environment)) {
-            registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-            registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-        }
     }
 
     @Override
