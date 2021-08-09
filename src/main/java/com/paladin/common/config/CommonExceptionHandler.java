@@ -46,7 +46,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (ex instanceof BusinessException) {
             BusinessException businessException = (BusinessException) ex;
-            if (businessException.isHasChildException()) {
+            if (businessException.getCause() != null) {
                 log.error("服务异常", businessException);
             } else {
                 if (status.is5xxServerError()) {
