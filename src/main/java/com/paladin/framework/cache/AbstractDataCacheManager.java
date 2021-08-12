@@ -1,6 +1,6 @@
 package com.paladin.framework.cache;
 
-import com.paladin.framework.exception.BusinessException;
+import com.paladin.framework.exception.SystemException;
 import com.paladin.framework.spring.SpringBeanHelper;
 import com.paladin.framework.utils.reflect.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,8 @@ import java.util.Map;
 public abstract class AbstractDataCacheManager implements ApplicationRunner, DataCacheManager {
 
     private Map<String, DataCacheWrapper> id2CacheMap;
-    private Map<Class, DataCacheWrapper> class2CacheMap;
-    private Map<Class, DataCacheWrapper> dataClass2CacheMap;
+    private Map<String, DataCacheWrapper> class2CacheMap;
+    private Map<String, DataCacheWrapper> dataClass2CacheMap;
 
     private boolean initialized = false;
 
@@ -29,14 +29,14 @@ public abstract class AbstractDataCacheManager implements ApplicationRunner, Dat
 
         Map<String, DataCache> dataCacheBeanMap = SpringBeanHelper.getBeansByType(DataCache.class);
 
-        if (dataCacheBeanMap == null) {
+        if (dataCacheBeanMap == null || dataCacheBeanMap.size() == 0) {
             log.warn("没有找到任何DataCache实例");
             return;
         }
 
         Map<String, DataCacheWrapper> id2CacheMap = new HashMap<>();
-        Map<Class, DataCacheWrapper> class2CacheMap = new HashMap<>();
-        Map<Class, DataCacheWrapper> dataClass2CacheMap = new HashMap<>();
+        Map<String, DataCacheWrapper> class2CacheMap = new HashMap<>();
+        Map<String, DataCacheWrapper> dataClass2CacheMap = new HashMap<>();
 
 
         for (Map.Entry<String, DataCache> entry : dataCacheBeanMap.entrySet()) {
@@ -50,15 +50,15 @@ public abstract class AbstractDataCacheManager implements ApplicationRunner, Dat
             }
 
             id2CacheMap.put(cacheId, cache);
-            class2CacheMap.put(cache.getClass(), cache);
+            class2CacheMap.put(cache.getClass().getName(), cache);
 
             // 通过泛型查找缓存的数据对象
             Class dataClass = ReflectUtil.getSuperClassArgument(source.getClass(), DataCache.class, 0);
             if (dataClass != null) {
-                if (dataClass2CacheMap.containsKey(dataClass)) {
+                if (dataClass2CacheMap.containsKey(dataClass.getName())) {
                     log.warn("存在多个DataCache的数据缓存对象为[" + dataClass + "]");
                 }
-                dataClass2CacheMap.put(dataClass, cache);
+                dataClass2CacheMap.put(dataClass.getName(), cache);
             }
         }
 
@@ -76,34 +76,34 @@ public abstract class AbstractDataCacheManager implements ApplicationRunner, Dat
         if (cache != null) {
             cache.toLoad();
         } else {
-            throw new BusinessException("找不到[ID:" + id + "]对应DataCache");
+            throw new SystemException(SystemException.CODE_ERROR_CODE, "找不到[ID:" + id + "]对应的DataCacheWrapper");
         }
     }
 
     public void reloadCache(Class clazz) {
-        DataCacheWrapper cache = null;
-        if (DataCache.class.isAssignableFrom(clazz)) {
-            cache = class2CacheMap.get(clazz);
-        } else {
-            cache = dataClass2CacheMap.get(clazz);
+        String key = clazz.getName();
+        DataCacheWrapper cache = class2CacheMap.get(key);
+        if (cache == null) {
+            cache = dataClass2CacheMap.get(clazz.getName());
         }
+
         if (cache != null) {
             cache.toLoad();
         } else {
-            throw new BusinessException("找不到[" + clazz + "]对应DataCache");
+            throw new SystemException(SystemException.CODE_ERROR_CODE, "找不到[" + clazz + "]对应的DataCacheWrapper");
         }
     }
 
     @Override
     public <T> T getData(Class<T> clazz) {
-        DataCacheWrapper dataCache = dataClass2CacheMap.get(clazz);
+        DataCacheWrapper dataCache = dataClass2CacheMap.get(clazz.getName());
         if (dataCache != null) {
             return (T) dataCache.getData();
         } else {
             if (initialized) {
-                throw new BusinessException("找不到[" + clazz + "]对应DataCache");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "找不到[" + clazz + "]对应的DataCacheWrapper");
             } else {
-                throw new BusinessException("系统正在启动中");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "系统正在启动中");
             }
         }
     }
@@ -115,30 +115,30 @@ public abstract class AbstractDataCacheManager implements ApplicationRunner, Dat
             return dataCache.getData();
         } else {
             if (initialized) {
-                throw new BusinessException("找不到[ID:" + cacheId + "]对应DataCache");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "找不到[ID:" + cacheId + "]对应的DataCacheWrapper");
             } else {
-                throw new BusinessException("系统正在启动中");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "系统正在启动中");
             }
         }
     }
 
     @Override
     public Object getDataOfCache(Class<? extends DataCache> clazz) {
-        DataCacheWrapper dataCache = class2CacheMap.get(clazz);
+        DataCacheWrapper dataCache = class2CacheMap.get(clazz.getName());
         if (dataCache != null) {
             return dataCache.getData();
         } else {
             if (initialized) {
-                throw new BusinessException("找不到[" + clazz + "]对应DataCache");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "找不到[" + clazz + "]对应的DataCacheWrapper");
             } else {
-                throw new BusinessException("系统正在启动中");
+                throw new SystemException(SystemException.CODE_ERROR_CODE, "系统正在启动中");
             }
         }
     }
 
     @Override
     public <T> DataCacheWrapper<T> getDataCacheWrapper(Class<T> clazz) {
-        return dataClass2CacheMap.get(clazz);
+        return dataClass2CacheMap.get(clazz.getName());
     }
 
     @Override

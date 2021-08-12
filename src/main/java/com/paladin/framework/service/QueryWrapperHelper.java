@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class QueryWrapperHelper {
 
-    private static Map<Class<?>, Builder> buildCache = new ConcurrentHashMap<>();
+    private static Map<String, Builder> buildCache = new ConcurrentHashMap<>();
 
     /**
      * 根据注解构建查询条件
@@ -71,13 +71,15 @@ public class QueryWrapperHelper {
      * 获取查询条件构建起
      */
     private static Builder getBuilder(Class<?> queryParamClass) {
-        Builder builder = buildCache.get(queryParamClass);
+        String key = queryParamClass.getName();
+        Builder builder = buildCache.get(key);
         if (builder == null) {
             // 同步创建Builder
             synchronized (buildCache) {
-                builder = buildCache.get(queryParamClass);
+                builder = buildCache.get(key);
                 if (builder == null) {
                     builder = new Builder(queryParamClass);
+                    buildCache.put(key, builder);
                 }
             }
         }
