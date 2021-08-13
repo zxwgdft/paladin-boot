@@ -36,7 +36,6 @@ public class CommonUserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authToken;
-
         String username = token.getUsername();
         SysUser sysUser = sysUserService.getUserByAccount(username);
 
