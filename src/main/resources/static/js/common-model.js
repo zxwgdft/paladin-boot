@@ -8,14 +8,6 @@
 //
 // 控件封装后可更方便统一替换和解决bug
 // -----------------------------------------
-
-var _isBigScreen = window.screen.width >= 1600;
-var _gid = 99999;
-
-function _generateId() {
-    return ++_gid;
-}
-
 function generateTagAttribute(obj) {
     if (!obj) return '';
     var s = [];
@@ -221,8 +213,8 @@ function generateEditFormHtml(options, hide) {
             id: id + '_form_submit_btn',
             type: options.server === false ? 'button' : 'submit',
             name: options.submitBtnName || '保存',
-            width: options.submitBtnWidth || '150px',
-            class: options.submitBtnClass || 'btn btn-primary btn-flat',
+            width: options.submitBtnWidth || '120px',
+            class: options.submitBtnClass || 'btn btn-success btn-flat',
             order: -1
         });
     }
@@ -231,7 +223,7 @@ function generateEditFormHtml(options, hide) {
         formButtonBar.push({
             id: id + '_form_back_btn',
             type: 'button',
-            width: options.backBtnWidth || '150px',
+            width: options.backBtnWidth || '120px',
             name: options.backBtnName || '返回',
             class: options.backBtnClass || 'btn btn-default btn-flat',
             order: 9999
@@ -245,7 +237,7 @@ function generateEditFormHtml(options, hide) {
     if (typeof options.generateFormButtonBar === 'function') {
         html += options.generateFormButtonBar();
     } else if (formButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
+        html += '<div class="form-group ' + (options.formButtonBarClass ? options.formButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle + '">\n';
         html += '<div class="btn-group">\n';
 
         formButtonBar.forEach(function (a) {
@@ -403,7 +395,7 @@ function generateViewFormHtml(options) {
     });
 
     if (viewButtonBar.length > 0) {
-        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle+ '">\n';
+        html += '<div class="form-group ' + (options.viewButtonBarClass ? options.viewButtonBarClass : 'form-button-bar') + '" style="' + options.formButtonBarStyle + '">\n';
         html += '<div class="btn-group">\n';
 
         viewButtonBar.forEach(function (a) {
@@ -1426,7 +1418,6 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 noneSelectedText: column.noneSelectedText || '没有选中任何项', //多选未选中任意选项提示
             });
         }
-        ;
 
         if (model.status == 'view') {
             this.fillView(column, model.data, model);
@@ -1509,6 +1500,33 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
                 }
             }
         }
+    },
+    hideEdit: function (column, model, target) {
+        // 隐藏编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (d.hasClass("dropdown")) {
+            d = d.parent();
+        }
+        var f = d.parent();
+        d.hide();
+        d.prev().hide();
+        if (f.children(":visible").length == 0) {
+            f.hide();
+        }
+    },
+    showEdit: function (column, model, target) {
+        // 显示编辑域
+        var p = target || this.getEditTarget(column, model);
+        if (!p || p.length == 0) return;
+        var d = p.is("div") ? p : p.parent();
+        if (d.hasClass("dropdown")) {
+            d = d.parent();
+        }
+        d.show();
+        d.prev().show();
+        d.parent().show();
     },
     generateEditFormHtml: function (column, isFirst, options) {
         var labelSize = column.labelSize || options.labelSize,
@@ -1935,9 +1953,9 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
                     });
                     fileCount++;
                 });
-                model.formBody.attr('enctype','multipart/form-data');
+                model.formBody.attr('enctype', 'multipart/form-data');
             } else {
-                model.formBody.attr('enctype','application/x-www-form-urlencoded');
+                model.formBody.attr('enctype', 'application/x-www-form-urlencoded');
             }
 
 
@@ -2316,14 +2334,14 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             itemHtml = column.createSubDataHtml();
         } else {
             itemHtml = '';
-            var subTitleViewHtmml;
-            if (typeof column.subTitleViewHtmml === 'function') {
-                subTitleViewHtmml = column.subTitleViewHtmml(data);
+            var subTitleViewHtml;
+            if (typeof column.subTitleViewHtml === 'function') {
+                subTitleViewHtml = column.subTitleViewHtml(data);
             } else {
-                subTitleViewHtmml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
+                subTitleViewHtml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
             }
 
-            itemHtml += subTitleViewHtmml;
+            itemHtml += subTitleViewHtml;
         }
 
         contentContainer.append(itemHtml);
@@ -2339,14 +2357,14 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
                 '<a class="btn" id="' + column.name + '_sub_edit_btn" href="javascript:void(0)"><i class="fa fa-edit"></i>编辑</a>\n' +
                 '<a class="btn" id="' + column.name + '_sub_remove_btn" href="javascript:void(0)"><i class="fa fa-remove"></i>删除</a>\n' +
                 '</div>';
-            var subTitleViewHtmml;
-            if (typeof column.subTitleViewHtmml === 'function') {
-                subTitleViewHtmml = column.subTitleViewHtmml(data);
+            var subTitleViewHtml;
+            if (typeof column.subTitleViewHtml === 'function') {
+                subTitleViewHtml = column.subTitleViewHtml(data);
             } else {
-                subTitleViewHtmml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
+                subTitleViewHtml += "<h3 style='display: inline-block;font-size: 18px;margin: 0;line-height: 1;'>" + data[column.subViewField] + "</h3>";
             }
 
-            itemHtml += subTitleViewHtmml;
+            itemHtml += subTitleViewHtml;
         }
 
         var div, com;
@@ -2579,7 +2597,7 @@ var _editorFieldBuilder = new _FieldBuilder("EDITOR", {
     }
 });
 
-// 省市区联动控件，需要district相关插件
+// 省市区联动控件，需要district相关插件，pick地区插件可能有问题
 var _areaPickFieldBuilder = new _FieldBuilder("AREA-PICK", {
     getDataName: function (column, v) {
         if (v || v === 0) {
@@ -2638,7 +2656,7 @@ var _areaPickFieldBuilder = new _FieldBuilder("AREA-PICK", {
             // "hoverColor": "#435abd",
             // "paddingLeft": "10px",//设置“省”位置处的span相较于边框的距离
             // "arrowRight": "10px",//设置下拉箭头距离边框右侧的距离
-            // "maxHeight": "250px",
+            "maxHeight": column.dropdownMaxHeight || "250px",
             "getVal": function () {
                 //这个方法是每次选中一个省、市或者县之后，执行的方法
                 var code = that.getEditValue(column, model);

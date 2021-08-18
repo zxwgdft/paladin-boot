@@ -84,7 +84,7 @@ public class LoginController {
     @ResponseBody
     public R updatePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
         sysUserService.updateSelfPassword(newPassword, oldPassword);
-        return R.success();
+        return R.SUCCESS;
     }
 
     @ApiOperation(value = "登录页面")

@@ -11,7 +11,7 @@ public class PathSetter {
     /**
      * 根据寻路地址找到相应的值
      * <p>
-     * 注意，传入sorce不能为空的List或Map，因为将无法判断类型，但是source子属性可以，并且不能有连续数组存在
+     * 注意，传入source不能为空的List或Map，因为将无法判断类型，但是source子属性可以，并且不能有连续数组存在
      * </p>
      *
      * @param source 数据源

@@ -7,7 +7,6 @@ import com.paladin.common.model.org.OrgRole;
 import com.paladin.common.service.org.dto.OrgRoleDTO;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.ServiceSupport;
-import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.convert.SimpleBeanCopyUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
 
+    @Transactional
+    public void saveRole(OrgRoleDTO orgRoleDTO) {
+        OrgRole model = new OrgRole();
+        SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
+        save(model);
+        // 更新缓存
+        DataCacheHelper.reloadCache(RoleContainer.class);
+    }
 
     @Transactional
     public void updateRole(OrgRoleDTO orgRoleDTO) {
-        String id = orgRoleDTO.getId();
-        if (StringUtil.isEmpty(id)) {
+        Integer id = orgRoleDTO.getId();
+        if (id == null) {
             throw new BusinessException("找不到更新角色");
         }
 
@@ -35,14 +42,21 @@ public class OrgRoleService extends ServiceSupport<OrgRole, OrgRoleMapper> {
         DataCacheHelper.reloadCache(RoleContainer.class);
     }
 
-    @Transactional
-    public void saveRole(OrgRoleDTO orgRoleDTO) {
-        OrgRole model = new OrgRole();
-        SimpleBeanCopyUtil.simpleCopy(orgRoleDTO, model);
-        save(model);
-
-        // 更新缓存
-        DataCacheHelper.reloadCache(RoleContainer.class);
+    public void updateRoleEnabled(int id) {
+        OrgRole role = new OrgRole();
+        role.setId(id);
+        role.setEnable(true);
+        if (!updateSelection(role)) {
+            throw new BusinessException("启用角色失败！");
+        }
     }
 
+    public void updateRoleDisabled(int id) {
+        OrgRole role = new OrgRole();
+        role.setId(id);
+        role.setEnable(false);
+        if (!updateSelection(role)) {
+            throw new BusinessException("停用角色失败！");
+        }
+    }
 }

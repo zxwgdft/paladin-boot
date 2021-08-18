@@ -1,20 +1,13 @@
 package com.paladin.demo.dynamic.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
 public class DynamicDemo {
 	private String name;
 	private Date time;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Date getTime() {
-		return time;
-	}
-	public void setTime(Date time) {
-		this.time = time;
-	}
 }

@@ -34,31 +34,31 @@ public class PermissionDataCache implements DataCache<PermissionContainer> {
          * 以下方式封装了Permission，如果存在权限属性的扩展，则需要按这种方式去加载，
          * 并一并把有用的数据缓存起来。
          * */
-        List<Permission> permissions = orgPermissionMapper.findPermission();
+        List<CodePermission> codePermissions = orgPermissionMapper.findPermission();
 
-        int size = (int) (permissions.size() / 0.75 + 1);
+        int size = (int) (codePermissions.size() / 0.75 + 1);
 
-        Map<String, Permission> permissionMap = new HashMap<>(size);
-        Map<String, Permission> code2permissionMap = new HashMap<>(size);
+        Map<Integer, CodePermission> permissionMap = new HashMap<>(size);
+        Map<String, CodePermission> code2permissionMap = new HashMap<>(size);
 
-        for (Permission permission : permissions) {
-            permissionMap.put(permission.getId(), permission);
-            code2permissionMap.put(permission.getCode(), permission);
+        for (CodePermission codePermission : codePermissions) {
+            permissionMap.put(codePermission.getId(), codePermission);
+            code2permissionMap.put(codePermission.getCode(), codePermission);
         }
 
         List<OrgRolePermission> rolePermissions = orgRolePermissionMapper.findList();
 
-        Map<String, Set<String>> role2CodesMap = new HashMap<>();
-        Map<String, Set<Permission>> role2PermissionsMap = new HashMap<>();
+        Map<Integer, Set<String>> role2CodesMap = new HashMap<>();
+        Map<Integer, Set<CodePermission>> role2PermissionsMap = new HashMap<>();
 
 
         for (OrgRolePermission rolePermission : rolePermissions) {
 
-            String roleId = rolePermission.getRoleId();
-            String permissionId = rolePermission.getPermissionId();
+            Integer roleId = rolePermission.getRoleId();
+            Integer permissionId = rolePermission.getPermissionId();
 
-            Permission permission = permissionMap.get(permissionId);
-            if (permission == null) continue;
+            CodePermission codePermission = permissionMap.get(permissionId);
+            if (codePermission == null) continue;
 
             Set<String> codeSet = role2CodesMap.get(roleId);
             if (codeSet == null) {
@@ -66,18 +66,18 @@ public class PermissionDataCache implements DataCache<PermissionContainer> {
                 role2CodesMap.put(roleId, codeSet);
             }
 
-            codeSet.add(permission.getCode());
+            codeSet.add(codePermission.getCode());
 
 
-            Set<Permission> permissionSet = role2PermissionsMap.get(roleId);
-            if (permissionSet == null) {
-                permissionSet = new HashSet<>();
-                role2PermissionsMap.put(roleId, permissionSet);
+            Set<CodePermission> codePermissionSet = role2PermissionsMap.get(roleId);
+            if (codePermissionSet == null) {
+                codePermissionSet = new HashSet<>();
+                role2PermissionsMap.put(roleId, codePermissionSet);
             }
 
-            permissionSet.add(permission);
+            codePermissionSet.add(codePermission);
         }
 
-        return new PermissionContainer(code2permissionMap, role2CodesMap, role2PermissionsMap);
+        return new PermissionContainer(permissionMap, code2permissionMap, role2CodesMap, role2PermissionsMap);
     }
 }

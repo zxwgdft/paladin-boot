@@ -11,7 +11,6 @@ public class BusinessException extends RuntimeException {
 
     private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
     private Object data;
-    private boolean hasChildException;
 
     public BusinessException(String message) {
         super(message);
@@ -24,13 +23,11 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
-        hasChildException = true;
     }
 
     public BusinessException(String message, Object data, Throwable cause) {
         super(message, cause);
         this.data = data;
-        hasChildException = true;
     }
 
     public BusinessException(HttpStatus httpStatus, String message) {
@@ -48,7 +45,6 @@ public class BusinessException extends RuntimeException {
         super(message, cause);
         this.httpStatus = httpStatus;
         this.data = data;
-        hasChildException = true;
     }
 
     public Object getData() {
@@ -59,7 +55,4 @@ public class BusinessException extends RuntimeException {
         return httpStatus;
     }
 
-    public boolean isHasChildException() {
-        return hasChildException;
-    }
 }

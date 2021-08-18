@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/header"/>
+
+<body>
+<tt:constant enumcode="agency-type,"/>
+<section class="content-header">
+    <h1>机构管理</h1>
+    <ol class="breadcrumb">
+        <li><a href="/demo/org/agency/index"><i class="fa fa-table"></i>机构列表</a></li>
+        <li class="active">机构新增</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div th:include="/footer"/>
+<script type="text/javascript">
+    var options = {
+        id: "model",
+        bigScreen: false,
+        cancelBtn: false,
+        name: "机构新增",
+        url: "/demo/org/agency/save",
+        columns: [
+            {title: "单位名称", name: "name", required: "required", maxLength: 120, inputType: "TEXT"},
+            {title: "单位类型", name: "type", enum: "agency-type", required: "required", inputType: "SELECT"},
+            {
+                title: "上级单位",
+                name: "parentId",
+                inputType: "SELECT-TREE-SERVER",
+                url: "/demo/org/agency/find/tree",
+                layerWidth: "500px",
+                isListData: false
+            },
+            {title: "联系人", name: "contact", maxLength: 50, inputType: "TEXT"},
+            {title: "联系电话", name: "contactPhone", maxLength: 50, inputType: "TEXT"},
+            {title: "排序号", name: "orderNo", required: "required", inputType: "TEXT"}
+        ]
+    }
+
+    $(function () {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponent($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern: "edit",
+            back: '/demo/org/agency/index',
+            successCallback: function () {
+                $.successAlert("保存成功", function () {
+                    window.location = "/demo/org/agency/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+</script>
+</body>
+
+</html>

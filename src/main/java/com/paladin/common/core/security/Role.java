@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class Role {
 
-    private String id;
+    private Integer id;
     private String name;
     private Integer level;
     private Boolean enabled;

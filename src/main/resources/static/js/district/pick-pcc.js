@@ -1,14 +1,4 @@
-/**
- * Created by yangyang2010cs@163.com on 2017-10-14.
- *全国省市区县 MySQL 数据库 含行政区划编码 名称 父级行政区划编码 基于国家统计局2017年3月发布数据
- */
-var areaJson = {
-        "data": _districtData
-    }
-    /*
- * author:yangyang2010cs@163.com
- * */
-;(function (execute) {
+(function (execute) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as anonymous module.
         define(['jquery'], execute);
@@ -28,7 +18,7 @@ var areaJson = {
         "arrowRight": "8px",
         "maxHeight": "220px"
     };
-    var pluginName = 'pickArea', area = areaJson.data, picknum = 0;
+    var pluginName = 'pickArea', area = _districtData, picknum = 0;
 
     function Plugin(element, options) {
         this.ele = $(element);
@@ -64,7 +54,6 @@ var areaJson = {
                     '<em class="pick-arrow"></em>' +
                     '</div>' +
                     '<ul class="pick-list">' +
-
                     '</ul>';
                 this.format = "p/c/c";
             }
@@ -280,7 +269,7 @@ var areaJson = {
                     if (area[i].name.indexOf(areaArr[0]) != -1) {
                         _this.ele.find("input:hidden.pick-area").attr("data-areacode", area[i].id);
                         if (slash == 1 || slash == 2) {
-                            cityArr = area[i].cities;
+                            cityArr = area[i].children;
                         }
                     }
                 }
@@ -292,7 +281,7 @@ var areaJson = {
                     if (cityArr[i].name.indexOf(areaArr[1]) != -1) {
                         _this.ele.find("input:hidden.pick-area").attr("data-areacode", _this.ele.find("input:hidden.pick-area").attr("data-areacode") + "," + cityArr[i].id);
                         if (slash == 2) {
-                            countyArr = cityArr[i].district;
+                            countyArr = cityArr[i].children;
                         }
                     }
                 }
@@ -340,7 +329,7 @@ var areaJson = {
             }
             for (var i = 0; i < area.length; i++) {
                 if (area[i].name.indexOf(setPro) != -1) {
-                    cityJson = area[i].cities;
+                    cityJson = area[i].children;
                 }
             }
             if (cityJson.length != 0) {
@@ -379,14 +368,19 @@ var areaJson = {
                 }
                 for (var i = 0; i < area.length; i++) {
                     if (area[i].name.indexOf(setPro) != -1) {
-                        cityJson = area[i].cities;
+                        cityJson = area[i].children;
+                        break;
                     }
                 }
+                var cityCode;
                 for (var j = 0; j < cityJson.length; j++) {
                     if (cityJson[j].name.indexOf(setCity) != -1) {
-                        countyJson = cityJson[j].district;
+                        countyJson = cityJson[j].children;
+                        cityCode = cityJson[j].id;
+                        break;
                     }
                 }
+
                 for (var t = 0; t < countyJson.length; t++) {
                     if (t == 0) {
                         countyStr = '<li class="ulli" data-code="">请选择县</li>'
@@ -407,26 +401,26 @@ var areaJson = {
             }
         },
         setVal: function (_thisP, aim, s) {
-            var _this = this;
+            var _this = this, code = $(aim).attr("data-code");
             if (s == "pro") {
                 this.ele.find(".pressActive").html($(aim).html());
-                if ($(aim).html() == "请选择省") {
+                if (code == "") {
                     this.ele.find(".pick-list").hide();
                     this.ele.find(".pick-city").html("请选择市");
                     this.ele.find(".pick-county").html("请选择县");
                     this.ele.find(".pick-province").removeClass("pressActive").css("background", "#fff");
                     this.ele.find("input:hidden.pick-area").val("").attr("data-areacode", "");
                 } else {
-                    $(aim).parent().prev().find("input:hidden.pick-area").attr("data-areacode", $(aim).attr("data-code"));
-                    if (($(aim).html() == "台湾省" || $(aim).html() == "香港特别行政区" || $(aim).html() == "澳门特别行政区") && this.format != "p") {
-                        this.ele.find(".pick-list,.pick-city,.pick-county,i").hide();
-                        this.ele.find(".pick-province").removeClass("pressActive").css("background", "#fff");
-                        this.ele.find("input[type=hidden].pick-area").val(this.ele.find(".pick-province").html());
-                        $(".pick-area-hidden").val(this.ele.find(".pick-province").html());
-                        return;
-                    } else {
-                        this.ele.find(".pick-list,.pick-city,.pick-county,i").show();
-                    }
+                    $(aim).parent().prev().find("input:hidden.pick-area").attr("data-areacode", code);
+                    // if (($(aim).html() == "香港特别行政区" || $(aim).html() == "澳门特别行政区") && this.format != "p") {
+                    //     this.ele.find(".pick-list,.pick-city,.pick-county,i").hide();
+                    //     this.ele.find(".pick-province").removeClass("pressActive").css("background", "#fff");
+                    //     this.ele.find("input[type=hidden].pick-area").val(this.ele.find(".pick-province").html());
+                    //     $(".pick-area-hidden").val(this.ele.find(".pick-province").html());
+                    //     return;
+                    // } else {
+                    this.ele.find(".pick-list,.pick-city,.pick-county,i").show();
+                    //}
                     this.ele.find(".pick-city").html("请选择市");
                     this.ele.find(".pick-county").html("请选择县");
                     this.ele.find(".pick-province").removeClass("pressActive").css("background", "#fff");
@@ -443,7 +437,7 @@ var areaJson = {
                 }
             } else if (s == "city") {
                 this.ele.find(".pressActive").html($(aim).html());
-                if ($(aim).html() == "请选择市") {
+                if (code == "") {
                     this.ele.find(".pick-list").hide();
                     this.ele.find(".pick-county").html("请选择县");
                     this.ele.find(".pick-city").removeClass("pressActive").css("background", "#fff");
@@ -467,12 +461,9 @@ var areaJson = {
                     this.setBack(this);
                 }
             } else if (s == "county") {
-                if ($(aim).html() == "请选择县") {
-                    console.log(this.ele.find(".pick-county").html())
+                if (code == "") {
                     if (this.ele.find(".pick-county").html() == "请选择县") {
-                        //alert(1)
                     } else {
-                        //alert(2)
                         this.ele.find(".pressActive").html($(aim).html());
                         var proAndCityVal = this.ele.find("input:hidden.pick-area").val().substring(0, this.ele.find("input:hidden.pick-area").val().lastIndexOf("/"));
                         var proAndCityCode = this.ele.find("input:hidden.pick-area").attr("data-areacode").substring(0, this.ele.find("input:hidden.pick-area").attr("data-areacode").lastIndexOf(","));
@@ -521,7 +512,6 @@ var areaJson = {
         picknum++;
         return this.each(function (index) {
             new Plugin(this, options);
-            //console.log(12)
         })
     };
 });

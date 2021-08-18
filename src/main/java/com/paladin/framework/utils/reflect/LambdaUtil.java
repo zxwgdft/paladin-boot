@@ -24,7 +24,7 @@ public class LambdaUtil {
      * @param fun get function
      * @return get方法对应字段名称
      */
-    public static String getFieldNameByFunction(GetFunction fun) {
+    public static <T> String getFieldNameByFunction(GetFunction<T> fun) {
         String funName = fun.getClass().getName();
         String fieldName = fieldNameCache.get(funName);
         if (fieldName == null) {

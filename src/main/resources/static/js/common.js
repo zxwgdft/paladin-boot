@@ -20,19 +20,16 @@ if (typeof String.prototype.rtrim !== 'function') {
         return this.replace(/(\s*$)/g, "");
     }
 }
-
 if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function (prefix) {
         return this.slice(0, prefix.length) === prefix;
     };
 }
-
 if (typeof String.prototype.endsWith !== 'function') {
     String.prototype.endsWith = function (suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
-
 if (!Array.prototype.forEach) {
     Array.prototype.forEach = function forEach(callback, thisArg) {
         var T, k;
@@ -57,6 +54,14 @@ if (!Array.prototype.forEach) {
             k++;
         }
     };
+}
+
+
+var _isBigScreen = window.screen.width >= 1600;
+var _gid = 99999;
+
+function _generateId() {
+    return ++_gid;
 }
 
 (function ($) {
@@ -224,11 +229,10 @@ if (!Array.prototype.forEach) {
                     success: options
                 };
             }
-
             options = $.extend(options, {
                 type: 1,
                 title: options.title || '',
-                maxmin: true, //开启最大化最小化按钮
+                maxmin: options.maxmin === false ? false : true, //开启最大化最小化按钮
                 area: $.getOpenLayerSize(options.width, options.height),
                 content: content,
                 success: options.success
@@ -261,7 +265,7 @@ if (!Array.prototype.forEach) {
             options = $.extend(options, {
                 type: 2,
                 title: options.title || '',
-                maxmin: true, //开启最大化最小化按钮
+                maxmin: options.maxmin === false ? false : true, //开启最大化最小化按钮
                 area: $.getOpenLayerSize(options.width, options.height),
                 content: url,
                 success: options.success
@@ -292,7 +296,7 @@ if (!Array.prototype.forEach) {
             return [w + "px", h + "px"];
         },
         openLayerEditor: function (subOp) {
-            subOp.id = subOp.id || "model_" + new Date().getTime();
+            subOp.id = subOp.id || "layer_" + _generateId();
             var defaultSubOp = {
                 cancelBtn: false,
                 editFormClass: false,
@@ -311,11 +315,10 @@ if (!Array.prototype.forEach) {
                 pattern: "edit"
             }
 
-            var subOp = $.extend(defaultSubOp, subOp);
-
+            subOp = $.extend(defaultSubOp, subOp);
 
             var html = generateEditFormHtml(subOp, false);
-            html = "<div style='padding-top:50px;padding-bottom:50px;padding-right:10px;padding-left:10px'>" + html + "</div>";
+            html = "<div style='padding:50px 10px 50px 10px;'>" + html + "</div>";
             var layerOption = subOp.layerOption || {};
             layerOption = $.extend({
                     success: function (layero, index) {
@@ -328,7 +331,6 @@ if (!Array.prototype.forEach) {
                             subOp.successCallback = function () {
                                 //成功提交表单后回调
                                 $.successMessage("保存成功");
-
                                 layer.close(index);
                             }
                         } else {
@@ -343,7 +345,7 @@ if (!Array.prototype.forEach) {
                 },
                 layerOption);
 
-            var index = $.openPageLayer(html, layerOption);
+            $.openPageLayer(html, layerOption);
         }
     });
 
@@ -398,8 +400,23 @@ if (!Array.prototype.forEach) {
                 $.validErrorHandler(xhr);
             } else {
                 var rj = xhr.responseJSON;
-                rj ? $.errorMessage(rj.message || rj.error || "操作失败") :
+                if (rj) {
+                    if ($.isArray(rj)) {
+                        if (rj.length == 1) {
+                            $.errorMessage(rj[0]);
+                        } else {
+                            var h = "<ul>";
+                            rj.forEach(function (item) {
+                                h += '<li>' + item + '</li>';
+                            })
+                            $.errorMessage(h);
+                        }
+                    } else {
+                        $.errorMessage(rj.message || rj.error || "操作失败")
+                    }
+                } else {
                     $.errorMessage(xhr.responseText || "操作失败");
+                }
             }
         },
         // 发送ajax请求，并做通用处理
@@ -1379,7 +1396,7 @@ function _initTable() {
                                     return value;
                                 }
                             }
-                            return "";
+                            return "-";
                         }
                     } else if (col.formatter == 'datetime') {
                         col.formatter = function (value, row, index) {
@@ -1395,10 +1412,11 @@ function _initTable() {
                                     return value;
                                 }
                             }
-                            return "";
+                            return "-";
                         }
                     } else if (col.formatter == 'boolean') {
                         col.formatter = function (value, row, index) {
+                            if (value === '' || value === undefined || value === null) return '-';
                             return (value === true || value === "true" || value === 1) ? "是" : "否";
                         }
                     } else if (col.formatter == 'identification') {
@@ -1407,7 +1425,7 @@ function _initTable() {
                         }
                     } else if (col.formatter == 'money') {
                         col.formatter = function (value, row, index) {
-                            return value ? (value / 100).toFixed(2) : '-';
+                            return value || value === 0 ? (value / 100).toFixed(2) : '-';
                         }
                     }
                 }
@@ -1458,7 +1476,7 @@ function _initTable() {
                             var switchOption = {
                                 onText: "是",
                                 offText: "否",
-                                size: "small"
+                                size: 'small'
                             }
 
                             if (col.switchOption) {
@@ -1486,7 +1504,7 @@ function _initTable() {
             dataField: 'data',
             totalField: 'total',
             treeParentField: 'parentId',
-            pageList: [default_page_size, 50, 100],
+            pageList: [default_page_size, 30, 50, 100],
             pageSize: default_page_size
         }
 
@@ -1572,9 +1590,6 @@ function _initTable() {
                     x[totalField] = res.length;
                     return x;
                 } else {
-                    if (!res[dataField]) {
-                        res[dataField] = [];
-                    }
                     return res;
                 }
             };
@@ -1628,7 +1643,7 @@ function _initTable() {
             if (enumTypeMap && type) {
                 return function (value, row, index) {
                     if (!value && value !== 0) {
-                        return "";
+                        return "-";
                     }
 
                     var arr = [],
@@ -1654,7 +1669,7 @@ function _initTable() {
                         }
                     });
 
-                    return arr.length > 0 ? arr.join("，") : "";
+                    return arr.length > 0 ? arr.join("，") : "-";
                 };
             }
         }
@@ -1776,6 +1791,7 @@ function _initTable() {
                     field: column.field,
                     name: column.title || column.field,
                     checked: column.visible,
+                    alignment: column.align || 'center',
                     column: column
                 });
             });
@@ -1785,16 +1801,27 @@ function _initTable() {
             }
 
             $.each(exportColumns, function (i, column) {
+                column.name = column.name.replace(/<br>/g, '');
                 columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
             });
 
-            var exportHtml = '<div style="padding:30px;padding-top:20px">' +
+            var selectOptionCreate = function (obj) {
+                var h = "";
+                for (var o in obj) {
+                    h += '<option value="' + o + '">' + obj[o] + '</option>';
+                }
+                return h;
+            }
+            var fileTypes = that.options.exportFileType || {excel: 'Excel'};
+            var dataScope = that.options.exportDataScope || {all: '当前全部记录', page: '当前页记录'};
+
+            var exportHtml = '<div style="padding:20px 30px 30px 30px">' +
                 '<form id="export_form" action="" method="post" class="form-horizontal" novalidate="novalidate">' +
                 '    <div class="form-group">' +
                 '        <label for="fileType" class="col-sm-3 control-label">文件类型：</label>' +
                 '        <div class="col-sm-8">' +
                 '            <select name="fileType" class="form-control">' +
-                '                <option value="excel">Excel</option>' +
+                selectOptionCreate(fileTypes) +
                 '            </select>' +
                 '        </div>' +
                 '    </div>' +
@@ -1802,8 +1829,7 @@ function _initTable() {
                 '        <label for="dataScope" class="col-sm-3 control-label">导出范围：</label>' +
                 '        <div class="col-sm-8">' +
                 '            <select name="dataScope" class="form-control">' +
-                '                <option value="all">当前全部记录</option>' +
-                '                <option value="page">当前页记录</option>' +
+                selectOptionCreate(dataScope) +
                 '            </select>' +
                 '        </div>' +
                 '    </div>' +
@@ -1813,9 +1839,9 @@ function _initTable() {
                 columnHtml +
                 '        </div>' +
                 '    </div>' +
-                '    <div class="form-group">' +
-                '        <div class="col-sm-4 col-sm-offset-3">' +
-                '            <button type="button" id="_exportSubmitBtn" class="btn btn-primary btn-block">导出</button>' +
+                '    <div class="form-group form-button-bar">' +
+                '        <div class="btn-group">' +
+                '            <button type="button" id="_exportSubmitBtn" style="width: 120px" class="btn btn-primary btn-flat">导出</button>' +
                 '        </div>' +
                 '    </div>' +
                 '</form></div>';
@@ -1823,7 +1849,7 @@ function _initTable() {
             $.openPageLayer(exportHtml, {
                 title: "导出",
                 width: 600,
-                height: 420,
+                height: that.options.exportLayerHeight || 400,
                 success: function (layero, layeroIndex) {
                     $('#_dataColumnDiv').find("input").iCheck({
                         checkboxClass: 'icheckbox_square-blue', // 注意square和blue的对应关系
@@ -1839,7 +1865,7 @@ function _initTable() {
                             },
                             firstTd = that.$body.find("tr:eq(0)"),
                             totalWidth = 0,
-                            totalCount = 0;
+                            exportTotalWidth = that.options.exportTotalWidth || 200;
 
                         $("#export_form").find("input[name='dataColumn']:checked").each(function () {
                             var v = $(this).val(),
@@ -1857,23 +1883,33 @@ function _initTable() {
                                         q = {
                                             field: c.field,
                                             name: c.name,
+                                            alignment: c.alignment,
                                             multiple: c.column.multiple === true ? true : false
                                         };
 
                                     if (f) {
-                                        q.dateFormat = f == 'date' ? 'yyyy/MM/dd' : (f == 'datetime' ? 'yyyy/MM/dd HH:mm:ss' : null);
+                                        if (f == 'date') {
+                                            q.dateFormat = 'yyyy/MM/dd';
+                                            if (!c.column.exportColumnWidth) {
+                                                c.column.exportColumnWidth = 15;
+                                            }
+                                        } else if (f == 'datetime') {
+                                            q.dateFormat = 'yyyy/MM/dd HH:mm:ss';
+                                            if (!c.column.exportColumnWidth) {
+                                                c.column.exportColumnWidth = 25;
+                                            }
+                                        }
                                     }
 
                                     q.enumType = c.column.enumcode ? c.column.enumcode : null;
 
                                     if (!c.column.exportColumnWidth) {
-                                        // 粗略计算width
                                         q.width = firstTd.find("td:eq('" + c.column.fieldIndex + "')").width();
-                                        q.realWidth = false;
                                         totalWidth += q.width;
-                                        totalCount++;
+                                        q.realWidth = false;
                                     } else {
                                         q.width = c.column.exportColumnWidth;
+                                        exportTotalWidth -= q.width;
                                     }
 
                                     if (c.column.exportOption) {
@@ -1892,11 +1928,10 @@ function _initTable() {
                             return;
                         }
 
+
                         param.columns.forEach(function (c) {
                             if (c.realWidth === false) {
-                                // c.width = Math.ceil(c.width / totalWidth * 1200 * totalCount / 120);
-                                c.width = Math.ceil(c.width * totalCount * 24 / totalWidth);
-                                c.width = Math.max(c.width, c.name.length * 2 + 2);
+                                c.width = Math.ceil(c.width * exportTotalWidth / totalWidth);
                                 c.realWidth = true;
                             }
 
@@ -1904,6 +1939,9 @@ function _initTable() {
                                 c.width = 255 * 256;
                             }
                         });
+
+                        param.fileName = that.options.exportFileName || null;
+                        param.sheetName = that.options.exportSheetName || null;
 
                         // copy from bootstrap-table begin
                         var data = {},
@@ -1947,42 +1985,23 @@ function _initTable() {
                             params.filter = JSON.stringify(that.filterColumnsPartial, null);
                         }
 
-                        var calculateObjectValue = function (self, name, args, defaultValue) {
-                            var func = name;
-
-                            if (typeof name === 'string') {
-                                // support obj.func1.func2
-                                var names = name.split('.');
-
-                                if (names.length > 1) {
-                                    func = window;
-                                    $.each(names, function (i, f) {
-                                        func = func[f];
-                                    });
-                                } else {
-                                    func = window[name];
-                                }
+                        if (that.options.queryParams) {
+                            if (typeof that.options.queryParams === 'function') {
+                                params = that.options.queryParams(params);
+                            } else {
+                                params = $.extend(params, that.options.queryParams);
                             }
-                            if (typeof func === 'object') {
-                                return func;
-                            }
-                            if (typeof func === 'function') {
-                                return func.apply(self, args || []);
-                            }
-                            if (!func && typeof name === 'string' && sprintf.apply(this, [name].concat(args))) {
-                                return sprintf.apply(this, [name].concat(args));
-                            }
-                            return defaultValue;
-                        };
+                        }
 
-                        data = calculateObjectValue(that.options, that.options.queryParams, [params], data);
-
-                        if (data === false) {
+                        if (params === false) {
                             return;
                         }
                         // copy from bootstrap-table end
 
                         param.query = params;
+                        if (typeof that.options.exportQueryParams === 'function') {
+                            param = that.options.exportQueryParams(param);
+                        }
 
                         $.sendAjax({
                             type: "POST",
@@ -1995,7 +2014,7 @@ function _initTable() {
                                     layer.close(layeroIndex);
                                 });
 
-                                window.open("/file" + fileUrl);
+                                window.open(fileUrl);
                             },
                             submitBtn: $("#_exportSubmitBtn")
                         });
@@ -2268,4 +2287,5 @@ function hideIdentification(value) {
     }
     return "";
 }
+
 

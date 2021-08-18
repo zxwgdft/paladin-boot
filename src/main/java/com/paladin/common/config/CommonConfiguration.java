@@ -7,11 +7,12 @@ import com.paladin.common.core.CommonUserRealm;
 import com.paladin.common.core.log.OperationLogInterceptor;
 import com.paladin.common.core.security.PermissionMethodInterceptor;
 import com.paladin.common.core.template.TontoDialect;
-import com.paladin.common.service.core.FileStoreService;
-import com.paladin.common.service.core.impl.DefaultFileStoreService;
+import com.paladin.common.service.file.FileStoreService;
+import com.paladin.common.service.file.TemporaryFileService;
+import com.paladin.common.service.file.impl.LocalFileStoreService;
+import com.paladin.common.service.file.impl.LocalTemporaryFileService;
 import com.paladin.framework.cache.DataCacheManager;
 import com.paladin.framework.cache.MemoryDataCacheManager;
-import com.paladin.framework.io.TemporaryFileHelper;
 import com.paladin.framework.service.QueryHandlerInterceptor;
 import com.paladin.framework.service.QueryMethodInterceptor;
 import com.paladin.framework.service.ServiceSupportManager;
@@ -27,7 +28,6 @@ import org.apache.shiro.session.mgt.SessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
 @Configuration
 public class CommonConfiguration {
@@ -183,16 +183,17 @@ public class CommonConfiguration {
      */
     @Bean
     public FileStoreService getFileStoreService() {
-        return new DefaultFileStoreService();
+        // 本地文件存储服务实现，分布式下可使用ftp或自己实现文件存储服务
+        return new LocalFileStoreService();
     }
 
     /**
-     * 临时文件助手
+     * 临时文件服务
      */
     @Bean
-    public TemporaryFileHelper getTemporaryFileHelper(Environment env) {
-        String basePath = env.getProperty("paladin.file.base-path");
-        return new TemporaryFileHelper(basePath);
+    public TemporaryFileService getTemporaryFileHelper() {
+        // 本地临时文件服务，分布式下需要自己实现或则使用其他逻辑
+        return new LocalTemporaryFileService();
     }
 
 

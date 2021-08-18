@@ -22,9 +22,8 @@ public class OrgPersonnelDTO {
     private String account;
 
     // 所属机构
-    @NotEmpty(message = "所属机构不能为空")
-    @Length(max = 32, message = "所属机构长度不能大于32")
-    private String unitId;
+    @NotNull(message = "所属机构不能为空")
+    private Integer agencyId;
 
     // 证件类型
     @NotNull(message = "证件类型不能为空")

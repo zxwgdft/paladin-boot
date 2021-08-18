@@ -1,8 +1,10 @@
 package com.paladin.common.controller.sys;
 
 import com.paladin.common.controller.sys.dto.SysLoggerOperateExportCondition;
+import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.common.core.security.NeedRoleLevel;
 import com.paladin.common.model.sys.SysLoggerOperate;
 import com.paladin.common.service.sys.SysLoggerOperateService;
 import com.paladin.common.service.sys.dto.SysLoggerOperateQuery;
@@ -11,7 +13,6 @@ import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ public class SysLoggerOperateController extends ControllerSupport {
     @Autowired
     private SysLoggerOperateService sysLoggerOperateService;
 
-
     @GetMapping("/index")
     public String index() {
         return "/common/sys/sys_logger_operate_index";
@@ -31,29 +31,18 @@ public class SysLoggerOperateController extends ControllerSupport {
 
     @PostMapping(value = "/find/page")
     @ResponseBody
+    @NeedRoleLevel(CommonUserSession.ROLE_LEVEL_APP_ADMIN)
     public PageResult<SysLoggerOperate> findPage(SysLoggerOperateQuery query) {
         return sysLoggerOperateService.findPage(query);
     }
-
-    @GetMapping("/get")
-    @ResponseBody
-    public SysLoggerOperate getDetail(@RequestParam String id) {
-        return sysLoggerOperateService.get(id);
-    }
-
-    @GetMapping("/detail")
-    public String detailInput(@RequestParam String id, Model model) {
-        model.addAttribute("id", id);
-        return "/common/sys/sys_logger_operate_detail";
-    }
-
+    
     @PostMapping(value = "/export")
     @ResponseBody
+    @NeedRoleLevel(CommonUserSession.ROLE_LEVEL_APP_ADMIN)
     public String export(@RequestBody SysLoggerOperateExportCondition condition) {
         if (condition == null) {
             throw new BusinessException("导出失败：请求参数异常");
         }
-        condition.sortCellIndex();
         SysLoggerOperateQuery query = condition.getQuery();
         try {
             if (query != null) {

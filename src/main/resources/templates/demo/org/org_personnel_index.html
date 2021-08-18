@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 
-<head th:include="/demo/header"/>
+<head th:include="/header"/>
 
 <body>
 <tt:constant enumcode="sex-type,identification-type,nation-type,"/>
@@ -10,60 +10,59 @@
 </section>
 <section class="content">
     <div class="box box-solid">
-        <div id="result" class="box-body">
+        <div class="box-body">
+            <!-- 需要查询数据回显，如下方式操作 -->
             <input type="hidden" id="pageLimit" th:value="${query?.limit}"/>
             <input type="hidden" id="pageOffset" th:value="${query?.offset}"/>
 
-
-            <div style="margin-top: 5px;height:50px">
+            <div class="table-toolbar-tonto">
                 <form id="searchbar">
                     <input type="text" class="form-control"
-                           style="width:220px;float:left;margin-right:10px"
+                           style="width:200px;float:left;margin-right:10px"
                            name="name" th:value="${query?.name}"
                            placeholder="请输入查询的姓名"/>
 
-                    <select name="identificationType"
-                            style="width:220px;float:left;margin-right:10px"
-                            class="form-control tonto-select-constant"
+                    <input type="text" class="form-control"
+                           style="width:200px;float:left;margin-right:10px"
+                           name="name" th:value="${query?.identificationNo}"
+                           placeholder="请输入查询的身份证号"/>
+
+                    <select name="identificationType" class="form-control tonto-select-constant"
+                            style="width:200px;float:left;margin-right:10px"
                             th:attr="selectedvalue=${query?.identificationType}" enumcode="identification-type">
                         <option value="">请选择查询证件类型</option>
                     </select>
 
                     <button type="button"
-                            class="btn btn-primary btn-flat tonto-btn-search"
-                            style="width:85px;float:left;margin-right:10px"
+                            class="btn btn-primary tonto-btn-search"
+                            style="float:left;margin-right:10px"
                             onclick="table.refresh()">
                         <i class="fa fa-search"></i>&nbsp;查询
                     </button>
                 </form>
 
                 <div class="pull-right">
-
-                    <a class="btn btn-default btn-flat"
-                       style="width:85px;float:left;margin-right:10px"
+                    <a class="btn btn-default"
+                       style="float:left;margin-right:10px"
                        onclick="table.export()">
                         <i class="glyphicon glyphicon-export"></i>&nbsp;导出
                     </a>
 
                     <a shiro:hasPermission="org:personnel:save"
-                       class="btn bg-olive btn-flat"
-                       style="width:85px;float:left;"
+                       class="btn bg-olive"
+                       style="float:left;"
                        onclick="add()">
                         <i class="fa fa-plus"></i>&nbsp;新增
                     </a>
-
                 </div>
-
             </div>
 
-
             <table id="dataGrid"></table>
-
         </div>
     </div>
     <input type="hidden" shiro:hasPermission="org:personnel:delete" id="permission_delete" value="1"/>
 </section>
-<div th:include="/demo/footer"/>
+<div th:include="/footer"/>
 <script type="text/javascript">
     var table;
     $(function () {
@@ -77,22 +76,13 @@
                 [
                     {title: "姓名", field: "name"},
                     {title: "性别", field: "sex", enumcode: "sex-type"},
-                    {title: "所属机构", field: "unitName"},
+                    {title: "所属机构", field: "agencyName"},
                     {title: "证件类型", field: "identificationType", enumcode: "identification-type"},
                     {title: "证件号码", field: "identificationNo"},
                     {title: "出生日期", field: "birthday", formatter: "date"},
                     {title: "手机号码", field: "cellphone"},
                     {
-                        title: "是否启用",
-                        field: "enabled",
-                        switch: true,
-                        onSwitchChange: function (row, state, event) {
-                            console.log(row);
-                        }
-                    },
-                    {
                         title: "操作",
-                        align: "center",
                         width: "200px",
                         events: {
                             'click .detail': function (e, value, row, index) {
@@ -106,11 +96,11 @@
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
-                            var html = '<button class="detail btn btn-xs btn-default" style="margin-left:10px"><i class="fa fa-search"></i>查看</button>';
-                            html += '<button class="edit btn btn-xs btn-info" style="margin-left:10px"><i class="fa fa-edit"></i>编辑</button>';
+                            var html = '<button class="detail btn btn-info" style="margin-right:10px"><i class="fa fa-search"></i>&nbsp;查看</button>';
+                            html += '<button class="edit btn btn-primary"><i class="fa fa-edit"></i>&nbsp;编辑</button>';
                             // 如果要做按钮权限则如下
                             if ($("#permission_delete").val()) {
-                                html += '<button class="remove btn btn-xs btn-danger" style="margin-left:10px"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                                html += '<button class="remove btn btn-danger" style="margin-left:10px"><i class="fa fa-trash-o"></i>&nbsp;删除</button>';
                             }
                             return html;
                         }
@@ -120,11 +110,7 @@
             url: '/demo/org/personnel/find/page',
             searchbar: '#searchbar',
             exportUrl: '/demo/org/personnel/export',
-            //showExportor: true,
-            //showColumns: true,
             pagination: true
-            //toolbar: "#toolbar"
-            //showRefresh: true
         });
     }
 
@@ -133,22 +119,20 @@
     }
 
     function detail(row) {
-        window.location = '/demo/org/personnel/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/demo/org/personnel/detail?id=' + row.id;
     }
 
     function edit(row) {
-        window.location = '/demo/org/personnel/edit' + (row ? ('?id=' + row.id) : '');
+        window.location = '/demo/org/personnel/edit?id=' + row.id;
     }
 
     function remove(row) {
-        if (row) {
-            layer.confirm('确定删除吗?', function () {
-                $.getAjax('/demo/org/personnel/delete?id=' + row.id, function () {
-                    $.successMessage("删除成功");
-                    table.refresh();
-                });
+        layer.confirm('确定删除吗?', function () {
+            $.getAjax('/demo/org/personnel/delete?id=' + row.id, function () {
+                $.successMessage("删除成功");
+                table.refresh();
             });
-        }
+        });
     }
 </script>
 </body>

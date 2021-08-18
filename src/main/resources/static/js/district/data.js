@@ -1,5 +1,4 @@
 /**
- * Created by yangyang2010cs@163.com on 2017-10-14.
  *全国省市区县 MySQL 数据库 含行政区划编码 名称 父级行政区划编码 基于国家统计局2017年3月发布数据
  */
 var _districtData = [
@@ -7,12 +6,12 @@ var _districtData = [
         "id": 110000,
         "name": "北京市",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 110100,
                 "name": "市辖区",
                 "pid": 110000,
-                "district": [
+                "children": [
                     {
                         "id": 110101,
                         "name": "东城区",
@@ -101,12 +100,12 @@ var _districtData = [
         "id": 120000,
         "name": "天津市",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 120100,
                 "name": "市辖区",
                 "pid": 120000,
-                "district": [
+                "children": [
                     {
                         "id": 120101,
                         "name": "和平区",
@@ -195,12 +194,12 @@ var _districtData = [
         "id": 130000,
         "name": "河北省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 130100,
                 "name": "石家庄市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130101,
                         "name": "市辖区",
@@ -302,6 +301,21 @@ var _districtData = [
                         "pid": 130100
                     },
                     {
+                        "id": 130171,
+                        "name": "石家庄高新技术产业开发区",
+                        "pid": 130100
+                    },
+                    {
+                        "id": 130172,
+                        "name": "石家庄循环化工园区",
+                        "pid": 130100
+                    },
+                    {
+                        "id": 130181,
+                        "name": "辛集市",
+                        "pid": 130100
+                    },
+                    {
                         "id": 130183,
                         "name": "晋州市",
                         "pid": 130100
@@ -317,7 +331,7 @@ var _districtData = [
                 "id": 130200,
                 "name": "唐山市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130201,
                         "name": "市辖区",
@@ -359,11 +373,6 @@ var _districtData = [
                         "pid": 130200
                     },
                     {
-                        "id": 130223,
-                        "name": "滦县",
-                        "pid": 130200
-                    },
-                    {
                         "id": 130224,
                         "name": "滦南县",
                         "pid": 130200
@@ -384,6 +393,26 @@ var _districtData = [
                         "pid": 130200
                     },
                     {
+                        "id": 130271,
+                        "name": "河北唐山芦台经济开发区",
+                        "pid": 130200
+                    },
+                    {
+                        "id": 130272,
+                        "name": "唐山市汉沽管理区",
+                        "pid": 130200
+                    },
+                    {
+                        "id": 130273,
+                        "name": "唐山高新技术产业开发区",
+                        "pid": 130200
+                    },
+                    {
+                        "id": 130274,
+                        "name": "河北唐山海港经济开发区",
+                        "pid": 130200
+                    },
+                    {
                         "id": 130281,
                         "name": "遵化市",
                         "pid": 130200
@@ -392,6 +421,11 @@ var _districtData = [
                         "id": 130283,
                         "name": "迁安市",
                         "pid": 130200
+                    },
+                    {
+                        "id": 130284,
+                        "name": "滦州市",
+                        "pid": 130200
                     }
                 ]
             },
@@ -399,7 +433,7 @@ var _districtData = [
                 "id": 130300,
                 "name": "秦皇岛市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130301,
                         "name": "市辖区",
@@ -439,6 +473,16 @@ var _districtData = [
                         "id": 130324,
                         "name": "卢龙县",
                         "pid": 130300
+                    },
+                    {
+                        "id": 130371,
+                        "name": "秦皇岛市经济技术开发区",
+                        "pid": 130300
+                    },
+                    {
+                        "id": 130372,
+                        "name": "北戴河新区",
+                        "pid": 130300
                     }
                 ]
             },
@@ -446,7 +490,7 @@ var _districtData = [
                 "id": 130400,
                 "name": "邯郸市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130401,
                         "name": "市辖区",
@@ -473,8 +517,13 @@ var _districtData = [
                         "pid": 130400
                     },
                     {
-                        "id": 130421,
-                        "name": "邯郸县",
+                        "id": 130407,
+                        "name": "肥乡区",
+                        "pid": 130400
+                    },
+                    {
+                        "id": 130408,
+                        "name": "永年区",
                         "pid": 130400
                     },
                     {
@@ -500,16 +549,6 @@ var _districtData = [
                     {
                         "id": 130427,
                         "name": "磁县",
-                        "pid": 130400
-                    },
-                    {
-                        "id": 130428,
-                        "name": "肥乡县",
-                        "pid": 130400
-                    },
-                    {
-                        "id": 130429,
-                        "name": "永年县",
                         "pid": 130400
                     },
                     {
@@ -543,6 +582,16 @@ var _districtData = [
                         "pid": 130400
                     },
                     {
+                        "id": 130471,
+                        "name": "邯郸经济技术开发区",
+                        "pid": 130400
+                    },
+                    {
+                        "id": 130473,
+                        "name": "邯郸冀南新区",
+                        "pid": 130400
+                    },
+                    {
                         "id": 130481,
                         "name": "武安市",
                         "pid": 130400
@@ -553,7 +602,7 @@ var _districtData = [
                 "id": 130500,
                 "name": "邢台市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130501,
                         "name": "市辖区",
@@ -645,6 +694,11 @@ var _districtData = [
                         "pid": 130500
                     },
                     {
+                        "id": 130571,
+                        "name": "河北邢台经济开发区",
+                        "pid": 130500
+                    },
+                    {
                         "id": 130581,
                         "name": "南宫市",
                         "pid": 130500
@@ -660,7 +714,7 @@ var _districtData = [
                 "id": 130600,
                 "name": "保定市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130601,
                         "name": "市辖区",
@@ -767,8 +821,23 @@ var _districtData = [
                         "pid": 130600
                     },
                     {
+                        "id": 130671,
+                        "name": "保定高新技术产业开发区",
+                        "pid": 130600
+                    },
+                    {
+                        "id": 130672,
+                        "name": "保定白沟新城",
+                        "pid": 130600
+                    },
+                    {
                         "id": 130681,
                         "name": "涿州市",
+                        "pid": 130600
+                    },
+                    {
+                        "id": 130682,
+                        "name": "定州市",
                         "pid": 130600
                     },
                     {
@@ -787,7 +856,7 @@ var _districtData = [
                 "id": 130700,
                 "name": "张家口市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130701,
                         "name": "市辖区",
@@ -872,6 +941,21 @@ var _districtData = [
                         "id": 130732,
                         "name": "赤城县",
                         "pid": 130700
+                    },
+                    {
+                        "id": 130771,
+                        "name": "张家口经济开发区",
+                        "pid": 130700
+                    },
+                    {
+                        "id": 130772,
+                        "name": "张家口市察北管理区",
+                        "pid": 130700
+                    },
+                    {
+                        "id": 130773,
+                        "name": "张家口市塞北管理区",
+                        "pid": 130700
                     }
                 ]
             },
@@ -879,7 +963,7 @@ var _districtData = [
                 "id": 130800,
                 "name": "承德市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130801,
                         "name": "市辖区",
@@ -911,11 +995,6 @@ var _districtData = [
                         "pid": 130800
                     },
                     {
-                        "id": 130823,
-                        "name": "平泉县",
-                        "pid": 130800
-                    },
-                    {
                         "id": 130824,
                         "name": "滦平县",
                         "pid": 130800
@@ -939,6 +1018,16 @@ var _districtData = [
                         "id": 130828,
                         "name": "围场满族蒙古族自治县",
                         "pid": 130800
+                    },
+                    {
+                        "id": 130871,
+                        "name": "承德高新技术产业开发区",
+                        "pid": 130800
+                    },
+                    {
+                        "id": 130881,
+                        "name": "平泉市",
+                        "pid": 130800
                     }
                 ]
             },
@@ -946,7 +1035,7 @@ var _districtData = [
                 "id": 130900,
                 "name": "沧州市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 130901,
                         "name": "市辖区",
@@ -1013,6 +1102,21 @@ var _districtData = [
                         "pid": 130900
                     },
                     {
+                        "id": 130971,
+                        "name": "河北沧州经济开发区",
+                        "pid": 130900
+                    },
+                    {
+                        "id": 130972,
+                        "name": "沧州高新技术产业开发区",
+                        "pid": 130900
+                    },
+                    {
+                        "id": 130973,
+                        "name": "沧州渤海新区",
+                        "pid": 130900
+                    },
+                    {
                         "id": 130981,
                         "name": "泊头市",
                         "pid": 130900
@@ -1038,7 +1142,7 @@ var _districtData = [
                 "id": 131000,
                 "name": "廊坊市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 131001,
                         "name": "市辖区",
@@ -1085,6 +1189,11 @@ var _districtData = [
                         "pid": 131000
                     },
                     {
+                        "id": 131071,
+                        "name": "廊坊经济技术开发区",
+                        "pid": 131000
+                    },
+                    {
                         "id": 131081,
                         "name": "霸州市",
                         "pid": 131000
@@ -1100,7 +1209,7 @@ var _districtData = [
                 "id": 131100,
                 "name": "衡水市",
                 "pid": 130000,
-                "district": [
+                "children": [
                     {
                         "id": 131101,
                         "name": "市辖区",
@@ -1157,26 +1266,19 @@ var _districtData = [
                         "pid": 131100
                     },
                     {
+                        "id": 131171,
+                        "name": "河北衡水高新技术产业开发区",
+                        "pid": 131100
+                    },
+                    {
+                        "id": 131172,
+                        "name": "衡水滨湖新区",
+                        "pid": 131100
+                    },
+                    {
                         "id": 131182,
                         "name": "深州市",
                         "pid": 131100
-                    }
-                ]
-            },
-            {
-                "id": 139000,
-                "name": "省直辖县级行政区划",
-                "pid": 130000,
-                "district": [
-                    {
-                        "id": 139001,
-                        "name": "定州市",
-                        "pid": 139000
-                    },
-                    {
-                        "id": 139002,
-                        "name": "辛集市",
-                        "pid": 139000
                     }
                 ]
             }
@@ -1186,12 +1288,12 @@ var _districtData = [
         "id": 140000,
         "name": "山西省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 140100,
                 "name": "太原市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140101,
                         "name": "市辖区",
@@ -1243,6 +1345,11 @@ var _districtData = [
                         "pid": 140100
                     },
                     {
+                        "id": 140171,
+                        "name": "山西转型综合改革示范区",
+                        "pid": 140100
+                    },
+                    {
                         "id": 140181,
                         "name": "古交市",
                         "pid": 140100
@@ -1253,30 +1360,30 @@ var _districtData = [
                 "id": 140200,
                 "name": "大同市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140201,
                         "name": "市辖区",
                         "pid": 140200
                     },
                     {
-                        "id": 140202,
-                        "name": "城区",
-                        "pid": 140200
-                    },
-                    {
-                        "id": 140203,
-                        "name": "矿区",
-                        "pid": 140200
-                    },
-                    {
-                        "id": 140211,
-                        "name": "南郊区",
-                        "pid": 140200
-                    },
-                    {
                         "id": 140212,
                         "name": "新荣区",
+                        "pid": 140200
+                    },
+                    {
+                        "id": 140213,
+                        "name": "平城区",
+                        "pid": 140200
+                    },
+                    {
+                        "id": 140214,
+                        "name": "云冈区",
+                        "pid": 140200
+                    },
+                    {
+                        "id": 140215,
+                        "name": "云州区",
                         "pid": 140200
                     },
                     {
@@ -1310,8 +1417,8 @@ var _districtData = [
                         "pid": 140200
                     },
                     {
-                        "id": 140227,
-                        "name": "大同县",
+                        "id": 140271,
+                        "name": "山西大同经济开发区",
                         "pid": 140200
                     }
                 ]
@@ -1320,7 +1427,7 @@ var _districtData = [
                 "id": 140300,
                 "name": "阳泉市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140301,
                         "name": "市辖区",
@@ -1357,35 +1464,35 @@ var _districtData = [
                 "id": 140400,
                 "name": "长治市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140401,
                         "name": "市辖区",
                         "pid": 140400
                     },
                     {
-                        "id": 140402,
-                        "name": "城区",
+                        "id": 140403,
+                        "name": "潞州区",
                         "pid": 140400
                     },
                     {
-                        "id": 140411,
-                        "name": "郊区",
+                        "id": 140404,
+                        "name": "上党区",
                         "pid": 140400
                     },
                     {
-                        "id": 140421,
-                        "name": "长治县",
+                        "id": 140405,
+                        "name": "屯留区",
+                        "pid": 140400
+                    },
+                    {
+                        "id": 140406,
+                        "name": "潞城区",
                         "pid": 140400
                     },
                     {
                         "id": 140423,
                         "name": "襄垣县",
-                        "pid": 140400
-                    },
-                    {
-                        "id": 140424,
-                        "name": "屯留县",
                         "pid": 140400
                     },
                     {
@@ -1424,8 +1531,8 @@ var _districtData = [
                         "pid": 140400
                     },
                     {
-                        "id": 140481,
-                        "name": "潞城市",
+                        "id": 140471,
+                        "name": "山西长治高新技术产业园区",
                         "pid": 140400
                     }
                 ]
@@ -1434,7 +1541,7 @@ var _districtData = [
                 "id": 140500,
                 "name": "晋城市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140501,
                         "name": "市辖区",
@@ -1476,7 +1583,7 @@ var _districtData = [
                 "id": 140600,
                 "name": "朔州市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140601,
                         "name": "市辖区",
@@ -1508,8 +1615,13 @@ var _districtData = [
                         "pid": 140600
                     },
                     {
-                        "id": 140624,
-                        "name": "怀仁县",
+                        "id": 140671,
+                        "name": "山西朔州经济开发区",
+                        "pid": 140600
+                    },
+                    {
+                        "id": 140681,
+                        "name": "怀仁市",
                         "pid": 140600
                     }
                 ]
@@ -1518,7 +1630,7 @@ var _districtData = [
                 "id": 140700,
                 "name": "晋中市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140701,
                         "name": "市辖区",
@@ -1585,7 +1697,7 @@ var _districtData = [
                 "id": 140800,
                 "name": "运城市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140801,
                         "name": "市辖区",
@@ -1662,7 +1774,7 @@ var _districtData = [
                 "id": 140900,
                 "name": "忻州市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 140901,
                         "name": "市辖区",
@@ -1734,6 +1846,11 @@ var _districtData = [
                         "pid": 140900
                     },
                     {
+                        "id": 140971,
+                        "name": "五台山风景名胜区",
+                        "pid": 140900
+                    },
+                    {
                         "id": 140981,
                         "name": "原平市",
                         "pid": 140900
@@ -1744,7 +1861,7 @@ var _districtData = [
                 "id": 141000,
                 "name": "临汾市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 141001,
                         "name": "市辖区",
@@ -1841,7 +1958,7 @@ var _districtData = [
                 "id": 141100,
                 "name": "吕梁市",
                 "pid": 140000,
-                "district": [
+                "children": [
                     {
                         "id": 141101,
                         "name": "市辖区",
@@ -1920,12 +2037,12 @@ var _districtData = [
         "id": 150000,
         "name": "内蒙古自治区",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 150100,
                 "name": "呼和浩特市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150101,
                         "name": "市辖区",
@@ -1975,6 +2092,16 @@ var _districtData = [
                         "id": 150125,
                         "name": "武川县",
                         "pid": 150100
+                    },
+                    {
+                        "id": 150171,
+                        "name": "呼和浩特金海工业园区",
+                        "pid": 150100
+                    },
+                    {
+                        "id": 150172,
+                        "name": "呼和浩特经济技术开发区",
+                        "pid": 150100
                     }
                 ]
             },
@@ -1982,7 +2109,7 @@ var _districtData = [
                 "id": 150200,
                 "name": "包头市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150201,
                         "name": "市辖区",
@@ -2032,6 +2159,11 @@ var _districtData = [
                         "id": 150223,
                         "name": "达尔罕茂明安联合旗",
                         "pid": 150200
+                    },
+                    {
+                        "id": 150271,
+                        "name": "包头稀土高新技术产业开发区",
+                        "pid": 150200
                     }
                 ]
             },
@@ -2039,7 +2171,7 @@ var _districtData = [
                 "id": 150300,
                 "name": "乌海市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150301,
                         "name": "市辖区",
@@ -2066,7 +2198,7 @@ var _districtData = [
                 "id": 150400,
                 "name": "赤峰市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150401,
                         "name": "市辖区",
@@ -2138,7 +2270,7 @@ var _districtData = [
                 "id": 150500,
                 "name": "通辽市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150501,
                         "name": "市辖区",
@@ -2180,6 +2312,11 @@ var _districtData = [
                         "pid": 150500
                     },
                     {
+                        "id": 150571,
+                        "name": "通辽经济技术开发区",
+                        "pid": 150500
+                    },
+                    {
                         "id": 150581,
                         "name": "霍林郭勒市",
                         "pid": 150500
@@ -2190,7 +2327,7 @@ var _districtData = [
                 "id": 150600,
                 "name": "鄂尔多斯市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150601,
                         "name": "市辖区",
@@ -2247,7 +2384,7 @@ var _districtData = [
                 "id": 150700,
                 "name": "呼伦贝尔市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150701,
                         "name": "市辖区",
@@ -2329,7 +2466,7 @@ var _districtData = [
                 "id": 150800,
                 "name": "巴彦淖尔市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150801,
                         "name": "市辖区",
@@ -2376,7 +2513,7 @@ var _districtData = [
                 "id": 150900,
                 "name": "乌兰察布市",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 150901,
                         "name": "市辖区",
@@ -2443,7 +2580,7 @@ var _districtData = [
                 "id": 152200,
                 "name": "兴安盟",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 152201,
                         "name": "乌兰浩特市",
@@ -2480,7 +2617,7 @@ var _districtData = [
                 "id": 152500,
                 "name": "锡林郭勒盟",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 152501,
                         "name": "二连浩特市",
@@ -2540,6 +2677,11 @@ var _districtData = [
                         "id": 152531,
                         "name": "多伦县",
                         "pid": 152500
+                    },
+                    {
+                        "id": 152571,
+                        "name": "乌拉盖管委会",
+                        "pid": 152500
                     }
                 ]
             },
@@ -2547,7 +2689,7 @@ var _districtData = [
                 "id": 152900,
                 "name": "阿拉善盟",
                 "pid": 150000,
-                "district": [
+                "children": [
                     {
                         "id": 152921,
                         "name": "阿拉善左旗",
@@ -2562,6 +2704,11 @@ var _districtData = [
                         "id": 152923,
                         "name": "额济纳旗",
                         "pid": 152900
+                    },
+                    {
+                        "id": 152971,
+                        "name": "内蒙古阿拉善经济开发区",
+                        "pid": 152900
                     }
                 ]
             }
@@ -2571,12 +2718,12 @@ var _districtData = [
         "id": 210000,
         "name": "辽宁省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 210100,
                 "name": "沈阳市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210101,
                         "name": "市辖区",
@@ -2653,7 +2800,7 @@ var _districtData = [
                 "id": 210200,
                 "name": "大连市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210201,
                         "name": "市辖区",
@@ -2715,7 +2862,7 @@ var _districtData = [
                 "id": 210300,
                 "name": "鞍山市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210301,
                         "name": "市辖区",
@@ -2762,7 +2909,7 @@ var _districtData = [
                 "id": 210400,
                 "name": "抚顺市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210401,
                         "name": "市辖区",
@@ -2809,7 +2956,7 @@ var _districtData = [
                 "id": 210500,
                 "name": "本溪市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210501,
                         "name": "市辖区",
@@ -2851,7 +2998,7 @@ var _districtData = [
                 "id": 210600,
                 "name": "丹东市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210601,
                         "name": "市辖区",
@@ -2893,7 +3040,7 @@ var _districtData = [
                 "id": 210700,
                 "name": "锦州市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210701,
                         "name": "市辖区",
@@ -2940,7 +3087,7 @@ var _districtData = [
                 "id": 210800,
                 "name": "营口市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210801,
                         "name": "市辖区",
@@ -2982,7 +3129,7 @@ var _districtData = [
                 "id": 210900,
                 "name": "阜新市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 210901,
                         "name": "市辖区",
@@ -3029,7 +3176,7 @@ var _districtData = [
                 "id": 211000,
                 "name": "辽阳市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 211001,
                         "name": "市辖区",
@@ -3076,7 +3223,7 @@ var _districtData = [
                 "id": 211100,
                 "name": "盘锦市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 211101,
                         "name": "市辖区",
@@ -3108,7 +3255,7 @@ var _districtData = [
                 "id": 211200,
                 "name": "铁岭市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 211201,
                         "name": "市辖区",
@@ -3155,7 +3302,7 @@ var _districtData = [
                 "id": 211300,
                 "name": "朝阳市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 211301,
                         "name": "市辖区",
@@ -3202,7 +3349,7 @@ var _districtData = [
                 "id": 211400,
                 "name": "葫芦岛市",
                 "pid": 210000,
-                "district": [
+                "children": [
                     {
                         "id": 211401,
                         "name": "市辖区",
@@ -3246,12 +3393,12 @@ var _districtData = [
         "id": 220000,
         "name": "吉林省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 220100,
                 "name": "长春市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220101,
                         "name": "市辖区",
@@ -3298,6 +3445,26 @@ var _districtData = [
                         "pid": 220100
                     },
                     {
+                        "id": 220171,
+                        "name": "长春经济技术开发区",
+                        "pid": 220100
+                    },
+                    {
+                        "id": 220172,
+                        "name": "长春净月高新技术产业开发区",
+                        "pid": 220100
+                    },
+                    {
+                        "id": 220173,
+                        "name": "长春高新技术产业开发区",
+                        "pid": 220100
+                    },
+                    {
+                        "id": 220174,
+                        "name": "长春汽车经济技术开发区",
+                        "pid": 220100
+                    },
+                    {
                         "id": 220182,
                         "name": "榆树市",
                         "pid": 220100
@@ -3313,7 +3480,7 @@ var _districtData = [
                 "id": 220200,
                 "name": "吉林市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220201,
                         "name": "市辖区",
@@ -3345,6 +3512,21 @@ var _districtData = [
                         "pid": 220200
                     },
                     {
+                        "id": 220271,
+                        "name": "吉林经济开发区",
+                        "pid": 220200
+                    },
+                    {
+                        "id": 220272,
+                        "name": "吉林高新技术产业开发区",
+                        "pid": 220200
+                    },
+                    {
+                        "id": 220273,
+                        "name": "吉林中国新加坡食品区",
+                        "pid": 220200
+                    },
+                    {
                         "id": 220281,
                         "name": "蛟河市",
                         "pid": 220200
@@ -3370,7 +3552,7 @@ var _districtData = [
                 "id": 220300,
                 "name": "四平市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220301,
                         "name": "市辖区",
@@ -3412,7 +3594,7 @@ var _districtData = [
                 "id": 220400,
                 "name": "辽源市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220401,
                         "name": "市辖区",
@@ -3444,7 +3626,7 @@ var _districtData = [
                 "id": 220500,
                 "name": "通化市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220501,
                         "name": "市辖区",
@@ -3491,7 +3673,7 @@ var _districtData = [
                 "id": 220600,
                 "name": "白山市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220601,
                         "name": "市辖区",
@@ -3533,7 +3715,7 @@ var _districtData = [
                 "id": 220700,
                 "name": "松原市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220701,
                         "name": "市辖区",
@@ -3560,6 +3742,11 @@ var _districtData = [
                         "pid": 220700
                     },
                     {
+                        "id": 220771,
+                        "name": "吉林松原经济开发区",
+                        "pid": 220700
+                    },
+                    {
                         "id": 220781,
                         "name": "扶余市",
                         "pid": 220700
@@ -3570,7 +3757,7 @@ var _districtData = [
                 "id": 220800,
                 "name": "白城市",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 220801,
                         "name": "市辖区",
@@ -3592,6 +3779,11 @@ var _districtData = [
                         "pid": 220800
                     },
                     {
+                        "id": 220871,
+                        "name": "吉林白城经济开发区",
+                        "pid": 220800
+                    },
+                    {
                         "id": 220881,
                         "name": "洮南市",
                         "pid": 220800
@@ -3607,7 +3799,7 @@ var _districtData = [
                 "id": 222400,
                 "name": "延边朝鲜族自治州",
                 "pid": 220000,
-                "district": [
+                "children": [
                     {
                         "id": 222401,
                         "name": "延吉市",
@@ -3656,12 +3848,12 @@ var _districtData = [
         "id": 230000,
         "name": "黑龙江省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 230100,
                 "name": "哈尔滨市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230101,
                         "name": "市辖区",
@@ -3763,7 +3955,7 @@ var _districtData = [
                 "id": 230200,
                 "name": "齐齐哈尔市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230201,
                         "name": "市辖区",
@@ -3855,7 +4047,7 @@ var _districtData = [
                 "id": 230300,
                 "name": "鸡西市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230301,
                         "name": "市辖区",
@@ -3912,7 +4104,7 @@ var _districtData = [
                 "id": 230400,
                 "name": "鹤岗市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230401,
                         "name": "市辖区",
@@ -3964,7 +4156,7 @@ var _districtData = [
                 "id": 230500,
                 "name": "双鸭山市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230501,
                         "name": "市辖区",
@@ -4016,7 +4208,7 @@ var _districtData = [
                 "id": 230600,
                 "name": "大庆市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230601,
                         "name": "市辖区",
@@ -4066,6 +4258,11 @@ var _districtData = [
                         "id": 230624,
                         "name": "杜尔伯特蒙古族自治县",
                         "pid": 230600
+                    },
+                    {
+                        "id": 230671,
+                        "name": "大庆高新技术产业开发区",
+                        "pid": 230600
                     }
                 ]
             },
@@ -4073,90 +4270,55 @@ var _districtData = [
                 "id": 230700,
                 "name": "伊春市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230701,
                         "name": "市辖区",
                         "pid": 230700
                     },
                     {
-                        "id": 230702,
-                        "name": "伊春区",
+                        "id": 230717,
+                        "name": "伊美区",
                         "pid": 230700
                     },
                     {
-                        "id": 230703,
-                        "name": "南岔区",
+                        "id": 230718,
+                        "name": "乌翠区",
                         "pid": 230700
                     },
                     {
-                        "id": 230704,
+                        "id": 230719,
                         "name": "友好区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230705,
-                        "name": "西林区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230706,
-                        "name": "翠峦区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230707,
-                        "name": "新青区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230708,
-                        "name": "美溪区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230709,
-                        "name": "金山屯区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230710,
-                        "name": "五营区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230711,
-                        "name": "乌马河区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230712,
-                        "name": "汤旺河区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230713,
-                        "name": "带岭区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230714,
-                        "name": "乌伊岭区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230715,
-                        "name": "红星区",
-                        "pid": 230700
-                    },
-                    {
-                        "id": 230716,
-                        "name": "上甘岭区",
                         "pid": 230700
                     },
                     {
                         "id": 230722,
                         "name": "嘉荫县",
+                        "pid": 230700
+                    },
+                    {
+                        "id": 230723,
+                        "name": "汤旺县",
+                        "pid": 230700
+                    },
+                    {
+                        "id": 230724,
+                        "name": "丰林县",
+                        "pid": 230700
+                    },
+                    {
+                        "id": 230725,
+                        "name": "大箐山县",
+                        "pid": 230700
+                    },
+                    {
+                        "id": 230726,
+                        "name": "南岔县",
+                        "pid": 230700
+                    },
+                    {
+                        "id": 230751,
+                        "name": "金林区",
                         "pid": 230700
                     },
                     {
@@ -4170,7 +4332,7 @@ var _districtData = [
                 "id": 230800,
                 "name": "佳木斯市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230801,
                         "name": "市辖区",
@@ -4232,7 +4394,7 @@ var _districtData = [
                 "id": 230900,
                 "name": "七台河市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 230901,
                         "name": "市辖区",
@@ -4264,7 +4426,7 @@ var _districtData = [
                 "id": 231000,
                 "name": "牡丹江市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 231001,
                         "name": "市辖区",
@@ -4293,6 +4455,11 @@ var _districtData = [
                     {
                         "id": 231025,
                         "name": "林口县",
+                        "pid": 231000
+                    },
+                    {
+                        "id": 231071,
+                        "name": "牡丹江经济技术开发区",
                         "pid": 231000
                     },
                     {
@@ -4326,7 +4493,7 @@ var _districtData = [
                 "id": 231100,
                 "name": "黑河市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 231101,
                         "name": "市辖区",
@@ -4335,11 +4502,6 @@ var _districtData = [
                     {
                         "id": 231102,
                         "name": "爱辉区",
-                        "pid": 231100
-                    },
-                    {
-                        "id": 231121,
-                        "name": "嫩江县",
                         "pid": 231100
                     },
                     {
@@ -4361,6 +4523,11 @@ var _districtData = [
                         "id": 231182,
                         "name": "五大连池市",
                         "pid": 231100
+                    },
+                    {
+                        "id": 231183,
+                        "name": "嫩江市",
+                        "pid": 231100
                     }
                 ]
             },
@@ -4368,7 +4535,7 @@ var _districtData = [
                 "id": 231200,
                 "name": "绥化市",
                 "pid": 230000,
-                "district": [
+                "children": [
                     {
                         "id": 231201,
                         "name": "市辖区",
@@ -4430,7 +4597,12 @@ var _districtData = [
                 "id": 232700,
                 "name": "大兴安岭地区",
                 "pid": 230000,
-                "district": [
+                "children": [
+                    {
+                        "id": 232701,
+                        "name": "漠河市",
+                        "pid": 232700
+                    },
                     {
                         "id": 232721,
                         "name": "呼玛县",
@@ -4442,8 +4614,23 @@ var _districtData = [
                         "pid": 232700
                     },
                     {
-                        "id": 232723,
-                        "name": "漠河县",
+                        "id": 232761,
+                        "name": "加格达奇区",
+                        "pid": 232700
+                    },
+                    {
+                        "id": 232762,
+                        "name": "松岭区",
+                        "pid": 232700
+                    },
+                    {
+                        "id": 232763,
+                        "name": "新林区",
+                        "pid": 232700
+                    },
+                    {
+                        "id": 232764,
+                        "name": "呼中区",
                         "pid": 232700
                     }
                 ]
@@ -4454,12 +4641,12 @@ var _districtData = [
         "id": 310000,
         "name": "上海市",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 310100,
                 "name": "市辖区",
                 "pid": 310000,
-                "district": [
+                "children": [
                     {
                         "id": 310101,
                         "name": "黄浦区",
@@ -4548,12 +4735,12 @@ var _districtData = [
         "id": 320000,
         "name": "江苏省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 320100,
                 "name": "南京市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320101,
                         "name": "市辖区",
@@ -4620,7 +4807,7 @@ var _districtData = [
                 "id": 320200,
                 "name": "无锡市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320201,
                         "name": "市辖区",
@@ -4667,7 +4854,7 @@ var _districtData = [
                 "id": 320300,
                 "name": "徐州市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320301,
                         "name": "市辖区",
@@ -4714,6 +4901,11 @@ var _districtData = [
                         "pid": 320300
                     },
                     {
+                        "id": 320371,
+                        "name": "徐州经济技术开发区",
+                        "pid": 320300
+                    },
+                    {
                         "id": 320381,
                         "name": "新沂市",
                         "pid": 320300
@@ -4729,7 +4921,7 @@ var _districtData = [
                 "id": 320400,
                 "name": "常州市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320401,
                         "name": "市辖区",
@@ -4771,7 +4963,7 @@ var _districtData = [
                 "id": 320500,
                 "name": "苏州市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320501,
                         "name": "市辖区",
@@ -4803,6 +4995,11 @@ var _districtData = [
                         "pid": 320500
                     },
                     {
+                        "id": 320571,
+                        "name": "苏州工业园区",
+                        "pid": 320500
+                    },
+                    {
                         "id": 320581,
                         "name": "常熟市",
                         "pid": 320500
@@ -4828,7 +5025,7 @@ var _districtData = [
                 "id": 320600,
                 "name": "南通市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320601,
                         "name": "市辖区",
@@ -4850,13 +5047,13 @@ var _districtData = [
                         "pid": 320600
                     },
                     {
-                        "id": 320621,
-                        "name": "海安县",
+                        "id": 320623,
+                        "name": "如东县",
                         "pid": 320600
                     },
                     {
-                        "id": 320623,
-                        "name": "如东县",
+                        "id": 320671,
+                        "name": "南通经济技术开发区",
                         "pid": 320600
                     },
                     {
@@ -4873,6 +5070,11 @@ var _districtData = [
                         "id": 320684,
                         "name": "海门市",
                         "pid": 320600
+                    },
+                    {
+                        "id": 320685,
+                        "name": "海安市",
+                        "pid": 320600
                     }
                 ]
             },
@@ -4880,7 +5082,7 @@ var _districtData = [
                 "id": 320700,
                 "name": "连云港市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320701,
                         "name": "市辖区",
@@ -4915,6 +5117,16 @@ var _districtData = [
                         "id": 320724,
                         "name": "灌南县",
                         "pid": 320700
+                    },
+                    {
+                        "id": 320771,
+                        "name": "连云港经济技术开发区",
+                        "pid": 320700
+                    },
+                    {
+                        "id": 320772,
+                        "name": "连云港高新技术产业开发区",
+                        "pid": 320700
                     }
                 ]
             },
@@ -4922,7 +5134,7 @@ var _districtData = [
                 "id": 320800,
                 "name": "淮安市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320801,
                         "name": "市辖区",
@@ -4962,6 +5174,11 @@ var _districtData = [
                         "id": 320831,
                         "name": "金湖县",
                         "pid": 320800
+                    },
+                    {
+                        "id": 320871,
+                        "name": "淮安经济技术开发区",
+                        "pid": 320800
                     }
                 ]
             },
@@ -4969,7 +5186,7 @@ var _districtData = [
                 "id": 320900,
                 "name": "盐城市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 320901,
                         "name": "市辖区",
@@ -5016,6 +5233,11 @@ var _districtData = [
                         "pid": 320900
                     },
                     {
+                        "id": 320971,
+                        "name": "盐城经济技术开发区",
+                        "pid": 320900
+                    },
+                    {
                         "id": 320981,
                         "name": "东台市",
                         "pid": 320900
@@ -5026,7 +5248,7 @@ var _districtData = [
                 "id": 321000,
                 "name": "扬州市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 321001,
                         "name": "市辖区",
@@ -5053,6 +5275,11 @@ var _districtData = [
                         "pid": 321000
                     },
                     {
+                        "id": 321071,
+                        "name": "扬州经济技术开发区",
+                        "pid": 321000
+                    },
+                    {
                         "id": 321081,
                         "name": "仪征市",
                         "pid": 321000
@@ -5068,7 +5295,7 @@ var _districtData = [
                 "id": 321100,
                 "name": "镇江市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 321101,
                         "name": "市辖区",
@@ -5087,6 +5314,11 @@ var _districtData = [
                     {
                         "id": 321112,
                         "name": "丹徒区",
+                        "pid": 321100
+                    },
+                    {
+                        "id": 321171,
+                        "name": "镇江新区",
                         "pid": 321100
                     },
                     {
@@ -5110,7 +5342,7 @@ var _districtData = [
                 "id": 321200,
                 "name": "泰州市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 321201,
                         "name": "市辖区",
@@ -5129,6 +5361,11 @@ var _districtData = [
                     {
                         "id": 321204,
                         "name": "姜堰区",
+                        "pid": 321200
+                    },
+                    {
+                        "id": 321271,
+                        "name": "泰州医药高新技术产业开发区",
                         "pid": 321200
                     },
                     {
@@ -5152,7 +5389,7 @@ var _districtData = [
                 "id": 321300,
                 "name": "宿迁市",
                 "pid": 320000,
-                "district": [
+                "children": [
                     {
                         "id": 321301,
                         "name": "市辖区",
@@ -5182,6 +5419,11 @@ var _districtData = [
                         "id": 321324,
                         "name": "泗洪县",
                         "pid": 321300
+                    },
+                    {
+                        "id": 321371,
+                        "name": "宿迁经济技术开发区",
+                        "pid": 321300
                     }
                 ]
             }
@@ -5191,12 +5433,12 @@ var _districtData = [
         "id": 330000,
         "name": "浙江省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 330100,
                 "name": "杭州市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330101,
                         "name": "市辖区",
@@ -5248,6 +5490,11 @@ var _districtData = [
                         "pid": 330100
                     },
                     {
+                        "id": 330112,
+                        "name": "临安区",
+                        "pid": 330100
+                    },
+                    {
                         "id": 330122,
                         "name": "桐庐县",
                         "pid": 330100
@@ -5261,11 +5508,6 @@ var _districtData = [
                         "id": 330182,
                         "name": "建德市",
                         "pid": 330100
-                    },
-                    {
-                        "id": 330185,
-                        "name": "临安市",
-                        "pid": 330100
                     }
                 ]
             },
@@ -5273,7 +5515,7 @@ var _districtData = [
                 "id": 330200,
                 "name": "宁波市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330201,
                         "name": "市辖区",
@@ -5282,11 +5524,6 @@ var _districtData = [
                     {
                         "id": 330203,
                         "name": "海曙区",
-                        "pid": 330200
-                    },
-                    {
-                        "id": 330204,
-                        "name": "江东区",
                         "pid": 330200
                     },
                     {
@@ -5310,6 +5547,11 @@ var _districtData = [
                         "pid": 330200
                     },
                     {
+                        "id": 330213,
+                        "name": "奉化区",
+                        "pid": 330200
+                    },
+                    {
                         "id": 330225,
                         "name": "象山县",
                         "pid": 330200
@@ -5328,11 +5570,6 @@ var _districtData = [
                         "id": 330282,
                         "name": "慈溪市",
                         "pid": 330200
-                    },
-                    {
-                        "id": 330283,
-                        "name": "奉化市",
-                        "pid": 330200
                     }
                 ]
             },
@@ -5340,7 +5577,7 @@ var _districtData = [
                 "id": 330300,
                 "name": "温州市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330301,
                         "name": "市辖区",
@@ -5392,6 +5629,11 @@ var _districtData = [
                         "pid": 330300
                     },
                     {
+                        "id": 330371,
+                        "name": "温州经济技术开发区",
+                        "pid": 330300
+                    },
+                    {
                         "id": 330381,
                         "name": "瑞安市",
                         "pid": 330300
@@ -5400,6 +5642,11 @@ var _districtData = [
                         "id": 330382,
                         "name": "乐清市",
                         "pid": 330300
+                    },
+                    {
+                        "id": 330383,
+                        "name": "龙港市",
+                        "pid": 330300
                     }
                 ]
             },
@@ -5407,7 +5654,7 @@ var _districtData = [
                 "id": 330400,
                 "name": "嘉兴市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330401,
                         "name": "市辖区",
@@ -5454,7 +5701,7 @@ var _districtData = [
                 "id": 330500,
                 "name": "湖州市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330501,
                         "name": "市辖区",
@@ -5491,7 +5738,7 @@ var _districtData = [
                 "id": 330600,
                 "name": "绍兴市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330601,
                         "name": "市辖区",
@@ -5533,7 +5780,7 @@ var _districtData = [
                 "id": 330700,
                 "name": "金华市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330701,
                         "name": "市辖区",
@@ -5590,7 +5837,7 @@ var _districtData = [
                 "id": 330800,
                 "name": "衢州市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330801,
                         "name": "市辖区",
@@ -5632,7 +5879,7 @@ var _districtData = [
                 "id": 330900,
                 "name": "舟山市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 330901,
                         "name": "市辖区",
@@ -5664,7 +5911,7 @@ var _districtData = [
                 "id": 331000,
                 "name": "台州市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 331001,
                         "name": "市辖区",
@@ -5683,11 +5930,6 @@ var _districtData = [
                     {
                         "id": 331004,
                         "name": "路桥区",
-                        "pid": 331000
-                    },
-                    {
-                        "id": 331021,
-                        "name": "玉环县",
                         "pid": 331000
                     },
                     {
@@ -5714,6 +5956,11 @@ var _districtData = [
                         "id": 331082,
                         "name": "临海市",
                         "pid": 331000
+                    },
+                    {
+                        "id": 331083,
+                        "name": "玉环市",
+                        "pid": 331000
                     }
                 ]
             },
@@ -5721,7 +5968,7 @@ var _districtData = [
                 "id": 331100,
                 "name": "丽水市",
                 "pid": 330000,
-                "district": [
+                "children": [
                     {
                         "id": 331101,
                         "name": "市辖区",
@@ -5780,12 +6027,12 @@ var _districtData = [
         "id": 340000,
         "name": "安徽省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 340100,
                 "name": "合肥市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340101,
                         "name": "市辖区",
@@ -5832,6 +6079,21 @@ var _districtData = [
                         "pid": 340100
                     },
                     {
+                        "id": 340171,
+                        "name": "合肥高新技术产业开发区",
+                        "pid": 340100
+                    },
+                    {
+                        "id": 340172,
+                        "name": "合肥经济技术开发区",
+                        "pid": 340100
+                    },
+                    {
+                        "id": 340173,
+                        "name": "合肥新站高新技术产业开发区",
+                        "pid": 340100
+                    },
+                    {
                         "id": 340181,
                         "name": "巢湖市",
                         "pid": 340100
@@ -5842,7 +6104,7 @@ var _districtData = [
                 "id": 340200,
                 "name": "芜湖市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340201,
                         "name": "市辖区",
@@ -5887,6 +6149,16 @@ var _districtData = [
                         "id": 340225,
                         "name": "无为县",
                         "pid": 340200
+                    },
+                    {
+                        "id": 340271,
+                        "name": "芜湖经济技术开发区",
+                        "pid": 340200
+                    },
+                    {
+                        "id": 340272,
+                        "name": "安徽芜湖长江大桥经济开发区",
+                        "pid": 340200
                     }
                 ]
             },
@@ -5894,7 +6166,7 @@ var _districtData = [
                 "id": 340300,
                 "name": "蚌埠市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340301,
                         "name": "市辖区",
@@ -5934,6 +6206,16 @@ var _districtData = [
                         "id": 340323,
                         "name": "固镇县",
                         "pid": 340300
+                    },
+                    {
+                        "id": 340371,
+                        "name": "蚌埠市高新技术开发区",
+                        "pid": 340300
+                    },
+                    {
+                        "id": 340372,
+                        "name": "蚌埠市经济开发区",
+                        "pid": 340300
                     }
                 ]
             },
@@ -5941,7 +6223,7 @@ var _districtData = [
                 "id": 340400,
                 "name": "淮南市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340401,
                         "name": "市辖区",
@@ -5988,7 +6270,7 @@ var _districtData = [
                 "id": 340500,
                 "name": "马鞍山市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340501,
                         "name": "市辖区",
@@ -6030,7 +6312,7 @@ var _districtData = [
                 "id": 340600,
                 "name": "淮北市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340601,
                         "name": "市辖区",
@@ -6062,7 +6344,7 @@ var _districtData = [
                 "id": 340700,
                 "name": "铜陵市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340701,
                         "name": "市辖区",
@@ -6094,7 +6376,7 @@ var _districtData = [
                 "id": 340800,
                 "name": "安庆市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 340801,
                         "name": "市辖区",
@@ -6121,11 +6403,6 @@ var _districtData = [
                         "pid": 340800
                     },
                     {
-                        "id": 340824,
-                        "name": "潜山县",
-                        "pid": 340800
-                    },
-                    {
                         "id": 340825,
                         "name": "太湖县",
                         "pid": 340800
@@ -6146,8 +6423,18 @@ var _districtData = [
                         "pid": 340800
                     },
                     {
+                        "id": 340871,
+                        "name": "安徽安庆经济开发区",
+                        "pid": 340800
+                    },
+                    {
                         "id": 340881,
                         "name": "桐城市",
+                        "pid": 340800
+                    },
+                    {
+                        "id": 340882,
+                        "name": "潜山市",
                         "pid": 340800
                     }
                 ]
@@ -6156,7 +6443,7 @@ var _districtData = [
                 "id": 341000,
                 "name": "黄山市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341001,
                         "name": "市辖区",
@@ -6203,7 +6490,7 @@ var _districtData = [
                 "id": 341100,
                 "name": "滁州市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341101,
                         "name": "市辖区",
@@ -6240,6 +6527,16 @@ var _districtData = [
                         "pid": 341100
                     },
                     {
+                        "id": 341171,
+                        "name": "苏滁现代产业园",
+                        "pid": 341100
+                    },
+                    {
+                        "id": 341172,
+                        "name": "滁州经济技术开发区",
+                        "pid": 341100
+                    },
+                    {
                         "id": 341181,
                         "name": "天长市",
                         "pid": 341100
@@ -6255,7 +6552,7 @@ var _districtData = [
                 "id": 341200,
                 "name": "阜阳市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341201,
                         "name": "市辖区",
@@ -6297,6 +6594,16 @@ var _districtData = [
                         "pid": 341200
                     },
                     {
+                        "id": 341271,
+                        "name": "阜阳合肥现代产业园区",
+                        "pid": 341200
+                    },
+                    {
+                        "id": 341272,
+                        "name": "阜阳经济技术开发区",
+                        "pid": 341200
+                    },
+                    {
                         "id": 341282,
                         "name": "界首市",
                         "pid": 341200
@@ -6307,7 +6614,7 @@ var _districtData = [
                 "id": 341300,
                 "name": "宿州市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341301,
                         "name": "市辖区",
@@ -6337,6 +6644,16 @@ var _districtData = [
                         "id": 341324,
                         "name": "泗县",
                         "pid": 341300
+                    },
+                    {
+                        "id": 341371,
+                        "name": "宿州马鞍山现代产业园区",
+                        "pid": 341300
+                    },
+                    {
+                        "id": 341372,
+                        "name": "宿州经济技术开发区",
+                        "pid": 341300
                     }
                 ]
             },
@@ -6344,7 +6661,7 @@ var _districtData = [
                 "id": 341500,
                 "name": "六安市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341501,
                         "name": "市辖区",
@@ -6391,7 +6708,7 @@ var _districtData = [
                 "id": 341600,
                 "name": "亳州市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341601,
                         "name": "市辖区",
@@ -6423,7 +6740,7 @@ var _districtData = [
                 "id": 341700,
                 "name": "池州市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341701,
                         "name": "市辖区",
@@ -6455,7 +6772,7 @@ var _districtData = [
                 "id": 341800,
                 "name": "宣城市",
                 "pid": 340000,
-                "district": [
+                "children": [
                     {
                         "id": 341801,
                         "name": "市辖区",
@@ -6469,11 +6786,6 @@ var _districtData = [
                     {
                         "id": 341821,
                         "name": "郎溪县",
-                        "pid": 341800
-                    },
-                    {
-                        "id": 341822,
-                        "name": "广德县",
                         "pid": 341800
                     },
                     {
@@ -6492,8 +6804,18 @@ var _districtData = [
                         "pid": 341800
                     },
                     {
+                        "id": 341871,
+                        "name": "宣城市经济开发区",
+                        "pid": 341800
+                    },
+                    {
                         "id": 341881,
                         "name": "宁国市",
+                        "pid": 341800
+                    },
+                    {
+                        "id": 341882,
+                        "name": "广德市",
                         "pid": 341800
                     }
                 ]
@@ -6504,12 +6826,12 @@ var _districtData = [
         "id": 350000,
         "name": "福建省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 350100,
                 "name": "福州市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350101,
                         "name": "市辖区",
@@ -6538,6 +6860,11 @@ var _districtData = [
                     {
                         "id": 350111,
                         "name": "晋安区",
+                        "pid": 350100
+                    },
+                    {
+                        "id": 350112,
+                        "name": "长乐区",
                         "pid": 350100
                     },
                     {
@@ -6574,11 +6901,6 @@ var _districtData = [
                         "id": 350181,
                         "name": "福清市",
                         "pid": 350100
-                    },
-                    {
-                        "id": 350182,
-                        "name": "长乐市",
-                        "pid": 350100
                     }
                 ]
             },
@@ -6586,7 +6908,7 @@ var _districtData = [
                 "id": 350200,
                 "name": "厦门市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350201,
                         "name": "市辖区",
@@ -6628,7 +6950,7 @@ var _districtData = [
                 "id": 350300,
                 "name": "莆田市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350301,
                         "name": "市辖区",
@@ -6665,7 +6987,7 @@ var _districtData = [
                 "id": 350400,
                 "name": "三明市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350401,
                         "name": "市辖区",
@@ -6737,7 +7059,7 @@ var _districtData = [
                 "id": 350500,
                 "name": "泉州市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350501,
                         "name": "市辖区",
@@ -6809,7 +7131,7 @@ var _districtData = [
                 "id": 350600,
                 "name": "漳州市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350601,
                         "name": "市辖区",
@@ -6876,7 +7198,7 @@ var _districtData = [
                 "id": 350700,
                 "name": "南平市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350701,
                         "name": "市辖区",
@@ -6938,7 +7260,7 @@ var _districtData = [
                 "id": 350800,
                 "name": "龙岩市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350801,
                         "name": "市辖区",
@@ -6985,7 +7307,7 @@ var _districtData = [
                 "id": 350900,
                 "name": "宁德市",
                 "pid": 350000,
-                "district": [
+                "children": [
                     {
                         "id": 350901,
                         "name": "市辖区",
@@ -7044,12 +7366,12 @@ var _districtData = [
         "id": 360000,
         "name": "江西省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 360100,
                 "name": "南昌市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360101,
                         "name": "市辖区",
@@ -7106,7 +7428,7 @@ var _districtData = [
                 "id": 360200,
                 "name": "景德镇市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360201,
                         "name": "市辖区",
@@ -7138,7 +7460,7 @@ var _districtData = [
                 "id": 360300,
                 "name": "萍乡市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360301,
                         "name": "市辖区",
@@ -7175,7 +7497,7 @@ var _districtData = [
                 "id": 360400,
                 "name": "九江市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360401,
                         "name": "市辖区",
@@ -7192,8 +7514,8 @@ var _districtData = [
                         "pid": 360400
                     },
                     {
-                        "id": 360421,
-                        "name": "九江县",
+                        "id": 360404,
+                        "name": "柴桑区",
                         "pid": 360400
                     },
                     {
@@ -7252,7 +7574,7 @@ var _districtData = [
                 "id": 360500,
                 "name": "新余市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360501,
                         "name": "市辖区",
@@ -7274,7 +7596,7 @@ var _districtData = [
                 "id": 360600,
                 "name": "鹰潭市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360601,
                         "name": "市辖区",
@@ -7286,8 +7608,8 @@ var _districtData = [
                         "pid": 360600
                     },
                     {
-                        "id": 360622,
-                        "name": "余江县",
+                        "id": 360603,
+                        "name": "余江区",
                         "pid": 360600
                     },
                     {
@@ -7301,7 +7623,7 @@ var _districtData = [
                 "id": 360700,
                 "name": "赣州市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360701,
                         "name": "市辖区",
@@ -7318,8 +7640,8 @@ var _districtData = [
                         "pid": 360700
                     },
                     {
-                        "id": 360721,
-                        "name": "赣县",
+                        "id": 360704,
+                        "name": "赣县区",
                         "pid": 360700
                     },
                     {
@@ -7403,7 +7725,7 @@ var _districtData = [
                 "id": 360800,
                 "name": "吉安市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360801,
                         "name": "市辖区",
@@ -7480,7 +7802,7 @@ var _districtData = [
                 "id": 360900,
                 "name": "宜春市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 360901,
                         "name": "市辖区",
@@ -7542,7 +7864,7 @@ var _districtData = [
                 "id": 361000,
                 "name": "抚州市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 361001,
                         "name": "市辖区",
@@ -7551,6 +7873,11 @@ var _districtData = [
                     {
                         "id": 361002,
                         "name": "临川区",
+                        "pid": 361000
+                    },
+                    {
+                        "id": 361003,
+                        "name": "东乡区",
                         "pid": 361000
                     },
                     {
@@ -7594,11 +7921,6 @@ var _districtData = [
                         "pid": 361000
                     },
                     {
-                        "id": 361029,
-                        "name": "东乡县",
-                        "pid": 361000
-                    },
-                    {
                         "id": 361030,
                         "name": "广昌县",
                         "pid": 361000
@@ -7609,7 +7931,7 @@ var _districtData = [
                 "id": 361100,
                 "name": "上饶市",
                 "pid": 360000,
-                "district": [
+                "children": [
                     {
                         "id": 361101,
                         "name": "市辖区",
@@ -7626,8 +7948,8 @@ var _districtData = [
                         "pid": 361100
                     },
                     {
-                        "id": 361121,
-                        "name": "上饶县",
+                        "id": 361104,
+                        "name": "广信区",
                         "pid": 361100
                     },
                     {
@@ -7683,12 +8005,12 @@ var _districtData = [
         "id": 370000,
         "name": "山东省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 370100,
                 "name": "济南市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370101,
                         "name": "市辖区",
@@ -7725,13 +8047,28 @@ var _districtData = [
                         "pid": 370100
                     },
                     {
-                        "id": 370124,
-                        "name": "平阴县",
+                        "id": 370114,
+                        "name": "章丘区",
                         "pid": 370100
                     },
                     {
-                        "id": 370125,
-                        "name": "济阳县",
+                        "id": 370115,
+                        "name": "济阳区",
+                        "pid": 370100
+                    },
+                    {
+                        "id": 370116,
+                        "name": "莱芜区",
+                        "pid": 370100
+                    },
+                    {
+                        "id": 370117,
+                        "name": "钢城区",
+                        "pid": 370100
+                    },
+                    {
+                        "id": 370124,
+                        "name": "平阴县",
                         "pid": 370100
                     },
                     {
@@ -7740,8 +8077,8 @@ var _districtData = [
                         "pid": 370100
                     },
                     {
-                        "id": 370181,
-                        "name": "章丘市",
+                        "id": 370171,
+                        "name": "济南高新技术产业开发区",
                         "pid": 370100
                     }
                 ]
@@ -7750,7 +8087,7 @@ var _districtData = [
                 "id": 370200,
                 "name": "青岛市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370201,
                         "name": "市辖区",
@@ -7787,13 +8124,18 @@ var _districtData = [
                         "pid": 370200
                     },
                     {
-                        "id": 370281,
-                        "name": "胶州市",
+                        "id": 370215,
+                        "name": "即墨区",
                         "pid": 370200
                     },
                     {
-                        "id": 370282,
-                        "name": "即墨市",
+                        "id": 370271,
+                        "name": "青岛高新技术产业开发区",
+                        "pid": 370200
+                    },
+                    {
+                        "id": 370281,
+                        "name": "胶州市",
                         "pid": 370200
                     },
                     {
@@ -7812,7 +8154,7 @@ var _districtData = [
                 "id": 370300,
                 "name": "淄博市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370301,
                         "name": "市辖区",
@@ -7864,7 +8206,7 @@ var _districtData = [
                 "id": 370400,
                 "name": "枣庄市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370401,
                         "name": "市辖区",
@@ -7906,7 +8248,7 @@ var _districtData = [
                 "id": 370500,
                 "name": "东营市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370501,
                         "name": "市辖区",
@@ -7936,6 +8278,16 @@ var _districtData = [
                         "id": 370523,
                         "name": "广饶县",
                         "pid": 370500
+                    },
+                    {
+                        "id": 370571,
+                        "name": "东营经济技术开发区",
+                        "pid": 370500
+                    },
+                    {
+                        "id": 370572,
+                        "name": "东营港经济开发区",
+                        "pid": 370500
                     }
                 ]
             },
@@ -7943,7 +8295,7 @@ var _districtData = [
                 "id": 370600,
                 "name": "烟台市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370601,
                         "name": "市辖区",
@@ -7972,6 +8324,16 @@ var _districtData = [
                     {
                         "id": 370634,
                         "name": "长岛县",
+                        "pid": 370600
+                    },
+                    {
+                        "id": 370671,
+                        "name": "烟台高新技术产业开发区",
+                        "pid": 370600
+                    },
+                    {
+                        "id": 370672,
+                        "name": "烟台经济技术开发区",
                         "pid": 370600
                     },
                     {
@@ -8015,7 +8377,7 @@ var _districtData = [
                 "id": 370700,
                 "name": "潍坊市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370701,
                         "name": "市辖区",
@@ -8049,6 +8411,11 @@ var _districtData = [
                     {
                         "id": 370725,
                         "name": "昌乐县",
+                        "pid": 370700
+                    },
+                    {
+                        "id": 370772,
+                        "name": "潍坊滨海经济技术开发区",
                         "pid": 370700
                     },
                     {
@@ -8087,7 +8454,7 @@ var _districtData = [
                 "id": 370800,
                 "name": "济宁市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370801,
                         "name": "市辖区",
@@ -8139,6 +8506,11 @@ var _districtData = [
                         "pid": 370800
                     },
                     {
+                        "id": 370871,
+                        "name": "济宁高新技术产业开发区",
+                        "pid": 370800
+                    },
+                    {
                         "id": 370881,
                         "name": "曲阜市",
                         "pid": 370800
@@ -8154,7 +8526,7 @@ var _districtData = [
                 "id": 370900,
                 "name": "泰安市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 370901,
                         "name": "市辖区",
@@ -8196,7 +8568,7 @@ var _districtData = [
                 "id": 371000,
                 "name": "威海市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371001,
                         "name": "市辖区",
@@ -8210,6 +8582,21 @@ var _districtData = [
                     {
                         "id": 371003,
                         "name": "文登区",
+                        "pid": 371000
+                    },
+                    {
+                        "id": 371071,
+                        "name": "威海火炬高技术产业开发区",
+                        "pid": 371000
+                    },
+                    {
+                        "id": 371072,
+                        "name": "威海经济技术开发区",
+                        "pid": 371000
+                    },
+                    {
+                        "id": 371073,
+                        "name": "威海临港经济技术开发区",
                         "pid": 371000
                     },
                     {
@@ -8228,7 +8615,7 @@ var _districtData = [
                 "id": 371100,
                 "name": "日照市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371101,
                         "name": "市辖区",
@@ -8253,28 +8640,11 @@ var _districtData = [
                         "id": 371122,
                         "name": "莒县",
                         "pid": 371100
-                    }
-                ]
-            },
-            {
-                "id": 371200,
-                "name": "莱芜市",
-                "pid": 370000,
-                "district": [
-                    {
-                        "id": 371201,
-                        "name": "市辖区",
-                        "pid": 371200
                     },
                     {
-                        "id": 371202,
-                        "name": "莱城区",
-                        "pid": 371200
-                    },
-                    {
-                        "id": 371203,
-                        "name": "钢城区",
-                        "pid": 371200
+                        "id": 371171,
+                        "name": "日照经济技术开发区",
+                        "pid": 371100
                     }
                 ]
             },
@@ -8282,7 +8652,7 @@ var _districtData = [
                 "id": 371300,
                 "name": "临沂市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371301,
                         "name": "市辖区",
@@ -8347,6 +8717,21 @@ var _districtData = [
                         "id": 371329,
                         "name": "临沭县",
                         "pid": 371300
+                    },
+                    {
+                        "id": 371371,
+                        "name": "临沂高新技术产业开发区",
+                        "pid": 371300
+                    },
+                    {
+                        "id": 371372,
+                        "name": "临沂经济技术开发区",
+                        "pid": 371300
+                    },
+                    {
+                        "id": 371373,
+                        "name": "临沂临港经济开发区",
+                        "pid": 371300
                     }
                 ]
             },
@@ -8354,7 +8739,7 @@ var _districtData = [
                 "id": 371400,
                 "name": "德州市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371401,
                         "name": "市辖区",
@@ -8406,6 +8791,16 @@ var _districtData = [
                         "pid": 371400
                     },
                     {
+                        "id": 371471,
+                        "name": "德州经济技术开发区",
+                        "pid": 371400
+                    },
+                    {
+                        "id": 371472,
+                        "name": "德州运河经济开发区",
+                        "pid": 371400
+                    },
+                    {
                         "id": 371481,
                         "name": "乐陵市",
                         "pid": 371400
@@ -8421,7 +8816,7 @@ var _districtData = [
                 "id": 371500,
                 "name": "聊城市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371501,
                         "name": "市辖区",
@@ -8433,6 +8828,11 @@ var _districtData = [
                         "pid": 371500
                     },
                     {
+                        "id": 371503,
+                        "name": "茌平区",
+                        "pid": 371500
+                    },
+                    {
                         "id": 371521,
                         "name": "阳谷县",
                         "pid": 371500
@@ -8440,11 +8840,6 @@ var _districtData = [
                     {
                         "id": 371522,
                         "name": "莘县",
-                        "pid": 371500
-                    },
-                    {
-                        "id": 371523,
-                        "name": "茌平县",
                         "pid": 371500
                     },
                     {
@@ -8473,7 +8868,7 @@ var _districtData = [
                 "id": 371600,
                 "name": "滨州市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371601,
                         "name": "市辖区",
@@ -8510,8 +8905,8 @@ var _districtData = [
                         "pid": 371600
                     },
                     {
-                        "id": 371626,
-                        "name": "邹平县",
+                        "id": 371681,
+                        "name": "邹平市",
                         "pid": 371600
                     }
                 ]
@@ -8520,7 +8915,7 @@ var _districtData = [
                 "id": 371700,
                 "name": "菏泽市",
                 "pid": 370000,
-                "district": [
+                "children": [
                     {
                         "id": 371701,
                         "name": "市辖区",
@@ -8570,6 +8965,16 @@ var _districtData = [
                         "id": 371728,
                         "name": "东明县",
                         "pid": 371700
+                    },
+                    {
+                        "id": 371771,
+                        "name": "菏泽经济技术开发区",
+                        "pid": 371700
+                    },
+                    {
+                        "id": 371772,
+                        "name": "菏泽高新技术开发区",
+                        "pid": 371700
                     }
                 ]
             }
@@ -8579,12 +8984,12 @@ var _districtData = [
         "id": 410000,
         "name": "河南省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 410100,
                 "name": "郑州市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410101,
                         "name": "市辖区",
@@ -8626,6 +9031,21 @@ var _districtData = [
                         "pid": 410100
                     },
                     {
+                        "id": 410171,
+                        "name": "郑州经济技术开发区",
+                        "pid": 410100
+                    },
+                    {
+                        "id": 410172,
+                        "name": "郑州高新技术产业开发区",
+                        "pid": 410100
+                    },
+                    {
+                        "id": 410173,
+                        "name": "郑州航空港经济综合实验区",
+                        "pid": 410100
+                    },
+                    {
                         "id": 410181,
                         "name": "巩义市",
                         "pid": 410100
@@ -8656,7 +9076,7 @@ var _districtData = [
                 "id": 410200,
                 "name": "开封市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410201,
                         "name": "市辖区",
@@ -8680,11 +9100,6 @@ var _districtData = [
                     {
                         "id": 410205,
                         "name": "禹王台区",
-                        "pid": 410200
-                    },
-                    {
-                        "id": 410211,
-                        "name": "金明区",
                         "pid": 410200
                     },
                     {
@@ -8718,7 +9133,7 @@ var _districtData = [
                 "id": 410300,
                 "name": "洛阳市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410301,
                         "name": "市辖区",
@@ -8795,6 +9210,11 @@ var _districtData = [
                         "pid": 410300
                     },
                     {
+                        "id": 410371,
+                        "name": "洛阳高新技术产业开发区",
+                        "pid": 410300
+                    },
+                    {
                         "id": 410381,
                         "name": "偃师市",
                         "pid": 410300
@@ -8805,7 +9225,7 @@ var _districtData = [
                 "id": 410400,
                 "name": "平顶山市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410401,
                         "name": "市辖区",
@@ -8852,6 +9272,16 @@ var _districtData = [
                         "pid": 410400
                     },
                     {
+                        "id": 410471,
+                        "name": "平顶山高新技术产业开发区",
+                        "pid": 410400
+                    },
+                    {
+                        "id": 410472,
+                        "name": "平顶山市城乡一体化示范区",
+                        "pid": 410400
+                    },
+                    {
                         "id": 410481,
                         "name": "舞钢市",
                         "pid": 410400
@@ -8867,7 +9297,7 @@ var _districtData = [
                 "id": 410500,
                 "name": "安阳市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410501,
                         "name": "市辖区",
@@ -8914,6 +9344,11 @@ var _districtData = [
                         "pid": 410500
                     },
                     {
+                        "id": 410571,
+                        "name": "安阳高新技术产业开发区",
+                        "pid": 410500
+                    },
+                    {
                         "id": 410581,
                         "name": "林州市",
                         "pid": 410500
@@ -8924,7 +9359,7 @@ var _districtData = [
                 "id": 410600,
                 "name": "鹤壁市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410601,
                         "name": "市辖区",
@@ -8954,6 +9389,11 @@ var _districtData = [
                         "id": 410622,
                         "name": "淇县",
                         "pid": 410600
+                    },
+                    {
+                        "id": 410671,
+                        "name": "鹤壁经济技术开发区",
+                        "pid": 410600
                     }
                 ]
             },
@@ -8961,7 +9401,7 @@ var _districtData = [
                 "id": 410700,
                 "name": "新乡市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410701,
                         "name": "市辖区",
@@ -9013,8 +9453,18 @@ var _districtData = [
                         "pid": 410700
                     },
                     {
-                        "id": 410728,
-                        "name": "长垣县",
+                        "id": 410771,
+                        "name": "新乡高新技术产业开发区",
+                        "pid": 410700
+                    },
+                    {
+                        "id": 410772,
+                        "name": "新乡经济技术开发区",
+                        "pid": 410700
+                    },
+                    {
+                        "id": 410773,
+                        "name": "新乡市平原城乡一体化示范区",
                         "pid": 410700
                     },
                     {
@@ -9026,6 +9476,11 @@ var _districtData = [
                         "id": 410782,
                         "name": "辉县市",
                         "pid": 410700
+                    },
+                    {
+                        "id": 410783,
+                        "name": "长垣市",
+                        "pid": 410700
                     }
                 ]
             },
@@ -9033,7 +9488,7 @@ var _districtData = [
                 "id": 410800,
                 "name": "焦作市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410801,
                         "name": "市辖区",
@@ -9080,6 +9535,11 @@ var _districtData = [
                         "pid": 410800
                     },
                     {
+                        "id": 410871,
+                        "name": "焦作城乡一体化示范区",
+                        "pid": 410800
+                    },
+                    {
                         "id": 410882,
                         "name": "沁阳市",
                         "pid": 410800
@@ -9095,7 +9555,7 @@ var _districtData = [
                 "id": 410900,
                 "name": "濮阳市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 410901,
                         "name": "市辖区",
@@ -9130,6 +9590,16 @@ var _districtData = [
                         "id": 410928,
                         "name": "濮阳县",
                         "pid": 410900
+                    },
+                    {
+                        "id": 410971,
+                        "name": "河南濮阳工业园区",
+                        "pid": 410900
+                    },
+                    {
+                        "id": 410972,
+                        "name": "濮阳经济技术开发区",
+                        "pid": 410900
                     }
                 ]
             },
@@ -9137,7 +9607,7 @@ var _districtData = [
                 "id": 411000,
                 "name": "许昌市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411001,
                         "name": "市辖区",
@@ -9149,8 +9619,8 @@ var _districtData = [
                         "pid": 411000
                     },
                     {
-                        "id": 411023,
-                        "name": "许昌县",
+                        "id": 411003,
+                        "name": "建安区",
                         "pid": 411000
                     },
                     {
@@ -9161,6 +9631,11 @@ var _districtData = [
                     {
                         "id": 411025,
                         "name": "襄城县",
+                        "pid": 411000
+                    },
+                    {
+                        "id": 411071,
+                        "name": "许昌经济技术开发区",
                         "pid": 411000
                     },
                     {
@@ -9179,7 +9654,7 @@ var _districtData = [
                 "id": 411100,
                 "name": "漯河市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411101,
                         "name": "市辖区",
@@ -9209,6 +9684,11 @@ var _districtData = [
                         "id": 411122,
                         "name": "临颍县",
                         "pid": 411100
+                    },
+                    {
+                        "id": 411171,
+                        "name": "漯河经济技术开发区",
+                        "pid": 411100
                     }
                 ]
             },
@@ -9216,7 +9696,7 @@ var _districtData = [
                 "id": 411200,
                 "name": "三门峡市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411201,
                         "name": "市辖区",
@@ -9243,6 +9723,11 @@ var _districtData = [
                         "pid": 411200
                     },
                     {
+                        "id": 411271,
+                        "name": "河南三门峡经济开发区",
+                        "pid": 411200
+                    },
+                    {
                         "id": 411281,
                         "name": "义马市",
                         "pid": 411200
@@ -9258,7 +9743,7 @@ var _districtData = [
                 "id": 411300,
                 "name": "南阳市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411301,
                         "name": "市辖区",
@@ -9325,6 +9810,16 @@ var _districtData = [
                         "pid": 411300
                     },
                     {
+                        "id": 411371,
+                        "name": "南阳高新技术产业开发区",
+                        "pid": 411300
+                    },
+                    {
+                        "id": 411372,
+                        "name": "南阳市城乡一体化示范区",
+                        "pid": 411300
+                    },
+                    {
                         "id": 411381,
                         "name": "邓州市",
                         "pid": 411300
@@ -9335,7 +9830,7 @@ var _districtData = [
                 "id": 411400,
                 "name": "商丘市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411401,
                         "name": "市辖区",
@@ -9382,6 +9877,16 @@ var _districtData = [
                         "pid": 411400
                     },
                     {
+                        "id": 411471,
+                        "name": "豫东综合物流产业聚集区",
+                        "pid": 411400
+                    },
+                    {
+                        "id": 411472,
+                        "name": "河南商丘经济开发区",
+                        "pid": 411400
+                    },
+                    {
                         "id": 411481,
                         "name": "永城市",
                         "pid": 411400
@@ -9392,7 +9897,7 @@ var _districtData = [
                 "id": 411500,
                 "name": "信阳市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411501,
                         "name": "市辖区",
@@ -9447,6 +9952,11 @@ var _districtData = [
                         "id": 411528,
                         "name": "息县",
                         "pid": 411500
+                    },
+                    {
+                        "id": 411571,
+                        "name": "信阳高新技术产业开发区",
+                        "pid": 411500
                     }
                 ]
             },
@@ -9454,7 +9964,7 @@ var _districtData = [
                 "id": 411600,
                 "name": "周口市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411601,
                         "name": "市辖区",
@@ -9463,6 +9973,11 @@ var _districtData = [
                     {
                         "id": 411602,
                         "name": "川汇区",
+                        "pid": 411600
+                    },
+                    {
+                        "id": 411603,
+                        "name": "淮阳区",
                         "pid": 411600
                     },
                     {
@@ -9491,11 +10006,6 @@ var _districtData = [
                         "pid": 411600
                     },
                     {
-                        "id": 411626,
-                        "name": "淮阳县",
-                        "pid": 411600
-                    },
-                    {
                         "id": 411627,
                         "name": "太康县",
                         "pid": 411600
@@ -9503,6 +10013,11 @@ var _districtData = [
                     {
                         "id": 411628,
                         "name": "鹿邑县",
+                        "pid": 411600
+                    },
+                    {
+                        "id": 411671,
+                        "name": "河南周口经济开发区",
                         "pid": 411600
                     },
                     {
@@ -9516,7 +10031,7 @@ var _districtData = [
                 "id": 411700,
                 "name": "驻马店市",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 411701,
                         "name": "市辖区",
@@ -9571,6 +10086,11 @@ var _districtData = [
                         "id": 411729,
                         "name": "新蔡县",
                         "pid": 411700
+                    },
+                    {
+                        "id": 411771,
+                        "name": "河南驻马店经济开发区",
+                        "pid": 411700
                     }
                 ]
             },
@@ -9578,7 +10098,7 @@ var _districtData = [
                 "id": 419000,
                 "name": "省直辖县级行政区划",
                 "pid": 410000,
-                "district": [
+                "children": [
                     {
                         "id": 419001,
                         "name": "济源市",
@@ -9592,12 +10112,12 @@ var _districtData = [
         "id": 420000,
         "name": "湖北省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 420100,
                 "name": "武汉市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420101,
                         "name": "市辖区",
@@ -9674,7 +10194,7 @@ var _districtData = [
                 "id": 420200,
                 "name": "黄石市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420201,
                         "name": "市辖区",
@@ -9716,7 +10236,7 @@ var _districtData = [
                 "id": 420300,
                 "name": "十堰市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420301,
                         "name": "市辖区",
@@ -9768,7 +10288,7 @@ var _districtData = [
                 "id": 420500,
                 "name": "宜昌市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420501,
                         "name": "市辖区",
@@ -9845,7 +10365,7 @@ var _districtData = [
                 "id": 420600,
                 "name": "襄阳市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420601,
                         "name": "市辖区",
@@ -9902,7 +10422,7 @@ var _districtData = [
                 "id": 420700,
                 "name": "鄂州市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420701,
                         "name": "市辖区",
@@ -9929,7 +10449,7 @@ var _districtData = [
                 "id": 420800,
                 "name": "荆门市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420801,
                         "name": "市辖区",
@@ -9946,11 +10466,6 @@ var _districtData = [
                         "pid": 420800
                     },
                     {
-                        "id": 420821,
-                        "name": "京山县",
-                        "pid": 420800
-                    },
-                    {
                         "id": 420822,
                         "name": "沙洋县",
                         "pid": 420800
@@ -9959,6 +10474,11 @@ var _districtData = [
                         "id": 420881,
                         "name": "钟祥市",
                         "pid": 420800
+                    },
+                    {
+                        "id": 420882,
+                        "name": "京山市",
+                        "pid": 420800
                     }
                 ]
             },
@@ -9966,7 +10486,7 @@ var _districtData = [
                 "id": 420900,
                 "name": "孝感市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 420901,
                         "name": "市辖区",
@@ -10013,7 +10533,7 @@ var _districtData = [
                 "id": 421000,
                 "name": "荆州市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 421001,
                         "name": "市辖区",
@@ -10045,6 +10565,11 @@ var _districtData = [
                         "pid": 421000
                     },
                     {
+                        "id": 421071,
+                        "name": "荆州经济技术开发区",
+                        "pid": 421000
+                    },
+                    {
                         "id": 421081,
                         "name": "石首市",
                         "pid": 421000
@@ -10065,7 +10590,7 @@ var _districtData = [
                 "id": 421100,
                 "name": "黄冈市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 421101,
                         "name": "市辖区",
@@ -10112,6 +10637,11 @@ var _districtData = [
                         "pid": 421100
                     },
                     {
+                        "id": 421171,
+                        "name": "龙感湖管理区",
+                        "pid": 421100
+                    },
+                    {
                         "id": 421181,
                         "name": "麻城市",
                         "pid": 421100
@@ -10127,7 +10657,7 @@ var _districtData = [
                 "id": 421200,
                 "name": "咸宁市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 421201,
                         "name": "市辖区",
@@ -10169,7 +10699,7 @@ var _districtData = [
                 "id": 421300,
                 "name": "随州市",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 421301,
                         "name": "市辖区",
@@ -10196,7 +10726,7 @@ var _districtData = [
                 "id": 422800,
                 "name": "恩施土家族苗族自治州",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 422801,
                         "name": "恩施市",
@@ -10243,7 +10773,7 @@ var _districtData = [
                 "id": 429000,
                 "name": "省直辖县级行政区划",
                 "pid": 420000,
-                "district": [
+                "children": [
                     {
                         "id": 429004,
                         "name": "仙桃市",
@@ -10272,12 +10802,12 @@ var _districtData = [
         "id": 430000,
         "name": "湖南省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 430100,
                 "name": "长沙市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430101,
                         "name": "市辖区",
@@ -10319,13 +10849,13 @@ var _districtData = [
                         "pid": 430100
                     },
                     {
-                        "id": 430124,
-                        "name": "宁乡县",
+                        "id": 430181,
+                        "name": "浏阳市",
                         "pid": 430100
                     },
                     {
-                        "id": 430181,
-                        "name": "浏阳市",
+                        "id": 430182,
+                        "name": "宁乡市",
                         "pid": 430100
                     }
                 ]
@@ -10334,7 +10864,7 @@ var _districtData = [
                 "id": 430200,
                 "name": "株洲市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430201,
                         "name": "市辖区",
@@ -10361,8 +10891,8 @@ var _districtData = [
                         "pid": 430200
                     },
                     {
-                        "id": 430221,
-                        "name": "株洲县",
+                        "id": 430212,
+                        "name": "渌口区",
                         "pid": 430200
                     },
                     {
@@ -10381,6 +10911,11 @@ var _districtData = [
                         "pid": 430200
                     },
                     {
+                        "id": 430271,
+                        "name": "云龙示范区",
+                        "pid": 430200
+                    },
+                    {
                         "id": 430281,
                         "name": "醴陵市",
                         "pid": 430200
@@ -10391,7 +10926,7 @@ var _districtData = [
                 "id": 430300,
                 "name": "湘潭市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430301,
                         "name": "市辖区",
@@ -10413,6 +10948,21 @@ var _districtData = [
                         "pid": 430300
                     },
                     {
+                        "id": 430371,
+                        "name": "湖南湘潭高新技术产业园区",
+                        "pid": 430300
+                    },
+                    {
+                        "id": 430372,
+                        "name": "湘潭昭山示范区",
+                        "pid": 430300
+                    },
+                    {
+                        "id": 430373,
+                        "name": "湘潭九华示范区",
+                        "pid": 430300
+                    },
+                    {
                         "id": 430381,
                         "name": "湘乡市",
                         "pid": 430300
@@ -10428,7 +10978,7 @@ var _districtData = [
                 "id": 430400,
                 "name": "衡阳市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430401,
                         "name": "市辖区",
@@ -10485,6 +11035,21 @@ var _districtData = [
                         "pid": 430400
                     },
                     {
+                        "id": 430471,
+                        "name": "衡阳综合保税区",
+                        "pid": 430400
+                    },
+                    {
+                        "id": 430472,
+                        "name": "湖南衡阳高新技术产业园区",
+                        "pid": 430400
+                    },
+                    {
+                        "id": 430473,
+                        "name": "湖南衡阳松木经济开发区",
+                        "pid": 430400
+                    },
+                    {
                         "id": 430481,
                         "name": "耒阳市",
                         "pid": 430400
@@ -10500,7 +11065,7 @@ var _districtData = [
                 "id": 430500,
                 "name": "邵阳市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430501,
                         "name": "市辖区",
@@ -10519,11 +11084,6 @@ var _districtData = [
                     {
                         "id": 430511,
                         "name": "北塔区",
-                        "pid": 430500
-                    },
-                    {
-                        "id": 430521,
-                        "name": "邵东县",
                         "pid": 430500
                     },
                     {
@@ -10565,6 +11125,11 @@ var _districtData = [
                         "id": 430581,
                         "name": "武冈市",
                         "pid": 430500
+                    },
+                    {
+                        "id": 430582,
+                        "name": "邵东市",
+                        "pid": 430500
                     }
                 ]
             },
@@ -10572,7 +11137,7 @@ var _districtData = [
                 "id": 430600,
                 "name": "岳阳市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430601,
                         "name": "市辖区",
@@ -10614,6 +11179,11 @@ var _districtData = [
                         "pid": 430600
                     },
                     {
+                        "id": 430671,
+                        "name": "岳阳市屈原管理区",
+                        "pid": 430600
+                    },
+                    {
                         "id": 430681,
                         "name": "汨罗市",
                         "pid": 430600
@@ -10629,7 +11199,7 @@ var _districtData = [
                 "id": 430700,
                 "name": "常德市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430701,
                         "name": "市辖区",
@@ -10676,6 +11246,11 @@ var _districtData = [
                         "pid": 430700
                     },
                     {
+                        "id": 430771,
+                        "name": "常德市西洞庭管理区",
+                        "pid": 430700
+                    },
+                    {
                         "id": 430781,
                         "name": "津市市",
                         "pid": 430700
@@ -10686,7 +11261,7 @@ var _districtData = [
                 "id": 430800,
                 "name": "张家界市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430801,
                         "name": "市辖区",
@@ -10718,7 +11293,7 @@ var _districtData = [
                 "id": 430900,
                 "name": "益阳市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 430901,
                         "name": "市辖区",
@@ -10750,6 +11325,16 @@ var _districtData = [
                         "pid": 430900
                     },
                     {
+                        "id": 430971,
+                        "name": "益阳市大通湖管理区",
+                        "pid": 430900
+                    },
+                    {
+                        "id": 430972,
+                        "name": "湖南益阳高新技术产业园区",
+                        "pid": 430900
+                    },
+                    {
                         "id": 430981,
                         "name": "沅江市",
                         "pid": 430900
@@ -10760,7 +11345,7 @@ var _districtData = [
                 "id": 431000,
                 "name": "郴州市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 431001,
                         "name": "市辖区",
@@ -10827,7 +11412,7 @@ var _districtData = [
                 "id": 431100,
                 "name": "永州市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 431101,
                         "name": "市辖区",
@@ -10887,6 +11472,21 @@ var _districtData = [
                         "id": 431129,
                         "name": "江华瑶族自治县",
                         "pid": 431100
+                    },
+                    {
+                        "id": 431171,
+                        "name": "永州经济技术开发区",
+                        "pid": 431100
+                    },
+                    {
+                        "id": 431172,
+                        "name": "永州市金洞管理区",
+                        "pid": 431100
+                    },
+                    {
+                        "id": 431173,
+                        "name": "永州市回龙圩管理区",
+                        "pid": 431100
                     }
                 ]
             },
@@ -10894,7 +11494,7 @@ var _districtData = [
                 "id": 431200,
                 "name": "怀化市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 431201,
                         "name": "市辖区",
@@ -10956,6 +11556,11 @@ var _districtData = [
                         "pid": 431200
                     },
                     {
+                        "id": 431271,
+                        "name": "怀化市洪江管理区",
+                        "pid": 431200
+                    },
+                    {
                         "id": 431281,
                         "name": "洪江市",
                         "pid": 431200
@@ -10966,7 +11571,7 @@ var _districtData = [
                 "id": 431300,
                 "name": "娄底市",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 431301,
                         "name": "市辖区",
@@ -11003,7 +11608,7 @@ var _districtData = [
                 "id": 433100,
                 "name": "湘西土家族苗族自治州",
                 "pid": 430000,
-                "district": [
+                "children": [
                     {
                         "id": 433101,
                         "name": "吉首市",
@@ -11043,6 +11648,11 @@ var _districtData = [
                         "id": 433130,
                         "name": "龙山县",
                         "pid": 433100
+                    },
+                    {
+                        "id": 433173,
+                        "name": "湖南永顺经济开发区",
+                        "pid": 433100
                     }
                 ]
             }
@@ -11052,12 +11662,12 @@ var _districtData = [
         "id": 440000,
         "name": "广东省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 440100,
                 "name": "广州市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440101,
                         "name": "市辖区",
@@ -11124,7 +11734,7 @@ var _districtData = [
                 "id": 440200,
                 "name": "韶关市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440201,
                         "name": "市辖区",
@@ -11186,7 +11796,7 @@ var _districtData = [
                 "id": 440300,
                 "name": "深圳市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440301,
                         "name": "市辖区",
@@ -11221,6 +11831,21 @@ var _districtData = [
                         "id": 440308,
                         "name": "盐田区",
                         "pid": 440300
+                    },
+                    {
+                        "id": 440309,
+                        "name": "龙华区",
+                        "pid": 440300
+                    },
+                    {
+                        "id": 440310,
+                        "name": "坪山区",
+                        "pid": 440300
+                    },
+                    {
+                        "id": 440311,
+                        "name": "光明区",
+                        "pid": 440300
                     }
                 ]
             },
@@ -11228,7 +11853,7 @@ var _districtData = [
                 "id": 440400,
                 "name": "珠海市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440401,
                         "name": "市辖区",
@@ -11255,7 +11880,7 @@ var _districtData = [
                 "id": 440500,
                 "name": "汕头市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440501,
                         "name": "市辖区",
@@ -11302,7 +11927,7 @@ var _districtData = [
                 "id": 440600,
                 "name": "佛山市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440601,
                         "name": "市辖区",
@@ -11339,7 +11964,7 @@ var _districtData = [
                 "id": 440700,
                 "name": "江门市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440701,
                         "name": "市辖区",
@@ -11386,7 +12011,7 @@ var _districtData = [
                 "id": 440800,
                 "name": "湛江市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440801,
                         "name": "市辖区",
@@ -11443,7 +12068,7 @@ var _districtData = [
                 "id": 440900,
                 "name": "茂名市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 440901,
                         "name": "市辖区",
@@ -11480,7 +12105,7 @@ var _districtData = [
                 "id": 441200,
                 "name": "肇庆市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441201,
                         "name": "市辖区",
@@ -11532,7 +12157,7 @@ var _districtData = [
                 "id": 441300,
                 "name": "惠州市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441301,
                         "name": "市辖区",
@@ -11569,7 +12194,7 @@ var _districtData = [
                 "id": 441400,
                 "name": "梅州市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441401,
                         "name": "市辖区",
@@ -11621,7 +12246,7 @@ var _districtData = [
                 "id": 441500,
                 "name": "汕尾市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441501,
                         "name": "市辖区",
@@ -11653,7 +12278,7 @@ var _districtData = [
                 "id": 441600,
                 "name": "河源市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441601,
                         "name": "市辖区",
@@ -11695,7 +12320,7 @@ var _districtData = [
                 "id": 441700,
                 "name": "阳江市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441701,
                         "name": "市辖区",
@@ -11727,7 +12352,7 @@ var _districtData = [
                 "id": 441800,
                 "name": "清远市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 441801,
                         "name": "市辖区",
@@ -11779,19 +12404,316 @@ var _districtData = [
                 "id": 441900,
                 "name": "东莞市",
                 "pid": 440000,
-                "district": []
+                "children": [
+                    {
+                        "id": 441900003,
+                        "name": "东城街道",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900004,
+                        "name": "南城街道",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900005,
+                        "name": "万江街道",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900006,
+                        "name": "莞城街道",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900101,
+                        "name": "石碣镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900102,
+                        "name": "石龙镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900103,
+                        "name": "茶山镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900104,
+                        "name": "石排镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900105,
+                        "name": "企石镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900106,
+                        "name": "横沥镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900107,
+                        "name": "桥头镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900108,
+                        "name": "谢岗镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900109,
+                        "name": "东坑镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900110,
+                        "name": "常平镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900111,
+                        "name": "寮步镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900112,
+                        "name": "樟木头镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900113,
+                        "name": "大朗镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900114,
+                        "name": "黄江镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900115,
+                        "name": "清溪镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900116,
+                        "name": "塘厦镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900117,
+                        "name": "凤岗镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900118,
+                        "name": "大岭山镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900119,
+                        "name": "长安镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900121,
+                        "name": "虎门镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900122,
+                        "name": "厚街镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900123,
+                        "name": "沙田镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900124,
+                        "name": "道滘镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900125,
+                        "name": "洪梅镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900126,
+                        "name": "麻涌镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900127,
+                        "name": "望牛墩镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900128,
+                        "name": "中堂镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900129,
+                        "name": "高埗镇",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900401,
+                        "name": "松山湖",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900402,
+                        "name": "东莞港",
+                        "pid": 441900
+                    },
+                    {
+                        "id": 441900403,
+                        "name": "东莞生态园",
+                        "pid": 441900
+                    }
+                ]
             },
             {
                 "id": 442000,
                 "name": "中山市",
                 "pid": 440000,
-                "district": []
+                "children": [
+                    {
+                        "id": 442000001,
+                        "name": "石岐街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000002,
+                        "name": "东区街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000003,
+                        "name": "中山港街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000004,
+                        "name": "西区街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000005,
+                        "name": "南区街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000006,
+                        "name": "五桂山街道",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000100,
+                        "name": "小榄镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000101,
+                        "name": "黄圃镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000102,
+                        "name": "民众镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000103,
+                        "name": "东凤镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000104,
+                        "name": "东升镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000105,
+                        "name": "古镇镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000106,
+                        "name": "沙溪镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000107,
+                        "name": "坦洲镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000108,
+                        "name": "港口镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000109,
+                        "name": "三角镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000110,
+                        "name": "横栏镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000111,
+                        "name": "南头镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000112,
+                        "name": "阜沙镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000113,
+                        "name": "南朗镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000114,
+                        "name": "三乡镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000115,
+                        "name": "板芙镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000116,
+                        "name": "大涌镇",
+                        "pid": 442000
+                    },
+                    {
+                        "id": 442000117,
+                        "name": "神湾镇",
+                        "pid": 442000
+                    }
+                ]
             },
             {
                 "id": 445100,
                 "name": "潮州市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 445101,
                         "name": "市辖区",
@@ -11818,7 +12740,7 @@ var _districtData = [
                 "id": 445200,
                 "name": "揭阳市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 445201,
                         "name": "市辖区",
@@ -11855,7 +12777,7 @@ var _districtData = [
                 "id": 445300,
                 "name": "云浮市",
                 "pid": 440000,
-                "district": [
+                "children": [
                     {
                         "id": 445301,
                         "name": "市辖区",
@@ -11894,12 +12816,12 @@ var _districtData = [
         "id": 450000,
         "name": "广西壮族自治区",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 450100,
                 "name": "南宁市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450101,
                         "name": "市辖区",
@@ -11971,7 +12893,7 @@ var _districtData = [
                 "id": 450200,
                 "name": "柳州市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450201,
                         "name": "市辖区",
@@ -12033,7 +12955,7 @@ var _districtData = [
                 "id": 450300,
                 "name": "桂林市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450301,
                         "name": "市辖区",
@@ -12115,13 +13037,13 @@ var _districtData = [
                         "pid": 450300
                     },
                     {
-                        "id": 450331,
-                        "name": "荔浦县",
+                        "id": 450332,
+                        "name": "恭城瑶族自治县",
                         "pid": 450300
                     },
                     {
-                        "id": 450332,
-                        "name": "恭城瑶族自治县",
+                        "id": 450381,
+                        "name": "荔浦市",
                         "pid": 450300
                     }
                 ]
@@ -12130,7 +13052,7 @@ var _districtData = [
                 "id": 450400,
                 "name": "梧州市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450401,
                         "name": "市辖区",
@@ -12177,7 +13099,7 @@ var _districtData = [
                 "id": 450500,
                 "name": "北海市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450501,
                         "name": "市辖区",
@@ -12209,7 +13131,7 @@ var _districtData = [
                 "id": 450600,
                 "name": "防城港市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450601,
                         "name": "市辖区",
@@ -12241,7 +13163,7 @@ var _districtData = [
                 "id": 450700,
                 "name": "钦州市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450701,
                         "name": "市辖区",
@@ -12273,7 +13195,7 @@ var _districtData = [
                 "id": 450800,
                 "name": "贵港市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450801,
                         "name": "市辖区",
@@ -12310,7 +13232,7 @@ var _districtData = [
                 "id": 450900,
                 "name": "玉林市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 450901,
                         "name": "市辖区",
@@ -12357,7 +13279,7 @@ var _districtData = [
                 "id": 451000,
                 "name": "百色市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 451001,
                         "name": "市辖区",
@@ -12369,8 +13291,8 @@ var _districtData = [
                         "pid": 451000
                     },
                     {
-                        "id": 451021,
-                        "name": "田阳县",
+                        "id": 451003,
+                        "name": "田阳区",
                         "pid": 451000
                     },
                     {
@@ -12429,7 +13351,7 @@ var _districtData = [
                 "id": 451100,
                 "name": "贺州市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 451101,
                         "name": "市辖区",
@@ -12466,7 +13388,7 @@ var _districtData = [
                 "id": 451200,
                 "name": "河池市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 451201,
                         "name": "市辖区",
@@ -12475,6 +13397,11 @@ var _districtData = [
                     {
                         "id": 451202,
                         "name": "金城江区",
+                        "pid": 451200
+                    },
+                    {
+                        "id": 451203,
+                        "name": "宜州区",
                         "pid": 451200
                     },
                     {
@@ -12521,11 +13448,6 @@ var _districtData = [
                         "id": 451229,
                         "name": "大化瑶族自治县",
                         "pid": 451200
-                    },
-                    {
-                        "id": 451281,
-                        "name": "宜州市",
-                        "pid": 451200
                     }
                 ]
             },
@@ -12533,7 +13455,7 @@ var _districtData = [
                 "id": 451300,
                 "name": "来宾市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 451301,
                         "name": "市辖区",
@@ -12575,7 +13497,7 @@ var _districtData = [
                 "id": 451400,
                 "name": "崇左市",
                 "pid": 450000,
-                "district": [
+                "children": [
                     {
                         "id": 451401,
                         "name": "市辖区",
@@ -12624,12 +13546,12 @@ var _districtData = [
         "id": 460000,
         "name": "海南省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 460100,
                 "name": "海口市",
                 "pid": 460000,
-                "district": [
+                "children": [
                     {
                         "id": 460101,
                         "name": "市辖区",
@@ -12661,7 +13583,7 @@ var _districtData = [
                 "id": 460200,
                 "name": "三亚市",
                 "pid": 460000,
-                "district": [
+                "children": [
                     {
                         "id": 460201,
                         "name": "市辖区",
@@ -12693,19 +13615,126 @@ var _districtData = [
                 "id": 460300,
                 "name": "三沙市",
                 "pid": 460000,
-                "district": []
+                "children": [
+                    {
+                        "id": 460321,
+                        "name": "西沙群岛",
+                        "pid": 460300
+                    },
+                    {
+                        "id": 460322,
+                        "name": "南沙群岛",
+                        "pid": 460300
+                    },
+                    {
+                        "id": 460323,
+                        "name": "中沙群岛的岛礁及其海域",
+                        "pid": 460300
+                    }
+                ]
             },
             {
                 "id": 460400,
                 "name": "儋州市",
                 "pid": 460000,
-                "district": []
+                "children": [
+                    {
+                        "id": 460400100,
+                        "name": "那大镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400101,
+                        "name": "和庆镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400102,
+                        "name": "南丰镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400103,
+                        "name": "大成镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400104,
+                        "name": "雅星镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400105,
+                        "name": "兰洋镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400106,
+                        "name": "光村镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400107,
+                        "name": "木棠镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400108,
+                        "name": "海头镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400109,
+                        "name": "峨蔓镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400111,
+                        "name": "王五镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400112,
+                        "name": "白马井镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400113,
+                        "name": "中和镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400114,
+                        "name": "排浦镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400115,
+                        "name": "东成镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400116,
+                        "name": "新州镇",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400499,
+                        "name": "洋浦经济开发区",
+                        "pid": 460400
+                    },
+                    {
+                        "id": 460400500,
+                        "name": "华南热作学院",
+                        "pid": 460400
+                    }
+                ]
             },
             {
                 "id": 469000,
                 "name": "省直辖县级行政区划",
                 "pid": 460000,
-                "district": [
+                "children": [
                     {
                         "id": 469001,
                         "name": "五指山市",
@@ -12789,12 +13818,12 @@ var _districtData = [
         "id": 500000,
         "name": "重庆市",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 500100,
                 "name": "市辖区",
                 "pid": 500000,
-                "district": [
+                "children": [
                     {
                         "id": 500101,
                         "name": "万州区",
@@ -12914,6 +13943,16 @@ var _districtData = [
                         "id": 500154,
                         "name": "开州区",
                         "pid": 500100
+                    },
+                    {
+                        "id": 500155,
+                        "name": "梁平区",
+                        "pid": 500100
+                    },
+                    {
+                        "id": 500156,
+                        "name": "武隆区",
+                        "pid": 500100
                     }
                 ]
             },
@@ -12921,12 +13960,7 @@ var _districtData = [
                 "id": 500200,
                 "name": "县",
                 "pid": 500000,
-                "district": [
-                    {
-                        "id": 500228,
-                        "name": "梁平县",
-                        "pid": 500200
-                    },
+                "children": [
                     {
                         "id": 500229,
                         "name": "城口县",
@@ -12940,11 +13974,6 @@ var _districtData = [
                     {
                         "id": 500231,
                         "name": "垫江县",
-                        "pid": 500200
-                    },
-                    {
-                        "id": 500232,
-                        "name": "武隆县",
                         "pid": 500200
                     },
                     {
@@ -13000,12 +14029,12 @@ var _districtData = [
         "id": 510000,
         "name": "四川省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 510100,
                 "name": "成都市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510101,
                         "name": "市辖区",
@@ -13062,13 +14091,13 @@ var _districtData = [
                         "pid": 510100
                     },
                     {
-                        "id": 510121,
-                        "name": "金堂县",
+                        "id": 510117,
+                        "name": "郫都区",
                         "pid": 510100
                     },
                     {
-                        "id": 510124,
-                        "name": "郫县",
+                        "id": 510121,
+                        "name": "金堂县",
                         "pid": 510100
                     },
                     {
@@ -13117,7 +14146,7 @@ var _districtData = [
                 "id": 510300,
                 "name": "自贡市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510301,
                         "name": "市辖区",
@@ -13159,7 +14188,7 @@ var _districtData = [
                 "id": 510400,
                 "name": "攀枝花市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510401,
                         "name": "市辖区",
@@ -13196,7 +14225,7 @@ var _districtData = [
                 "id": 510500,
                 "name": "泸州市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510501,
                         "name": "市辖区",
@@ -13243,7 +14272,7 @@ var _districtData = [
                 "id": 510600,
                 "name": "德阳市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510601,
                         "name": "市辖区",
@@ -13255,13 +14284,13 @@ var _districtData = [
                         "pid": 510600
                     },
                     {
-                        "id": 510623,
-                        "name": "中江县",
+                        "id": 510604,
+                        "name": "罗江区",
                         "pid": 510600
                     },
                     {
-                        "id": 510626,
-                        "name": "罗江县",
+                        "id": 510623,
+                        "name": "中江县",
                         "pid": 510600
                     },
                     {
@@ -13285,7 +14314,7 @@ var _districtData = [
                 "id": 510700,
                 "name": "绵阳市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510701,
                         "name": "市辖区",
@@ -13342,7 +14371,7 @@ var _districtData = [
                 "id": 510800,
                 "name": "广元市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510801,
                         "name": "市辖区",
@@ -13389,7 +14418,7 @@ var _districtData = [
                 "id": 510900,
                 "name": "遂宁市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 510901,
                         "name": "市辖区",
@@ -13411,13 +14440,13 @@ var _districtData = [
                         "pid": 510900
                     },
                     {
-                        "id": 510922,
-                        "name": "射洪县",
+                        "id": 510923,
+                        "name": "大英县",
                         "pid": 510900
                     },
                     {
-                        "id": 510923,
-                        "name": "大英县",
+                        "id": 510981,
+                        "name": "射洪市",
                         "pid": 510900
                     }
                 ]
@@ -13426,7 +14455,7 @@ var _districtData = [
                 "id": 511000,
                 "name": "内江市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511001,
                         "name": "市辖区",
@@ -13453,8 +14482,13 @@ var _districtData = [
                         "pid": 511000
                     },
                     {
-                        "id": 511028,
-                        "name": "隆昌县",
+                        "id": 511071,
+                        "name": "内江经济开发区",
+                        "pid": 511000
+                    },
+                    {
+                        "id": 511083,
+                        "name": "隆昌市",
                         "pid": 511000
                     }
                 ]
@@ -13463,7 +14497,7 @@ var _districtData = [
                 "id": 511100,
                 "name": "乐山市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511101,
                         "name": "市辖区",
@@ -13530,7 +14564,7 @@ var _districtData = [
                 "id": 511300,
                 "name": "南充市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511301,
                         "name": "市辖区",
@@ -13587,7 +14621,7 @@ var _districtData = [
                 "id": 511400,
                 "name": "眉山市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511401,
                         "name": "市辖区",
@@ -13629,7 +14663,7 @@ var _districtData = [
                 "id": 511500,
                 "name": "宜宾市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511501,
                         "name": "市辖区",
@@ -13646,8 +14680,8 @@ var _districtData = [
                         "pid": 511500
                     },
                     {
-                        "id": 511521,
-                        "name": "宜宾县",
+                        "id": 511504,
+                        "name": "叙州区",
                         "pid": 511500
                     },
                     {
@@ -13691,7 +14725,7 @@ var _districtData = [
                 "id": 511600,
                 "name": "广安市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511601,
                         "name": "市辖区",
@@ -13733,7 +14767,7 @@ var _districtData = [
                 "id": 511700,
                 "name": "达州市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511701,
                         "name": "市辖区",
@@ -13770,6 +14804,11 @@ var _districtData = [
                         "pid": 511700
                     },
                     {
+                        "id": 511771,
+                        "name": "达州经济开发区",
+                        "pid": 511700
+                    },
+                    {
                         "id": 511781,
                         "name": "万源市",
                         "pid": 511700
@@ -13780,7 +14819,7 @@ var _districtData = [
                 "id": 511800,
                 "name": "雅安市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511801,
                         "name": "市辖区",
@@ -13832,7 +14871,7 @@ var _districtData = [
                 "id": 511900,
                 "name": "巴中市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 511901,
                         "name": "市辖区",
@@ -13862,6 +14901,11 @@ var _districtData = [
                         "id": 511923,
                         "name": "平昌县",
                         "pid": 511900
+                    },
+                    {
+                        "id": 511971,
+                        "name": "巴中经济开发区",
+                        "pid": 511900
                     }
                 ]
             },
@@ -13869,7 +14913,7 @@ var _districtData = [
                 "id": 512000,
                 "name": "资阳市",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 512001,
                         "name": "市辖区",
@@ -13896,7 +14940,7 @@ var _districtData = [
                 "id": 513200,
                 "name": "阿坝藏族羌族自治州",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 513201,
                         "name": "马尔康市",
@@ -13968,7 +15012,7 @@ var _districtData = [
                 "id": 513300,
                 "name": "甘孜藏族自治州",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 513301,
                         "name": "康定市",
@@ -14065,7 +15109,7 @@ var _districtData = [
                 "id": 513400,
                 "name": "凉山彝族自治州",
                 "pid": 510000,
-                "district": [
+                "children": [
                     {
                         "id": 513401,
                         "name": "西昌市",
@@ -14159,12 +15203,12 @@ var _districtData = [
         "id": 520000,
         "name": "贵州省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 520100,
                 "name": "贵阳市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520101,
                         "name": "市辖区",
@@ -14226,7 +15270,7 @@ var _districtData = [
                 "id": 520200,
                 "name": "六盘水市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520201,
                         "name": "钟山区",
@@ -14243,8 +15287,8 @@ var _districtData = [
                         "pid": 520200
                     },
                     {
-                        "id": 520222,
-                        "name": "盘县",
+                        "id": 520281,
+                        "name": "盘州市",
                         "pid": 520200
                     }
                 ]
@@ -14253,7 +15297,7 @@ var _districtData = [
                 "id": 520300,
                 "name": "遵义市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520301,
                         "name": "市辖区",
@@ -14335,7 +15379,7 @@ var _districtData = [
                 "id": 520400,
                 "name": "安顺市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520401,
                         "name": "市辖区",
@@ -14377,7 +15421,7 @@ var _districtData = [
                 "id": 520500,
                 "name": "毕节市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520501,
                         "name": "市辖区",
@@ -14429,7 +15473,7 @@ var _districtData = [
                 "id": 520600,
                 "name": "铜仁市",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 520601,
                         "name": "市辖区",
@@ -14491,15 +15535,15 @@ var _districtData = [
                 "id": 522300,
                 "name": "黔西南布依族苗族自治州",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 522301,
                         "name": "兴义市",
                         "pid": 522300
                     },
                     {
-                        "id": 522322,
-                        "name": "兴仁县",
+                        "id": 522302,
+                        "name": "兴仁市",
                         "pid": 522300
                     },
                     {
@@ -14538,7 +15582,7 @@ var _districtData = [
                 "id": 522600,
                 "name": "黔东南苗族侗族自治州",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 522601,
                         "name": "凯里市",
@@ -14625,7 +15669,7 @@ var _districtData = [
                 "id": 522700,
                 "name": "黔南布依族苗族自治州",
                 "pid": 520000,
-                "district": [
+                "children": [
                     {
                         "id": 522701,
                         "name": "都匀市",
@@ -14694,12 +15738,12 @@ var _districtData = [
         "id": 530000,
         "name": "云南省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 530100,
                 "name": "昆明市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530101,
                         "name": "市辖区",
@@ -14736,8 +15780,8 @@ var _districtData = [
                         "pid": 530100
                     },
                     {
-                        "id": 530122,
-                        "name": "晋宁县",
+                        "id": 530115,
+                        "name": "晋宁区",
                         "pid": 530100
                     },
                     {
@@ -14781,7 +15825,7 @@ var _districtData = [
                 "id": 530300,
                 "name": "曲靖市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530301,
                         "name": "市辖区",
@@ -14798,8 +15842,8 @@ var _districtData = [
                         "pid": 530300
                     },
                     {
-                        "id": 530321,
-                        "name": "马龙县",
+                        "id": 530304,
+                        "name": "马龙区",
                         "pid": 530300
                     },
                     {
@@ -14838,7 +15882,7 @@ var _districtData = [
                 "id": 530400,
                 "name": "玉溪市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530401,
                         "name": "市辖区",
@@ -14895,7 +15939,7 @@ var _districtData = [
                 "id": 530500,
                 "name": "保山市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530501,
                         "name": "市辖区",
@@ -14932,7 +15976,7 @@ var _districtData = [
                 "id": 530600,
                 "name": "昭通市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530601,
                         "name": "市辖区",
@@ -14989,8 +16033,8 @@ var _districtData = [
                         "pid": 530600
                     },
                     {
-                        "id": 530630,
-                        "name": "水富县",
+                        "id": 530681,
+                        "name": "水富市",
                         "pid": 530600
                     }
                 ]
@@ -14999,7 +16043,7 @@ var _districtData = [
                 "id": 530700,
                 "name": "丽江市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530701,
                         "name": "市辖区",
@@ -15036,7 +16080,7 @@ var _districtData = [
                 "id": 530800,
                 "name": "普洱市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530801,
                         "name": "市辖区",
@@ -15098,7 +16142,7 @@ var _districtData = [
                 "id": 530900,
                 "name": "临沧市",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 530901,
                         "name": "市辖区",
@@ -15150,7 +16194,7 @@ var _districtData = [
                 "id": 532300,
                 "name": "楚雄彝族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 532301,
                         "name": "楚雄市",
@@ -15207,7 +16251,7 @@ var _districtData = [
                 "id": 532500,
                 "name": "红河哈尼族彝族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 532501,
                         "name": "个旧市",
@@ -15279,7 +16323,7 @@ var _districtData = [
                 "id": 532600,
                 "name": "文山壮族苗族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 532601,
                         "name": "文山市",
@@ -15326,7 +16370,7 @@ var _districtData = [
                 "id": 532800,
                 "name": "西双版纳傣族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 532801,
                         "name": "景洪市",
@@ -15348,7 +16392,7 @@ var _districtData = [
                 "id": 532900,
                 "name": "大理白族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 532901,
                         "name": "大理市",
@@ -15415,7 +16459,7 @@ var _districtData = [
                 "id": 533100,
                 "name": "德宏傣族景颇族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 533102,
                         "name": "瑞丽市",
@@ -15447,7 +16491,7 @@ var _districtData = [
                 "id": 533300,
                 "name": "怒江傈僳族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 533301,
                         "name": "泸水市",
@@ -15474,7 +16518,7 @@ var _districtData = [
                 "id": 533400,
                 "name": "迪庆藏族自治州",
                 "pid": 530000,
-                "district": [
+                "children": [
                     {
                         "id": 533401,
                         "name": "香格里拉市",
@@ -15498,12 +16542,12 @@ var _districtData = [
         "id": 540000,
         "name": "西藏自治区",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 540100,
                 "name": "拉萨市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 540101,
                         "name": "市辖区",
@@ -15517,6 +16561,11 @@ var _districtData = [
                     {
                         "id": 540103,
                         "name": "堆龙德庆区",
+                        "pid": 540100
+                    },
+                    {
+                        "id": 540104,
+                        "name": "达孜区",
                         "pid": 540100
                     },
                     {
@@ -15540,13 +16589,28 @@ var _districtData = [
                         "pid": 540100
                     },
                     {
-                        "id": 540126,
-                        "name": "达孜县",
+                        "id": 540127,
+                        "name": "墨竹工卡县",
                         "pid": 540100
                     },
                     {
-                        "id": 540127,
-                        "name": "墨竹工卡县",
+                        "id": 540171,
+                        "name": "格尔木藏青工业园区",
+                        "pid": 540100
+                    },
+                    {
+                        "id": 540172,
+                        "name": "拉萨经济技术开发区",
+                        "pid": 540100
+                    },
+                    {
+                        "id": 540173,
+                        "name": "西藏文化旅游创意园区",
+                        "pid": 540100
+                    },
+                    {
+                        "id": 540174,
+                        "name": "达孜工业园区",
                         "pid": 540100
                     }
                 ]
@@ -15555,7 +16619,7 @@ var _districtData = [
                 "id": 540200,
                 "name": "日喀则市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 540202,
                         "name": "桑珠孜区",
@@ -15652,7 +16716,7 @@ var _districtData = [
                 "id": 540300,
                 "name": "昌都市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 540302,
                         "name": "卡若区",
@@ -15714,7 +16778,7 @@ var _districtData = [
                 "id": 540400,
                 "name": "林芝市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 540402,
                         "name": "巴宜区",
@@ -15756,7 +16820,7 @@ var _districtData = [
                 "id": 540500,
                 "name": "山南市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 540501,
                         "name": "市辖区",
@@ -15825,64 +16889,64 @@ var _districtData = [
                 ]
             },
             {
-                "id": 542400,
-                "name": "那曲地区",
+                "id": 540600,
+                "name": "那曲市",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
-                        "id": 542421,
-                        "name": "那曲县",
-                        "pid": 542400
+                        "id": 540602,
+                        "name": "色尼区",
+                        "pid": 540600
                     },
                     {
-                        "id": 542422,
+                        "id": 540621,
                         "name": "嘉黎县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542423,
+                        "id": 540622,
                         "name": "比如县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542424,
+                        "id": 540623,
                         "name": "聂荣县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542425,
+                        "id": 540624,
                         "name": "安多县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542426,
+                        "id": 540625,
                         "name": "申扎县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542427,
+                        "id": 540626,
                         "name": "索县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542428,
+                        "id": 540627,
                         "name": "班戈县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542429,
+                        "id": 540628,
                         "name": "巴青县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542430,
+                        "id": 540629,
                         "name": "尼玛县",
-                        "pid": 542400
+                        "pid": 540600
                     },
                     {
-                        "id": 542431,
+                        "id": 540630,
                         "name": "双湖县",
-                        "pid": 542400
+                        "pid": 540600
                     }
                 ]
             },
@@ -15890,7 +16954,7 @@ var _districtData = [
                 "id": 542500,
                 "name": "阿里地区",
                 "pid": 540000,
-                "district": [
+                "children": [
                     {
                         "id": 542521,
                         "name": "普兰县",
@@ -15934,12 +16998,12 @@ var _districtData = [
         "id": 610000,
         "name": "陕西省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 610100,
                 "name": "西安市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610101,
                         "name": "市辖区",
@@ -15996,6 +17060,11 @@ var _districtData = [
                         "pid": 610100
                     },
                     {
+                        "id": 610118,
+                        "name": "鄠邑区",
+                        "pid": 610100
+                    },
+                    {
                         "id": 610122,
                         "name": "蓝田县",
                         "pid": 610100
@@ -16004,11 +17073,6 @@ var _districtData = [
                         "id": 610124,
                         "name": "周至县",
                         "pid": 610100
-                    },
-                    {
-                        "id": 610125,
-                        "name": "户县",
-                        "pid": 610100
                     }
                 ]
             },
@@ -16016,7 +17080,7 @@ var _districtData = [
                 "id": 610200,
                 "name": "铜川市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610201,
                         "name": "市辖区",
@@ -16048,7 +17112,7 @@ var _districtData = [
                 "id": 610300,
                 "name": "宝鸡市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610301,
                         "name": "市辖区",
@@ -16120,7 +17184,7 @@ var _districtData = [
                 "id": 610400,
                 "name": "咸阳市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610401,
                         "name": "市辖区",
@@ -16167,11 +17231,6 @@ var _districtData = [
                         "pid": 610400
                     },
                     {
-                        "id": 610427,
-                        "name": "彬县",
-                        "pid": 610400
-                    },
-                    {
                         "id": 610428,
                         "name": "长武县",
                         "pid": 610400
@@ -16195,6 +17254,11 @@ var _districtData = [
                         "id": 610481,
                         "name": "兴平市",
                         "pid": 610400
+                    },
+                    {
+                        "id": 610482,
+                        "name": "彬州市",
+                        "pid": 610400
                     }
                 ]
             },
@@ -16202,7 +17266,7 @@ var _districtData = [
                 "id": 610500,
                 "name": "渭南市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610501,
                         "name": "市辖区",
@@ -16269,7 +17333,7 @@ var _districtData = [
                 "id": 610600,
                 "name": "延安市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610601,
                         "name": "市辖区",
@@ -16293,11 +17357,6 @@ var _districtData = [
                     {
                         "id": 610622,
                         "name": "延川县",
-                        "pid": 610600
-                    },
-                    {
-                        "id": 610623,
-                        "name": "子长县",
                         "pid": 610600
                     },
                     {
@@ -16339,6 +17398,11 @@ var _districtData = [
                         "id": 610632,
                         "name": "黄陵县",
                         "pid": 610600
+                    },
+                    {
+                        "id": 610681,
+                        "name": "子长市",
+                        "pid": 610600
                     }
                 ]
             },
@@ -16346,7 +17410,7 @@ var _districtData = [
                 "id": 610700,
                 "name": "汉中市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610701,
                         "name": "市辖区",
@@ -16358,8 +17422,8 @@ var _districtData = [
                         "pid": 610700
                     },
                     {
-                        "id": 610721,
-                        "name": "南郑县",
+                        "id": 610703,
+                        "name": "南郑区",
                         "pid": 610700
                     },
                     {
@@ -16413,7 +17477,7 @@ var _districtData = [
                 "id": 610800,
                 "name": "榆林市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610801,
                         "name": "市辖区",
@@ -16427,11 +17491,6 @@ var _districtData = [
                     {
                         "id": 610803,
                         "name": "横山区",
-                        "pid": 610800
-                    },
-                    {
-                        "id": 610821,
-                        "name": "神木县",
                         "pid": 610800
                     },
                     {
@@ -16478,6 +17537,11 @@ var _districtData = [
                         "id": 610831,
                         "name": "子洲县",
                         "pid": 610800
+                    },
+                    {
+                        "id": 610881,
+                        "name": "神木市",
+                        "pid": 610800
                     }
                 ]
             },
@@ -16485,7 +17549,7 @@ var _districtData = [
                 "id": 610900,
                 "name": "安康市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 610901,
                         "name": "市辖区",
@@ -16547,7 +17611,7 @@ var _districtData = [
                 "id": 611000,
                 "name": "商洛市",
                 "pid": 610000,
-                "district": [
+                "children": [
                     {
                         "id": 611001,
                         "name": "市辖区",
@@ -16596,12 +17660,12 @@ var _districtData = [
         "id": 620000,
         "name": "甘肃省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 620100,
                 "name": "兰州市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620101,
                         "name": "市辖区",
@@ -16646,6 +17710,11 @@ var _districtData = [
                         "id": 620123,
                         "name": "榆中县",
                         "pid": 620100
+                    },
+                    {
+                        "id": 620171,
+                        "name": "兰州新区",
+                        "pid": 620100
                     }
                 ]
             },
@@ -16653,7 +17722,7 @@ var _districtData = [
                 "id": 620200,
                 "name": "嘉峪关市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620201,
                         "name": "市辖区",
@@ -16665,7 +17734,7 @@ var _districtData = [
                 "id": 620300,
                 "name": "金昌市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620301,
                         "name": "市辖区",
@@ -16687,7 +17756,7 @@ var _districtData = [
                 "id": 620400,
                 "name": "白银市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620401,
                         "name": "市辖区",
@@ -16724,7 +17793,7 @@ var _districtData = [
                 "id": 620500,
                 "name": "天水市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620501,
                         "name": "市辖区",
@@ -16771,7 +17840,7 @@ var _districtData = [
                 "id": 620600,
                 "name": "武威市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620601,
                         "name": "市辖区",
@@ -16803,7 +17872,7 @@ var _districtData = [
                 "id": 620700,
                 "name": "张掖市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620701,
                         "name": "市辖区",
@@ -16845,7 +17914,7 @@ var _districtData = [
                 "id": 620800,
                 "name": "平凉市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620801,
                         "name": "市辖区",
@@ -16872,11 +17941,6 @@ var _districtData = [
                         "pid": 620800
                     },
                     {
-                        "id": 620824,
-                        "name": "华亭县",
-                        "pid": 620800
-                    },
-                    {
                         "id": 620825,
                         "name": "庄浪县",
                         "pid": 620800
@@ -16885,6 +17949,11 @@ var _districtData = [
                         "id": 620826,
                         "name": "静宁县",
                         "pid": 620800
+                    },
+                    {
+                        "id": 620881,
+                        "name": "华亭市",
+                        "pid": 620800
                     }
                 ]
             },
@@ -16892,7 +17961,7 @@ var _districtData = [
                 "id": 620900,
                 "name": "酒泉市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 620901,
                         "name": "市辖区",
@@ -16939,7 +18008,7 @@ var _districtData = [
                 "id": 621000,
                 "name": "庆阳市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 621001,
                         "name": "市辖区",
@@ -16991,7 +18060,7 @@ var _districtData = [
                 "id": 621100,
                 "name": "定西市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 621101,
                         "name": "市辖区",
@@ -17038,7 +18107,7 @@ var _districtData = [
                 "id": 621200,
                 "name": "陇南市",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 621201,
                         "name": "市辖区",
@@ -17095,7 +18164,7 @@ var _districtData = [
                 "id": 622900,
                 "name": "临夏回族自治州",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 622901,
                         "name": "临夏市",
@@ -17142,7 +18211,7 @@ var _districtData = [
                 "id": 623000,
                 "name": "甘南藏族自治州",
                 "pid": 620000,
-                "district": [
+                "children": [
                     {
                         "id": 623001,
                         "name": "合作市",
@@ -17191,12 +18260,12 @@ var _districtData = [
         "id": 630000,
         "name": "青海省",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 630100,
                 "name": "西宁市",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 630101,
                         "name": "市辖区",
@@ -17243,7 +18312,7 @@ var _districtData = [
                 "id": 630200,
                 "name": "海东市",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 630202,
                         "name": "乐都区",
@@ -17280,7 +18349,7 @@ var _districtData = [
                 "id": 632200,
                 "name": "海北藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632221,
                         "name": "门源回族自治县",
@@ -17307,7 +18376,7 @@ var _districtData = [
                 "id": 632300,
                 "name": "黄南藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632321,
                         "name": "同仁县",
@@ -17334,7 +18403,7 @@ var _districtData = [
                 "id": 632500,
                 "name": "海南藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632521,
                         "name": "共和县",
@@ -17366,7 +18435,7 @@ var _districtData = [
                 "id": 632600,
                 "name": "果洛藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632621,
                         "name": "玛沁县",
@@ -17403,7 +18472,7 @@ var _districtData = [
                 "id": 632700,
                 "name": "玉树藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632701,
                         "name": "玉树市",
@@ -17440,7 +18509,7 @@ var _districtData = [
                 "id": 632800,
                 "name": "海西蒙古族藏族自治州",
                 "pid": 630000,
-                "district": [
+                "children": [
                     {
                         "id": 632801,
                         "name": "格尔木市",
@@ -17449,6 +18518,11 @@ var _districtData = [
                     {
                         "id": 632802,
                         "name": "德令哈市",
+                        "pid": 632800
+                    },
+                    {
+                        "id": 632803,
+                        "name": "茫崖市",
                         "pid": 632800
                     },
                     {
@@ -17465,6 +18539,11 @@ var _districtData = [
                         "id": 632823,
                         "name": "天峻县",
                         "pid": 632800
+                    },
+                    {
+                        "id": 632857,
+                        "name": "大柴旦行政委员会",
+                        "pid": 632800
                     }
                 ]
             }
@@ -17474,12 +18553,12 @@ var _districtData = [
         "id": 640000,
         "name": "宁夏回族自治区",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 640100,
                 "name": "银川市",
                 "pid": 640000,
-                "district": [
+                "children": [
                     {
                         "id": 640101,
                         "name": "市辖区",
@@ -17521,7 +18600,7 @@ var _districtData = [
                 "id": 640200,
                 "name": "石嘴山市",
                 "pid": 640000,
-                "district": [
+                "children": [
                     {
                         "id": 640201,
                         "name": "市辖区",
@@ -17548,7 +18627,7 @@ var _districtData = [
                 "id": 640300,
                 "name": "吴忠市",
                 "pid": 640000,
-                "district": [
+                "children": [
                     {
                         "id": 640301,
                         "name": "市辖区",
@@ -17585,7 +18664,7 @@ var _districtData = [
                 "id": 640400,
                 "name": "固原市",
                 "pid": 640000,
-                "district": [
+                "children": [
                     {
                         "id": 640401,
                         "name": "市辖区",
@@ -17622,7 +18701,7 @@ var _districtData = [
                 "id": 640500,
                 "name": "中卫市",
                 "pid": 640000,
-                "district": [
+                "children": [
                     {
                         "id": 640501,
                         "name": "市辖区",
@@ -17651,12 +18730,12 @@ var _districtData = [
         "id": 650000,
         "name": "新疆维吾尔自治区",
         "pid": -1,
-        "cities": [
+        "children": [
             {
                 "id": 650100,
                 "name": "乌鲁木齐市",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 650101,
                         "name": "市辖区",
@@ -17708,7 +18787,7 @@ var _districtData = [
                 "id": 650200,
                 "name": "克拉玛依市",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 650201,
                         "name": "市辖区",
@@ -17740,7 +18819,7 @@ var _districtData = [
                 "id": 650400,
                 "name": "吐鲁番市",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 650402,
                         "name": "高昌区",
@@ -17762,7 +18841,7 @@ var _districtData = [
                 "id": 650500,
                 "name": "哈密市",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 650502,
                         "name": "伊州区",
@@ -17784,7 +18863,7 @@ var _districtData = [
                 "id": 652300,
                 "name": "昌吉回族自治州",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 652301,
                         "name": "昌吉市",
@@ -17826,7 +18905,7 @@ var _districtData = [
                 "id": 652700,
                 "name": "博尔塔拉蒙古自治州",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 652701,
                         "name": "博乐市",
@@ -17853,7 +18932,7 @@ var _districtData = [
                 "id": 652800,
                 "name": "巴音郭楞蒙古自治州",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 652801,
                         "name": "库尔勒市",
@@ -17898,6 +18977,11 @@ var _districtData = [
                         "id": 652829,
                         "name": "博湖县",
                         "pid": 652800
+                    },
+                    {
+                        "id": 652871,
+                        "name": "库尔勒经济技术开发区",
+                        "pid": 652800
                     }
                 ]
             },
@@ -17905,7 +18989,7 @@ var _districtData = [
                 "id": 652900,
                 "name": "阿克苏地区",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 652901,
                         "name": "阿克苏市",
@@ -17957,7 +19041,7 @@ var _districtData = [
                 "id": 653000,
                 "name": "克孜勒苏柯尔克孜自治州",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 653001,
                         "name": "阿图什市",
@@ -17984,7 +19068,7 @@ var _districtData = [
                 "id": 653100,
                 "name": "喀什地区",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 653101,
                         "name": "喀什市",
@@ -18051,7 +19135,7 @@ var _districtData = [
                 "id": 653200,
                 "name": "和田地区",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 653201,
                         "name": "和田市",
@@ -18098,7 +19182,7 @@ var _districtData = [
                 "id": 654000,
                 "name": "伊犁哈萨克自治州",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 654002,
                         "name": "伊宁市",
@@ -18160,7 +19244,7 @@ var _districtData = [
                 "id": 654200,
                 "name": "塔城地区",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 654201,
                         "name": "塔城市",
@@ -18202,7 +19286,7 @@ var _districtData = [
                 "id": 654300,
                 "name": "阿勒泰地区",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 654301,
                         "name": "阿勒泰市",
@@ -18244,7 +19328,7 @@ var _districtData = [
                 "id": 659000,
                 "name": "自治区直辖县级行政区划",
                 "pid": 650000,
-                "district": [
+                "children": [
                     {
                         "id": 659001,
                         "name": "石河子市",
@@ -18278,22 +19362,443 @@ var _districtData = [
         "id": 710000,
         "name": "台湾省",
         "pid": -1,
-        "cities": []
+        "children": [
+            {
+                "id": 710100,
+                "name": "台北市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710101,
+                        "name": "内湖区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710102,
+                        "name": "南港区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710103,
+                        "name": "中正区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710104,
+                        "name": "松山区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710105,
+                        "name": "信义区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710106,
+                        "name": "大安区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710107,
+                        "name": "中山区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710108,
+                        "name": "文山区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710109,
+                        "name": "大同区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710110,
+                        "name": "万华区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710111,
+                        "name": "士林区",
+                        "pid": 710100
+                    },
+                    {
+                        "id": 710112,
+                        "name": "北投区",
+                        "pid": 710100
+                    }
+                ]
+            },
+            {
+                "id": 710200,
+                "name": "高雄市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710201,
+                        "name": "新兴区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710202,
+                        "name": "前金区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710203,
+                        "name": "芩雅区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710204,
+                        "name": "盐埕区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710205,
+                        "name": "鼓山区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710206,
+                        "name": "旗津区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710207,
+                        "name": "前镇区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710208,
+                        "name": "三民区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710209,
+                        "name": "左营区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710210,
+                        "name": "楠梓区",
+                        "pid": 710200
+                    },
+                    {
+                        "id": 710211,
+                        "name": "小港区",
+                        "pid": 710200
+                    }
+                ]
+            },
+            {
+                "id": 710300,
+                "name": "基隆市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710301,
+                        "name": "仁爱区",
+                        "pid": 710300
+                    },
+                    {
+                        "id": 710302,
+                        "name": "信义区",
+                        "pid": 710300
+                    },
+                    {
+                        "id": 710303,
+                        "name": "中正区",
+                        "pid": 710300
+                    },
+                    {
+                        "id": 710304,
+                        "name": "暖暖区",
+                        "pid": 710300
+                    },
+                    {
+                        "id": 710305,
+                        "name": "安乐区",
+                        "pid": 710300
+                    },
+                    {
+                        "id": 710307,
+                        "name": "七堵区",
+                        "pid": 710300
+                    }
+                ]
+            },
+            {
+                "id": 710400,
+                "name": "台中市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710301,
+                        "name": "中区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710302,
+                        "name": "东区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710303,
+                        "name": "南区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710304,
+                        "name": "西区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710305,
+                        "name": "北区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710306,
+                        "name": "北屯区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710307,
+                        "name": "西屯区",
+                        "pid": 710400
+                    },
+                    {
+                        "id": 710308,
+                        "name": "南屯区",
+                        "pid": 710400
+                    }
+                ]
+            },
+            {
+                "id": 710500,
+                "name": "台南市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710501,
+                        "name": "中西区",
+                        "pid": 710500
+                    },
+                    {
+                        "id": 710502,
+                        "name": "东区",
+                        "pid": 710500
+                    },
+                    {
+                        "id": 710503,
+                        "name": "南区",
+                        "pid": 710500
+                    },
+                    {
+                        "id": 710504,
+                        "name": "北区",
+                        "pid": 710500
+                    },
+                    {
+                        "id": 710505,
+                        "name": "安平区",
+                        "pid": 710500
+                    },
+                    {
+                        "id": 710506,
+                        "name": "安南区",
+                        "pid": 710500
+                    }
+                ]
+            },
+            {
+                "id": 710600,
+                "name": "新竹市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710601,
+                        "name": "东区",
+                        "pid": 710600
+                    },
+                    {
+                        "id": 710602,
+                        "name": "北区",
+                        "pid": 710600
+                    },
+                    {
+                        "id": 710603,
+                        "name": "香山区",
+                        "pid": 710600
+                    }
+                ]
+            },
+            {
+                "id": 710700,
+                "name": "嘉义市",
+                "pid": 710000,
+                "children": [
+                    {
+                        "id": 710701,
+                        "name": "东区",
+                        "pid": 710700
+                    },
+                    {
+                        "id": 710702,
+                        "name": "西区",
+                        "pid": 710700
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": 810000,
         "name": "香港特别行政区",
         "pid": -1,
-        "cities": []
+        "children": [
+            {
+                "id": 810001,
+                "name": "中西區",
+                "pid": 810000
+            },
+            {
+                "id": 810002,
+                "name": "灣仔區",
+                "pid": 810000
+            },
+            {
+                "id": 810003,
+                "name": "東區",
+                "pid": 810000
+            },
+            {
+                "id": 810004,
+                "name": "南區",
+                "pid": 810000
+            },
+            {
+                "id": 810005,
+                "name": "油尖旺區",
+                "pid": 810000
+            },
+            {
+                "id": 810006,
+                "name": "深水埗區",
+                "pid": 810000
+            },
+            {
+                "id": 810007,
+                "name": "九龍城區",
+                "pid": 810000
+            },
+            {
+                "id": 810008,
+                "name": "黃大仙區",
+                "pid": 810000
+            },
+            {
+                "id": 810009,
+                "name": "觀塘區",
+                "pid": 810000
+            },
+            {
+                "id": 810010,
+                "name": "荃灣區",
+                "pid": 810000
+            },
+            {
+                "id": 810011,
+                "name": "屯門區",
+                "pid": 810000
+            },
+            {
+                "id": 810012,
+                "name": "元朗區",
+                "pid": 810000
+            },
+            {
+                "id": 810013,
+                "name": "北區",
+                "pid": 810000
+            },
+            {
+                "id": 810014,
+                "name": "大埔區",
+                "pid": 810000
+            },
+            {
+                "id": 810015,
+                "name": "西貢區",
+                "pid": 810000
+            },
+            {
+                "id": 810016,
+                "name": "沙田區",
+                "pid": 810000
+            },
+            {
+                "id": 810017,
+                "name": "葵青區",
+                "pid": 810000
+            },
+            {
+                "id": 810018,
+                "name": "離島區",
+                "pid": 810000
+            }
+        ]
     },
     {
         "id": 820000,
         "name": "澳门特别行政区",
         "pid": -1,
-        "cities": []
+        "children": [
+            {
+                "id": 820001,
+                "name": "花地瑪堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820002,
+                "name": "花王堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820003,
+                "name": "望德堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820004,
+                "name": "大堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820005,
+                "name": "風順堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820006,
+                "name": "嘉模堂區",
+                "pid": 820000
+            },
+            {
+                "id": 820007,
+                "name": "路氹填海區",
+                "pid": 820000
+            },
+            {
+                "id": 820008,
+                "name": "聖方濟各堂區",
+                "pid": 820000
+            }
+        ]
     }
 ]
-
 
 var _provinces = [], _cities = [], _districts = [];
 var _districtMap = {};
@@ -18306,7 +19811,7 @@ for (var i = 0; i < _districtData.length; i++) {
         pid: pro.pid
     });
 
-    var cities = pro.cities;
+    var cities = pro.children;
     if (cities) {
         for (var j = 0; j < cities.length; j++) {
             var city = cities[j];
@@ -18316,7 +19821,7 @@ for (var i = 0; i < _districtData.length; i++) {
                 pid: city.pid
             });
 
-            var districts = city.district;
+            var districts = city.children;
             if (districts) {
                 for (var k = 0; k < districts.length; k++) {
                     var district = districts[k];
@@ -18326,6 +19831,12 @@ for (var i = 0; i < _districtData.length; i++) {
                         pid: district.pid
                     });
                 }
+            } else {
+                city.children = [{
+                    id: city.id,
+                    name: city.name,
+                    pid: city.pid
+                }]
             }
         }
     }
@@ -18354,10 +19865,10 @@ function getDistrictFullName(code, separator) {
     if (a) {
         v = a.name;
         if (a.pid != -1) {
-            a = getDistrict(v.pid);
+            a = getDistrict(a.pid);
             v = a.name + separator + v;
             if (a.pid != -1) {
-                a = getDistrict(v.pid);
+                a = getDistrict(a.pid);
                 v = a.name + separator + v;
             }
         }

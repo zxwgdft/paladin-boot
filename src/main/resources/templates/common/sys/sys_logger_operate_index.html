@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/header"/>
+<head th:include="/header"/>
 
 <body>
-
 <section class="content-header">
     <h1>操作日志管理</h1>
 </section>
 <section class="content">
     <div class="box box-solid">
-        <div id="result" class="box-body">
-            <div style="margin-top: 5px;height:50px">
+        <div class="box-body">
+            <div class="table-toolbar-tonto">
                 <form id="searchbar">
                     <input type="text" class="form-control"
                            style="width:200px;float:left;margin-right:10px"
                            name="operateByName"
                            placeholder="请输入操作人姓名"/>
+
                     <input type="text" class="form-control"
                            style="width:200px;float:left;margin-right:10px"
                            name="operateName"
@@ -33,18 +33,25 @@
                     </div>
 
                     <button type="button"
-                            class="btn btn-primary btn-flat tonto-btn-search"
+                            class="btn btn-primary tonto-btn-search"
                             style="width:85px;float:left;margin-right:10px"
                             onclick="table.refresh()">
                         <i class="fa fa-search"></i>&nbsp;查询
                     </button>
                 </form>
+                <div class="pull-right">
+                    <a class="btn btn-default"
+                       style="float:left;"
+                       onclick="table.export()">
+                        <i class="glyphicon glyphicon-export"></i>&nbsp;导出
+                    </a>
+                </div>
             </div>
             <table id="dataGrid"></table>
         </div>
     </div>
 </section>
-<div th:include="/common/footer"/>
+<div th:include="/footer"/>
 <script type="text/javascript">
     var table;
     $(function () {
@@ -56,29 +63,12 @@
             idField: "id",
             columns: [
                 [
-                    {title: "模块名称", field: "modelName"},
-                    {title: "操作名称", field: "operateName"},
-                    {title: "操作人名称", field: "operateByName"},
+                    {title: "模块名称", field: "modelName", sortable: true},
+                    {title: "操作名称", field: "operateName", sortable: true},
+                    {title: "操作人名称", field: "operateByName", sortable: true},
                     {title: "是否成功", field: "isSuccess", formatter: "boolean"},
                     {title: "操作时间", field: "operateTime", formatter: "datetime"},
-                    {title: "操作时长(ms)", field: "operateDuration"},
-                    {
-                        title: "操作",
-                        align: "center",
-                        width: "120px",
-                        events: {
-                            'click .detail': function (e, value, row, index) {
-                                detail(row);
-                            },
-                            'click .remove': function (e, value, row, index) {
-                                remove(row);
-                            }
-                        },
-                        formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info"><i class="fa fa-search"></i>查看</button>'
-
-                        }
-                    }
+                    {title: "操作时长(ms)", field: "operateDuration"}
                 ]
             ],
             url: '/common/sys/logger/operate/find/page',
@@ -86,14 +76,6 @@
             exportUrl: '/common/sys/logger/operate/export',
             pagination: true
         });
-    }
-
-    function add() {
-        window.location = '/common/sys/logger/operate/add';
-    }
-
-    function detail(row) {
-        window.location = '/common/sys/logger/operate/detail' + (row ? ('?id=' + row.id) : '');
     }
 
 </script>

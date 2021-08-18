@@ -7,8 +7,6 @@ import com.paladin.framework.api.R;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
-import com.paladin.framework.service.annotation.QueryInputMethod;
-import com.paladin.framework.service.annotation.QueryOutputMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,21 +24,19 @@ public class ${upperModelName}Controller extends ControllerSupport {
     private ${upperModelName}Service ${lowerModelName}Service;
 
     @GetMapping("${indexRM}")
-    @QueryInputMethod(queryClass = ${upperModelName}Query.class)
     public String index() {
         return "${indexPage}";
     }
 
     @PostMapping(value = "${findPageRM}")
     @ResponseBody
-    @QueryOutputMethod(queryClass = ${upperModelName}Query.class, paramIndex = 0)
     public PageResult<${upperModelName}> findPage(${upperModelName}Query query) {
         return ${lowerModelName}Service.findPage(query);
     }
     
     @GetMapping("${getDetailRM}")
     @ResponseBody
-    public ${upperModelName} getDetail(@RequestParam String id) {
+    public ${upperModelName} getDetail(@RequestParam ${primaryClass} id) {
         return ${lowerModelName}Service.get(id);
     }
     
@@ -67,7 +63,7 @@ public class ${upperModelName}Controller extends ControllerSupport {
 	    // 验证数据
 	    validErrorHandler(bindingResult);
 		${lowerModelName}Service.save(beanCopy(${lowerModelName}DTO, new ${upperModelName}()));
-		return R.success();
+		return R.SUCCESS;
 	}
 
     @PostMapping("${updateRM}")
@@ -75,17 +71,17 @@ public class ${upperModelName}Controller extends ControllerSupport {
     public R update(@Valid ${upperModelName}DTO ${lowerModelName}DTO, BindingResult bindingResult) {
         // 验证数据
 		validErrorHandler(bindingResult);
-		String id = ${lowerModelName}DTO.getId();
+		${primaryClass} id = ${lowerModelName}DTO.getId();
 		${upperModelName} model = beanCopy(${lowerModelName}DTO, ${lowerModelName}Service.getWhole(id));
 		${lowerModelName}Service.updateWhole(model);
-        return R.success();
+        return R.SUCCESS;
 	}
 
     @PostMapping(value = "${deleteRM}")
     @ResponseBody
-    public R delete(@RequestParam String id) {
+    public R delete(@RequestParam ${primaryClass} id) {
         ${lowerModelName}Service.deleteById(id);
-        return R.success();
+        return R.SUCCESS;
     }
     
     @PostMapping(value = "${exportRM}")
@@ -94,7 +90,6 @@ public class ${upperModelName}Controller extends ControllerSupport {
 		if (condition == null) {
             throw new BusinessException("导出失败：请求参数异常");
 		}
-		condition.sortCellIndex();
 		${upperModelName}Query query = condition.getQuery();
 		try {
 			if (query != null) {

@@ -1,6 +1,7 @@
 package com.paladin.framework.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.annotation.QueryCondition;
 import com.paladin.framework.utils.TimeUtil;
 import com.paladin.framework.utils.reflect.Entity;
@@ -12,6 +13,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -23,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class QueryWrapperHelper {
 
-    private static Map<Class<?>, Builder> buildCache = new ConcurrentHashMap<>();
+    private static Map<String, Builder> buildCache = new ConcurrentHashMap<>();
 
     /**
      * 根据注解构建查询条件
@@ -69,13 +71,15 @@ public class QueryWrapperHelper {
      * 获取查询条件构建起
      */
     private static Builder getBuilder(Class<?> queryParamClass) {
-        Builder builder = buildCache.get(queryParamClass);
+        String key = queryParamClass.getName();
+        Builder builder = buildCache.get(key);
         if (builder == null) {
             // 同步创建Builder
             synchronized (buildCache) {
-                builder = buildCache.get(queryParamClass);
+                builder = buildCache.get(key);
                 if (builder == null) {
                     builder = new Builder(queryParamClass);
+                    buildCache.put(key, builder);
                 }
             }
         }
@@ -129,6 +133,7 @@ public class QueryWrapperHelper {
         }
     }
 
+    private static Pattern columnNamePattern = Pattern.compile("^\\w+$");
 
     /**
      * 查询对象构建器
@@ -174,6 +179,10 @@ public class QueryWrapperHelper {
                 String sort = sortParam.getSort();
                 if (sort != null && sort.length() > 0) {
                     sort = NameUtil.hump2underline(sort);
+                    if (!columnNamePattern.matcher(sort).matches()) {
+                        throw new BusinessException("非法的排序字段：" + sort);
+                    }
+
                     String order = sortParam.getOrder();
                     if ("asc".equalsIgnoreCase(order)) {
                         queryWrapper.orderByAsc(sort);

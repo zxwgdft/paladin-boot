@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class OrgRoleDTO {
 
     // id
-    private String id;
+    private Integer id;
 
     // 角色名称
     @NotEmpty(message = "角色名称不能为空")
@@ -27,7 +27,7 @@ public class OrgRoleDTO {
 
     // 是否启用 1是0否
     @NotNull(message = "是否启用不能为空")
-    private Integer enable;
+    private Boolean enable;
 
 
 }

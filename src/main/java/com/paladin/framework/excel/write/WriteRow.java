@@ -1,102 +1,100 @@
 package com.paladin.framework.excel.write;
 
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.List;
 
-public abstract class WriteRow  implements WriteComponent{
-	
-	List<WriteColumn> columns;
-	List<WriteRow> subRows;	
-	
-	public List<WriteColumn> getColumns() {
-		return columns;
-	}
+@Getter
+@Setter
+public abstract class WriteRow implements WriteComponent {
 
-	public void setColumns(List<WriteColumn> columns) {
-		this.columns = columns;
-	}
+    private List<WriteColumn> columns;
+    private List<WriteRow> subRows;
 
-	public List<WriteRow> getSubRows() {
-		return subRows;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public int write(Object data, Sheet sheet, Workbook workbook, int rowNum, int rowSpan, CellStyle commonCellStyle) {
+        if (data == null) {
+            return 0;
+        }
 
-	public void setSubRows(List<WriteRow> subRows) {
-		this.subRows = subRows;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	@Override
-	public int write(Object data, Sheet sheet, Workbook workbook, int rowNum, int span, CellStyle commonCellStyle) {
-		if (data == null) {
-			return 0;
-		}
-
-		Class<?> type = data.getClass();
-		if (Collection.class.isAssignableFrom(type)) {
-			Collection coll = (Collection) data;
-			int start = rowNum;
-			for (Object obj : coll) {
-				rowNum += writeOne(obj, sheet, workbook, rowNum, span, commonCellStyle);
-			}
-			return rowNum - start;
-		} else if (type.isArray()) {
-			int length = Array.getLength(data);
-			int start = rowNum;
-			for (int i = 0; i < length; i++) {
-				Object item = Array.get(data, i);
-				rowNum += writeOne(item, sheet, workbook, rowNum, span, commonCellStyle);
-			}
-			return rowNum - start;
-		} else {
-			return writeOne(data, sheet, workbook, rowNum, span, commonCellStyle);
-		}
-	}
+        Class<?> type = data.getClass();
+        if (Collection.class.isAssignableFrom(type)) {
+            Collection coll = (Collection) data;
+            int start = rowNum;
+            for (Object obj : coll) {
+                rowNum += writeOne(obj, sheet, workbook, rowNum, rowSpan, commonCellStyle);
+            }
+            return rowNum - start;
+        } else if (type.isArray()) {
+            int length = Array.getLength(data);
+            int start = rowNum;
+            for (int i = 0; i < length; i++) {
+                Object item = Array.get(data, i);
+                rowNum += writeOne(item, sheet, workbook, rowNum, rowSpan, commonCellStyle);
+            }
+            return rowNum - start;
+        } else {
+            return writeOne(data, sheet, workbook, rowNum, rowSpan, commonCellStyle);
+        }
+    }
 
 
-	/**
-	 * 写EXCEL
-	 * 
-	 * @param data
-	 *            具体数据
-	 * @param sheet
-	 *            工作簿
-	 * @param workbook
-	 *            工作空间
-	 * @param rowNum
-	 *            行号
-	 * @param span
-	 *            跨行数
-	 * @param commonCellStyle
-	 *            通用样式
-	 * @return
-	 */
-	public int writeOne(Object data, Sheet sheet, Workbook workbook, int rowNum, int span, CellStyle commonCellStyle) {
-		int maxSubSpan = 0;
+    /**
+     * 写EXCEL
+     *
+     * @param data            具体数据
+     * @param sheet           工作簿
+     * @param workbook        工作空间
+     * @param rowNum          行号
+     * @param rowSpan         跨行数
+     * @param commonCellStyle 通用样式
+     * @return
+     */
+    public int writeOne(Object data, Sheet sheet, Workbook workbook, int rowNum, int rowSpan, CellStyle commonCellStyle) {
+        int maxSubSpan = 0;
 
-		if (subRows != null && subRows.size() > 0) {
-			for (WriteRow writeRow : subRows) {
-				Object subData = writeRow.peelData(data);
-				int s = writeRow.write(subData, sheet, workbook, rowNum, span, commonCellStyle);
-				maxSubSpan = Math.max(s, maxSubSpan);
-			}
-		}
+        if (subRows != null && subRows.size() > 0) {
+            for (WriteRow writeRow : subRows) {
+                Object subData = writeRow.peelData(data);
+                int s = writeRow.write(subData, sheet, workbook, rowNum, rowSpan, commonCellStyle);
+                maxSubSpan = Math.max(s, maxSubSpan);
+            }
+        }
 
-		if (columns != null && columns.size() > 0) {
-			span = Math.max(span, maxSubSpan);
-			for (WriteColumn writeColumn : columns) {
-				Object columnData = writeColumn.peelData(data);
-				writeColumn.write(columnData, sheet, workbook, rowNum, span, commonCellStyle);
-			}
-		} else {
-			span = maxSubSpan;
-		}
+        if (columns != null && columns.size() > 0) {
+            rowSpan = Math.max(rowSpan, maxSubSpan);
+            for (WriteColumn writeColumn : columns) {
+                Object columnData = writeColumn.peelData(data);
+                writeColumn.write(columnData, sheet, workbook, rowNum, rowSpan, commonCellStyle);
+            }
+        } else {
+            rowSpan = maxSubSpan;
+        }
 
-		return span;
-	}
+        return rowSpan;
+    }
+
+    /**
+     * 如果需要复用，则在每次使用前应该调用该方法清除历史数据，例如历史样式（他是无法多个workbook复用）
+     */
+    public void reset() {
+        if (subRows != null) {
+            for (WriteRow writeRow : subRows) {
+                writeRow.reset();
+            }
+        }
+
+        if (columns != null) {
+            for (WriteColumn column : columns) {
+                column.reset();
+            }
+        }
+    }
 }

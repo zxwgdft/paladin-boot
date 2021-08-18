@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * 自定义的简单权限判断注解
+ * <p>
+ * 需要系统管理员
  *
  * @author TontoZhou
  * @since 2020/3/19

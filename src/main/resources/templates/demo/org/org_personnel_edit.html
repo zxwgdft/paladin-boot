@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/demo/header"/>
+<head th:include="/header"/>
 <link rel="stylesheet" href="/static/assets/ueditor/themes/default/css/ueditor.min.css"/>
 
 <body>
@@ -16,7 +16,7 @@
 <section class="content">
 </section>
 <input type="hidden" id="id" th:value="${id}"/>
-<div th:include="/demo/footer"/>
+<div th:include="/footer"/>
 <script type="text/javascript" src="/static/assets/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" src="/static/assets/ueditor/ueditor.all.min.js"></script>
 <script type="text/javascript">
@@ -27,8 +27,15 @@
             name: "编辑人员信息",
             url: "/demo/org/personnel/update?id=" + $("#id").val(),
             columns: [
-                {title: "姓名", name: "name", required: "required", maxLength: 20, inputType: "TEXT"},
-                {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
+                {
+                    title: "姓名",
+                    name: "name",
+                    required: "required",
+                    maxLength: 20,
+                    inputType: "TEXT",
+                    fieldset: true,
+                    legend: '基本信息'
+                },
 
                 {
                     title: "证件类型",
@@ -38,19 +45,7 @@
                     inputType: "SELECT"
                 },
                 {title: "证件号码", name: "identificationNo", required: "required", maxLength: 32, inputType: "TEXT"},
-                {
-                    // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
-                    title: "所属机构",
-                    name: "unitId",
-                    inputType: "SELECT-TREE-SERVER",
-                    url: "/demo/org/unit/find/tree",
-                    layerWidth: "500px", // 弹出框宽度
-                    required: "required",
-                    isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
-                    idField: "id",
-                    nameField: "name"
-                },
-                {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO"},
+                {title: "账号", name: "account", required: "required", minLength: 6, maxLength: 20, inputType: "TEXT"},
                 {
                     title: "角色",
                     name: "roles",
@@ -62,6 +57,19 @@
                     colspan: 2,
                     nameField: "roleName"
                 },
+                {
+                    // 从服务器获取单位树形下拉数据，idField 和nameField分别为数据中的value和name
+                    title: "所属机构",
+                    name: "agencyId",
+                    inputType: "SELECT-TREE-SERVER",
+                    url: "/demo/org/agency/find/tree",
+                    layerWidth: "500px", // 弹出框宽度
+                    required: "required",
+                    isListData: false, // 是否列表形式（如果是列表形式将会自动把数据转换为TREE形式）
+                    idField: "id",
+                    nameField: "name"
+                },
+                {title: "性别", name: "sex", enum: "sex-type", inputType: "RADIO", fieldset: true, legend: '详细信息'},
                 {title: "出生日期", name: "birthday", inputType: "DATE"},
                 {
                     title: "手机号码",
@@ -72,24 +80,21 @@
                         "data-type": "cellphone",
                         "placeholder": "请输入本人的手机号码"
                         // 可以增加dom的属性，例如添加数据类型和最大长度用于验证
-                    },
-                    // 性别男时候才能选择手机号码，如果值为多个可以在数组后面继续添加
-                    dependency: ["sex", "1"]
+                    }
                 },
                 {title: "电话号码", name: "officePhone", maxLength: 20, inputType: "TEXT"},
                 {title: "民族", name: "nation", enum: "nation-type", inputType: "SELECT"},
-                {title: "简历", name: "resume", inputType: "EDITOR"},
+                {title: "所在城市", name: "address", inputType: "AREA-PICK", colspan: 2},
                 {
-                    // 子项添加，未做保存处理，如果要后台保存，需要json格式而不能form格式
-                    title: "地址",
-                    name: "address",
-                    required: "required",
+                    // 子项添加，未做保存处理
+                    title: "紧急联系人",
+                    name: "emergencyContact",
                     inputType: "SUB-MODEL",
                     subViewField: "personnelName",
-                    addSubModelBtnTitle: '添加地址',
+                    addSubModelBtnTitle: '添加联系人',
                     // colCount: 5,
-                    subTitleViewHtmml: function (data) {
-                        var html = '<span class="product-description" style="line-height:34px">' + data.city + "-" + data.address + '</span>';
+                    subTitleViewHtml: function (data) {
+                        var html = '<p class="product-description" style="line-height: 34px">姓名：' + data.name + "/电话：" + data.phone + '</p>';
                         return html;
                     },
                     subModelOptions: {
@@ -100,11 +105,12 @@
                             width: 600
                         },
                         columns: [
-                            {title: "所在地区", name: "city", inputType: "TEXT", required: "required"},
-                            {title: "详细地址", name: "address", inputType: "TEXT", required: "required"}
+                            {title: "姓名", name: "name", inputType: "TEXT", required: "required"},
+                            {title: "电话", name: "phone", inputType: "TEXT", required: "required"}
                         ]
                     }
                 },
+                {title: "简历", name: "resume", inputType: "EDITOR", fieldset: true, legend: '补充信息'},
                 {
                     title: "附件",
                     name: "attachment",
@@ -117,7 +123,7 @@
         }
 
         $.getAjax("/demo/org/personnel/get?id=" + $("#id").val(), function (data) {
-            var html = generateHtml(options);
+            var html = generateEditHtml(options);
             $(".content").html(html);
             $.initComponent($(".content"));
 

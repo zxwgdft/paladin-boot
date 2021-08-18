@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class RoleContainer {
 
-    private Map<String, Role> roleMap;
+    private Map<Integer, Role> roleMap;
 
     public RoleContainer(List<Role> roles) {
         if (roles == null) {
@@ -23,7 +23,7 @@ public class RoleContainer {
         }
     }
 
-    public Role getRole(String roleId) {
+    public Role getRole(Integer roleId) {
         return roleMap.get(roleId);
     }
 

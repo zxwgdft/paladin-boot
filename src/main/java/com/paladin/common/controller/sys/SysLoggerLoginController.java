@@ -1,16 +1,16 @@
 package com.paladin.common.controller.sys;
 
 import com.paladin.common.controller.sys.dto.SysLoggerLoginExportCondition;
+import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.ControllerSupport;
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.common.core.security.NeedRoleLevel;
 import com.paladin.common.model.sys.SysLoggerLogin;
 import com.paladin.common.service.sys.SysLoggerLoginService;
 import com.paladin.common.service.sys.dto.SysLoggerLoginQuery;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.exception.BusinessException;
 import com.paladin.framework.service.PageResult;
-import com.paladin.framework.service.annotation.QueryInputMethod;
-import com.paladin.framework.service.annotation.QueryOutputMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,25 +25,24 @@ public class SysLoggerLoginController extends ControllerSupport {
     private SysLoggerLoginService sysLoggerLoginService;
 
     @GetMapping("/index")
-    @QueryInputMethod(queryClass = SysLoggerLoginQuery.class)
     public String index() {
         return "/common/sys/sys_logger_login_index";
     }
 
     @PostMapping(value = "/find/page")
     @ResponseBody
-    @QueryOutputMethod(queryClass = SysLoggerLoginQuery.class, paramIndex = 0)
+    @NeedRoleLevel(CommonUserSession.ROLE_LEVEL_APP_ADMIN)
     public PageResult<SysLoggerLogin> findPage(SysLoggerLoginQuery query) {
         return sysLoggerLoginService.findPage(query);
     }
 
     @PostMapping(value = "/export")
     @ResponseBody
+    @NeedRoleLevel(CommonUserSession.ROLE_LEVEL_APP_ADMIN)
     public String export(@RequestBody SysLoggerLoginExportCondition condition) {
         if (condition == null) {
             throw new BusinessException("导出失败：请求参数异常");
         }
-        condition.sortCellIndex();
         SysLoggerLoginQuery query = condition.getQuery();
         try {
             if (query != null) {

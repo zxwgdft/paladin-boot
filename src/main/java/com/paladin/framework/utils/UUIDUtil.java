@@ -1,35 +1,29 @@
 package com.paladin.framework.utils;
 
+import com.paladin.framework.utils.secure.SecureUtil;
 import org.apache.commons.codec.binary.Base64;
 
-import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * ThreadLocalRandom 拥有更高的性能，jmh（10线程）测试下快了近10倍
+ */
 public class UUIDUtil {
 
-    private final static SecureRandom numberGenerator = new SecureRandom();
-
     /**
-     * 创建32位UUID
-     *
-     * @return
+     * @return 32位UUID
      */
     public static String create32UUID() {
-        byte[] data = new byte[16];
-        numberGenerator.nextBytes(data);
-        data[6] &= 0x0f; /* clear version */
-        data[6] |= 0x40; /* set to version 4 */
-        data[8] &= 0x3f; /* clear variant */
-        data[8] |= 0x80; /* set to IETF variant */
+        // 使用ThreadLocalRandom获取UUID获取更优的效果
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        long mostSigBits = random.nextLong();
+        long leastSigBits = random.nextLong();
 
-        long msb = 0;
-        long lsb = 0;
-        assert data.length == 16;
-        for (int i = 0; i < 8; i++)
-            msb = (msb << 8) | (data[i] & 0xff);
-        for (int i = 8; i < 16; i++)
-            lsb = (lsb << 8) | (data[i] & 0xff);
-
-        return (digits(msb >> 32, 8) + digits(msb >> 16, 4) + digits(msb, 4) + digits(lsb >> 48, 4) + digits(lsb, 12));
+        return (digits(mostSigBits >> 32, 8) +
+                digits(mostSigBits >> 16, 4) +
+                digits(mostSigBits, 4) +
+                digits(leastSigBits >> 48, 4) +
+                digits(leastSigBits, 12));
     }
 
     private static String digits(long val, int digits) {
@@ -38,20 +32,15 @@ public class UUIDUtil {
     }
 
     /**
-     * 创建压缩的UUID（对32位UUID进行Base64编码）
-     *
-     * @return
+     * @return 压缩的UUID（对32位UUID进行Base64编码）
      */
     public static String createUUID() {
-        byte[] randomBytes = new byte[16];
-        numberGenerator.nextBytes(randomBytes);
-        return Base64.encodeBase64URLSafeString(randomBytes);
+        return Base64.encodeBase64URLSafeString(SecureUtil.random16bytes());
     }
 
+
     public static void main(String[] args) {
-        for (int i = 0; i < 20; i++) {
-            System.out.println(createUUID());
-        }
+        System.out.println(createUUID());
     }
 
 }
