@@ -27,7 +27,7 @@
 	    }
     
         $.getAjax(${getDataUrl}, function(data) {
-            var html = generateHtml(options);
+            var html = generateEditHtml(options);
             $(".content").html(html);
             $.initComponent($(".content"));
            
